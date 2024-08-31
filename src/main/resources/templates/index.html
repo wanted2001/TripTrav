@@ -24,7 +24,7 @@
         .mainBackImg img.active{
             opacity: 1;
         }
-        .mainText {
+        .mainText{
             position: absolute;
             top: 40%;
             left: 50%;
@@ -52,7 +52,6 @@
             border-radius: 17px;
             width: 200px;
             height: 34px;
-            line-height: 30px;
         }
         .mainBtn a{
             vertical-align: middle;
@@ -60,9 +59,9 @@
             font-family: LINESeedKR-Rg;
         }
         .mainBtn a img{
-            width: 15px;
-            margin-left: 5px;
             vertical-align: middle;
+            width: 15px;
+            margin-left: 4px;
         }
     </style>
 </head>
@@ -71,6 +70,7 @@
         <div class="mainWrap">
             <div class="mainBackImg">
                 <img src="/dist/image/main1.jpg" class="active">
+                <img src="/dist/image/main2.jpg">
                 <img src="/dist/image/main3.jpg">
                 <img src="/dist/image/main4.jpg">
                 <img src="/dist/image/main5.jpg">
@@ -80,7 +80,7 @@
             </div>
             <div class="mainBtnDiv">
                 <button class="mainBtn">
-                    <a th:src="@{/}">AI 여행지 추천받기<img src="/dist/image/send.svg"></a>
+                    <a th:href="@{/}">AI 여행지 추천받기<img src="/dist/image/send.svg"></a>
                 </button>
             </div>
         </div>
