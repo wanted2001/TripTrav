@@ -40,7 +40,7 @@
         }
         .mainBtnDiv{
             position: absolute;
-            top: 46%;
+            top: 48%;
             left: 50%;
             transform: translate(-50%,-50%);
             z-index: 10;
@@ -80,7 +80,7 @@
             </div>
             <div class="mainBtnDiv">
                 <button class="mainBtn">
-                    <a>AI 여행지 추천받기<img src="/dist/image/send.svg"></a>
+                    <a th:src="@{/}">AI 여행지 추천받기<img src="/dist/image/send.svg"></a>
                 </button>
             </div>
         </div>
@@ -94,7 +94,7 @@
                 images[currentImg].classList.remove('active');
                 currentImg = (currentImg+1)%images.length;
                 images[currentImg].classList.add('active');
-            }, 50000);
+            }, 30000);
         }
 
         window.onload = changeImage;
