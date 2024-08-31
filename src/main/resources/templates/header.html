@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="header">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>title</title>
+    <link rel="stylesheet" th:href="@{/dist/css/reset.css}">
+    <style>
+        .header-nav{
+            background: #ffffff00;
+            position: absolute;
+            z-index: 100;
+            width: 1300px;
+            top: 30px;
+            left: 52%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: space-between;
+        }
+        .middleUl{
+            font-family: LINESeedKR-Bd;
+            width: 500px;
+            display: flex;
+            justify-content: space-around;
+            font-size: 19px;
+        }
+        .rightUl{
+            font-family: LINESeedKR-Rg;
+            display: flex;
+        }
+        a{
+            color: white;
+        }
+        .after::after{
+            content: "/";
+            color: white;
+            margin: 0 10px 0 8px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="header-nav">
+        <div class="leftBox">
+            <a th:href="@{/}">
+                <img src="/" class="logoImg">
+            </a>
+        </div>
+        <div class="middleBox">
+            <ul class="middleUl">
+                <li><a th:href="@{/}">Maps</a></li>
+                <li><a th:href="@{/}">Trips</a></li>
+                <li><a th:href="@{/}">About</a></li>
+            </ul>
+        </div>
+        <div class="rightBox">
+            <ul class="rightUl">
+                <li class="after"><a th:href="@{/}">Login</a></li>
+                <li><a th:href="@{/}">Join</a></li>
+            </ul>
+        </div>
+    </nav>
+</body>
+</th:block>
+</html>
