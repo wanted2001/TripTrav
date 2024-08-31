@@ -1,8 +1,103 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<th:block th:replace="~{header :: setFragment(~{this::content})}">
-    <th:block th:fragment="content">
+<title>main</title>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>영화 목록</title>
+    <style>
+        .mainWrap{
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .mainBackImg img{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+        }
+        .mainBackImg img.active{
+            opacity: 1;
+        }
+        .mainText {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            text-align: center;
+            font-size: 2em;
+            font-family: LINESeedKR-Bd;
+            z-index: 10;
+        }
+        .bold{
+            font-size: 48px;
+        }
+        .mainBtnDiv{
+            position: absolute;
+            top: 46%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            z-index: 10;
+        }
+        .mainBtn{
+            background: white;
+            outline: none;
+            border: 1px solid gainsboro;
+            border-radius: 17px;
+            width: 200px;
+            height: 34px;
+            line-height: 30px;
+        }
+        .mainBtn a{
+            vertical-align: middle;
+            color: black;
+            font-family: LINESeedKR-Rg;
+        }
+        .mainBtn a img{
+            width: 15px;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+    <body>
+        <th:block th:replace="~{header :: header}"></th:block>
+        <div class="mainWrap">
+            <div class="mainBackImg">
+                <img src="/dist/image/main1.jpg" class="active">
+                <img src="/dist/image/main3.jpg">
+                <img src="/dist/image/main4.jpg">
+                <img src="/dist/image/main5.jpg">
+            </div>
+            <div class="mainText">
+                <span class="bold">한방</span>에 끝나는 여행계획, 트립트랩이 도와드릴게요.
+            </div>
+            <div class="mainBtnDiv">
+                <button class="mainBtn">
+                    <a>AI 여행지 추천받기<img src="/dist/image/send.svg"></a>
+                </button>
+            </div>
+        </div>
 
+    <script>
+        function changeImage(){
+            const images = document.querySelectorAll('.mainBackImg img');
+            let currentImg = 0;
 
-    </th:block>
-</th:block>
+            setInterval(()=>{
+                images[currentImg].classList.remove('active');
+                currentImg = (currentImg+1)%images.length;
+                images[currentImg].classList.add('active');
+            }, 50000);
+        }
+
+        window.onload = changeImage;
+    </script>
+    </body>
+</html>
