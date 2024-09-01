@@ -1,0 +1,166 @@
+
+body{
+    display: flex;
+    justify-content: center;
+    background-color: #f4f4f9;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.myPageWrap {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 75px auto 0 auto;
+    padding: 40px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.leftWrap, .rightWrap {
+    width: 48%;
+}
+
+.profile {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.profileImg {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile h2 {
+    margin-top: 10px;
+    font-size: 1.7em;
+    font-weight: 600;
+    color: #333;
+}
+
+.profileUpdate {
+    margin-top: 15px;
+    padding: 12px 25px;
+    border: none;
+    background-color: #3498db;
+    color: white;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+.profileUpdate:hover {
+    background-color: #2980b9;
+}
+
+.reviewWrap h3, .rightWrap h3 {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: #333;
+}
+
+.reviewList {
+    display: flex;
+    justify-content: space-between;
+}
+
+.reviewCard {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    width: 30%;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.reviewCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.reviewCard img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.reviewCard p {
+    margin: 15px 0;
+    font-size: 1em;
+    color: #555;
+}
+
+.reviewDate {
+    font-size: 0.9em;
+    color: #aaa;
+}
+
+.scheduleWrap {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.scheduleCard {
+    display: flex;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.scheduleCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.scheduleCard img {
+    width: 30%;
+    height: auto;
+    object-fit: cover;
+}
+
+.scheduleInfo {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.scheduleInfo h4 {
+    font-size: 1.3em;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #333;
+}
+
+.scheduleInfo p {
+    font-size: 1em;
+    margin-bottom: 15px;
+    color: #555;
+}
+
+.detailBtn {
+    padding: 10px 25px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 0.95em;
+    transition: background-color 0.3s ease;
+    align-self: flex-start;
+}
+
+.detailBtn:hover {
+    background-color: #2980b9;
+}
+

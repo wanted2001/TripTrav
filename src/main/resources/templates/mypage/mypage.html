@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>마이페이지</title>
+    <link rel="stylesheet" th:href="@{/dist/css/mypage.css}">
+</head>
+<body>
+<th:block th:replace="~{header :: header}"></th:block>
+<div class="myPageWrap">
+    <div class="leftWrap">
+        <div class="profile">
+            <img src="/dist/image/poky.png" alt="프로필 사진" class="profileImg">
+            <h2>사용자 이름</h2>
+            <button class="profileUpdate">내 정보 수정</button>
+        </div>
+        <div class="reviewWrap">
+            <h3>최근 쓴 리뷰</h3>
+            <div class="reviewList">
+                <div class="reviewCard">
+                    <img src="/dist/image/poky.png" alt="리뷰 이미지">
+                    <p>제가 가본 바다 중에 가장 아름다웠어요</p>
+                    <p class="reviewDate">2024.09.01</p>
+                </div>
+                <div class="reviewCard">
+                    <img src="/dist/image/poky.png" alt="리뷰 이미지">
+                    <p>제가 가본 바다 중에 가장 아름다웠어요</p>
+                    <p class="reviewDate">2024.09.01</p>
+                </div>
+                <div class="reviewCard">
+                    <img src="/dist/image/poky.png" alt="리뷰 이미지">
+                    <p>제가 가본 바다 중에 가장 아름다웠어요</p>
+                    <p class="reviewDate">2024.09.01</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="rightWrap">
+        <h3>내가 만든 일정</h3>
+        <div class="scheduleWrap">
+            <div class="scheduleCard">
+                <img src="/dist/image/poky.png" alt="일정 이미지">
+                <div class="scheduleInfo">
+                    <h4>여행 이름</h4>
+                    <p>일자: 2024.09.01 - 2024.09.03</p>
+                    <button class="detailBtn">자세히 보기</button>
+                </div>
+            </div>
+            <div class="scheduleCard">
+                <img src="/dist/image/poky.png" alt="일정 이미지">
+                <div class="scheduleInfo">
+                    <h4>여행 이름</h4>
+                    <p>일자: 2024.09.01 - 2024.09.03</p>
+                    <button class="detailBtn">자세히 보기</button>
+                </div>
+            </div>
+            <div class="scheduleCard">
+                <img src="/dist/image/poky.png" alt="일정 이미지">
+                <div class="scheduleInfo">
+                    <h4>여행 이름</h4>
+                    <p>일자: 2024.09.01 - 2024.09.03</p>
+                    <button class="detailBtn">자세히 보기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
