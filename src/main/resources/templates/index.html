@@ -63,6 +63,37 @@
             width: 15px;
             margin-left: 4px;
         }
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            background-color: rgba(0, 0, 0, 0.34);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transform: none; /
+        }
+        .modal-content {
+            font-family: LINESeedKR-Rg;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 375px;
+            text-align: center;
+            height: 600px;
+            z-index: 1001;
+        }
+        .close-button {
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            position: relative;
+            right: 45%;
+        }
     </style>
 </head>
     <body>
@@ -83,6 +114,20 @@
                 </button>
             </div>
         </div>
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <section>
+                    <button class="close-button" id="closeModal">&times;</button>
+                    <h2>로그인 / 회원가입</h2>
+                    <p><input type="text" placeholder="아이디를 입력하세요."></p>
+                    <p><input type="password" placeholder="비밀번호를 입력하세요."></p>
+                    <p><button type="button">로그인</button></p>
+                    <p>아직 트립트랩의 회원이 아니신가요?</p>
+                    <hr>
+                    <p><button type="button">회원가입하러 가기</button></p>
+                </section>
+            </div>
+        </div>
 
     <script>
         function changeImage(){
@@ -98,5 +143,27 @@
 
         window.onload = changeImage;
     </script>
+        <script>
+            const modal = document.getElementById('myModal');
+            const openModalBtn = document.getElementById('openModal');
+            const closeModalBtn = document.getElementById('closeModal');
+
+
+            function openModal() {
+                modal.style.display = 'flex';
+            }
+
+            function closeModal() {
+                modal.style.display = 'none';
+            }
+
+            openModalBtn.addEventListener('click', openModal);
+            closeModalBtn.addEventListener('click', closeModal);
+            window.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+        </script>
     </body>
 </html>
