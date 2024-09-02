@@ -55,11 +55,14 @@
         </div>
         <div class="rightBox">
             <ul class="rightUl">
-                <li class="after"><a th:href="@{/}">Login</a></li>
-                <li><a th:href="@{/}">Join</a></li>
+                <li class="after"><a href="javascript:void(0);" onclick="window.openLoginModal()">Login</a></li>
+                <li><a href="javascript:void(0);" onclick="window.openSignupModal()">Join</a></li>
             </ul>
         </div>
     </nav>
+    <div id="modal-root"></div>
+    <script src="/path/to/your/bundled/react/code.js"></script>
+    <script src="/dist/signup/js/ModalHandler.js"></script>
 </body>
 </th:block>
 </html>
