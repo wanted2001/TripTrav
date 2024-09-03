@@ -111,6 +111,7 @@
             border: none;
             background-color: #d3d3d361;
             border-radius: 5px;
+            outline: none;
         }
         p button{
             width: 98%;
@@ -121,11 +122,13 @@
             background-color: orange;
             color: white;
             border-radius: 5px;
+            cursor: pointer;
         }
         p a{
             font-family: 'LINESeedKR-Bd';
             font-size: 15px;
             color: orange;
+            cursor: pointer;
         }
         .joinBox {
             margin-top: 35px;
@@ -154,6 +157,7 @@
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
+            border: 0.1px solid lightgray;
         }
         .snsJoinBox button:nth-child(3) {
             background-image: url("/dist/image/naverLogin.png");
@@ -187,7 +191,7 @@
                     <button class="close-button" id="closeModal">&times;</button>
                     <p><img src="/" class="logoImg"></p>
                     <h2>로그인 / 회원가입</h2>
-                    <p><input type="text" placeholder="아이디를 입력하세요."></p>
+                    <p><input type="text" placeholder="이메일을 입력하세요."></p>
                     <p><input type="password" placeholder="비밀번호를 입력하세요."></p>
                     <p><button type="button">로그인</button></p>
                 </section>
