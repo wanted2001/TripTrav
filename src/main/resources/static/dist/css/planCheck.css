@@ -33,7 +33,7 @@
 .vsm-container{
     border-radius: 8px;
 }
-.mapOpenBtn button{
+.mapOpenBtn button, .mapCloseBtn{
     border: none;
     outline: none;
     background: white;
@@ -43,25 +43,18 @@
     z-index: 100;
     height: 45px;
     width: 30px;
+    transition: opacity 0.5s ease;
+}
+.mapOpenBtn button{
     top: 510px;
     right: 263px;
-    transition: opacity 0.3s ease;
     opacity: 1;
 }
 .mapCloseBtn{
-    border: none;
-    outline: none;
-    background: white;
-    border-radius: 8px;
-    box-shadow: -2px 2px 5px 0px #979797b8;
-    position: absolute;
-    height: 45px;
-    width: 30px;
     top: 511px;
     right: 639px;
     z-index: 100;
     transform: translateX(2%);
-    transition: opacity 0.3s ease;
     opacity: 0;
     pointer-events: none;
 }
@@ -99,4 +92,29 @@
 .mapCloseBtn.visible {
     opacity: 1;
     pointer-events: auto;
+}
+button{
+    cursor: pointer;
+}
+.slideWrap{
+    position: absolute;
+    overflow: hidden;
+    width: 1400px;
+    height: 200px;
+    margin: -18px 253px;
+}
+.innerSlide{
+    position: absolute;
+    display: grid;
+    width: 100%;
+    height: 160px;
+    grid-template-columns: repeat(8, 1fr);
+    /*gap: -48px;*/
+    pointer-events: none;
+}
+.slideItem{
+    background: pink;
+    height: 100%;
+    width: 160px;
+    border-radius: 16px;
 }
