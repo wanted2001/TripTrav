@@ -19,19 +19,19 @@ const imgUrl = `https://apis.data.go.kr/B551011/KorService1/detailImage1?MobileO
 //         console.error('There has been a problem with your fetch operation:', error);
 //     });
 
-fetch(mainImgUrl)
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        const mainImageContainer = document.getElementById('main-image');
-        const item = data.response.body.items.item[0];
-        const mainImgUrl1 = item.firstimage;
-        const mainImgUrl2 = item.firstimage2;
-
-        const mainImgElement1 = document.createElement('img');
-        const mainImgElement2 = document.createElement('img');
-        mainImgElement1.src = mainImgUrl1;
-        mainImgElement2.src = mainImgUrl2;
-        mainImageContainer.appendChild(mainImgElement1);
-        mainImageContainer.appendChild(mainImgElement2);
-    })
+// fetch(mainImgUrl)
+//     .then(response => response.json())
+//     .then(data => {
+//         console.log(data);
+//         const mainImageContainer = document.getElementById('main-image');
+//         const item = data.response.body.items.item[0];
+//         const mainImgUrl1 = item.firstimage;
+//         const mainImgUrl2 = item.firstimage2;
+//
+//         const mainImgElement1 = document.createElement('img');
+//         const mainImgElement2 = document.createElement('img');
+//         mainImgElement1.src = mainImgUrl1;
+//         mainImgElement2.src = mainImgUrl2;
+//         mainImageContainer.appendChild(mainImgElement1);
+//         mainImageContainer.appendChild(mainImgElement2);
+//     })
