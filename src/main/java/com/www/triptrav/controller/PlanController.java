@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class PlanController {
 
-    @GetMapping("/create")
-    public void createPlan() {}
+    @GetMapping("/check")
+    public void checkPlan() {}
 
 }
