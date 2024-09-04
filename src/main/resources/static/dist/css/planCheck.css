@@ -101,20 +101,21 @@ button{
     overflow: hidden;
     width: 1400px;
     height: 200px;
-    margin: -18px 253px;
+    margin: -95px 253px;
 }
 .innerSlide{
     position: absolute;
-    display: grid;
+    display: flex;
     width: 100%;
-    height: 160px;
-    grid-template-columns: repeat(8, 1fr);
-    /*gap: -48px;*/
+    height: 180px;
     pointer-events: none;
+    margin-top: 20px;
 }
 .slideItem{
     background: pink;
-    height: 100%;
+    height: 160px;
     width: 160px;
     border-radius: 16px;
+    flex-shrink: 0;
+    margin-right: 36px;
 }
