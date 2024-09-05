@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>상세페이지</title>
+    <link rel="stylesheet" href="/dist/css/place/placeDetail.css">
+    <script src="/dist/js/key.js"></script>
+</head>
+<body>
+<th:block th:replace="~{header :: header}"></th:block>
+<main>
+    <div class="bg-image">
+        <div class="location">
+        </div>
+        <div class="main-image"></div>
+    </div>
+
+    <section class="infoSection">
+        <div class="firstLine">
+            <span class="title">이름</span>
+            <span class="rating">⭐⭐⭐⭐⭐</span>
+            <span class="score">(5.0)</span>
+        </div><br>
+        <span class="locationInfo">부산</span><br>
+        <span class="timeInfo">09시</span><br>
+        <span class="telInfo">032</span><br>
+        <a class="homepageInfo">http</a>
+    </section>
+    <section class="buttonSection">
+        <button>개요</button>
+        <button>리뷰</button>
+        <button>찾아가는 길</button>
+        <button>주변정보</button>
+    </section>
+
+    <section class="details">
+        <p>소개</p>
+        <p>해동용궁사는 1376년 고려 시대에 창건된 사찰로, 독특한 해양 불교 문화를 체험할 수 있는 장소입니다...</p>
+    </section>
+
+    <section class="reviews">
+        <p>리뷰</p>
+        <div class="buttons">
+            <button>높은 평점순</button>
+            <button>낮은 평점순</button>
+            <button>최신순</button>
+            <button>리뷰 작성하기</button>
+        </div>
+        <div class="review">
+            <div class="review-info"><img class="profileImage" alt="noPic" src=""></img>
+                <span class="nickName">닉네임</span>
+                <span class="regDate">등록날짜</span>
+                <button class="helpButton">도움</button>
+                <button class="reportButton">신고</button>
+            </div>
+            <div class="review-detail">
+                <h3>리뷰 제목</h3>
+                <p>리뷰 내용...</p>
+                <span class="review-rating">⭐⭐⭐⭐☆(4.0)</span>
+            </div>
+        </div>
+        <div class="review">
+            <div class="review-info"><img class="profileImage" alt="noPic" src=""></img>
+                <span class="nickName">닉네임</span>
+                <span class="regDate">등록날짜</span>
+                <button class="helpButton">도움</button>
+                <button class="reportButton">신고</button>
+            </div>
+            <div class="review-detail">
+                <h3>리뷰 제목</h3>
+                <p>리뷰 내용...</p>
+                <span class="review-rating">⭐⭐⭐⭐⭐(5.0)</span>
+            </div>
+        </div>
+    </section>
+    <section class="transportation">
+        <p>찾아가는 길</p>
+        <div class="public-transportation">
+            <p>대중교통</p>
+            <span>1. ~~~</span><br>
+            <span>2. ~~~</span>
+        </div>
+        <div class="private-transportation">
+            <p>자가용</p>
+            <span>1. ~~~</span><br>
+            <span>2. ~~~</span>
+        </div>
+    </section>
+    <section class="map">
+        <div class="mapDetail">
+            지도출력공간
+        </div>
+    </section>
+    <section class="nearby">
+        <p>근처 맛집</p>
+        <div class="food">
+            <div class="locations">
+                <img src="location1.jpg" alt="Location 1">
+                <p>음식점 이름 1</p>
+            </div>
+            <div class="locations">
+                <img src="location2.jpg" alt="Location 2">
+                <p>음식점 이름 2</p>
+            </div>
+            <div class="locations">
+                <img src="location3.jpg" alt="Location 3">
+                <p>음식점 이름 3</p>
+            </div>
+            <div class="locations">
+                <img src="location4.jpg" alt="Location 4">
+                <p>음식점 이름 4</p>
+            </div>
+        </div>
+        <p>근처 관광지</p>
+        <div class="attractions">
+            <div class="locations">
+                <img src="location1.jpg" alt="Location 1">
+                <p>명소 이름 1</p>
+            </div>
+            <div class="locations">
+                <img src="location2.jpg" alt="Location 2">
+                <p>명소 이름 2</p>
+            </div>
+            <div class="locations">
+                <img src="location3.jpg" alt="Location 3">
+                <p>명소 이름 3</p>
+            </div>
+            <div class="locations">
+                <img src="location4.jpg" alt="Location 4">
+                <p>명소 이름 4</p>
+            </div>
+        </div>
+    </section>
+</main>
+<script src="/dist/js/place/placeDetail.js"></script>
+</body>
+</html>

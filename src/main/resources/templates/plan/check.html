@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/dist/css/planCheck.css}">
+    <script src="/dist/js/key.js"></script>
+    <script src="https://toptmaptile2.tmap.co.kr/scriptSDKV3/tmapjs3.min.js?version=20231206"></script>
+    <script type="text/javascript">
+        const script = document.createElement('script');
+        script.src = `https://apis.openapi.sk.com/tmap/vectorjs?version=1&appKey=${tMapAPIKEY}`;
+        document.head.appendChild(script);
+        function initTmap(){
+            let map = new Tmapv3.Map("checkMap",
+                {
+                    center: new Tmapv3.LatLng(37.566481622437934,126.98502302169841), // 지도 초기 좌표
+                    width: "1400px",
+                    height: "800px",
+                    zoom: 18
+                });
+        }
+    </script>
+</head>
+<body onload="initTmap()">
+    <th:block th:replace="~{header :: header}"></th:block>
+    <div class="checkBackImg">
+        <div class="checkTitle">
+            <img src="/dist/image/send.svg">
+            <p class="checkName">재미난 부산여행 2박3일</p>
+            <p class="checkSche">스케줄쫙쫙.. 작성</p>
+        </div>
+        <div class="slideWrap">
+            <div class="innerSlide">
+                <div class="slideItem"></div>
+                <div class="slideItem"></div>
+                <div class="slideItem"></div>
+                <div class="slideItem"></div>
+                <div class="slideItem"></div>
+                <div class="slideItem"></div>
+                <div class="slideItem"></div>
+                <div class="slideItem"></div>
+                <div class="slideItem"></div>
+                <div class="slideItem"></div>
+                <div class="slideItem"></div>
+                <div class="slideItem"></div>
+                <div class="slideItem"></div>
+                <div class="slideItem"></div>
+            </div>
+        </div>
+        <div id="checkMap">
+            <div class="mapOpenBtn">
+                <button><img src="/dist/image/chevrons-left.svg"></button>
+            </div>
+            <div class="mapCloseBtn hidden">
+                <button><img src="/dist/image/chevrons-right.svg"></button>
+            </div>
+            <div class="mapContentBox hidden"></div>
+        </div>
+        <div class="checkBottom"></div>
+    </div>
+    <script src="/dist/js/plan/check.js"></script>
+</body>
+</html>

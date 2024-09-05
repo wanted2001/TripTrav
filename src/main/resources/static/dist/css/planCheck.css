@@ -1,0 +1,121 @@
+.checkBackImg{
+    background: gainsboro;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 480px;
+}
+.checkTitle{
+    width: 1210px;
+    margin: 130px auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+.checkTitle img{
+    width: 17px;
+}
+.checkName{
+    font-family: 'LINESeedKR-Rg';
+    font-size: 1.3em;
+    margin: -16px 0 0 25px;
+    width: 100%;
+}
+.checkSche{
+    font-family: 'LINESeedKR-Rg';
+    margin-top: 21px;
+}
+#checkMap{
+    margin: 305px auto 0;
+}
+.checkBottom{
+    height: 25px;
+}
+.vsm-container{
+    border-radius: 8px;
+}
+.mapOpenBtn button, .mapCloseBtn{
+    border: none;
+    outline: none;
+    background: white;
+    border-radius: 8px;
+    box-shadow: -2px 2px 5px 0px #979797b8;
+    position: absolute;
+    z-index: 100;
+    height: 45px;
+    width: 30px;
+    transition: opacity 0.5s ease;
+}
+.mapOpenBtn button{
+    top: 510px;
+    right: 263px;
+    opacity: 1;
+}
+.mapCloseBtn{
+    top: 511px;
+    right: 639px;
+    z-index: 100;
+    transform: translateX(2%);
+    opacity: 0;
+    pointer-events: none;
+}
+.mapCloseBtn button{
+    border: none;
+    outline: none;
+    background: #ffffff00;
+    height: 45px;
+}
+.mapCloseBtn button img, .mapOpenBtn button img{
+    margin-left: -3px;
+}
+.mapContentBox {
+    background: white;
+    width: 19%;
+    height: 160%;
+    position: absolute;
+    z-index: 10;
+    right: 271px;
+    top: 510px;
+    border-radius: 8px;
+    box-shadow: 4px 4px 15px 6px #9797974a;
+    opacity: 0;
+    transform: translateX(2%);
+    transition: opacity 0.5s ease, transform 0.5s ease-in-out;
+}
+.mapContentBox.visible {
+    transform: translateX(0);
+    opacity: 1;
+}
+.mapOpenBtn.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+.mapCloseBtn.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+button{
+    cursor: pointer;
+}
+.slideWrap{
+    position: absolute;
+    overflow: hidden;
+    width: 1400px;
+    height: 200px;
+    margin: -95px 253px;
+}
+.innerSlide{
+    position: absolute;
+    display: flex;
+    width: 100%;
+    height: 180px;
+    pointer-events: none;
+    margin-top: 20px;
+}
+.slideItem{
+    background: pink;
+    height: 160px;
+    width: 160px;
+    border-radius: 16px;
+    flex-shrink: 0;
+    margin-right: 36px;
+}

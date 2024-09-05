@@ -1,0 +1,140 @@
+
+main{
+    text-align: center;
+}
+.bg-image{
+    width: 100%;
+    height: 500px;
+    z-index: -99;
+    background-color: blue;
+}
+.location{
+    width: 400px;
+    height: 50px;
+    background-color: yellow;
+    position: absolute;
+    top: 200px;
+    left: 300px;
+}
+.main-image{
+    width: 250px;
+    height: 250px;
+    background-color: black;
+    border-radius: 10px;
+    position: absolute;
+    top: 350px;
+    left: 300px;
+}
+.firstLine{
+    height: 10px;
+}
+.infoSection{
+    height: 170px;
+    background-color: orange;
+    text-align : left;
+    position: absolute;
+    top: 650px;
+    left: 300px;
+    line-height: 30px;
+}
+.buttonSection {
+    position: absolute;
+    left: 300px;
+    top: 850px;
+    width: 1400px;
+    background-color: white;
+    height: 50px;
+    display: flex;
+}
+.buttonSection > button {
+    flex: 1;
+    border: 1px solid black;
+    background-color: white;
+    text-align: center;
+}
+.buttonSection > button:nth-child(2),
+.buttonSection > button:nth-child(3),
+.buttonSection > button:nth-child(4) {
+    border-left: none;
+}
+.details{
+    position: absolute;
+    left: 300px;
+    top: 950px;
+    height: 100px;
+    width: 1400px;
+    background-color: green;
+}
+.details>p{
+    text-align: left;
+    margin-top: 5px;
+}
+.reviews{
+    position: absolute;
+    left: 300px;
+    top: 1000px;
+    width: 1400px;
+    height: 500px;
+    background-color: red;
+    margin-top: 20px;
+}
+.reviews>p{
+    text-align: left;
+}
+.reviews>div{
+    margin-top: 10px;
+    line-height: 50px;
+}
+.transportation{
+    position: absolute;
+    left: 300px;
+    top: 1520px;
+    background-color: antiquewhite;
+    width: 1400px;
+}
+.transportation>p{
+    text-align: left;
+    margin-top: 10px;
+}
+.transportation>div{
+    line-height: 30px;
+    margin-top: 10px;
+}
+.map{
+    position: absolute;
+    left: 300px;
+    top: 1740px;
+    background-color: #fb763f;
+    width: 1400px;
+    height: 500px;
+}
+.nearby{
+    position: absolute;
+    left: 300px;
+    top: 2240px;
+    background-color: #9001ef;
+    width: 1400px;
+    height: auto;
+}
+.nearby>div{
+    margin-top: 10px;
+}
+.nearby>p{
+    text-align: left;
+    margin-top: 10px;
+}
+.nearby>div>div{
+    margin-top: 20px;
+}
+.food, .attractions{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    align-items: stretch;
+}
+.food>div, .attractions>div{
+    width: 200px;
+    height: 200px;
+    border: 1px solid black;
+}
