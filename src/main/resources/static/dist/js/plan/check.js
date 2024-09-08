@@ -26,7 +26,7 @@ let slideItems = document.querySelectorAll('.slideItem');
 let pressed = false;
 let startPoint;
 let x;
-const slideItemWidth = 160;
+const slideItemWidth = 200;
 
 //메모모달
 const modal = document.querySelector('.memoModal');
@@ -35,9 +35,10 @@ const addMemoBtn = document.querySelector('.addMemoBtn');
 
 function updateInnerSlideWidth() {
     //div 개수따라 totalWidth 값 설정되도록
+    console.log(slideItems.length);
     const totalWidth = slideItems.length * slideItemWidth;
     innerSlide.style.width = `${totalWidth}px`;
-    document.querySelector('.innerLine').style.width=`${totalWidth}px`;
+    document.querySelector('.innerLine').style.width=`${totalWidth - 215}px`;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -86,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function checkBoundary() {
+    //div가 하나 덜 출력돼서 div를 실제 여행일정 +1만큼 생성해야함
     const outerRect = slideWrap.getBoundingClientRect();
     const innerRect = innerSlide.getBoundingClientRect();
     const lastSlideItem = slideItems[slideItems.length - 1]; // 마지막 slideItem
@@ -95,9 +97,13 @@ function checkBoundary() {
         innerSlide.style.left = '0px';
     }
 
-    if (lastItemRect.right > outerRect.right) {
-        const maxLeft = outerRect.width - innerRect.width;
-        innerSlide.style.left = `${Math.max(maxLeft, parseInt(innerSlide.style.left))}px`;
+    const maxLeft = outerRect.width - innerRect.width;
+
+    if (innerRect.right < outerRect.right) {
+        const minLeft = Math.min(outerRect.width - innerRect.width, 0);
+        if (parseInt(innerSlide.style.left) < minLeft) {
+            innerSlide.style.left = `${minLeft}px`;
+        }
     }
 }
 
