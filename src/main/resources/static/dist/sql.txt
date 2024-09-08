@@ -1,0 +1,18 @@
+//2024-09-04 user, auth table 생성
+CREATE TABLE `user` (
+    `uno` BIGINT NOT NULL AUTO_INCREMENT,
+    `email` VARCHAR(255) NOT NULL,
+    `pw` VARCHAR(255) NOT NULL,
+    `nickname` VARCHAR(64) NOT NULL,
+    `profile` VARCHAR(500),
+    `provider` VARCHAR(255),
+    `provider_id` VARCHAR(255),
+    `role` VARCHAR(20) NOT NULL DEFAULT 'ROLE_USER',
+    PRIMARY KEY (`uno`)
+  );
+
+ CREATE TABLE `auth` (
+    email` VARCHAR(255) NOT NULL,
+    `role` VARCHAR(20) NOT NULL DEFAULT 'ROLE_USER'
+  );
+

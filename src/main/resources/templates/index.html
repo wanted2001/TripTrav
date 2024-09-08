@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>영화 목록</title>
+    <title>triptrav index</title>
     <link rel="stylesheet" th:href="@{/dist/css/loginJoin.css}">
     <style>
         .mainWrap{
@@ -124,6 +124,15 @@
 
         window.onload = changeImage;
     </script>
+        <script th:inline="javascript">
+            window.onload = function () {
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.has('joinMsg')) {
+                    alert('회원가입이 완료되었습니다!');
+                    history.replaceState(null, '', window.location.pathname);
+                }
+            };
+        </script>
         <script src="/dist/js/loginJoin.js"></script>
     </body>
 </html>
