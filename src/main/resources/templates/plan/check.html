@@ -29,8 +29,23 @@
             <p class="checkName">재미난 부산여행 2박3일</p>
             <p class="checkSche">스케줄쫙쫙.. 작성</p>
         </div>
-        <div class="checkContent">
-            <div class="contentImg"></div>
+        <div class="slideWrap">
+            <div class="innerSlide">
+                <div class="slideItem"></div>
+                <div class="slideItem"></div>
+                <div class="slideItem"></div>
+                <div class="slideItem"></div>
+                <div class="slideItem"></div>
+                <div class="slideItem"></div>
+                <div class="slideItem"></div>
+                <div class="slideItem"></div>
+                <div class="slideItem"></div>
+                <div class="slideItem"></div>
+                <div class="slideItem"></div>
+                <div class="slideItem"></div>
+                <div class="slideItem"></div>
+                <div class="slideItem"></div>
+            </div>
         </div>
         <div id="checkMap">
             <div class="mapOpenBtn">
@@ -43,27 +58,6 @@
         </div>
         <div class="checkBottom"></div>
     </div>
-<script>
-    let openBtn = document.querySelector('.mapOpenBtn');
-    let closeBtn = document.querySelector('.mapCloseBtn');
-    let mapContentBox = document.querySelector('.mapContentBox');
-
-    openBtn.addEventListener('click', () => {
-        openBtn.classList.add("hidden"); // openBtn 숨기기
-        mapContentBox.classList.remove("hidden"); // mapContentBox 나타내기
-        mapContentBox.classList.add("visible"); // visible 클래스 추가
-        closeBtn.classList.remove("hidden"); // closeBtn 나타내기
-        closeBtn.classList.add("visible"); // visible 클래스 추가
-    });
-
-    closeBtn.addEventListener('click', () => {
-        openBtn.classList.remove("hidden"); // openBtn 나타내기
-        mapContentBox.classList.remove("visible"); // mapContentBox 숨기기
-        mapContentBox.classList.add("hidden"); // hidden 클래스 추가
-        closeBtn.classList.remove("visible"); // closeBtn 숨기기
-        closeBtn.classList.add("hidden"); // hidden 클래스 추가
-    });
-
-</script>
+    <script src="/dist/js/plan/check.js"></script>
 </body>
 </html>

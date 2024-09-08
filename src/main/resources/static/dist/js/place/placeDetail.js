@@ -1,37 +1,49 @@
 const contentId = "126676";
-const mainImgUrl = `https://apis.data.go.kr/B551011/KorService1/detailCommon1?ServiceKey=${tourAPIKEY}&contentTypeId=12&contentId=${contentId}&MobileOS=ETC&MobileApp=AppTest&_type=json&defaultYN=Y&firstImageYN=Y&areacodeYN=Y&catcodeYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y`
 const imgUrl = `https://apis.data.go.kr/B551011/KorService1/detailImage1?MobileOS=ETC&MobileApp=TripTrav&_type=json&subImageYN=Y&contentId=${contentId}&serviceKey=${tourAPIKEY}`;
+const detailInfoUrl = `https://apis.data.go.kr/B551011/KorService1/detailCommon1?MobileOS=ETC&MobileApp=TripTrav&contentId=${contentId}&defaultYN=Y&firstImageYN=Y&areacodeYN=Y&catcodeYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&serviceKey=${tourAPIKEY}&_type=json`
+let imageUrls = [];
 
+//기본정보가져오기
+fetch(detailInfoUrl)
+    .then(response => response.json())
+    .then(data => {
+        const jsonData = data.response.body.items.item[0];
+        const locationDiv = document.querySelector('.location');
+        //시군구, 이름정보
+        let city =  splitAddr(jsonData.addr1)[0];
+        let district = splitAddr(jsonData.addr1)[1];
+        let title = jsonData.title
+        locationDiv.innerHTML = `<span>${city}  >  </span><span>${district}  >  </span><span>${title}</span>`;
 
-// fetch(imgUrl)
-//     .then(response => response.json())
-//     .then(data => {
-//         const imagesContainer = document.getElementById('images-container');
-//         const items = data.response.body.items.item;
-//         items.forEach(item => {
-//             const imgURL = item.originimgurl;
-//             const imgElement = document.createElement('img');
-//             imgElement.src = imgURL;
-//             imagesContainer.appendChild(imgElement);
-//         })
-//     })
-//     .catch(error => {
-//         console.error('There has been a problem with your fetch operation:', error);
-//     });
+        //타이틀이미지
+        const mainImageContainer = document.querySelector('.bg-image');
+        const mainImgUrl = jsonData.firstimage;
+        // imageUrls.push(mainImgUrl);
+        // const mainImgElement1 = document.createElement('img');
+        // mainImgElement1.src = mainImgUrl1;
+        // mainImgElement1.classList.add('main-image');
+        // document.body.appendChild(mainImgElement1);
+    })
 
-// fetch(mainImgUrl)
-//     .then(response => response.json())
-//     .then(data => {
-//         console.log(data);
-//         const mainImageContainer = document.getElementById('main-image');
-//         const item = data.response.body.items.item[0];
-//         const mainImgUrl1 = item.firstimage;
-//         const mainImgUrl2 = item.firstimage2;
-//
-//         const mainImgElement1 = document.createElement('img');
-//         const mainImgElement2 = document.createElement('img');
-//         mainImgElement1.src = mainImgUrl1;
-//         mainImgElement2.src = mainImgUrl2;
-//         mainImageContainer.appendChild(mainImgElement1);
-//         mainImageContainer.appendChild(mainImgElement2);
-//     })
+//주소처리 함수
+function splitAddr(address){
+    let addrParts = address.split(' ');
+    let city = addrParts[0];
+    let district = addrParts[1];
+    return [city, district];
+}
+async function getImage(url){
+    const response = await fetch(url);
+    return await response.json();
+}
+
+fetch(imgUrl)
+    .then(response => response.json())
+    .then(data => {
+        const items = data.response.body.items.item;
+        const additionalImages = items.map(item => item.originimgurl);
+        imageUrls.push(...additionalImages);
+    })
+    .catch(error => {
+        console.log(error);
+    });
