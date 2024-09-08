@@ -87,7 +87,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function checkBoundary() {
-    //div가 하나 덜 출력돼서 div를 실제 여행일정 +1만큼 생성해야함
     const outerRect = slideWrap.getBoundingClientRect();
     const innerRect = innerSlide.getBoundingClientRect();
     const lastSlideItem = slideItems[slideItems.length - 1]; // 마지막 slideItem
