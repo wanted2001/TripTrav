@@ -1,0 +1,122 @@
+.header-nav a{
+    color: black;
+}
+
+.myPageWrap {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
+    max-width: 1440px;
+    margin: 50px auto;
+    padding: 0 40px;
+    font-family: LINESeedKR-Rg;
+
+}
+.topWrap{
+    width: 1440px;
+    height : 400px;
+    /*background-color: #fb763f;*/
+}
+
+.bottomWrap{
+    width: 1440px;
+    height: 1000px;
+}
+
+.profile {
+    position: relative;
+    display: flex;
+    text-align: left;
+    padding-top : 50px;
+    padding-left: 20px;
+}
+
+.profileImg {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 1px solid black;
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+
+.settingProfile{
+    position: absolute;
+    height: 30px;
+    width: 30px;
+    top: 140px;
+    left: 105px;
+}
+
+.userInfoDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 25px;
+}
+
+.userInfoDiv>h2{
+    font-size: 22px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.profileUpdate {
+    margin-top: 15px;
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    background-color: transparent;
+    color: #333;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.myPageList{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+
+}
+
+.myPageList>li{
+    border-bottom: 2px solid #B3B3B3;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 360px;
+    height: 50px;
+}
+
+.myPageList>li:hover{
+    border-bottom: 2px solid black;
+}
+
+.myPageList>li:hover>a {
+    color: black;
+
+}
+
+.myPageList>li>a {
+    color: #B3B3B3;
+}
+
+.resultMyPage{
+    width: 1440px;
+    height: 1000px;
+}
+
+.bottomInfoWrap{
+    margin-top: 10px;
+}
+
+.bottomInfoWrap h1{
+    font-size: 22px;
+    font-weight: 600;
+}
+
+
