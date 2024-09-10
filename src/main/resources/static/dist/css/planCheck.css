@@ -61,7 +61,6 @@
     color: gray;
     border: none;
     font-size: 24px;
-    cursor: pointer;
     position: relative;
     right: -543px;
     top: -414px;
@@ -85,7 +84,6 @@
     color: black;
     border: none;
     font-size: 17px;
-    cursor: pointer;
     position: relative;
     right: 62px;
     top: 29px;
@@ -103,6 +101,52 @@
 }
 .vsm-container{
     border-radius: 8px;
+}
+button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo{
+    cursor: pointer;
+}
+.slideWrap{
+    position: absolute;
+    overflow: hidden;
+    width: 1400px;
+    height: 245px;
+    margin: -95px 252px;
+}
+.innerSlide{
+    position: absolute;
+    display: flex;
+    width: 100%;
+    height: 160px;
+    pointer-events: none;
+    margin-top: 40px;
+}
+.slideItem{
+    background: pink;
+    height: 160px;
+    width: 160px;
+    border-radius: 16px;
+    flex-shrink: 0;
+    margin-right: 36px;
+}
+.dot {
+    width: 30px;
+    height: 30px;
+    background: aliceblue;
+    border-radius: 46px;
+    position: absolute;
+    top: 172px;
+    margin-left: 64px;
+    z-index: 10;
+}
+.selectDot {
+    margin-left: 80px;
+}
+.innerLine {
+    border: 3px dashed pink;
+    position: absolute;
+    z-index: 0;
+    top: 115%;
+    left: 67px;
 }
 .mapOpenBtn button, .mapCloseBtn{
     border: none;
@@ -151,6 +195,10 @@
     opacity: 0;
     transform: translateX(2%);
     transition: opacity 0.5s ease, transform 0.5s ease-in-out;
+    overflow: hidden auto;
+}
+.mapContentBox::-webkit-scrollbar{
+    display: none;
 }
 .mapContentBox.visible {
     transform: translateX(0);
@@ -164,49 +212,76 @@
     opacity: 1;
     pointer-events: auto;
 }
-button{
-    cursor: pointer;
+.contentTitle {
+    width: 90%;
+    height: 50px;
+    background: orange;
+    border-radius: 5px;
+    margin: 10px 9px;
+    font-family: 'LINESeedKR-Rg';
+    text-align: right;
+    line-height: 50px;
+    color: white;
+    font-size: 20px;
+    padding-right: 17px;
 }
-.slideWrap{
-    position: absolute;
-    overflow: hidden;
-    width: 1400px;
-    height: 245px;
-    margin: -95px 252px;
-}
-.innerSlide{
-    position: absolute;
-    display: flex;
-    width: 100%;
-    height: 160px;
-    pointer-events: none;
-    margin-top: 40px;
-}
-.slideItem{
-    background: pink;
-    height: 160px;
-    width: 160px;
-    border-radius: 16px;
-    flex-shrink: 0;
-    margin-right: 36px;
-}
-.dot {
-    width: 30px;
+.editBtn, .saveBtn {
+    width: 50px;
     height: 30px;
+    border: 1px solid orange;
+    border-radius: 4px;
+    text-align: center;
+    line-height: 33px;
+    font-family: 'LINESeedKR-Rg';
+    margin-left: 299px;
+    font-size: 14px;
+}
+.oneContent {
+    width: 342.41px;
+    border-bottom: 1px solid gainsboro;
+    margin: 20px auto;
+    transition: transform 0.2s ease;
+}
+.oneContent.dragging {
+    transform: scale(1.03);
+}
+.name_cate{
+    margin: 7px 0;
+}
+.placeName{
+    font-family: 'LINESeedKR-Rg';
+    font-size: 17px;
+}
+.placeCate{
+    font-family: 'LINESeedKR-Th';
+    font-size: 13px;
+    font-weight: bold;
+}
+.placeImgDiv {
+    display: flex;
+    justify-content: space-between;
+}
+.placeImg {
+    width: 100px;
+    height: 100px;
     background: aliceblue;
-    border-radius: 46px;
-    position: absolute;
-    top: 172px;
-    margin-left: 64px;
-    z-index: 10;
+    margin: 11px 4px;
+    border-radius: 8px;
 }
-.selectDot {
-    margin-left: 80px;
+/*일정편집*/
+.drag {
+    width: 19px;
+    float: right;
+    margin-top: -1px;
+    cursor: pointer;
+    /*border: 1px solid #a8a8a8;*/
+    /*border-radius: 4px;*/
+    /*line-height: 1px;*/
 }
-.innerLine {
-    border: 3px dashed pink;
-    position: absolute;
-    z-index: 0;
-    top: 115%;
-    left: 67px;
+.drag img{
+    width: 100%;
+    opacity: 0.6;
+}
+.hidden{
+    display: none;
 }

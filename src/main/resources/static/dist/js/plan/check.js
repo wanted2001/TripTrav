@@ -26,18 +26,22 @@ let slideItems = document.querySelectorAll('.slideItem');
 let pressed = false;
 let startPoint;
 let x;
-const slideItemWidth = 160;
+const slideItemWidth = 200;
 
 //메모모달
 const modal = document.querySelector('.memoModal');
 const closeModalBtn = document.querySelector('.memoCloseBtn');
 const addMemoBtn = document.querySelector('.addMemoBtn');
 
+//일정편집
+const editBtn = document.querySelector('.editBtn');
+const saveBtn = document.querySelector('.saveBtn');
+
 function updateInnerSlideWidth() {
     //div 개수따라 totalWidth 값 설정되도록
     const totalWidth = slideItems.length * slideItemWidth;
     innerSlide.style.width = `${totalWidth}px`;
-    document.querySelector('.innerLine').style.width=`${totalWidth}px`;
+    document.querySelector('.innerLine').style.width=`${totalWidth - 215}px`;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -83,6 +87,9 @@ document.addEventListener('DOMContentLoaded', () => {
     saveMemoBtn.addEventListener('click',()=>{
         saveMemo();
     })
+
+    //드래그드랍 부분
+
 });
 
 function checkBoundary() {
@@ -95,9 +102,13 @@ function checkBoundary() {
         innerSlide.style.left = '0px';
     }
 
-    if (lastItemRect.right > outerRect.right) {
-        const maxLeft = outerRect.width - innerRect.width;
-        innerSlide.style.left = `${Math.max(maxLeft, parseInt(innerSlide.style.left))}px`;
+    const maxLeft = outerRect.width - innerRect.width;
+
+    if (innerRect.right < outerRect.right) {
+        const minLeft = Math.min(outerRect.width - innerRect.width, 0);
+        if (parseInt(innerSlide.style.left) < minLeft) {
+            innerSlide.style.left = `${minLeft}px`;
+        }
     }
 }
 
@@ -145,3 +156,92 @@ function saveMemo(){
         modal.style.display='none';
     }
 }
+
+//편집
+const container = document.querySelector('body');
+
+container.addEventListener('click', (e) => {
+    const target = e.target;
+    const dragElement = document.querySelectorAll('.drag');
+    const drags = document.querySelectorAll('.oneContent');
+    const container = document.querySelector('.mapContentBox');
+
+    if (target.classList.contains('editBtn')) {
+        // 편집 버튼을 클릭했을 때
+        dragElement.forEach((drag)=>{
+            drag.classList.remove('hidden');
+        })
+        target.innerText = '저장';
+        target.classList.remove('editBtn');
+        target.classList.add('saveBtn');
+
+        // 드래그 가능하게 설정
+            drags.forEach(drag => {
+                drag.setAttribute('draggable', true);
+
+                drag.addEventListener('dragstart', () => {
+                    drag.classList.add('dragging');
+                });
+
+                drag.addEventListener('dragend', () => {
+                    drag.classList.remove('dragging');
+                });
+            });
+
+            // 드래그 후 위치에 따라 삽입할 위치 계산
+            function getDragAfterElement(container, y) {
+                const draggableElements = [...container.querySelectorAll('.oneContent:not(.dragging)')];
+
+                return draggableElements.reduce((closest, child) => {
+                    const box = child.getBoundingClientRect();
+                    const offset = y - box.top - box.height / 3;
+
+                    if (offset < 0 && offset > closest.offset) {
+                        return { offset: offset, element: child };
+                    } else {
+                        return closest;
+                    }
+                }, { offset: Number.NEGATIVE_INFINITY }).element;
+            }
+
+            // 드래그 오버 및 드롭 이벤트 설정
+            container.addEventListener('dragover', (e) => {
+                e.preventDefault(); // 필수: 드래그 오버 시 기본 동작을 막음
+                const afterElement = getDragAfterElement(container, e.clientY);
+                const draggable = document.querySelector('.dragging');
+
+                if (afterElement == null) {
+                    container.appendChild(draggable);
+                } else {
+                    container.insertBefore(draggable, afterElement);
+                }
+            });
+
+            container.addEventListener('drop', (e) => {
+                e.preventDefault(); // 필수: 드롭 시 기본 동작을 막음
+                const draggable = document.querySelector('.dragging');
+                const afterElement = getDragAfterElement(container, e.clientY);
+
+                if (afterElement == null) {
+                    container.appendChild(draggable);
+                } else {
+                    container.insertBefore(draggable, afterElement);
+                }
+            })
+
+
+    } else if (target.classList.contains('saveBtn')) {
+        // 저장 버튼을 클릭했을 때
+        console.log('saveBtn 눌림');
+        dragElement.forEach((drag)=>{
+            drag.classList.add('hidden');
+        })
+        target.classList.remove('saveBtn');
+        target.classList.add('editBtn');
+        target.innerText = '편집';
+        drags.forEach(drag=>{
+            drag.setAttribute('draggable', false);
+        })
+    }
+});
+
