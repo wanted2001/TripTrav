@@ -2,7 +2,7 @@
 CREATE TABLE `user` (
     `uno` BIGINT NOT NULL AUTO_INCREMENT,
     `email` VARCHAR(255) NOT NULL,
-    `pw` VARCHAR(255) NOT NULL,
+    `pw` VARCHAR(255),
     `nickname` VARCHAR(64) NOT NULL,
     `profile` VARCHAR(500),
     `provider` VARCHAR(255),
