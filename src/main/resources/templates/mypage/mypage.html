@@ -7,102 +7,42 @@
 </head>
 <body>
 <th:block th:replace="~{header :: header}"></th:block>
+
 <div class="myPageWrap">
-    <div class="leftWrap">
+    <div class="topWrap">
         <div class="profile">
             <img src="/dist/image/poky.png" alt="프로필 사진" class="profileImg">
-            <h2>사용자 이름</h2>
-            <button class="profileUpdate">내 정보 수정</button>
-        </div>
-        <div class="reviewWrap">
-            <h3>최근 쓴 리뷰</h3>
-            <div class="reviewList">
-                <div class="reviewCard">
-                    <img src="/dist/image/poky.png" alt="리뷰 이미지">
-                    <p>제가 가본 바다 중에 가장 아름다웠어요</p>
-                    <p class="reviewDate">2024.09.01</p>
-                </div>
-                <div class="reviewCard">
-                    <img src="/dist/image/poky.png" alt="리뷰 이미지">
-                    <p>제가 가본 바다 중에 가장 아름다웠어요</p>
-                    <p class="reviewDate">2024.09.01</p>
-                </div>
-                <div class="reviewCard">
-                    <img src="/dist/image/poky.png" alt="리뷰 이미지">
-                    <p>제가 가본 바다 중에 가장 아름다웠어요</p>
-                    <p class="reviewDate">2024.09.01</p>
-                </div>
-                <div class="reviewCard">
-                    <img src="/dist/image/poky.png" alt="리뷰 이미지">
-                    <p>제가 가본 바다 중에 가장 아름다웠어요</p>
-                    <p class="reviewDate">2024.09.01</p>
-                </div>
+            <div class="settingProfile">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-gear-fill" viewBox="0 0 16 16">
+                    <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
+                </svg>
             </div>
-        </div>
-        <div class="wishListWrap">
-            <h3>찜한 목록</h3>
-            <div class="wishList">
-                <div class="wishCard">
-                    <img src="/dist/image/poky.png" alt="리뷰 이미지">
-                    <p>제가 가본 바다 중에 가장 아름다웠어요</p>
-                    <p class="reviewDate">2024.09.01</p>
-                </div>
-                <div class="wishCard">
-                    <img src="/dist/image/poky.png" alt="리뷰 이미지">
-                    <p>제가 가본 바다 중에 가장 아름다웠어요</p>
-                    <p class="reviewDate">2024.09.01</p>
-                </div>
-                <div class="wishCard">
-                    <img src="/dist/image/poky.png" alt="리뷰 이미지">
-                    <p>제가 가본 바다 중에 가장 아름다웠어요</p>
-                    <p class="reviewDate">2024.09.01</p>
-                </div>
-                <div class="wishCard">
-                    <img src="/dist/image/poky.png" alt="리뷰 이미지">
-                    <p>제가 가본 바다 중에 가장 아름다웠어요</p>
-                    <p class="reviewDate">2024.09.01</p>
-                </div>
+            <div class="userInfoDiv">
+                <h2>닉네임</h2>
+                <h2>jimyungsla@naver.com</h2>
             </div>
         </div>
     </div>
-    <div class="rightWrap">
-        <h3>내가 만든 일정</h3>
-        <div class="scheduleWrap">
-            <div class="scheduleCard">
-                <img src="/dist/image/poky.png" alt="일정 이미지">
-                <div class="scheduleInfo">
-                    <h4>여행 이름</h4>
-                    <p>일자: 2024.09.01 - 2024.09.03</p>
-                    <button class="detailBtn">자세히 보기</button>
-                </div>
-            </div>
-            <div class="scheduleCard">
-                <img src="/dist/image/poky.png" alt="일정 이미지">
-                <div class="scheduleInfo">
-                    <h4>여행 이름</h4>
-                    <p>일자: 2024.09.01 - 2024.09.03</p>
-                    <button class="detailBtn">자세히 보기</button>
-                </div>
-            </div>
-            <div class="scheduleCard">
-                <img src="/dist/image/poky.png" alt="일정 이미지">
-                <div class="scheduleInfo">
-                    <h4>여행 이름</h4>
-                    <p>일자: 2024.09.01 - 2024.09.03</p>
-                    <button class="detailBtn">자세히 보기</button>
-                </div>
-            </div>
-            <div class="scheduleCard">
-                <img src="/dist/image/poky.png" alt="일정 이미지">
-                <div class="scheduleInfo">
-                    <h4>여행 이름</h4>
-                    <p>일자: 2024.09.01 - 2024.09.03</p>
-                    <button class="detailBtn">자세히 보기</button>
-                </div>
-            </div>
+    <div class="bottomWrap">
+        <ul class="myPageList">
+            <li>
+                <a id="tripList">네 여행 일정</a>
+            </li>
+            <li>
+                <a id="tripReview">내가 쓴 리뷰</a>
+            </li>
+            <li>
+                <a id="wishPlace">찜한 장소</a>
+            </li>
+            <li>
+                <a id="wishTrip">찜한 여행 일정</a>
+            </li>
+        </ul>
+        <div id="resultMyPage">
+
         </div>
     </div>
 </div>
-
+<script type="text/javascript" src="/dist/js/mypage/mypageDetail.js"></script>
 </body>
 </html>
