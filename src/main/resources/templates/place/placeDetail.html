@@ -9,12 +9,19 @@
 <body>
 <th:block th:replace="~{header :: header}"></th:block>
 <main>
-    <div class="bg-image">
+    <section class="titleSection">
         <div class="location">
         </div>
-        <div class="main-image"></div>
-    </div>
-
+        <div class="carousel-container">
+            <button class="prev" onclick="prevImage()">&#10094;</button>
+            <div class="carousel">
+                <div class="carousel-item"></div>
+                <div class="carousel-item"></div>
+                <div class="carousel-item"></div>
+            </div>
+            <button class="next" onclick="nextImage()">&#10095;</button>
+        </div>
+    </section>
     <section class="infoSection">
         <div class="firstLine">
             <span class="title">이름</span>
@@ -95,19 +102,19 @@
         <p>근처 맛집</p>
         <div class="food">
             <div class="locations">
-                <img src="location1.jpg" alt="Location 1">
+                <img src="" alt="Location 1">
                 <p>음식점 이름 1</p>
             </div>
             <div class="locations">
-                <img src="location2.jpg" alt="Location 2">
+                <img src="" alt="Location 2">
                 <p>음식점 이름 2</p>
             </div>
             <div class="locations">
-                <img src="location3.jpg" alt="Location 3">
+                <img src="" alt="Location 3">
                 <p>음식점 이름 3</p>
             </div>
             <div class="locations">
-                <img src="location4.jpg" alt="Location 4">
+                <img src="" alt="Location 4">
                 <p>음식점 이름 4</p>
             </div>
         </div>

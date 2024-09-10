@@ -2,6 +2,9 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="header">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>title</title>
     <link rel="stylesheet" th:href="@{/dist/css/reset.css}">
     <style>
         .header-nav{
@@ -29,12 +32,6 @@
         a{
             color: white;
         }
-        .after::after{
-            content: "/";
-            color: white;
-            margin: 0 10px 0 8px;
-        }
-
     </style>
 </head>
 <body>
@@ -53,7 +50,7 @@
         </div>
         <div class="rightBox">
             <ul class="rightUl">
-                <li class="after"><a id="openModal">Login / Join</a></li>
+                <li><a id="openModal"> Login / Join </a></li>
             </ul>
         </div>
     </nav>
