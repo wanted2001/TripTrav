@@ -24,6 +24,77 @@
     font-family: 'LINESeedKR-Rg';
     margin-top: 21px;
 }
+.addMemoBtn {
+    position: absolute;
+    right: 325px;
+    top: 129px;
+    height: 12px;
+    border: 1px solid orange;
+    border-radius: 16px;
+    padding: 10px 15px;
+    text-align: center;
+    line-height: 16px;
+    font-family: 'LINESeedKR-Rg';
+    font-size: 14px;
+}
+.addMemoBtn:hover {
+    cursor: pointer;
+    background: #ffffff2e;
+}
+.memoModal {
+    display: none;
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.34);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+.memoWrap {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.memoCloseBtn {
+    color: gray;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    position: relative;
+    right: -543px;
+    top: -414px;
+    background: #ffffff00;
+}
+.memoContents {
+    resize: none;
+    border: none;
+    outline: none;
+    width: 500px;
+    height: 400px;
+    padding: 20px;
+    font-family: 'LINESeedKR-Rg';
+    font-size: 16px;
+    border-radius: 6px;
+}
+.memoContents::-webkit-scrollbar{
+    display: none;
+}
+.saveMemo {
+    color: black;
+    border: none;
+    font-size: 17px;
+    cursor: pointer;
+    position: relative;
+    right: 62px;
+    top: 29px;
+    font-family: 'LINESeedKR-Rg';
+    border-radius: 6px;
+    background: gainsboro;
+    padding: 6px 13px;
+}
+
 #checkMap{
     margin: 305px auto 0;
 }
@@ -100,16 +171,16 @@ button{
     position: absolute;
     overflow: hidden;
     width: 1400px;
-    height: 200px;
-    margin: -95px 253px;
+    height: 245px;
+    margin: -95px 252px;
 }
 .innerSlide{
     position: absolute;
     display: flex;
     width: 100%;
-    height: 180px;
+    height: 160px;
     pointer-events: none;
-    margin-top: 20px;
+    margin-top: 40px;
 }
 .slideItem{
     background: pink;
@@ -118,4 +189,24 @@ button{
     border-radius: 16px;
     flex-shrink: 0;
     margin-right: 36px;
+}
+.dot {
+    width: 30px;
+    height: 30px;
+    background: aliceblue;
+    border-radius: 46px;
+    position: absolute;
+    top: 172px;
+    margin-left: 64px;
+    z-index: 10;
+}
+.selectDot {
+    margin-left: 80px;
+}
+.innerLine {
+    border: 3px dashed pink;
+    position: absolute;
+    z-index: 0;
+    top: 115%;
+    left: 67px;
 }

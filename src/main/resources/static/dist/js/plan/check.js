@@ -28,14 +28,22 @@ let startPoint;
 let x;
 const slideItemWidth = 160;
 
+//메모모달
+const modal = document.querySelector('.memoModal');
+const closeModalBtn = document.querySelector('.memoCloseBtn');
+const addMemoBtn = document.querySelector('.addMemoBtn');
+
 function updateInnerSlideWidth() {
     //div 개수따라 totalWidth 값 설정되도록
     const totalWidth = slideItems.length * slideItemWidth;
     innerSlide.style.width = `${totalWidth}px`;
+    document.querySelector('.innerLine').style.width=`${totalWidth}px`;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    //드래그 슬라이드 부분
     updateInnerSlideWidth();
+    makeDot();
 
     slideWrap.addEventListener('mousedown', e => {
         pressed = true;
@@ -50,7 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
         innerSlide.style.left = `${x - startPoint}px`;
 
         checkBoundary();
-
         checkSelectedItem();
     });
 
@@ -62,6 +69,20 @@ document.addEventListener('DOMContentLoaded', () => {
     slideWrap.addEventListener('mouseleave', () => {
         pressed = false;
     });
+
+    //메모작성부분
+    addMemoBtn.addEventListener('click', () => {
+        modal.style.display = 'flex';
+    });
+    closeModalBtn.addEventListener('click',()=>{
+        modal.style.display='none';
+    })
+
+    //메모저장부분
+    const saveMemoBtn = document.querySelector('.saveMemo');
+    saveMemoBtn.addEventListener('click',()=>{
+        saveMemo();
+    })
 });
 
 function checkBoundary() {
@@ -90,12 +111,37 @@ function checkSelectedItem() {
         const distance = Math.abs(center - itemCenter);
 
         if (distance < expandRange) {
-            item.style.transform = 'scale(1.25)';
+            item.style.width = '195px';
+            item.style.height = '195px';
+            item.style.marginTop='-35px';
             item.style.background='gold';
 
+            const dot = item.querySelector('.dot');
+            if(dot){ dot.classList.add('selectDot'); }
         } else {
-            item.style.transform = 'scale(1)';
+            item.style.width = '160px';
+            item.style.height = '160px';
+            item.style.marginTop='0px';
             item.style.background='pink';
+
+            const dot = item.querySelector('.dot');
+            if(dot){ dot.classList.remove('selectDot'); }
         }
     });
+}
+
+function makeDot(){
+    slideItems.forEach(item=>{
+        const dot = document.createElement('div');
+        dot.classList.add('dot');
+        item.appendChild(dot);
+    })
+}
+
+//메모저장
+function saveMemo(){
+    if(confirm('메모를 저장하시겠습니까?')) {
+        console.log("메모저장")
+        modal.style.display='none';
+    }
 }
