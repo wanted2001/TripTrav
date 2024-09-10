@@ -1,9 +1,6 @@
 package com.www.triptrav.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,6 +8,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class UserVO {
     private String email;
     private String nickname;
@@ -19,4 +17,5 @@ public class UserVO {
     private String provider;
     private String providerId;
     private List<AuthVO> authList;
+
 }
