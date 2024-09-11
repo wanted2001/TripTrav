@@ -43,9 +43,10 @@ fetch(detailInfoUrl)
             document.querySelector('.priceInfo').innerHTML = `${additionalInfoData.infoname} : ${additionalInfoData.infotext}`
         })
         document.querySelector('.homepageInfo').innerHTML = `홈페이지 : ${jsonData.homepage}`
-
-
-        document.querySelector('.detailsInfo').innerText = `${jsonData.overview}`;
+        document.querySelector('.details').innerHTML = `<p>소개</p><span>${jsonData.overview}</span>`;
+        console.log(jsonData.mapy,jsonData.mapx)
+        initTmap(jsonData.mapy,jsonData.mapx,title)
+        // document.querySelector('.vsm-marker').style.transform = "translate(700px, 250px)"
 
     });
 
@@ -70,72 +71,6 @@ async function getImage(url) {
     }
 }
 
-// 캐러셀 업데이트 함수
-function updateCarousel() {
-    const carouselItems = document.querySelectorAll('.carousel-item');
-    for (let i = 0; i < 3; i++) {
-        let imgIndex = (currentIndex + i) % imageUrls.length;
-        const imgElement = document.createElement('img');
-        imgElement.src = imageUrls[imgIndex];
-        carouselItems[i].innerHTML = '';
-        carouselItems[i].appendChild(imgElement);
-    }
-    updateScale();
-}
-
-// 이미지 크기 조정 함수
-function updateScale() {
-    const carouselItems = document.querySelectorAll('.carousel-item');
-    carouselItems.forEach((item, index) => {
-        if (index === 0) {
-            item.style.transform = 'scale(1.2)';
-            item.style.zIndex = '3';
-        } else if (index === 1 || index === 2) {
-            item.style.transform = 'scale(0.9)';
-            item.style.zIndex = '2';
-        }
-    });
-}
-
-// 다음 이미지로 이동
-function nextImage() {
-    currentIndex = (currentIndex + 1) % imageUrls.length;
-    updateCarousel();
-}
-
-// 이전 이미지로 이동
-function prevImage() {
-    currentIndex = (currentIndex - 1 + imageUrls.length) % imageUrls.length;
-    updateCarousel();
-}
-
-// 자동 슬라이드 기능
-function startAutoSlide() {
-    slideInterval = setInterval(() => {
-        nextImage();
-    }, 5000); // 5초마다 이미지 전환
-}
-
-// 자동 슬라이드를 멈추고 다시 시작하는 기능
-function restartAutoSlide() {
-    clearInterval(slideInterval);
-    startAutoSlide();
-}
-
-// 버튼을 통해 슬라이드를 조작할 때 자동 슬라이드를 멈췄다가 다시 시작
-document.querySelector('.next').addEventListener('click', () => {
-    nextImage();
-    restartAutoSlide();
-});
-
-document.querySelector('.prev').addEventListener('click', () => {
-    prevImage();
-    restartAutoSlide();
-});
-
-// 페이지 로드 시 자동 슬라이드 시작
-startAutoSlide();
-
 //인트로정보 조회 함수
 async function getIntroInfo(contentTypeId) {
     try {
@@ -157,4 +92,18 @@ async function getAdditionalInfo(contentTypeId) {
     }catch (error){
         console.log(error)
     }
+}
+//지도 함수
+function initTmap(mapx,mapy,title){
+    let map = new Tmapv3.Map("map",
+        {
+            center: new Tmapv3.LatLng(mapx,mapy),
+            width: "1400px",
+            height: "400px",
+            zoom: 14
+        });
+    let marker = new Tmapv3.Marker({
+        position: new Tmapv3.LatLng(mapx, mapy),
+        map: map,
+    });
 }
