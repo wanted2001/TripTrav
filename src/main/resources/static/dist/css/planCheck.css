@@ -236,14 +236,18 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo{
     margin-left: 299px;
     font-size: 14px;
 }
+.mapContentBox:nth-child(1){
+    background: pink;
+}
 .oneContent {
-    width: 342.41px;
+    width: 340px;
     border-bottom: 1px solid gainsboro;
-    margin: 20px auto;
     transition: transform 0.2s ease;
+    padding: 12px 11px 3px;
 }
 .oneContent.dragging {
     transform: scale(1.03);
+    background: rgba(235, 235, 235, 0.8);;
 }
 .name_cate{
     margin: 7px 0;
@@ -282,6 +286,12 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo{
     width: 100%;
     opacity: 0.6;
 }
+.dragging{
+    cursor: grabbing;
+    position: relative;
+    z-index: 5000;
+}
+
 .hidden{
     display: none;
 }
