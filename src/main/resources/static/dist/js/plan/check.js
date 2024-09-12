@@ -158,90 +158,144 @@ function saveMemo(){
 }
 
 //편집
-const container = document.querySelector('body');
+let draggingElement = null;
+let draggingIndex = null;
+let startY = 0;
+const container = document.querySelector('.mapContentBox');
 
 container.addEventListener('click', (e) => {
     const target = e.target;
-    const dragElement = document.querySelectorAll('.drag');
-    const drags = document.querySelectorAll('.oneContent');
-    const container = document.querySelector('.mapContentBox');
+    const dragElements = document.querySelectorAll('.drag');
+    //oneContent 배열로 변환
+    const oneContents = Array.from(container.querySelectorAll('.oneContent'));
 
     if (target.classList.contains('editBtn')) {
-        // 편집 버튼을 클릭했을 때
-        dragElement.forEach((drag)=>{
+        dragElements.forEach((drag) => {
             drag.classList.remove('hidden');
-        })
+            drag.setAttribute('draggable', true);
+
+            // 드래그 시작
+            drag.addEventListener('dragstart', (event) => {
+                draggingElement = event.target.closest('.oneContent');
+                draggingIndex = oneContents.indexOf(draggingElement);
+                startY = event.clientY;
+                draggingElement.classList.add('dragging');
+                draggingElement.style.transition = 'none'; // 드래그 중에는 transition 제거
+            });
+
+            // 드래그 종료
+            drag.addEventListener('dragend', () => {
+                draggingElement.classList.remove('dragging');
+                draggingElement.style.transition = 'transform 0.3s ease'; // 드래그 종료 후 애니메이션 추가
+                draggingElement.style.transform = 'none';
+
+                // 모든 요소 transform 초기화
+                oneContents.forEach(content => content.style.transform = 'none');
+                draggingElement = null;
+            });
+        });
+
         target.innerText = '저장';
         target.classList.remove('editBtn');
         target.classList.add('saveBtn');
 
-        // 드래그 가능하게 설정
-            drags.forEach(drag => {
-                drag.setAttribute('draggable', true);
+        // 드래그 중 위치 업데이트
+        container.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            if (!draggingElement) return;
 
-                drag.addEventListener('dragstart', () => {
-                    drag.classList.add('dragging');
-                });
+            const deltaY = e.clientY - startY;
 
-                drag.addEventListener('dragend', () => {
-                    drag.classList.remove('dragging');
-                });
-            });
+            // 드래그 중인 요소 이동
+            draggingElement.style.transform = `translateY(${deltaY}px)`;
 
-            // 드래그 후 위치에 따라 삽입할 위치 계산
-            function getDragAfterElement(container, y) {
-                const draggableElements = [...container.querySelectorAll('.oneContent:not(.dragging)')];
+            // 다른 요소들의 위치 업데이트
+            oneContents.forEach((content, index) => {
+                if (content !== draggingElement) {
+                    const box = content.getBoundingClientRect();
+                    const oneThirdPoint = box.top + (box.height / 2);
 
-                return draggableElements.reduce((closest, child) => {
-                    const box = child.getBoundingClientRect();
-                    const offset = y - box.top - box.height / 3;
-
-                    if (offset < 0 && offset > closest.offset) {
-                        return { offset: offset, element: child };
-                    } else {
-                        return closest;
+                    // 드래그된 요소가 아래로 내려갈 때
+                    if (e.clientY > oneThirdPoint && index > draggingIndex) {
+                        content.style.transition = 'transform 0.3s ease';
+                        content.style.transform = `translateY(-${draggingElement.offsetHeight}px)`
                     }
-                }, { offset: Number.NEGATIVE_INFINITY }).element;
+                    // 드래그된 요소가 위로 올라갈 때
+                    else if (e.clientY < oneThirdPoint && index < draggingIndex) {
+                        content.style.transition = 'transform 0.3s ease';
+                        content.style.transform = `translateY(${draggingElement.offsetHeight}px)`;
+                    } else {
+                        content.style.transform = 'none';
+                    }
+                }
+            });
+        });
+
+        // 드래그 종료 후 위치 고정
+        container.addEventListener('drop', (e) => {
+            e.preventDefault();
+            if (!draggingElement) return;
+
+            const overElement = getDragAfterElement(container, e.clientY);
+
+            if (overElement && container.contains(overElement)) {
+                if (oneContents.indexOf(draggingElement) < oneContents.indexOf(overElement)) {
+                    container.insertBefore(draggingElement, overElement.nextElementSibling);
+                } else {
+                    container.insertBefore(draggingElement, overElement);
+                }
+            } else {
+                container.appendChild(draggingElement);
             }
 
-            // 드래그 오버 및 드롭 이벤트 설정
-            container.addEventListener('dragover', (e) => {
-                e.preventDefault(); // 필수: 드래그 오버 시 기본 동작을 막음
-                const afterElement = getDragAfterElement(container, e.clientY);
-                const draggable = document.querySelector('.dragging');
-
-                if (afterElement == null) {
-                    container.appendChild(draggable);
-                } else {
-                    container.insertBefore(draggable, afterElement);
-                }
+            // 모든 요소 transform 및 순서 초기화
+            oneContents.forEach(content => {
+                content.style.transition = 'none'; // 애니메이션을 종료한 후 transition 제거
+                content.style.transform = 'none'; // 위치 초기화
             });
+            updateOneContentsOrder();
+        });
 
-            container.addEventListener('drop', (e) => {
-                e.preventDefault(); // 필수: 드롭 시 기본 동작을 막음
-                const draggable = document.querySelector('.dragging');
-                const afterElement = getDragAfterElement(container, e.clientY);
+        // 위치 계산 함수
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.oneContent:not(.dragging)')];
 
-                if (afterElement == null) {
-                    container.appendChild(draggable);
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
                 } else {
-                    container.insertBefore(draggable, afterElement);
+                    return closest;
                 }
-            })
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
 
-
+        // DOM 순서 업데이트 함수
+        function updateOneContentsOrder() {
+            oneContents.length = 0;
+            container.querySelectorAll('.oneContent').forEach(content => {
+                oneContents.push(content); // 실제 DOM 순서에 맞게 배열 업데이트
+            });
+        }
     } else if (target.classList.contains('saveBtn')) {
         // 저장 버튼을 클릭했을 때
-        console.log('saveBtn 눌림');
-        dragElement.forEach((drag)=>{
+        dragElements.forEach((drag)=>{
             drag.classList.add('hidden');
         })
         target.classList.remove('saveBtn');
         target.classList.add('editBtn');
         target.innerText = '편집';
-        drags.forEach(drag=>{
+        oneContents.forEach(drag=>{
             drag.setAttribute('draggable', false);
         })
     }
 });
+
+//고민점
+//왔다갔다 애니메이션이 자연스럽지 않다.
+//올라갈때 내려갈 div의 위치가 제대로 잡히지않는게 문제인듯?
+//올라가든 내려가든 div의 높이를 파악해서 해당 높이가 넘어가면
+//옮김당하는 div의 위치가 바로바로 바뀔수있도록 만들어야할듯
 
