@@ -7,4 +7,11 @@
     <insert id="insertAuth">
         insert into auth values (#{email},'ROLE_USER')
     </insert>
+    <insert id="insertSocialUser">
+        insert into user(email,pw,nickname, profile, provider,provider_id)
+        values (#{email},#{pw},#{nickname},#{profile}, #{provider},#{providerId})
+    </insert>
+    <select id="searchUser" resultType="com.www.triptrav.domain.UserVO">
+        select * from user where provider_id=#{providerId}
+    </select>
 </mapper>
