@@ -1,8 +1,10 @@
 const bottom = document.getElementById("resultMyPage");
+const js = "/dist/js/mypage";
 const tripList = "/tripList";
 const tripReview = "/tripReview";
 const wishPlace = "/wishPlace";
 const wishTrip = "/wishTrip";
+
 
 document.querySelectorAll('#tripList,#tripReview,#wishPlace,#wishTrip').forEach(button=>{
     button.addEventListener('click',(e)=>{
@@ -11,16 +13,16 @@ document.querySelectorAll('#tripList,#tripReview,#wishPlace,#wishTrip').forEach(
         bottom.innerHTML= "";
         switch (id) {
             case 'tripList':
-                pageCall(tripList,bottom);
+                pageCall(tripList);
                 break;
             case 'tripReview':
-                pageCall(tripReview,bottom);
+                pageCall(tripReview);
                 break;
             case 'wishPlace':
-                pageCall(wishPlace,bottom);
+                pageCall(wishPlace);
                 break;
             case 'wishTrip':
-                pageCall(wishTrip,bottom);
+                pageCall(wishTrip);
                 break;
 
         }
@@ -40,6 +42,7 @@ function pageCall(page) {
         })
         .then(data => {
             bottom.innerHTML = data;
+            loadScript(page);
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
@@ -47,10 +50,38 @@ function pageCall(page) {
 }
 
 function loadScript(page){
-    const scripts = document.getElementsByName("script");
-    for(let i = 0; i<scripts.length; i++){
-
+    const src = js+page+'.js';
+    removeAllScript(src);
+    if(!isScriptAlreadyIncluded(src)){
+        const script = document.createElement('script');
+        script.src = src;
+        document.body.appendChild(script);
     }
+}
+// src를 keep 할것인지 추후 결정 예정...
+function removeAllScript(){
+    const toKeep =['/dist/js/header.js','/dist/js/loginJoin.js',js+'/mypageDetail.js'];
+    const scripts = document.getElementsByTagName('script');
+    for(let i = 0; i<scripts.length; i++) {
+        let isToKeep = false;
+        for (let j = 0; j < toKeep.length; j++) {
+            if(scripts[i].src.includes(toKeep[j])){
+                isToKeep = true;
+            }
+        }
+        if(!isToKeep){
+            document.body.removeChild(scripts[i]);
+        }
+    }
+}
 
+function isScriptAlreadyIncluded(src) {
+    const scripts = document.getElementsByTagName('script');
+    for (let i = 0; i < scripts.length; i++) {
+        if (scripts[i].src.includes(src)) {
+            return true;
+        }
+    }
+    return false;
 }
 
