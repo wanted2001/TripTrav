@@ -1,11 +1,16 @@
 const contentId = "126676";
 const imgUrl = `https://apis.data.go.kr/B551011/KorService1/detailImage1?MobileOS=ETC&MobileApp=TripTrav&_type=json&subImageYN=Y&contentId=${contentId}&serviceKey=${tourAPIKEY}`;
 const detailInfoUrl = `https://apis.data.go.kr/B551011/KorService1/detailCommon1?MobileOS=ETC&MobileApp=TripTrav&contentId=${contentId}&defaultYN=Y&firstImageYN=Y&areacodeYN=Y&catcodeYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&serviceKey=${tourAPIKEY}&_type=json`;
+const foodContainer = document.querySelector('.food');
+const attractionsContainer = document.querySelector('.attractions');
+
 
 let contentTypeId = 0;
 let imageUrls = [];
 let currentIndex = 0;
 let slideInterval;
+let mapx = 0;
+let mapy = 0;
 
 // 기본정보 가져오기
 fetch(detailInfoUrl)
@@ -44,9 +49,17 @@ fetch(detailInfoUrl)
         })
         document.querySelector('.homepageInfo').innerHTML = `홈페이지 : ${jsonData.homepage}`
         document.querySelector('.details').innerHTML = `<p>소개</p><span>${jsonData.overview}</span>`;
-        console.log(jsonData.mapy,jsonData.mapx)
-        initTmap(jsonData.mapy,jsonData.mapx,title)
-        // document.querySelector('.vsm-marker').style.transform = "translate(700px, 250px)"
+        // initTmap(jsonData.mapy,jsonData.mapx)
+        console.log(jsonData.mapx, jsonData.mapy)
+        mapx = jsonData.mapx;
+        mapy = jsonData.mapy;
+        //주변정보
+        processNearbySightsAndFood(mapx, mapy).then(result => {
+            renderNearbySightsAndFood(result.sights, result.food);
+        }).catch(error => {
+            console.log(error)
+        });
+
 
     });
 
@@ -93,8 +106,117 @@ async function getAdditionalInfo(contentTypeId) {
         console.log(error)
     }
 }
+
+//주변 관광지 조회 함수
+async function getNearBySights(mapx, mapy, radius) {
+    try {
+        const url = `https://apis.data.go.kr/B551011/KorService1/locationBasedList1?MobileOS=ETC&MobileApp=TripTrav&_type=json&arrange=O&mapX=${mapx}&mapY=${mapy}&radius=${radius}&contentTypeId=12&serviceKey=${tourAPIKEY}`;
+        const response = await fetch(url);
+        const result = await response.json();
+        return result.response.body.items.item;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+//주변 음식점 조회 함수
+async function getNearByFoodInfo(mapx, mapy, radius){
+    try {
+        const url = `https://apis.data.go.kr/B551011/KorService1/locationBasedList1?MobileOS=ETC&MobileApp=TripTrav&_type=json&arrange=O&mapX=${mapx}&mapY=${mapy}&radius=${radius}&contentTypeId=39&serviceKey=${tourAPIKEY}`
+        const response = await fetch(url);
+        const result = await response.json()
+        return result.response.body.items.item;
+    }catch (error){
+        console.log(error);
+    }
+}
+
+// 주변 관광지와 음식점 조회 후 조건 처리 함수
+async function processNearbySightsAndFood(mapx, mapy) {
+    let range = 1000;
+    async function fetchAndProcess() {
+        const [sightsArray = [], foodArray = []] = await Promise.all([
+            getNearBySights(mapx, mapy, range).catch(() => []),
+            getNearByFoodInfo(mapx, mapy, range).catch(() => [])
+        ]);
+        const filteredSights = (sightsArray || []).filter(sight => sight.firstimage);
+        const filteredFood = (foodArray || []).filter(food => food.firstimage);
+        if (filteredSights.length < 5 || filteredFood.length < 5) {
+            range += 1000;
+            return fetchAndProcess();
+        }
+        filteredSights.sort((a, b) => a.dist - b.dist);
+        filteredFood.sort((a, b) => a.dist - b.dist);
+
+        const topSights = filteredSights.slice(1, 5);
+        const topFood = filteredFood.slice(1, 5);
+        return {
+            sights: topSights,
+            food: topFood
+        };
+    }
+    return fetchAndProcess();
+}
+
+function renderNearbySightsAndFood(sights, food) {
+    foodContainer.innerHTML = '';
+    attractionsContainer.innerHTML = '';
+
+    food.forEach(item => {
+        const foodDiv = document.createElement('div');
+        foodDiv.classList.add('locations');
+        const img = document.createElement('img');
+        img.src = item.firstimage;
+        img.alt = item.title;
+        foodDiv.appendChild(img);
+        const infoDiv = document.createElement('div');
+        infoDiv.classList.add('info');
+        const titleP = document.createElement('p');
+        titleP.classList.add('title');
+        titleP.textContent = item.title;
+        const distP = document.createElement('p');
+        distP.classList.add('distance');
+        distP.textContent = convertDistance(item.dist);
+        infoDiv.appendChild(titleP);
+        infoDiv.appendChild(distP);
+        foodDiv.appendChild(infoDiv);
+        foodContainer.appendChild(foodDiv);
+    });
+
+    sights.forEach(item => {
+        const sightDiv = document.createElement('div');
+        sightDiv.classList.add('locations');
+        const img = document.createElement('img');
+        img.src = item.firstimage;
+        img.alt = item.title;
+        sightDiv.appendChild(img);
+        const infoDiv = document.createElement('div');
+        infoDiv.classList.add('info');
+        const titleP = document.createElement('p');
+        titleP.classList.add('title');
+        titleP.textContent = item.title;
+        const distP = document.createElement('p');
+        distP.classList.add('distance');
+        distP.textContent = convertDistance(item.dist);
+        infoDiv.appendChild(titleP);
+        infoDiv.appendChild(distP);
+        sightDiv.appendChild(infoDiv);
+        attractionsContainer.appendChild(sightDiv);
+    });
+}
+//거리 변환 함수
+function convertDistance(dist) {
+    let number = parseFloat(dist);
+    let integerNumber = Math.floor(number);
+    let kilometers = integerNumber / 1000;
+    if (kilometers < 1) {
+        return integerNumber + ' m';
+    } else {
+        return kilometers.toFixed(0) + ' km';
+    }
+}
 //지도 함수
-function initTmap(mapx,mapy,title){
+function initTmap(mapx,mapy){
     let map = new Tmapv3.Map("map",
         {
             center: new Tmapv3.LatLng(mapx,mapy),
