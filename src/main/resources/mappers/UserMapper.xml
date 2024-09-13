@@ -14,4 +14,10 @@
     <select id="searchUser" resultType="com.www.triptrav.domain.UserVO">
         select * from user where provider_id=#{providerId}
     </select>
+    <select id="checkEmail">
+        select * from user where email=#{email}
+    </select>
+    <select id="selectAuth" resultType="com.www.triptrav.domain.UserVO">
+        select * from auth as a join user as u on u.email=a.email where a.email=#{email}
+    </select>
 </mapper>
