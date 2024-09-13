@@ -48,7 +48,6 @@ fetch(detailInfoUrl)
         })
         document.querySelector('.homepageInfo').innerHTML = `홈페이지 : ${jsonData.homepage}`
         document.querySelector('.details').innerHTML = `<p>소개</p><span>${jsonData.overview}</span>`;
-        // initTmap(jsonData.mapy,jsonData.mapx)
         mapx = jsonData.mapx;
         mapy = jsonData.mapy;
         //주변정보
@@ -211,48 +210,79 @@ function convertDistance(dist) {
         return kilometers.toFixed(0) + ' km';
     }
 }
-//지도 함수
-function initTmap(mapx,mapy){
-    let map = new Tmapv3.Map("map",
-        {
-            center: new Tmapv3.LatLng(mapx,mapy),
-            width: "1400px",
-            height: "400px",
-            zoom: 14
-        });
-    let marker = new Tmapv3.Marker({
-        position: new Tmapv3.LatLng(mapx, mapy),
-        map: map,
-    });
-}
-//현재 사용자 위치 Geolocation API
-function getCurrentLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            function(position) {
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude;
-                console.log("위도: " + latitude + ", 경도: " + longitude);
-            },
-            function(error) {
-                switch(error.code) {
-                    case error.PERMISSION_DENIED:
-                        console.error("위치 정보 접근이 거부되었습니다.");
-                        break;
-                    case error.POSITION_UNAVAILABLE:
-                        console.error("위치 정보를 사용할 수 없습니다.");
-                        break;
-                    case error.TIMEOUT:
-                        console.error("위치 정보 요청이 시간 초과되었습니다.");
-                        break;
-                    case error.UNKNOWN_ERROR:
-                        console.error("알 수 없는 오류가 발생했습니다.");
-                        break;
-                }
-            }
-        );
-    } else {
-        console.error("Geolocation API를 지원하지 않는 브라우저입니다.");
-    }
-}
-window.onload = getCurrentLocation;
+// //현재 사용자 위치 Geolocation API
+// var map, marker;
+// function geoLocationTmap(){
+//     map = new Tmapv2.Map("map_div", {
+//         center : new Tmapv2.LatLng(37.56520450, 126.98702028),
+//         width : "100%",
+//         height : "600px",
+//         zoom : 15
+//     });
+//     if (navigator.geolocation) {
+//         navigator.geolocation.getCurrentPosition(
+//             function(position) {
+//                 var lat = position.coords.latitude;
+//                 var lon = position.coords.longitude;
+//
+//                 marker = new Tmapv2.Marker({
+//                     position : new Tmapv2.LatLng(lat,lon),
+//                     draggable: true,
+//                     map : map
+//                 });
+//                 //마커의 움직임이 끝날때 이벤트 등록
+//                 marker.addListener("dragend", function (evt) {
+//                     const latitude = evt.latLng.lat();
+//                     const longitude = evt.latLng.lng();
+//                     getRP(latitude, longitude, mapx, mapy);
+//                 });
+//
+//                 map.setCenter(new Tmapv2.LatLng(lat,lon));
+//                 map.setZoom(15);
+//             });
+//
+//     }
+// }
+// //경로안내 요청 함수
+// function getRP(latitude, longitude, mapx, mapy) {
+//     var s_latlng = new Tmapv2.LatLng (latitude, longitude);
+//     var e_latlng = new Tmapv2.LatLng (mapy, mapx);
+//     var optionObj = {
+//         reqCoordType:"WGS84GEO",
+//         resCoordType:"WGS84GEO",
+//         trafficInfo:"Y"
+//     };
+//     var params = {
+//         onComplete:onComplete,
+//         onProgress:onProgress,
+//         onError:onError
+//     };
+//     var tData = new Tmapv2.extension.TData();
+//     tData.getRoutePlanJson(s_latlng, e_latlng, optionObj, params);
+// }
+//
+// //경로안내
+// function onComplete() {
+//     var jsonObject = new Tmapv2.extension.GeoJSON();
+//     var jsonForm = jsonObject.rpTrafficRead(this._responseData);
+//     var trafficColors = {
+//
+//         trafficDefaultColor:"#000000", //교통 정보가 없을 때
+//         trafficType1Color:"#009900", //원할
+//         trafficType2Color:"#7A8E0A", //서행
+//         trafficType3Color:"#8E8111",  //정체
+//         trafficType4Color:"#FF0000"  //정체
+//     };
+//     jsonObject.drawRouteByTraffic(map, jsonForm, trafficColors);
+//     map.setCenter(new Tmapv2.LatLng(latitude,longitude));
+//     map.setZoom(14);
+// }
+//
+// //데이터 로드중 실행하는 함수
+// function onProgress(){}
+// //데이터 로드 중 에러가 발생시 실행하는 함수
+// function onError(){
+//     alert("onError");
+// }
+//
+// // window.onload = geoLocationTmap();

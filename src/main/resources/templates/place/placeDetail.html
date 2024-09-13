@@ -5,12 +5,8 @@
     <title>상세페이지</title>
     <link rel="stylesheet" href="/dist/css/place/placeDetail.css">
     <script src="/dist/js/key.js"></script>
-    <script src="https://toptmaptile2.tmap.co.kr/scriptSDKV3/tmapjs3.min.js?version=20231206"></script>
-    <script type="text/javascript">
-        const script = document.createElement('script');
-        script.src = `https://apis.openapi.sk.com/tmap/vectorjs?version=1&appKey=${tMapAPIKEY}`;
-        document.head.appendChild(script);
-    </script>
+    <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+
 </head>
 <body>
 <th:block th:replace="~{header :: header}"></th:block>
@@ -87,14 +83,7 @@
     <section class="transportation">
         <p>찾아가는 길</p>
         <div class="public-transportation">
-            <p>대중교통</p>
-            <span>1. ~~~</span><br>
-            <span>2. ~~~</span>
-        </div>
-        <div class="private-transportation">
-            <p>자가용</p>
-            <span>1. ~~~</span><br>
-            <span>2. ~~~</span>
+            <div id="map_div"></div>
         </div>
     </section>
     <section class="map" id="map">
