@@ -5,12 +5,14 @@ const tripReview = "/tripReview";
 const wishPlace = "/wishPlace";
 const wishTrip = "/wishTrip";
 
+pageCall(tripList);
 
 document.querySelectorAll('#tripList,#tripReview,#wishPlace,#wishTrip').forEach(button=>{
     button.addEventListener('click',(e)=>{
         const id = e.target.id;
         console.log(id);
         bottom.innerHTML= "";
+        pageHover(id);
         switch (id) {
             case 'tripList':
                 pageCall(tripList);
@@ -29,6 +31,16 @@ document.querySelectorAll('#tripList,#tripReview,#wishPlace,#wishTrip').forEach(
 
     })
 })
+
+// 호버 관련하여 수정중
+function pageHover(id) {
+    document.querySelectorAll(".myPageList > li").forEach(li => {
+        li.classList.remove('highlighted');
+    });
+    const selectedItem = document.getElementById(id).parentElement;
+    selectedItem.classList.add('highlighted');
+}
+
 
 function pageCall(page) {
     const mypage = "/mypage" + page;
@@ -59,7 +71,7 @@ function loadScript(page){
     }
 }
 // src를 keep 할것인지 추후 결정 예정...
-function removeAllScript(){
+function removeAllScript(src){
     const toKeep =['/dist/js/header.js','/dist/js/loginJoin.js',js+'/mypageDetail.js'];
     const scripts = document.getElementsByTagName('script');
     for(let i = 0; i<scripts.length; i++) {
