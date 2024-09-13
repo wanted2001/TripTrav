@@ -15,7 +15,7 @@
 }
 .topWrap{
     width: 1440px;
-    height : 400px;
+    height : 320px;
     /*background-color: #fb763f;*/
 }
 
@@ -105,18 +105,52 @@
     color: #B3B3B3;
 }
 
+.highlighted {
+    border-bottom: 2px solid black;
+}
+
+.highlighted > a {
+    color: black;
+}
+
 .resultMyPage{
     width: 1440px;
     height: 1000px;
 }
 
 .bottomInfoWrap{
+    width: 1440px;
+    height: 700px;
     margin-top: 10px;
 }
 
 .bottomInfoWrap h1{
     font-size: 22px;
     font-weight: 600;
+}
+
+.tripImg{
+    width: 120px;
+    height: 120px;
+    border-radius: 20px;
+    border: 1px solid #B3B3B3;
+    object-fit: cover;
+    margin: 10px 0;
+}
+
+.tripCard{
+    display: flex;
+    flex-direction: row;
+}
+
+.tripinfo{
+    display: flex;
+    align-items: center;
+}
+
+.tripinfo > ul {
+    display: flex;
+    flex-direction: column;
 }
 
 
