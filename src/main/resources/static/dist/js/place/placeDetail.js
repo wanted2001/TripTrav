@@ -17,7 +17,6 @@ fetch(detailInfoUrl)
     .then(response => response.json())
     .then(data => {
         const jsonData = data.response.body.items.item[0];
-        console.log(jsonData)
         const locationDiv = document.querySelector('.location');
         let city = splitAddr(jsonData.addr1)[0];
         let district = splitAddr(jsonData.addr1)[1];
@@ -50,7 +49,6 @@ fetch(detailInfoUrl)
         document.querySelector('.homepageInfo').innerHTML = `홈페이지 : ${jsonData.homepage}`
         document.querySelector('.details').innerHTML = `<p>소개</p><span>${jsonData.overview}</span>`;
         // initTmap(jsonData.mapy,jsonData.mapx)
-        console.log(jsonData.mapx, jsonData.mapy)
         mapx = jsonData.mapx;
         mapy = jsonData.mapy;
         //주변정보
@@ -59,8 +57,6 @@ fetch(detailInfoUrl)
         }).catch(error => {
             console.log(error)
         });
-
-
     });
 
 // 주소 처리 함수
@@ -157,7 +153,7 @@ async function processNearbySightsAndFood(mapx, mapy) {
     }
     return fetchAndProcess();
 }
-
+//주변 관광지, 음식점 화면출력 함수
 function renderNearbySightsAndFood(sights, food) {
     foodContainer.innerHTML = '';
     attractionsContainer.innerHTML = '';
@@ -229,3 +225,34 @@ function initTmap(mapx,mapy){
         map: map,
     });
 }
+//현재 사용자 위치 Geolocation API
+function getCurrentLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                console.log("위도: " + latitude + ", 경도: " + longitude);
+            },
+            function(error) {
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        console.error("위치 정보 접근이 거부되었습니다.");
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        console.error("위치 정보를 사용할 수 없습니다.");
+                        break;
+                    case error.TIMEOUT:
+                        console.error("위치 정보 요청이 시간 초과되었습니다.");
+                        break;
+                    case error.UNKNOWN_ERROR:
+                        console.error("알 수 없는 오류가 발생했습니다.");
+                        break;
+                }
+            }
+        );
+    } else {
+        console.error("Geolocation API를 지원하지 않는 브라우저입니다.");
+    }
+}
+window.onload = getCurrentLocation;
