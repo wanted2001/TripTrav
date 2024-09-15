@@ -51,11 +51,11 @@ fetch(detailInfoUrl)
         mapx = jsonData.mapx;
         mapy = jsonData.mapy;
         //주변정보
-        processNearbySightsAndFood(mapx, mapy).then(result => {
-            renderNearbySightsAndFood(result.sights, result.food);
-        }).catch(error => {
-            console.log(error)
-        });
+        // processNearbySightsAndFood(mapx, mapy).then(result => {
+        //     renderNearbySightsAndFood(result.sights, result.food);
+        // }).catch(error => {
+        //     console.log(error)
+        // });
     });
 
 // 주소 처리 함수
@@ -127,78 +127,78 @@ async function getNearByFoodInfo(mapx, mapy, radius){
 }
 
 // 주변 관광지와 음식점 조회 후 조건 처리 함수
-async function processNearbySightsAndFood(mapx, mapy) {
-    let range = 1000;
-    async function fetchAndProcess() {
-        const [sightsArray = [], foodArray = []] = await Promise.all([
-            getNearBySights(mapx, mapy, range).catch(() => []),
-            getNearByFoodInfo(mapx, mapy, range).catch(() => [])
-        ]);
-        const filteredSights = (sightsArray || []).filter(sight => sight.firstimage);
-        const filteredFood = (foodArray || []).filter(food => food.firstimage);
-        if (filteredSights.length < 5 || filteredFood.length < 5) {
-            range += 1000;
-            return fetchAndProcess();
-        }
-        filteredSights.sort((a, b) => a.dist - b.dist);
-        filteredFood.sort((a, b) => a.dist - b.dist);
-
-        const topSights = filteredSights.slice(1, 5);
-        const topFood = filteredFood.slice(1, 5);
-        return {
-            sights: topSights,
-            food: topFood
-        };
-    }
-    return fetchAndProcess();
-}
+// async function processNearbySightsAndFood(mapx, mapy) {
+//     let range = 1000;
+//     async function fetchAndProcess() {
+//         const [sightsArray = [], foodArray = []] = await Promise.all([
+//             getNearBySights(mapx, mapy, range).catch(() => []),
+//             getNearByFoodInfo(mapx, mapy, range).catch(() => [])
+//         ]);
+//         const filteredSights = (sightsArray || []).filter(sight => sight.firstimage);
+//         const filteredFood = (foodArray || []).filter(food => food.firstimage);
+//         if (filteredSights.length < 5 || filteredFood.length < 5) {
+//             range += 1000;
+//             return fetchAndProcess();
+//         }
+//         filteredSights.sort((a, b) => a.dist - b.dist);
+//         filteredFood.sort((a, b) => a.dist - b.dist);
+//
+//         const topSights = filteredSights.slice(1, 5);
+//         const topFood = filteredFood.slice(1, 5);
+//         return {
+//             sights: topSights,
+//             food: topFood
+//         };
+//     }
+//     return fetchAndProcess();
+// }
 //주변 관광지, 음식점 화면출력 함수
-function renderNearbySightsAndFood(sights, food) {
-    foodContainer.innerHTML = '';
-    attractionsContainer.innerHTML = '';
-
-    food.forEach(item => {
-        const foodDiv = document.createElement('div');
-        foodDiv.classList.add('locations');
-        const img = document.createElement('img');
-        img.src = item.firstimage;
-        img.alt = item.title;
-        foodDiv.appendChild(img);
-        const infoDiv = document.createElement('div');
-        infoDiv.classList.add('info');
-        const titleP = document.createElement('p');
-        titleP.classList.add('title');
-        titleP.textContent = item.title;
-        const distP = document.createElement('p');
-        distP.classList.add('distance');
-        distP.textContent = convertDistance(item.dist);
-        infoDiv.appendChild(titleP);
-        infoDiv.appendChild(distP);
-        foodDiv.appendChild(infoDiv);
-        foodContainer.appendChild(foodDiv);
-    });
-
-    sights.forEach(item => {
-        const sightDiv = document.createElement('div');
-        sightDiv.classList.add('locations');
-        const img = document.createElement('img');
-        img.src = item.firstimage;
-        img.alt = item.title;
-        sightDiv.appendChild(img);
-        const infoDiv = document.createElement('div');
-        infoDiv.classList.add('info');
-        const titleP = document.createElement('p');
-        titleP.classList.add('title');
-        titleP.textContent = item.title;
-        const distP = document.createElement('p');
-        distP.classList.add('distance');
-        distP.textContent = convertDistance(item.dist);
-        infoDiv.appendChild(titleP);
-        infoDiv.appendChild(distP);
-        sightDiv.appendChild(infoDiv);
-        attractionsContainer.appendChild(sightDiv);
-    });
-}
+// function renderNearbySightsAndFood(sights, food) {
+//     foodContainer.innerHTML = '';
+//     attractionsContainer.innerHTML = '';
+//
+//     food.forEach(item => {
+//         const foodDiv = document.createElement('div');
+//         foodDiv.classList.add('locations');
+//         const img = document.createElement('img');
+//         img.src = item.firstimage;
+//         img.alt = item.title;
+//         foodDiv.appendChild(img);
+//         const infoDiv = document.createElement('div');
+//         infoDiv.classList.add('info');
+//         const titleP = document.createElement('p');
+//         titleP.classList.add('title');
+//         titleP.textContent = item.title;
+//         const distP = document.createElement('p');
+//         distP.classList.add('distance');
+//         distP.textContent = convertDistance(item.dist);
+//         infoDiv.appendChild(titleP);
+//         infoDiv.appendChild(distP);
+//         foodDiv.appendChild(infoDiv);
+//         foodContainer.appendChild(foodDiv);
+//     });
+//
+//     sights.forEach(item => {
+//         const sightDiv = document.createElement('div');
+//         sightDiv.classList.add('locations');
+//         const img = document.createElement('img');
+//         img.src = item.firstimage;
+//         img.alt = item.title;
+//         sightDiv.appendChild(img);
+//         const infoDiv = document.createElement('div');
+//         infoDiv.classList.add('info');
+//         const titleP = document.createElement('p');
+//         titleP.classList.add('title');
+//         titleP.textContent = item.title;
+//         const distP = document.createElement('p');
+//         distP.classList.add('distance');
+//         distP.textContent = convertDistance(item.dist);
+//         infoDiv.appendChild(titleP);
+//         infoDiv.appendChild(distP);
+//         sightDiv.appendChild(infoDiv);
+//         attractionsContainer.appendChild(sightDiv);
+//     });
+// }
 //거리 변환 함수
 function convertDistance(dist) {
     let number = parseFloat(dist);
@@ -210,79 +210,3 @@ function convertDistance(dist) {
         return kilometers.toFixed(0) + ' km';
     }
 }
-// //현재 사용자 위치 Geolocation API
-// var map, marker;
-// function geoLocationTmap(){
-//     map = new Tmapv2.Map("map_div", {
-//         center : new Tmapv2.LatLng(37.56520450, 126.98702028),
-//         width : "100%",
-//         height : "600px",
-//         zoom : 15
-//     });
-//     if (navigator.geolocation) {
-//         navigator.geolocation.getCurrentPosition(
-//             function(position) {
-//                 var lat = position.coords.latitude;
-//                 var lon = position.coords.longitude;
-//
-//                 marker = new Tmapv2.Marker({
-//                     position : new Tmapv2.LatLng(lat,lon),
-//                     draggable: true,
-//                     map : map
-//                 });
-//                 //마커의 움직임이 끝날때 이벤트 등록
-//                 marker.addListener("dragend", function (evt) {
-//                     const latitude = evt.latLng.lat();
-//                     const longitude = evt.latLng.lng();
-//                     getRP(latitude, longitude, mapx, mapy);
-//                 });
-//
-//                 map.setCenter(new Tmapv2.LatLng(lat,lon));
-//                 map.setZoom(15);
-//             });
-//
-//     }
-// }
-// //경로안내 요청 함수
-// function getRP(latitude, longitude, mapx, mapy) {
-//     var s_latlng = new Tmapv2.LatLng (latitude, longitude);
-//     var e_latlng = new Tmapv2.LatLng (mapy, mapx);
-//     var optionObj = {
-//         reqCoordType:"WGS84GEO",
-//         resCoordType:"WGS84GEO",
-//         trafficInfo:"Y"
-//     };
-//     var params = {
-//         onComplete:onComplete,
-//         onProgress:onProgress,
-//         onError:onError
-//     };
-//     var tData = new Tmapv2.extension.TData();
-//     tData.getRoutePlanJson(s_latlng, e_latlng, optionObj, params);
-// }
-//
-// //경로안내
-// function onComplete() {
-//     var jsonObject = new Tmapv2.extension.GeoJSON();
-//     var jsonForm = jsonObject.rpTrafficRead(this._responseData);
-//     var trafficColors = {
-//
-//         trafficDefaultColor:"#000000", //교통 정보가 없을 때
-//         trafficType1Color:"#009900", //원할
-//         trafficType2Color:"#7A8E0A", //서행
-//         trafficType3Color:"#8E8111",  //정체
-//         trafficType4Color:"#FF0000"  //정체
-//     };
-//     jsonObject.drawRouteByTraffic(map, jsonForm, trafficColors);
-//     map.setCenter(new Tmapv2.LatLng(latitude,longitude));
-//     map.setZoom(14);
-// }
-//
-// //데이터 로드중 실행하는 함수
-// function onProgress(){}
-// //데이터 로드 중 에러가 발생시 실행하는 함수
-// function onError(){
-//     alert("onError");
-// }
-//
-// // window.onload = geoLocationTmap();
