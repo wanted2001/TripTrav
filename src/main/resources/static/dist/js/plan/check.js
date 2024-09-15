@@ -9,6 +9,7 @@ openBtn.addEventListener('click', () => {
     mapContentBox.classList.add("visible");
     closeBtn.classList.remove("hidden");
     closeBtn.classList.add("visible");
+    closeBtn.style.left='520px';
 });
 
 closeBtn.addEventListener('click', () => {
@@ -17,7 +18,137 @@ closeBtn.addEventListener('click', () => {
     mapContentBox.classList.add("hidden");
     closeBtn.classList.remove("visible");
     closeBtn.classList.add("hidden");
+    depth2.classList.add("hidden");
 });
+
+//일정추가 2depth
+const addPlan = document.querySelector('.addPlan');
+const depth2 = document.querySelector('.mapContentBox2Depth');
+addPlan.addEventListener('click',()=>{
+    depth2.classList.remove('hidden');
+    depth2.classList.add('visible');
+    closeBtn.style.left='883px';
+})
+
+const ul = document.querySelector('.depth2_ul');
+ul.addEventListener('click',(e)=>{
+    const clickNumber = e.target.getAttribute('data-number');
+    const li = ul.querySelectorAll('li');
+
+    if(!clickNumber) return;
+
+    li.forEach(item=>{
+        if(item.getAttribute('data-number')===clickNumber){
+            item.classList.add('on');
+        } else {
+            item.classList.remove('on');
+        }
+    })
+
+    const recommend = document.querySelectorAll('.depth2_recomm');
+    const search = document.querySelectorAll('.depth2_search');
+    const searchInput = document.querySelector('.depth2_search_input_area');
+    const heart = document.querySelectorAll('.depth2_heart');
+    if(clickNumber==='1'){
+        recommend.forEach(item=>{
+            item.classList.remove('hidden');
+        })
+        search.forEach(item=>{
+            item.classList.add('hidden');
+        })
+        heart.forEach(item=>{
+            item.classList.add('hidden');
+        })
+        searchInput.classList.add('hidden');
+    } else if(clickNumber==='2'){
+        recommend.forEach(item=>{
+            item.classList.add('hidden');
+        })
+        search.forEach(item=>{
+            item.classList.remove('hidden');
+        })
+        heart.forEach(item=>{
+            item.classList.add('hidden');
+        })
+        searchInput.classList.remove('hidden');
+    } else if(clickNumber==='3'){
+        recommend.forEach(item=>{
+            item.classList.add('hidden');
+        })
+        search.forEach(item=>{
+            item.classList.add('hidden');
+        })
+        heart.forEach(item=>{
+            item.classList.remove('hidden');
+        })
+        searchInput.classList.add('hidden');
+    }
+})
+
+//검색(2Depth)
+const searchBtn = document.querySelector('.depth2_searchBtn');
+const searchInput = document.querySelector('.depth2_input');
+
+searchBtn.addEventListener('click',()=>{
+    search();
+})
+
+searchInput.addEventListener('keyup',(e)=>{
+    if(e.keyCode===13){
+        search();
+    }
+})
+
+function search(){
+    if(searchInput.value===''){
+        alert('검색어를 입력해주세요.')
+    } else {
+        let resultDiv = '';
+        let keyword = searchInput.value;
+        let url = `https://apis.data.go.kr/B551011/KorService1/searchKeyword1?serviceKey=${tourAPIKEY}&MobileApp=TripTrav&MobileOS=ETC&pageNo=1&numOfRows=10&listYN=Y&&arrange=A&contentTypeId=12&keyword=${keyword}&_type=json`;
+        searchKeyword(url).then(result=>{
+            console.log(result);
+            result.forEach(key=>{
+                resultDiv+=`
+                    <div class="depth2_search">
+                        <div class="depth2_search_area">
+                            <div class="depth2_search_img"></div>
+                            <div class="depth2_search_name">${key.title}</div>
+                            <div class="depth2_search_addr">${key.addr1}</div>
+                        </div>
+                    </div>`;
+                document.querySelector('.searchResultDiv').innerHTML=resultDiv;
+                const imageDiv = document.querySelectorAll('.depth2_search_img');
+                imageDiv.forEach(img=>{
+                    img.style.backgroundImage=`url(${key.firstimage})`;
+                })
+            })
+        })
+    }
+}
+
+async function searchKeyword(url){
+    try{
+        const response = await fetch(url);
+        const data = await response.json();
+        const items = data.response.body.items.item;
+        return items;
+    } catch(err){
+        console.log(err);
+    }
+}
+
+async function getImage(url) {
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        const items = data.response.body.items.item;
+        return items.map(item => item.firstimage);
+    } catch (error) {
+        console.log(error);
+        return [];
+    }
+}
 
 //상단 일수별 슬라이드
 let slideWrap = document.querySelector('.slideWrap');
@@ -37,6 +168,7 @@ const addMemoBtn = document.querySelector('.addMemoBtn');
 const editBtn = document.querySelector('.editBtn');
 const saveBtn = document.querySelector('.saveBtn');
 
+//상단 슬라이드 길이 계산 함수
 function updateInnerSlideWidth() {
     //div 개수따라 totalWidth 값 설정되도록
     const totalWidth = slideItems.length * slideItemWidth;
@@ -88,9 +220,53 @@ document.addEventListener('DOMContentLoaded', () => {
         saveMemo();
     })
 
-    //드래그드랍 부분
-
+    //데이터 불러오기
+    getData(detailInfoUrl).then(result=>{
+        console.log(result);
+        let content='';
+        result.forEach(key=>{
+            //a태그 추가작업 필요
+            content += `<li class="oneContent" data-id="${key.subcontentid}">
+                    <div class="deletePlan hidden">&times;</div>
+                    <div class="drag hidden">
+                        <img src="/dist/image/drag.png" class="dragIcon">
+                    </div>
+                    <div class="name_cate">
+                        <span class="placeName">${key.subname}</span>
+                        <span class="placeCate">장소카테고리</span>
+                    </div>
+                    <div class="rate_count">
+                        <span class="placeRate">별점</span>
+                        <span class="placeRateCount">별점개수</span>
+                    </div>
+                    <div class="placeImgDiv">
+                        <div class="placeImg"></div>
+                        <div class="placeImg"></div>
+                        <div class="placeImg"></div>
+                    </div>
+                </li>`;
+            document.querySelector('.contentArea').innerHTML=content;
+        })
+    })
 });
+
+//데이터 불러오기
+const contentId = '2383747';
+const detailInfoUrl = `https://apis.data.go.kr/B551011/KorService1/detailInfo1?ServiceKey=${tourAPIKEY}&contentTypeId=25&contentId=${contentId}&MobileOS=ETC&MobileApp=TripTrav&_type=json`;
+
+async function getData(url){
+    try{
+        const response = await fetch(url);
+        const data = await response.json();
+        const items = data.response.body.items.item;
+        return items;
+    } catch(err){
+        console.log(err);
+    }
+}
+
+//예제 끝
+
 
 function checkBoundary() {
     const outerRect = slideWrap.getBoundingClientRect();
@@ -112,6 +288,7 @@ function checkBoundary() {
     }
 }
 
+//일정위치에서 div 사이즈 변경
 function checkSelectedItem() {
     const center = slideWrap.getBoundingClientRect().width / 1.5;
     const expandRange = 100;
@@ -141,6 +318,7 @@ function checkSelectedItem() {
     });
 }
 
+//슬라이드 div 하단 dot 생성
 function makeDot(){
     slideItems.forEach(item=>{
         const dot = document.createElement('div');
@@ -166,10 +344,14 @@ const container = document.querySelector('.mapContentBox');
 container.addEventListener('click', (e) => {
     const target = e.target;
     const dragElements = document.querySelectorAll('.drag');
+    const deleteBtn = document.querySelectorAll('.deletePlan');
     //oneContent 배열로 변환
     const oneContents = Array.from(container.querySelectorAll('.oneContent'));
 
     if (target.classList.contains('editBtn')) {
+        deleteBtn.forEach(btn=>{
+            btn.classList.remove('hidden');
+        })
         dragElements.forEach((drag) => {
             drag.classList.remove('hidden');
             drag.setAttribute('draggable', true);
@@ -284,6 +466,9 @@ container.addEventListener('click', (e) => {
         dragElements.forEach((drag)=>{
             drag.classList.add('hidden');
         })
+        deleteBtn.forEach(btn=>{
+            btn.classList.add('hidden');
+        })
         target.classList.remove('saveBtn');
         target.classList.add('editBtn');
         target.innerText = '편집';
@@ -293,9 +478,6 @@ container.addEventListener('click', (e) => {
     }
 });
 
-//고민점
-//왔다갔다 애니메이션이 자연스럽지 않다.
-//올라갈때 내려갈 div의 위치가 제대로 잡히지않는게 문제인듯?
-//올라가든 내려가든 div의 높이를 파악해서 해당 높이가 넘어가면
-//옮김당하는 div의 위치가 바로바로 바뀔수있도록 만들어야할듯
 
+//고민점
+//투어 id 가져가서 각 id별 좌표값, 대표이미지, 서브이미지 가져오기(subname수만큼)
