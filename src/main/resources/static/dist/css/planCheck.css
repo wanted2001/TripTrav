@@ -101,6 +101,7 @@
 }
 .vsm-container{
     border-radius: 8px;
+    box-shadow: 0 0 20px -5px #666666;
 }
 button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo{
     cursor: pointer;
@@ -161,13 +162,13 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo{
     transition: opacity 0.5s ease;
 }
 .mapOpenBtn button{
-    top: 510px;
-    right: 263px;
+    top: 500px;
+    left: 161px;
     opacity: 1;
 }
 .mapCloseBtn{
-    top: 511px;
-    right: 639px;
+    top: 500px;
+    left: 520px;
     z-index: 100;
     transform: translateX(2%);
     opacity: 0;
@@ -185,17 +186,128 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo{
 .mapContentBox {
     background: white;
     width: 19%;
-    height: 160%;
+    height: 800px;
     position: absolute;
     z-index: 10;
-    right: 271px;
-    top: 510px;
-    border-radius: 8px;
+    left: 152px;
+    top: 494px;
+    border-radius: 8px 0 0 8px;
     box-shadow: 4px 4px 15px 6px #9797974a;
     opacity: 0;
     transform: translateX(2%);
     transition: opacity 0.5s ease, transform 0.5s ease-in-out;
     overflow: hidden auto;
+}
+.mapContentBox2Depth {
+    width: 361.56px;
+    height: 800px;
+    background: white;
+    position: absolute;
+    z-index: 10;
+    left: 507px;
+    box-shadow: 5px 2px 14px 0px #c9c9c9;
+    transform: translateX(2%);
+    transition: opacity 0.5s ease, transform 0.5s ease-in-out;
+    overflow: hidden auto;
+}
+.mapContentBox2Depth ul{
+    display: flex;
+    justify-content: space-around;
+    margin-top: 13px;
+    padding-bottom: 26px;
+}
+.mapContentBox2Depth ul li{
+    font-family: 'LINESeedKR-Rg';
+    padding: 13px;
+    border-radius: 23px;
+    height: 13px;
+    cursor: pointer;
+}
+.mapContentBox2Depth ul li.on{
+    background: orange;
+    color: white;
+    box-shadow: 0 2px 7px 1px #dfdfdf
+}
+.depth2_recomm, .depth2_heart,.depth2_search {
+    height: 90px;
+    padding-top: 23px;
+}
+.depth2_recomm:hover, .depth2_search:hover,
+.depth2_heart:hover{
+    background: #ededed99;
+}
+.recomm_img, .depth2_search_img, .heart_img {
+    float: left;
+    width: 70px;
+    height: 70px;
+    background: #68b9ff;
+    border-radius: 100px;
+    margin-left: 15px;
+}
+.recomm_name, .depth2_search_name, .heart_name {
+    font-family: 'LINESeedKR-Rg';
+    width: 73%;
+    padding: 13px 0 0 94px;
+}
+.recomm_addr, .depth2_search_addr, .heart_addr {
+    font-family: 'LINESeedKR-Th';
+    width: 73%;
+    padding: 10px 0 0 94px;
+    font-size: 15px;
+}
+.recomm_addBtn,.depth2_search_addBtn,.heart_addBtn {
+    float: right;
+    border: 1px solid #3f3f3f;
+    padding: 9px 9px 6px;
+    font-family: 'LINESeedKR-Rg';
+    border-radius: 3px;
+    margin: -43px 13px;
+    color: #3f3f3f;
+    cursor: pointer;
+}
+.recomm_addBtn:hover,.depth2_search_addBtn:hover,
+.heart_addBtn:hover{
+    background: #80808029;
+}
+.depth2_search_input_area {
+    background: #e8e8e8;
+    width: 90%;
+    height: 35px;
+    margin: 0 0 20px 16px;
+    padding-top: 12px;
+}
+.depth2_input {
+    border: none;
+    outline: none;
+    background: none;
+    margin: -7px 0 0 9px;
+    height: 109%;
+    width: 79%;
+    font-family: 'LINESeedKR-Th';
+    font-size: 16px;
+}
+.depth2_searchBtn img {
+    position: absolute;
+    top: 89px;
+    left: 305px;
+}
+button.depth2_searchBtn {
+    border: none;
+    outline: none;
+}
+
+.addPlan {
+    /* border: 1px solid orange; */
+    height: 38px;
+    text-align: center;
+    line-height: 41px;
+    border-radius: 8px;
+    width: 88%;
+    margin: 14px auto;
+    font-family: 'LINESeedKR-Rg';
+    background: orange;
+    color: white;
+    cursor: pointer;
 }
 .mapContentBox::-webkit-scrollbar{
     display: none;
@@ -217,7 +329,7 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo{
     height: 50px;
     background: orange;
     border-radius: 5px;
-    margin: 10px 9px;
+    margin: 10px 10px;
     font-family: 'LINESeedKR-Rg';
     text-align: right;
     line-height: 50px;
@@ -233,17 +345,21 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo{
     text-align: center;
     line-height: 33px;
     font-family: 'LINESeedKR-Rg';
-    margin-left: 299px;
+    margin-left: 300px;
     font-size: 14px;
 }
-.mapContentBox:nth-child(1){
-    background: pink;
+.deletePlan {
+    float: right;
+    cursor: pointer;
+}
+.deletePlan:hover{
+    font-weight: bold;
 }
 .oneContent {
-    width: 340px;
+    width: 330px;
     border-bottom: 1px solid gainsboro;
     transition: transform 0.2s ease;
-    padding: 12px 11px 3px;
+    padding: 12px 16px 3px;
 }
 .oneContent.dragging {
     transform: scale(1.03);

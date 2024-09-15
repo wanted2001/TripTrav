@@ -10,11 +10,11 @@
         const script = document.createElement('script');
         script.src = `https://apis.openapi.sk.com/tmap/vectorjs?version=1&appKey=${tMapAPIKEY}`;
         document.head.appendChild(script);
-        function initTmap(){
+        function initTmap() {
             let map = new Tmapv3.Map("checkMap",
                 {
-                    center: new Tmapv3.LatLng(37.566481622437934,126.98502302169841), // 지도 초기 좌표
-                    width: "1400px",
+                    center: new Tmapv3.LatLng(37.566481622437934, 126.98502302169841), // 지도 초기 좌표
+                    width: "1600px",
                     height: "800px",
                     zoom: 16
                 });
@@ -62,202 +62,90 @@
         </div>
         <div id="checkMap">
             <div class="mapOpenBtn">
-                <button><img src="/dist/image/chevrons-left.svg"></button>
+                <button><img src="/dist/image/chevrons-right.svg"></button>
             </div>
             <div class="mapCloseBtn hidden">
-                <button><img src="/dist/image/chevrons-right.svg"></button>
+                <button><img src="/dist/image/chevrons-left.svg"></button>
             </div>
             <div class="mapContentBox hidden">
                 <div class="contentTitle">1일차</div>
                 <div class="editBtn btnText">편집</div>
-                <div class="oneContent">
-                    <div class="drag hidden">
-                        <img src="/dist/image/drag.png" class="dragIcon">
-                    </div>
-                    <div class="name_cate">
-                        <span class="placeName">장소이름1</span>
-                        <span class="placeCate">장소카테고리</span>
-                    </div>
-                    <div class="rate_count">
-                        <span class="placeRate">별점</span>
-                        <span class="placeRateCount">별점개수</span>
-                    </div>
-                    <div class="placeInfo">장소소개</div>
-                    <div class="placeImgDiv">
-                        <div class="placeImg"></div>
-                        <div class="placeImg"></div>
-                        <div class="placeImg"></div>
+                <ul class="contentArea"></ul>
+                <div class="addPlan">여행지 추가 + </div>
+            </div>
+            <div class="mapContentBox2Depth hidden">
+                <ul class="depth2_ul">
+                    <li class="on" data-number="1">추천 여행지</li>
+                    <li data-number="2">검색</li>
+                    <li data-number="3">My 좋아요</li>
+                </ul>
+                <div class="depth2_recomm">
+                    <div class="recomm_area">
+                        <div class="recomm_img"></div>
+                        <div class="recomm_name">추천장소 이름</div>
+                        <div class="recomm_addr">추천장소 주소</div>
+                        <div class="recomm_addBtn">추가</div>
                     </div>
                 </div>
-                <div class="oneContent">
-                    <div class="drag hidden">
-                        <img src="/dist/image/drag.png">
-                    </div>
-                    <div class="name_cate">
-                        <span class="placeName">장소이름2</span>
-                        <span class="placeCate">장소카테고리</span>
-                    </div>
-                    <div class="rate_count">
-                        <span class="placeRate">별점</span>
-                        <span class="placeRateCount">별점개수</span>
-                    </div>
-                    <div class="placeInfo">장소소개</div>
-                    <div class="placeImgDiv">
-                        <div class="placeImg"></div>
-                        <div class="placeImg"></div>
-                        <div class="placeImg"></div>
+                <div class="depth2_recomm">
+                    <div class="recomm_area">
+                        <div class="recomm_img"></div>
+                        <div class="recomm_name">추천장소 이름</div>
+                        <div class="recomm_addr">추천장소 주소</div>
+                        <div class="recomm_addBtn">추가</div>
                     </div>
                 </div>
-                <div class="oneContent">
-                    <div class="drag hidden">
-                        <img src="/dist/image/drag.png">
-                    </div>
-                    <div class="name_cate">
-                        <span class="placeName">장소이름3</span>
-                        <span class="placeCate">장소카테고리</span>
-                    </div>
-                    <div class="rate_count">
-                        <span class="placeRate">별점</span>
-                        <span class="placeRateCount">별점개수</span>
-                    </div>
-                    <div class="placeInfo">장소소개</div>
-                    <div class="placeImgDiv">
-                        <div class="placeImg"></div>
-                        <div class="placeImg"></div>
-                        <div class="placeImg"></div>
+                <div class="depth2_recomm">
+                    <div class="recomm_area">
+                        <div class="recomm_img"></div>
+                        <div class="recomm_name">추천장소 이름</div>
+                        <div class="recomm_addr">추천장소 주소</div>
+                        <div class="recomm_addBtn">추가</div>
                     </div>
                 </div>
-                <div class="oneContent">
-                    <div class="drag hidden">
-                        <img src="/dist/image/drag.png">
-                    </div>
-                    <div class="name_cate">
-                        <span class="placeName">장소이름4</span>
-                        <span class="placeCate">장소카테고리</span>
-                    </div>
-                    <div class="rate_count">
-                        <span class="placeRate">별점</span>
-                        <span class="placeRateCount">별점개수</span>
-                    </div>
-                    <div class="placeInfo">장소소개</div>
-                    <div class="placeImgDiv">
-                        <div class="placeImg"></div>
-                        <div class="placeImg"></div>
-                        <div class="placeImg"></div>
+                <div class="depth2_search_input_area hidden">
+                    <input class="depth2_input">
+                    <button type="submit" class="depth2_searchBtn"><img src="/dist/image/search.svg"></button>
+                </div>
+                <div class="searchResultDiv"></div>
+                <div class="depth2_heart hidden">
+                    <div class="heart_area">
+                        <div class="heart_img"></div>
+                        <div class="heart_name">찜한장소 이름</div>
+                        <div class="heart_addr">찜한장소 주소</div>
+                        <div class="heart_addBtn">추가</div>
                     </div>
                 </div>
-                <div class="oneContent">
-                    <div class="drag hidden">
-                        <img src="/dist/image/drag.png">
-                    </div>
-                    <div class="name_cate">
-                        <span class="placeName">장소이름5</span>
-                        <span class="placeCate">장소카테고리</span>
-                    </div>
-                    <div class="rate_count">
-                        <span class="placeRate">별점</span>
-                        <span class="placeRateCount">별점개수</span>
-                    </div>
-                    <div class="placeInfo">장소소개</div>
-                    <div class="placeImgDiv">
-                        <div class="placeImg"></div>
-                        <div class="placeImg"></div>
-                        <div class="placeImg"></div>
+                <div class="depth2_heart hidden">
+                    <div class="heart_area">
+                        <div class="heart_img"></div>
+                        <div class="heart_name">찜한장소 이름</div>
+                        <div class="heart_addr">찜한장소 주소</div>
+                        <div class="heart_addBtn">추가</div>
                     </div>
                 </div>
-                <div class="oneContent">
-                    <div class="drag hidden">
-                        <img src="/dist/image/drag.png">
-                    </div>
-                    <div class="name_cate">
-                        <span class="placeName">장소이름6</span>
-                        <span class="placeCate">장소카테고리</span>
-                    </div>
-                    <div class="rate_count">
-                        <span class="placeRate">별점</span>
-                        <span class="placeRateCount">별점개수</span>
-                    </div>
-                    <div class="placeInfo">장소소개</div>
-                    <div class="placeImgDiv">
-                        <div class="placeImg"></div>
-                        <div class="placeImg"></div>
-                        <div class="placeImg"></div>
+                <div class="depth2_heart hidden">
+                    <div class="heart_area">
+                        <div class="heart_img"></div>
+                        <div class="heart_name">찜한장소 이름</div>
+                        <div class="heart_addr">찜한장소 주소</div>
+                        <div class="heart_addBtn">추가</div>
                     </div>
                 </div>
-                <div class="oneContent">
-                    <div class="drag hidden">
-                        <img src="/dist/image/drag.png">
-                    </div>
-                    <div class="name_cate">
-                        <span class="placeName">장소이름7</span>
-                        <span class="placeCate">장소카테고리</span>
-                    </div>
-                    <div class="rate_count">
-                        <span class="placeRate">별점</span>
-                        <span class="placeRateCount">별점개수</span>
-                    </div>
-                    <div class="placeInfo">장소소개</div>
-                    <div class="placeImgDiv">
-                        <div class="placeImg"></div>
-                        <div class="placeImg"></div>
-                        <div class="placeImg"></div>
+                <div class="depth2_heart hidden">
+                    <div class="heart_area">
+                        <div class="heart_img"></div>
+                        <div class="heart_name">찜한장소 이름</div>
+                        <div class="heart_addr">찜한장소 주소</div>
+                        <div class="heart_addBtn">추가</div>
                     </div>
                 </div>
-                <div class="oneContent">
-                    <div class="drag hidden">
-                        <img src="/dist/image/drag.png">
-                    </div>
-                    <div class="name_cate">
-                        <span class="placeName">장소이름8</span>
-                        <span class="placeCate">장소카테고리</span>
-                    </div>
-                    <div class="rate_count">
-                        <span class="placeRate">별점</span>
-                        <span class="placeRateCount">별점개수</span>
-                    </div>
-                    <div class="placeInfo">장소소개</div>
-                    <div class="placeImgDiv">
-                        <div class="placeImg"></div>
-                        <div class="placeImg"></div>
-                        <div class="placeImg"></div>
-                    </div>
-                </div>
-                <div class="oneContent">
-                    <div class="drag hidden">
-                        <img src="/dist/image/drag.png">
-                    </div>
-                    <div class="name_cate">
-                        <span class="placeName">장소이름9</span>
-                        <span class="placeCate">장소카테고리</span>
-                    </div>
-                    <div class="rate_count">
-                        <span class="placeRate">별점</span>
-                        <span class="placeRateCount">별점개수</span>
-                    </div>
-                    <div class="placeInfo">장소소개</div>
-                    <div class="placeImgDiv">
-                        <div class="placeImg"></div>
-                        <div class="placeImg"></div>
-                        <div class="placeImg"></div>
-                    </div>
-                </div>
-                <div class="oneContent">
-                    <div class="drag hidden">
-                        <img src="/dist/image/drag.png">
-                    </div>
-                    <div class="name_cate">
-                        <span class="placeName">장소이름10</span>
-                        <span class="placeCate">장소카테고리</span>
-                    </div>
-                    <div class="rate_count">
-                        <span class="placeRate">별점</span>
-                        <span class="placeRateCount">별점개수</span>
-                    </div>
-                    <div class="placeInfo">장소소개</div>
-                    <div class="placeImgDiv">
-                        <div class="placeImg"></div>
-                        <div class="placeImg"></div>
-                        <div class="placeImg"></div>
+                <div class="depth2_heart hidden">
+                    <div class="heart_area">
+                        <div class="heart_img"></div>
+                        <div class="heart_name">찜한장소 이름</div>
+                        <div class="heart_addr">찜한장소 주소</div>
+                        <div class="heart_addBtn">추가</div>
                     </div>
                 </div>
             </div>
