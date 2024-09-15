@@ -5,8 +5,7 @@
     <title>상세페이지</title>
     <link rel="stylesheet" href="/dist/css/place/placeDetail.css">
     <script src="/dist/js/key.js"></script>
-    <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
-
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2405143deeab244b2402da9e3bd9a581"></script>
 </head>
 <body>
 <th:block th:replace="~{header :: header}"></th:block>
@@ -83,11 +82,10 @@
     <section class="transportation">
         <p>찾아가는 길</p>
         <div class="public-transportation">
-            <div id="map_div"></div>
+
         </div>
     </section>
-    <section class="map" id="map">
-    </section>
+    <div id="map" style="width:500px;height:400px;"></div>
     <section class="nearby">
         <p>근처 관광지</p>
         <div class="attractions">
@@ -112,5 +110,13 @@
     </section>
 </main>
 <script src="/dist/js/place/placeDetail.js"></script>
+<script>
+    var container = document.getElementById('map');
+    var options = {
+        center: new kakao.maps.LatLng(33.450701, 126.570667),
+        level: 3
+    };
+    var map = new kakao.maps.Map(container, options);
+</script>
 </body>
 </html>
