@@ -61,7 +61,6 @@
     color: gray;
     border: none;
     font-size: 24px;
-    cursor: pointer;
     position: relative;
     right: -543px;
     top: -414px;
@@ -85,7 +84,6 @@
     color: black;
     border: none;
     font-size: 17px;
-    cursor: pointer;
     position: relative;
     right: 62px;
     top: 29px;
@@ -103,68 +101,9 @@
 }
 .vsm-container{
     border-radius: 8px;
+    box-shadow: 0 0 20px -5px #666666;
 }
-.mapOpenBtn button, .mapCloseBtn{
-    border: none;
-    outline: none;
-    background: white;
-    border-radius: 8px;
-    box-shadow: -2px 2px 5px 0px #979797b8;
-    position: absolute;
-    z-index: 100;
-    height: 45px;
-    width: 30px;
-    transition: opacity 0.5s ease;
-}
-.mapOpenBtn button{
-    top: 510px;
-    right: 263px;
-    opacity: 1;
-}
-.mapCloseBtn{
-    top: 511px;
-    right: 639px;
-    z-index: 100;
-    transform: translateX(2%);
-    opacity: 0;
-    pointer-events: none;
-}
-.mapCloseBtn button{
-    border: none;
-    outline: none;
-    background: #ffffff00;
-    height: 45px;
-}
-.mapCloseBtn button img, .mapOpenBtn button img{
-    margin-left: -3px;
-}
-.mapContentBox {
-    background: white;
-    width: 19%;
-    height: 160%;
-    position: absolute;
-    z-index: 10;
-    right: 271px;
-    top: 510px;
-    border-radius: 8px;
-    box-shadow: 4px 4px 15px 6px #9797974a;
-    opacity: 0;
-    transform: translateX(2%);
-    transition: opacity 0.5s ease, transform 0.5s ease-in-out;
-}
-.mapContentBox.visible {
-    transform: translateX(0);
-    opacity: 1;
-}
-.mapOpenBtn.hidden {
-    opacity: 0;
-    pointer-events: none;
-}
-.mapCloseBtn.visible {
-    opacity: 1;
-    pointer-events: auto;
-}
-button{
+button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo{
     cursor: pointer;
 }
 .slideWrap{
@@ -209,4 +148,266 @@ button{
     z-index: 0;
     top: 115%;
     left: 67px;
+}
+.mapOpenBtn button, .mapCloseBtn{
+    border: none;
+    outline: none;
+    background: white;
+    border-radius: 8px;
+    box-shadow: -2px 2px 5px 0px #979797b8;
+    position: absolute;
+    z-index: 100;
+    height: 45px;
+    width: 30px;
+    transition: opacity 0.5s ease;
+}
+.mapOpenBtn button{
+    top: 500px;
+    left: 161px;
+    opacity: 1;
+}
+.mapCloseBtn{
+    top: 500px;
+    left: 520px;
+    z-index: 100;
+    transform: translateX(2%);
+    opacity: 0;
+    pointer-events: none;
+}
+.mapCloseBtn button{
+    border: none;
+    outline: none;
+    background: #ffffff00;
+    height: 45px;
+}
+.mapCloseBtn button img, .mapOpenBtn button img{
+    margin-left: -3px;
+}
+.mapContentBox {
+    background: white;
+    width: 19%;
+    height: 800px;
+    position: absolute;
+    z-index: 10;
+    left: 152px;
+    top: 494px;
+    border-radius: 8px 0 0 8px;
+    box-shadow: 4px 4px 15px 6px #9797974a;
+    opacity: 0;
+    transform: translateX(2%);
+    transition: opacity 0.5s ease, transform 0.5s ease-in-out;
+    overflow: hidden auto;
+}
+.mapContentBox2Depth {
+    width: 361.56px;
+    height: 800px;
+    background: white;
+    position: absolute;
+    z-index: 10;
+    left: 507px;
+    box-shadow: 5px 2px 14px 0px #c9c9c9;
+    transform: translateX(2%);
+    transition: opacity 0.5s ease, transform 0.5s ease-in-out;
+    overflow: hidden auto;
+}
+.mapContentBox2Depth ul{
+    display: flex;
+    justify-content: space-around;
+    margin-top: 13px;
+    padding-bottom: 26px;
+}
+.mapContentBox2Depth ul li{
+    font-family: 'LINESeedKR-Rg';
+    padding: 13px;
+    border-radius: 23px;
+    height: 13px;
+    cursor: pointer;
+}
+.mapContentBox2Depth ul li.on{
+    background: orange;
+    color: white;
+    box-shadow: 0 2px 7px 1px #dfdfdf
+}
+.depth2_recomm, .depth2_heart,.depth2_search {
+    height: 90px;
+    padding-top: 23px;
+}
+.depth2_recomm:hover, .depth2_search:hover,
+.depth2_heart:hover{
+    background: #ededed99;
+}
+.recomm_img, .depth2_search_img, .heart_img {
+    float: left;
+    width: 70px;
+    height: 70px;
+    background: #68b9ff;
+    border-radius: 100px;
+    margin-left: 15px;
+}
+.recomm_name, .depth2_search_name, .heart_name {
+    font-family: 'LINESeedKR-Rg';
+    width: 73%;
+    padding: 13px 0 0 94px;
+}
+.recomm_addr, .depth2_search_addr, .heart_addr {
+    font-family: 'LINESeedKR-Th';
+    width: 73%;
+    padding: 10px 0 0 94px;
+    font-size: 15px;
+}
+.recomm_addBtn,.depth2_search_addBtn,.heart_addBtn {
+    float: right;
+    border: 1px solid #3f3f3f;
+    padding: 9px 9px 6px;
+    font-family: 'LINESeedKR-Rg';
+    border-radius: 3px;
+    margin: -43px 13px;
+    color: #3f3f3f;
+    cursor: pointer;
+}
+.recomm_addBtn:hover,.depth2_search_addBtn:hover,
+.heart_addBtn:hover{
+    background: #80808029;
+}
+.depth2_search_input_area {
+    background: #e8e8e8;
+    width: 90%;
+    height: 35px;
+    margin: 0 0 20px 16px;
+    padding-top: 12px;
+}
+.depth2_input {
+    border: none;
+    outline: none;
+    background: none;
+    margin: -7px 0 0 9px;
+    height: 109%;
+    width: 79%;
+    font-family: 'LINESeedKR-Th';
+    font-size: 16px;
+}
+.depth2_searchBtn img {
+    position: absolute;
+    top: 89px;
+    left: 305px;
+}
+button.depth2_searchBtn {
+    border: none;
+    outline: none;
+}
+
+.addPlan {
+    /* border: 1px solid orange; */
+    height: 38px;
+    text-align: center;
+    line-height: 41px;
+    border-radius: 8px;
+    width: 88%;
+    margin: 14px auto;
+    font-family: 'LINESeedKR-Rg';
+    background: orange;
+    color: white;
+    cursor: pointer;
+}
+.mapContentBox::-webkit-scrollbar{
+    display: none;
+}
+.mapContentBox.visible {
+    transform: translateX(0);
+    opacity: 1;
+}
+.mapOpenBtn.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+.mapCloseBtn.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+.contentTitle {
+    width: 90%;
+    height: 50px;
+    background: orange;
+    border-radius: 5px;
+    margin: 10px 10px;
+    font-family: 'LINESeedKR-Rg';
+    text-align: right;
+    line-height: 50px;
+    color: white;
+    font-size: 20px;
+    padding-right: 17px;
+}
+.editBtn, .saveBtn {
+    width: 50px;
+    height: 30px;
+    border: 1px solid orange;
+    border-radius: 4px;
+    text-align: center;
+    line-height: 33px;
+    font-family: 'LINESeedKR-Rg';
+    margin-left: 300px;
+    font-size: 14px;
+}
+.deletePlan {
+    float: right;
+    cursor: pointer;
+}
+.deletePlan:hover{
+    font-weight: bold;
+}
+.oneContent {
+    width: 330px;
+    border-bottom: 1px solid gainsboro;
+    transition: transform 0.2s ease;
+    padding: 12px 16px 3px;
+}
+.oneContent.dragging {
+    transform: scale(1.03);
+    background: rgba(235, 235, 235, 0.8);;
+}
+.name_cate{
+    margin: 7px 0;
+}
+.placeName{
+    font-family: 'LINESeedKR-Rg';
+    font-size: 17px;
+}
+.placeCate{
+    font-family: 'LINESeedKR-Th';
+    font-size: 13px;
+    font-weight: bold;
+}
+.placeImgDiv {
+    display: flex;
+    justify-content: space-between;
+}
+.placeImg {
+    width: 100px;
+    height: 100px;
+    background: aliceblue;
+    margin: 11px 4px;
+    border-radius: 8px;
+}
+/*일정편집*/
+.drag {
+    width: 19px;
+    float: right;
+    margin-top: -1px;
+    cursor: pointer;
+    /*border: 1px solid #a8a8a8;*/
+    /*border-radius: 4px;*/
+    /*line-height: 1px;*/
+}
+.drag img{
+    width: 100%;
+    opacity: 0.6;
+}
+.dragging{
+    cursor: grabbing;
+    position: relative;
+    z-index: 5000;
+}
+
+.hidden{
+    display: none;
 }

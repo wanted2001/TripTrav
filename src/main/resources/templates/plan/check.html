@@ -10,11 +10,11 @@
         const script = document.createElement('script');
         script.src = `https://apis.openapi.sk.com/tmap/vectorjs?version=1&appKey=${tMapAPIKEY}`;
         document.head.appendChild(script);
-        function initTmap(){
+        function initTmap() {
             let map = new Tmapv3.Map("checkMap",
                 {
-                    center: new Tmapv3.LatLng(37.566481622437934,126.98502302169841), // 지도 초기 좌표
-                    width: "1400px",
+                    center: new Tmapv3.LatLng(37.566481622437934, 126.98502302169841), // 지도 초기 좌표
+                    width: "1600px",
                     height: "800px",
                     zoom: 16
                 });
@@ -41,35 +41,114 @@
         </div>
         <div class="slideWrap">
             <div class="innerSlide">
-                <div class="slideItem"></div>
-                <div class="slideItem"></div>
-                <div class="slideItem"></div>
-                <div class="slideItem"></div>
-                <div class="slideItem"></div>
-                <div class="slideItem"></div>
-                <div class="slideItem"></div>
-                <div class="slideItem"></div>
-                <div class="slideItem"></div>
-                <div class="slideItem"></div>
-                <div class="slideItem"></div>
-                <div class="slideItem"></div>
-                <div class="slideItem"></div>
-                <div class="slideItem"></div>
+                <div class="slideItem">1</div>
+                <div class="slideItem">2</div>
+                <div class="slideItem">3</div>
+                <div class="slideItem">4</div>
+                <div class="slideItem">5</div>
+                <div class="slideItem">6</div>
+                <div class="slideItem">7</div>
+                <div class="slideItem">8</div>
+                <div class="slideItem">9</div>
+                <div class="slideItem">10</div>
+                <div class="slideItem">11</div>
+                <div class="slideItem">12</div>
+                <div class="slideItem">13</div>
+                <div class="slideItem">14</div>
+                <div class="slideItem">15</div>
+                <div class="slideItem">16</div>
                 <div class="innerLine"></div>
-                <div class="slideItem"></div>
-                <div class="slideItem"></div>
-                <div class="slideItem"></div>
-<!--                <div class="innerLine"></div>-->
             </div>
         </div>
         <div id="checkMap">
             <div class="mapOpenBtn">
-                <button><img src="/dist/image/chevrons-left.svg"></button>
-            </div>
-            <div class="mapCloseBtn hidden">
                 <button><img src="/dist/image/chevrons-right.svg"></button>
             </div>
-            <div class="mapContentBox hidden"></div>
+            <div class="mapCloseBtn hidden">
+                <button><img src="/dist/image/chevrons-left.svg"></button>
+            </div>
+            <div class="mapContentBox hidden">
+                <div class="contentTitle">1일차</div>
+                <div class="editBtn btnText">편집</div>
+                <ul class="contentArea"></ul>
+                <div class="addPlan">여행지 추가 + </div>
+            </div>
+            <div class="mapContentBox2Depth hidden">
+                <ul class="depth2_ul">
+                    <li class="on" data-number="1">추천 여행지</li>
+                    <li data-number="2">검색</li>
+                    <li data-number="3">My 좋아요</li>
+                </ul>
+                <div class="depth2_recomm">
+                    <div class="recomm_area">
+                        <div class="recomm_img"></div>
+                        <div class="recomm_name">추천장소 이름</div>
+                        <div class="recomm_addr">추천장소 주소</div>
+                        <div class="recomm_addBtn">추가</div>
+                    </div>
+                </div>
+                <div class="depth2_recomm">
+                    <div class="recomm_area">
+                        <div class="recomm_img"></div>
+                        <div class="recomm_name">추천장소 이름</div>
+                        <div class="recomm_addr">추천장소 주소</div>
+                        <div class="recomm_addBtn">추가</div>
+                    </div>
+                </div>
+                <div class="depth2_recomm">
+                    <div class="recomm_area">
+                        <div class="recomm_img"></div>
+                        <div class="recomm_name">추천장소 이름</div>
+                        <div class="recomm_addr">추천장소 주소</div>
+                        <div class="recomm_addBtn">추가</div>
+                    </div>
+                </div>
+                <div class="depth2_search_input_area hidden">
+                    <input class="depth2_input">
+                    <button type="submit" class="depth2_searchBtn"><img src="/dist/image/search.svg"></button>
+                </div>
+                <div class="searchResultDiv"></div>
+                <div class="depth2_heart hidden">
+                    <div class="heart_area">
+                        <div class="heart_img"></div>
+                        <div class="heart_name">찜한장소 이름</div>
+                        <div class="heart_addr">찜한장소 주소</div>
+                        <div class="heart_addBtn">추가</div>
+                    </div>
+                </div>
+                <div class="depth2_heart hidden">
+                    <div class="heart_area">
+                        <div class="heart_img"></div>
+                        <div class="heart_name">찜한장소 이름</div>
+                        <div class="heart_addr">찜한장소 주소</div>
+                        <div class="heart_addBtn">추가</div>
+                    </div>
+                </div>
+                <div class="depth2_heart hidden">
+                    <div class="heart_area">
+                        <div class="heart_img"></div>
+                        <div class="heart_name">찜한장소 이름</div>
+                        <div class="heart_addr">찜한장소 주소</div>
+                        <div class="heart_addBtn">추가</div>
+                    </div>
+                </div>
+                <div class="depth2_heart hidden">
+                    <div class="heart_area">
+                        <div class="heart_img"></div>
+                        <div class="heart_name">찜한장소 이름</div>
+                        <div class="heart_addr">찜한장소 주소</div>
+                        <div class="heart_addBtn">추가</div>
+                    </div>
+                </div>
+                <div class="depth2_heart hidden">
+                    <div class="heart_area">
+                        <div class="heart_img"></div>
+                        <div class="heart_name">찜한장소 이름</div>
+                        <div class="heart_addr">찜한장소 주소</div>
+                        <div class="heart_addBtn">추가</div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="checkBottom"></div>
     </div>

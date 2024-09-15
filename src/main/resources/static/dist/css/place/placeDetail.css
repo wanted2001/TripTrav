@@ -1,164 +1,107 @@
 html {
     scroll-behavior: smooth;
 }
-
+.header-nav a{
+    color: black;
+}
 main {
     text-align: center;
     font-family: LINESeedKR-Rg;
 }
-
 .titleSection {
     width: 1400px;
     height: 500px;
-    background-color: #9001ef;
     display: inline-block;
 }
 
 .location {
     width: 400px;
     height: 50px;
-    position: absolute;
+    position: relative;
     top: 130px;
-    left: 300px;
+    left: 50px;
     text-align: left;
     line-height: 55px;
     font-size: 25px;
 }
 
-.carousel-container {
-    position: relative;
-    width: 600px;
-    height: 300px;
-    margin-top: 250px;
-    margin-left: 300px;
-}
-
-.carousel {
-    display: flex;
-    justify-content: center;
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-}
-
-.carousel-item {
-    width: 200px;
-    height: 250px;
-    background-color: black;
-    margin-right: -50px;
-    border-radius: 10px;
-    transition: transform 0.5s ease, z-index 0.5s;
-    position: relative;
-    z-index: 1;
-}
-
-.carousel-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 10px;
-}
-
-.prev, .next {
-    cursor: pointer;
-    position: absolute;
-    top: 50%;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    padding: 10px;
-    font-size: 20px;
-    transform: translateY(-50%);
-    z-index: 5;
-}
-
-.prev {
-    left: -20px;
-}
-
-.next {
-    right: -20px;
-}
-
-.carousel-item:nth-child(1) {
-    transform: scale(1.2);
-    z-index: 3;
-}
-
-.carousel-item:nth-child(2),
-.carousel-item:nth-child(3) {
-    transform: scale(0.9);
-    z-index: 2;
-}
-
-
 .firstLine{
     height: 10px;
 }
 .infoSection{
-    height: 170px;
-    background-color: orange;
+    height: 350px;
     text-align : left;
-    position: absolute;
-    top: 650px;
-    left: 300px;
-    line-height: 30px;
+    position: relative;
+    line-height: 50px;
+    margin-left: 300px;
+}
+.infoSection a {
+    color: black;
+    text-decoration: none;
 }
 .buttonSection {
-    position: absolute;
-    left: 300px;
-    top: 850px;
+    position: relative;
     width: 1400px;
-    background-color: white;
     height: 50px;
     display: flex;
+    margin-left: 300px;
+    margin-top: 10px;
 }
 .buttonSection > button {
     flex: 1;
     border: 1px solid black;
     background-color: white;
     text-align: center;
+    font-size: 20px;
 }
 .buttonSection > button:nth-child(2),
 .buttonSection > button:nth-child(3),
 .buttonSection > button:nth-child(4) {
     border-left: none;
 }
-.details{
-    position: absolute;
-    left: 300px;
-    top: 950px;
-    height: 100px;
+.details {
+    position: relative;
+    margin-left: 300px;
     width: 1400px;
-    background-color: green;
+    height: auto;
+    text-align: left;
+    line-height: 40px;
+    margin-top: 10px;
 }
 .details>p{
-    text-align: left;
-    margin-top: 5px;
+    padding-right: 120px;
+}
+.details>span{
+    display: block;
+    word-break: break-all;
+    text-indent : 10px;
+    margin-left: 10px;
 }
 .reviews{
-    position: absolute;
-    left: 300px;
-    top: 1000px;
+    position: relative;
+    margin-left: 300px;
     width: 1400px;
     height: 500px;
     background-color: red;
-    margin-top: 20px;
+    margin-top: 10px;
+    text-align: left;
 }
 .reviews>p{
-    text-align: left;
+    padding-right: 120px;
+}
+.buttons{
+    text-align: center;
 }
 .reviews>div{
     margin-top: 10px;
     line-height: 50px;
 }
 .transportation{
-    position: absolute;
-    left: 300px;
-    top: 1520px;
-    background-color: antiquewhite;
+    position: relative;
+    margin-left: 300px;
     width: 1400px;
+    height: auto;
+    background-color: #fb763f;
 }
 .transportation>p{
     text-align: left;
@@ -169,18 +112,20 @@ main {
     margin-top: 10px;
 }
 .map{
-    position: absolute;
-    left: 300px;
-    top: 1740px;
-    background-color: #fb763f;
-    width: 1400px;
-    height: 500px;
+    position: relative;
+    margin-left: 300px;
 }
-.nearby{
+.map .vsm-marker{
     position: absolute;
-    left: 300px;
-    top: 2240px;
-    background-color: #9001ef;
+}
+.titlePopup{
+    font-size: 15px;
+    border-radius: 10px;
+}
+
+.nearby{
+    position: relative;
+    margin-left: 300px;
     width: 1400px;
     height: auto;
 }
@@ -200,9 +145,31 @@ main {
     flex-wrap: nowrap;
     justify-content: space-evenly;
     align-items: stretch;
+    text-align: center;
 }
-.food>div, .attractions>div{
+.food>div, .attractions>div {
     width: 200px;
-    height: 200px;
-    border: 1px solid black;
+    height: 250px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
+
+.food>div img, .attractions>div img {
+    width: 100%;
+    height: 70%;
+    object-fit: cover;
+}
+
+.food>div .info, .attractions>div .info {
+    width: 100%;
+    height: 30%;
+    text-align: center;
+    padding: 5px;
+}
+
+.food>div .info p, .attractions>div .info p {
+    margin: 3px 0;
+}
+

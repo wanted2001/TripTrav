@@ -16,4 +16,13 @@ public class MyPageController {
 
     @GetMapping("/tripList")
     public void tripList() {}
+
+    @GetMapping("/tripReview")
+    public void tripReview() {}
+
+    @GetMapping("/wishPlace")
+    public void wishPlace() {}
+
+    @GetMapping("/wishTrip")
+    public void wishTrip() {}
 }
