@@ -3,12 +3,11 @@ const imgUrl = `https://apis.data.go.kr/B551011/KorService1/detailImage1?MobileO
 const detailInfoUrl = `https://apis.data.go.kr/B551011/KorService1/detailCommon1?MobileOS=ETC&MobileApp=TripTrav&contentId=${contentId}&defaultYN=Y&firstImageYN=Y&areacodeYN=Y&catcodeYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&serviceKey=${tourAPIKEY}&_type=json`;
 const foodContainer = document.querySelector('.food');
 const attractionsContainer = document.querySelector('.attractions');
+const imageUrlsDiv = document.querySelector('.imageUrls');
 
-
+let currentIndex = 0;
 let contentTypeId = 0;
 let imageUrls = [];
-let currentIndex = 0;
-let slideInterval;
 let mapx = 0;
 let mapy = 0;
 
@@ -24,14 +23,14 @@ fetch(detailInfoUrl)
         locationDiv.innerHTML = `<span>${city} > </span><span>${district} > </span><span>${title}</span>`;
 
         const mainImgUrl = jsonData.firstimage;
-        // imageUrls.push(mainImgUrl);
+        imageUrls.push(mainImgUrl);
 
-        // // 추가 이미지를 가져오고 슬라이더에 반영
-        // getImage(imgUrl).then(result => {
-        //     imageUrls.push(...result);
-        //     updateCarousel(); // 캐러셀 업데이트
-        //     startAutoSlide(); // 자동 슬라이드 시작
-        // });
+        // 추가 이미지를 가져오고 슬라이더에 반영
+        getImage(imgUrl).then(result => {
+            imageUrls.push(...result);
+            updateImages();
+        });
+
         contentTypeId = jsonData.contenttypeid;
         document.querySelector('.title').innerText = jsonData.title
         document.querySelector('.locationInfo').innerHTML = `주소 : ${jsonData.addr1}`;
@@ -57,6 +56,39 @@ fetch(detailInfoUrl)
         //     console.log(error)
         // });
     });
+
+// 이미지 URL 배열을 동적으로 추가하는 함수
+function updateImages() {
+    imageUrlsDiv.innerHTML = '';
+    const visibleImages = imageUrls.slice(currentIndex, currentIndex + 4);
+
+    visibleImages.forEach(url => {
+        const imgElement = document.createElement('img');
+        imgElement.src = url;
+        imgElement.classList.add('slideImage');
+        imageUrlsDiv.appendChild(imgElement);
+    });
+}
+
+// 이전 버튼 클릭 시
+document.querySelector('.prev').addEventListener('click', () => {
+    if (currentIndex > 0) {
+        currentIndex--;
+    } else {
+        currentIndex = imageUrls.length - 4;
+    }
+    updateImages();
+});
+
+// 다음 버튼 클릭 시
+document.querySelector('.next').addEventListener('click', () => {
+    if (currentIndex < imageUrls.length - 4) {
+        currentIndex++;
+    } else {
+        currentIndex = 0;
+    }
+    updateImages();
+});
 
 // 주소 처리 함수
 function splitAddr(address) {

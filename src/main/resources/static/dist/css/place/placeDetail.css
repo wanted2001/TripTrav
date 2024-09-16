@@ -12,6 +12,8 @@ main {
     width: 1400px;
     height: 500px;
     display: inline-block;
+    position: relative;
+    margin: 0 auto;
 }
 
 .location {
@@ -23,6 +25,55 @@ main {
     text-align: left;
     line-height: 55px;
     font-size: 25px;
+    z-index: 1;
+}
+
+.imageUrls {
+    display: flex;
+    justify-content: space-between;
+    width: 1400px;
+    height: 300px;
+    position: absolute;
+    top: 180px;
+    left: 0px;
+    overflow: hidden;
+    z-index: 0;
+    margin-left: 50px;
+}
+
+.imageUrls img {
+    width: 25%;
+    border-radius: 10px;
+    transition: transform 0.5s ease;
+    object-fit: cover;
+}
+
+.imageUrls img:hover {
+    transform: scale(1.05);
+}
+
+button.prev, button.next {
+    cursor: pointer;
+    position: absolute;
+    top: 330px;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 30px;
+}
+
+button.prev {
+    left: 32px;
+}
+
+button.next {
+    right: -62px;
+}
+
+button.prev:hover, button.next:hover {
+    background-color: #f0f0f0;
 }
 
 .firstLine{
