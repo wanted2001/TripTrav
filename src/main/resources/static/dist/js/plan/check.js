@@ -19,6 +19,8 @@ closeBtn.addEventListener('click', () => {
     closeBtn.classList.remove("visible");
     closeBtn.classList.add("hidden");
     depth2.classList.add("hidden");
+    searchInput.value='';
+    document.querySelector('.searchResultDiv').innerHTML='';
 });
 
 //일정추가 2depth
@@ -103,26 +105,77 @@ function search(){
     if(searchInput.value===''){
         alert('검색어를 입력해주세요.')
     } else {
+        let currentPage = 1;
+        const itemsPage = 10;
+        let totalCount = 0;
         let resultDiv = '';
         let keyword = searchInput.value;
-        let url = `https://apis.data.go.kr/B551011/KorService1/searchKeyword1?serviceKey=${tourAPIKEY}&MobileApp=TripTrav&MobileOS=ETC&pageNo=1&numOfRows=10&listYN=Y&&arrange=A&contentTypeId=12&keyword=${keyword}&_type=json`;
-        searchKeyword(url).then(result=>{
-            console.log(result);
-            result.forEach(key=>{
-                resultDiv+=`
+        let url = `https://apis.data.go.kr/B551011/KorService1/searchKeyword1?serviceKey=${tourAPIKEY}&MobileApp=TripTrav&MobileOS=ETC&pageNo=&numOfRows=100&listYN=Y&&arrange=A&contentTypeId=12&keyword=${keyword}&_type=json`;
+
+        function displayResult(result){
+            totalCount = result.totalCount;
+
+            if(totalCount>=1){
+                const start = (currentPage-1)*itemsPage;
+                const end = Math.min(start+itemsPage, totalCount);
+                const itemsDisplay = result.items.item.slice(start, end);
+
+                itemsDisplay.forEach(key=>{
+                    resultDiv += `
                     <div class="depth2_search">
                         <div class="depth2_search_area">
-                            <div class="depth2_search_img"></div>
-                            <div class="depth2_search_name">${key.title}</div>
+                            <div class="depth2_search_img" data-image="${key.firstimage}"></div>
+                            <div class="depth2_search_name" data-id="${key.contentid}">${key.title}</div>
                             <div class="depth2_search_addr">${key.addr1}</div>
                         </div>
+                        <div class="addPlanBtn" onclick="newPlan(event)"><img src="/dist/image/plus.svg"></div>
                     </div>`;
-                document.querySelector('.searchResultDiv').innerHTML=resultDiv;
-                const imageDiv = document.querySelectorAll('.depth2_search_img');
-                imageDiv.forEach(img=>{
-                    img.style.backgroundImage=`url(${key.firstimage})`;
                 })
+
+                document.querySelector('.searchResultDiv').innerHTML=resultDiv;
+
+                if(totalCount > currentPage * itemsPage){
+                    const more = `<div class="morePlaceBtn">더보기<img src="/dist/image/chevron-down.svg"></div>`;
+                    document.querySelector('.searchResultDiv').innerHTML += more;
+
+                    // Attach event listener programmatically
+                    document.querySelector('.morePlaceBtn').addEventListener('click', loadMore);
+                    paddingSetting();
+                }
+
+                requestAnimationFrame(() => {
+                    const imageDivs = document.querySelectorAll('.depth2_search_img');
+                    imageDivs.forEach(img => {
+                        const imageUrl = img.getAttribute('data-image');
+                        img.style.backgroundImage = `url(${imageUrl})`;
+                    });
+                });
+                paddingSetting();
+            } else if(totalCount<1){
+                const noResult = `<div class="noResult"><img src="/dist/image/alert-circle.svg">검색결과가 없습니다</div>`
+                document.querySelector('.searchResultDiv').innerHTML=noResult;
+            }
+        }
+
+        function loadMore(){
+            currentPage++;
+            searchKeyword(url).then(result=>{
+                displayResult(result);
             })
+        }
+
+        function paddingSetting(){
+            const name = document.querySelectorAll('.depth2_search_name');
+            name.forEach(nameKey=>{
+                if (nameKey.innerText.length>=19){
+                    nameKey.style.paddingTop='0';
+                }
+            })
+        }
+
+        searchKeyword(url).then(result=>{
+            console.log(result);
+            displayResult(result);
         })
     }
 }
@@ -131,24 +184,46 @@ async function searchKeyword(url){
     try{
         const response = await fetch(url);
         const data = await response.json();
-        const items = data.response.body.items.item;
+        const items = data.response.body;
         return items;
     } catch(err){
         console.log(err);
     }
 }
 
-async function getImage(url) {
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
-        const items = data.response.body.items.item;
-        return items.map(item => item.firstimage);
-    } catch (error) {
-        console.log(error);
-        return [];
+//일정삽입하기
+function newPlan(event){
+    if(document.querySelector('.btnText').innerText==='편집'){
+         if(confirm('일정을 편집하시겠습니까?')){
+             const searchDiv = event.target.closest('.depth2_search');
+             const contentId = searchDiv.querySelector('.depth2_search_name').getAttribute('data-id');
+             const placeName = searchDiv.querySelector('.depth2_search_name').innerText
+             const placeAddress = searchDiv.querySelector('.depth2_search_addr').innerText;
+
+             const newLi = `<li class="oneContent" data-id="${contentId}" draggable="false">
+                            <div class="deletePlan hidden">×</div>
+                            <div class="drag hidden" draggable="true">
+                                <img src="/dist/image/drag.png" class="dragIcon">
+                            </div>
+                            <div class="name_cate">
+                                <span class="placeName">${placeName}</span>
+                                <span class="placeCate"></span>
+                            </div>
+                            <div class="rate_count">
+                                <span class="placeRate"></span>
+                                <span class="placeRateCount"></span>
+                            </div>
+                            <div class="placeImgDiv">
+                                <div class="placeImg"></div>
+                                <div class="placeImg"></div>
+                                <div class="placeImg"></div>
+                            </div>
+                        </li>`;
+             document.querySelector('.contentArea').insertAdjacentHTML('beforeend', newLi);
+         }
     }
 }
+
 
 //상단 일수별 슬라이드
 let slideWrap = document.querySelector('.slideWrap');
@@ -225,6 +300,8 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(result);
         let content='';
         result.forEach(key=>{
+            //카테고리 -> 관광지 / 음식점 같은 api 코드 넣기
+            //어차피 id별 이미지가져올꺼니까 주소도 가져와서 넣음되겠다
             //a태그 추가작업 필요
             content += `<li class="oneContent" data-id="${key.subcontentid}">
                     <div class="deletePlan hidden">&times;</div>
@@ -481,3 +558,6 @@ container.addEventListener('click', (e) => {
 
 //고민점
 //투어 id 가져가서 각 id별 좌표값, 대표이미지, 서브이미지 가져오기(subname수만큼)
+//일정 편집 안들어갔는데 2depth 열어서 일정추가하면 일정을 편집하시겠습니까? confirm 띄우고 ok하면 일정편집으로 들어가기
+//2depth 닫으면 class on 추천 여행지로 돌아가게 만들기
+//일정편집 중에 닫기 버튼누르면 편집을 그만히시겠습니까? 띄우고 ok하면 해당 순서 배열로 저장, 버튼 저장으로 돌려서 닫기
