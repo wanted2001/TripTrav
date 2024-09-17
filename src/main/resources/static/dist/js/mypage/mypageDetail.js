@@ -6,6 +6,11 @@ const wishPlace = "/wishPlace";
 const wishTrip = "/wishTrip";
 
 pageCall(tripList);
+pageHover("tripList");
+
+document.querySelector(".settingProfile").addEventListener('click',()=>{
+
+})
 
 document.querySelectorAll('#tripList,#tripReview,#wishPlace,#wishTrip').forEach(button=>{
     button.addEventListener('click',(e)=>{
@@ -32,15 +37,18 @@ document.querySelectorAll('#tripList,#tripReview,#wishPlace,#wishTrip').forEach(
     })
 })
 
-// 호버 관련하여 수정중
+// !important 키워드에 대한 사용법을 알게됨
 function pageHover(id) {
-    document.querySelectorAll(".myPageList > li").forEach(li => {
-        li.classList.remove('highlighted');
+    const listItems = document.querySelectorAll(".myPageList > li");
+    listItems.forEach(item => {
+        const link = item.querySelector('a');
+        if (link.id === id) {
+            item.classList.add('active');
+        } else {
+            item.classList.remove('active');
+        }
     });
-    const selectedItem = document.getElementById(id).parentElement;
-    selectedItem.classList.add('highlighted');
 }
-
 
 function pageCall(page) {
     const mypage = "/mypage" + page;
@@ -96,4 +104,6 @@ function isScriptAlreadyIncluded(src) {
     }
     return false;
 }
+
+
 
