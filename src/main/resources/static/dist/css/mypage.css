@@ -75,14 +75,13 @@
     transition: background-color 0.3s ease;
 }
 
-.myPageList{
+.myPageList {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
-
 }
 
-.myPageList>li{
+.myPageList > li {
     border-bottom: 2px solid #B3B3B3;
     cursor: pointer;
     display: flex;
@@ -90,27 +89,27 @@
     justify-content: space-around;
     width: 360px;
     height: 50px;
+    transition: border-bottom 0.3s, color 0.3s; /* 부드러운 효과 */
 }
 
-.myPageList>li:hover{
+.myPageList > li:hover {
     border-bottom: 2px solid black;
 }
 
-.myPageList>li:hover>a {
+.myPageList > li:hover > a {
     color: black;
-
 }
 
-.myPageList>li>a {
+.myPageList > li > a {
     color: #B3B3B3;
 }
 
-.highlighted {
-    border-bottom: 2px solid black;
+.myPageList > li.active {
+    border-bottom: 2px solid black !important;
 }
 
-.highlighted > a {
-    color: black;
+.myPageList > li.active > a {
+    color: black !important;
 }
 
 .resultMyPage{
