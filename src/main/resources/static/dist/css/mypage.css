@@ -75,14 +75,13 @@
     transition: background-color 0.3s ease;
 }
 
-.myPageList{
+.myPageList {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
-
 }
 
-.myPageList>li{
+.myPageList > li {
     border-bottom: 2px solid #B3B3B3;
     cursor: pointer;
     display: flex;
@@ -90,27 +89,27 @@
     justify-content: space-around;
     width: 360px;
     height: 50px;
+    transition: border-bottom 0.3s, color 0.3s;
 }
 
-.myPageList>li:hover{
+.myPageList > li:hover {
     border-bottom: 2px solid black;
 }
 
-.myPageList>li:hover>a {
+.myPageList > li:hover > a {
     color: black;
-
 }
 
-.myPageList>li>a {
+.myPageList > li > a {
     color: #B3B3B3;
 }
 
-.highlighted {
-    border-bottom: 2px solid black;
+.myPageList > li.active {
+    border-bottom: 2px solid black !important;
 }
 
-.highlighted > a {
-    color: black;
+.myPageList > li.active > a {
+    color: black !important;
 }
 
 .resultMyPage{
@@ -152,5 +151,116 @@
     display: flex;
     flex-direction: column;
 }
+
+/*모달창*/
+.updateModal {
+    font-family: LINESeedKR-Rg;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    flex-direction: column;
+    background-color: rgba(0, 0, 0, 0.34);
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transform: none;
+}
+
+.modal-header{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: white;
+    height: 40px;
+    width: 375px;
+    border: 2px solid #B3B3B3;
+    border-radius:10px 10px 0 0;
+    border-bottom: none;
+}
+
+.profileUpdateImg{
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    border: 1px solid black;
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+
+.modalCloseBtn{
+    width: 14px;
+    height: 28px;
+    color: orange;
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    position: relative;
+    right: -15px;
+}
+
+.updateProfile{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.imgBtn{
+    position: absolute;
+    top: 105px;
+    right: 85px;
+}
+
+.profileUpdateInput{
+    display: none;
+}
+
+.modal-section{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    background-color: white;
+    border-radius:0 0 10px 10px;
+    height: 385px;
+    width: 375px;
+    padding-top: 20px;
+    border: 2px solid #B3B3B3;
+    border-top: none;
+
+    form{
+        width: 300px;
+        height: 400px;
+    }
+
+    p input{
+        padding: 10px;
+        width: 90%;
+        margin: 8px 0;
+        border: none;
+        background-color: #d3d3d361;
+        border-radius: 5px;
+        outline: none;
+    }
+
+    p button{
+        width: 98%;
+        margin: 24px 0;
+        height: 35px;
+        border: none;
+        background-color: orange;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+}
+
+
+
+
 
 

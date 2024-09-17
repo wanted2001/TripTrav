@@ -1,6 +1,3 @@
-html {
-    scroll-behavior: smooth;
-}
 .header-nav a{
     color: black;
 }
@@ -9,26 +6,74 @@ main {
     font-family: LINESeedKR-Rg;
 }
 .titleSection {
-    width: 1400px;
-    height: 500px;
+    width: 100%;
+    height: 480px;
     display: inline-block;
+    position: relative;
+    margin: 0 auto;
+    background-color: #dbdbdb;
+    border-bottom: 1px solid black;
 }
 
 .location {
-    width: 400px;
+    width: auto;
     height: 50px;
     position: relative;
-    top: 130px;
-    left: 50px;
+    top: 150px;
+    left: 300px;
     text-align: left;
     line-height: 55px;
-    font-size: 25px;
+    font-size: 40px;
+    z-index: 1;
 }
 
+.imageUrls {
+    display: flex;
+    justify-content: space-between;
+    width: 1400px;
+    height: 300px;
+    position: absolute;
+    top: 220px;
+    left: 300px;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.imageUrls img {
+    height: 250px;
+    width: 250px;
+    border-radius: 10px;
+    transition: transform 0.5s ease;
+    object-fit: cover;
+}
+
+.imageUrls img:hover {
+    transform: scale(1.05);
+}
+
+button.prev, button.next {
+    cursor: pointer;
+    position: absolute;
+    top: 350px;
+    transform: translateY(-50%);
+    width: 30px;
+    color: white;
+    font-size: 60px;
+    border: none;
+    border-radius: 30px;
+    background-color: transparent;
+}
+button.prev {
+    left: 273px;
+}
+button.next {
+    right: 194px;
+}
 .firstLine{
     height: 10px;
 }
 .infoSection{
+    width: 1400px;
     height: 350px;
     text-align : left;
     position: relative;
@@ -67,6 +112,7 @@ main {
     text-align: left;
     line-height: 40px;
     margin-top: 10px;
+    border-bottom: 1px solid black;
 }
 .details>p{
     padding-right: 120px;
@@ -81,27 +127,63 @@ main {
     position: relative;
     margin-left: 300px;
     width: 1400px;
-    height: 500px;
-    background-color: red;
+    height: auto;
     margin-top: 10px;
     text-align: left;
+    border-bottom: 1px solid black;
 }
-.reviews>p{
-    padding-right: 120px;
+.reviews>span:first-child{
+    display: inline-block;
+    padding-right: 20px;
+    margin-top: 20px;
+    margin-left: 10px;
+}
+.inputDiv{
+    margin-top: 30px;
+    margin-left: 250px;
+    width: 900px;
+    height: 170px;
+    background-color: #F3A701;
+}
+.reviewArea{
+    width: 800px;
+    height: 75px;
+    resize: none;
+    margin-left: 43px;
+    margin-top: 30px;
+    font-size: 18px;
+    padding-left: 10px;
+    padding-top: 10px;
+}
+.reviewArea:hover{
+    border: 1px solid black;
+}
+.inputDiv > form > button{
+    margin-top: 7px;
+    font-size: 17px;
+    position: absolute;
+    right: 293px;
+}
+.cameraInput{
+    margin-right: 60px;
 }
 .buttons{
-    text-align: center;
+    margin-top: 30px;
+    text-align: right;
+    margin-right: 250px;
 }
-.reviews>div{
-    margin-top: 10px;
-    line-height: 50px;
+.review{
+    margin-top: 25px;
+    margin-left: 250px;
 }
+
 .transportation{
     position: relative;
     margin-left: 300px;
     width: 1400px;
     height: auto;
     background-color: #fb763f;
+    border-bottom: 1px solid black;
 }
 .transportation>p{
     text-align: left;
@@ -110,6 +192,13 @@ main {
 .transportation>div{
     line-height: 30px;
     margin-top: 10px;
+
+}
+.title{
+    width: 100%;
+}
+.distance{
+    width: 100%;
 }
 .map{
     position: relative;
