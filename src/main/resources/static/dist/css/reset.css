@@ -44,6 +44,11 @@ table {
     border-collapse: collapse;
     border-spacing: 0;
 }
+
+button{
+    border: none;
+    background-color: rgba(255, 255, 255, 0);
+}
 @font-face{
     font-family: LINESeedKR-Bd;
     src: url(../font/LINESeedKR-Bd.otf) format("opentype");
