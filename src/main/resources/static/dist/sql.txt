@@ -1,18 +1,96 @@
-//2024-09-04 user, auth table 생성
 CREATE TABLE `user` (
-    `uno` BIGINT NOT NULL AUTO_INCREMENT,
-    `email` VARCHAR(255) NOT NULL,
-    `pw` VARCHAR(255),
-    `nickname` VARCHAR(64) NOT NULL,
-    `profile` VARCHAR(500),
-    `provider` VARCHAR(255),
-    `provider_id` VARCHAR(255),
-    `role` VARCHAR(20) NOT NULL DEFAULT 'ROLE_USER',
-    PRIMARY KEY (`uno`)
-  );
+	`uno`	bigint	NOT NULL,
+	`email`	varchar(255)	NOT NULL,
+	`pw`	varchar(255)	NOT NULL,
+	`nickname`	varchar(64)	NOT NULL,
+	`profile`	varchar(500)	NULL,
+	`provider`	varchar(255)	NULL,
+	`provider_id`	varchar(255)	NULL,
+	`role`	varchar(20)	NOT NULL	DEFAULT "ROLE_USER"
+);
 
- CREATE TABLE `auth` (
-    email` VARCHAR(255) NOT NULL,
-    `role` VARCHAR(20) NOT NULL DEFAULT 'ROLE_USER'
-  );
+CREATE TABLE `review` (
+	`rno`	bigint	NOT NULL,
+	`uno`	bigint	NOT NULL,
+	`nickname`	varchar(64)	NOT NULL,
+	`re_rate`	float	NULL,
+	`re_content`	text	NULL,
+	`re_image`	varchar(500)	NULL,
+	`re_date`	datetime	NULL	DEFAULT NOW(),
+	`re_useful`	bigint	NULL DEFAULT 0,
+	`re_report`	int	NULL DEFAULT 0
+);
+
+CREATE TABLE `schedule_role` (
+	`sche_role`	int	NOT NULL,
+	`sco`	bigint	NOT NULL,
+	`uno`	bigint	NOT NULL
+);
+
+CREATE TABLE `schedule` (
+	`sco`	bigint	NOT NULL,
+	`sche_name`	varchar(64)	NOT NULL,
+	`sche_start`	datetime	NOT NULL,
+	`sche_end`	datetime	NOT NULL,
+	`sche_count`	int	NOT NULL,
+	`sche_memo`	text	NULL
+);
+
+CREATE TABLE `schedule_detail` (
+	`sco`	bigint	NOT NULL,
+	`code`	bigint	NOT NULL,
+	`sche_index`	int	NOT NULL
+);
+
+CREATE TABLE `like` (
+	`uno`	bigint	NOT NULL,
+	`code`	bigint	NOT NULL
+);
+
+ALTER TABLE `user` ADD CONSTRAINT `PK_USER` PRIMARY KEY (
+	`uno`
+);
+
+ALTER TABLE `review` ADD CONSTRAINT `PK_REVIEW` PRIMARY KEY (
+	`rno`
+);
+
+ALTER TABLE `schedule` ADD CONSTRAINT `PK_SCHEDULE` PRIMARY KEY (
+	`sco`
+);
+
+ALTER TABLE `review` ADD CONSTRAINT `FK_user_TO_review_1` FOREIGN KEY (
+	`uno`
+)
+REFERENCES `user` (
+	`uno`
+);
+
+ALTER TABLE `schedule_role` ADD CONSTRAINT `FK_schedule_TO_schedule_role_1` FOREIGN KEY (
+	`sco`
+)
+REFERENCES `schedule` (
+	`sco`
+);
+
+ALTER TABLE `schedule_role` ADD CONSTRAINT `FK_user_TO_schedule_role_1` FOREIGN KEY (
+	`uno`
+)
+REFERENCES `user` (
+	`uno`
+);
+
+ALTER TABLE `schedule_detail` ADD CONSTRAINT `FK_schedule_TO_schedule_detail_1` FOREIGN KEY (
+	`sco`
+)
+REFERENCES `schedule` (
+	`sco`
+);
+
+ALTER TABLE `like` ADD CONSTRAINT `FK_user_TO_like_1` FOREIGN KEY (
+	`uno`
+)
+REFERENCES `user` (
+	`uno`
+);
 
