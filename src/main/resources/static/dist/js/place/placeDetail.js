@@ -49,7 +49,29 @@ fetch(detailInfoUrl)
         document.querySelector('.details').innerHTML = `<p>소개</p><span>${jsonData.overview}</span>`;
         mapx = jsonData.mapx;
         mapy = jsonData.mapy;
-        //주변정보
+
+
+
+        let marker = {
+            position: new kakao.maps.LatLng(mapy, mapx),
+            text: '눌러서 경로를 검색해보세요!'
+        };
+        let staticMapContainer  = document.getElementById('staticMap'),
+            staticMapOption = {
+                center: new kakao.maps.LatLng(mapy, mapx),
+                level: 4,
+                marker: marker
+            };
+        let staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
+        document.getElementById('staticMap').addEventListener('click', () => {
+            const anchorTag = document.querySelector('#staticMap a');
+            if (anchorTag) {
+                anchorTag.href = `https://map.kakao.com/link/to/${title},${mapy},${mapx}`;
+            }
+        });
+
+
+        //주변지역 처리
         processNearbySightsAndFood(mapx, mapy).then(result => {
             renderNearbySightsAndFood(result.sights, result.food);
         }).catch(error => {
