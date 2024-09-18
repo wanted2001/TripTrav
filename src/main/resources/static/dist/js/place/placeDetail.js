@@ -50,8 +50,6 @@ fetch(detailInfoUrl)
         mapx = jsonData.mapx;
         mapy = jsonData.mapy;
 
-
-
         let marker = {
             position: new kakao.maps.LatLng(mapy, mapx),
             text: '눌러서 경로를 검색해보세요!'
@@ -69,7 +67,6 @@ fetch(detailInfoUrl)
                 anchorTag.href = `https://map.kakao.com/link/to/${title},${mapy},${mapx}`;
             }
         });
-
 
         //주변지역 처리
         processNearbySightsAndFood(mapx, mapy).then(result => {
@@ -292,3 +289,18 @@ function convertDistance(dist) {
         return kilometers.toFixed(0) + ' km';
     }
 }
+
+// 버튼누르면 섹션 이동하는 함수
+function scrollToSection(buttonClass, sectionClass) {
+    const button = document.querySelector(buttonClass);
+    const section = document.querySelector(sectionClass);
+    if (button && section) {
+        button.addEventListener('click', function() {
+            section.scrollIntoView({ behavior: 'smooth' });
+        });
+    }
+}
+scrollToSection('.outlineMove', '.details');
+scrollToSection('.reviewMove', '.reviews');
+scrollToSection('.findRouteMove', '.transportation');
+scrollToSection('.nearbyInfoMove', '.nearby');
