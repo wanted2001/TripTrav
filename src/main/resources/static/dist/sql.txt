@@ -1,16 +1,18 @@
 CREATE TABLE `user` (
-	`uno`	bigint	NOT NULL,
+	`uno`	bigint	AUTO_INCREMENT PRIMARY KEY,
 	`email`	varchar(255)	NOT NULL,
-	`pw`	varchar(255)	NOT NULL,
+	`pw`	varchar(255)	NULL,
 	`nickname`	varchar(64)	NOT NULL,
 	`profile`	varchar(500)	NULL,
 	`provider`	varchar(255)	NULL,
-	`provider_id`	varchar(255)	NULL,
-	`role`	varchar(20)	NOT NULL	DEFAULT "ROLE_USER"
+	`provider_id`	varchar(255)	NULL
 );
-
+CREATE TABLE `auth` (
+	`uno` bigint,
+	`role` varchar(20) NOT NULL
+);
 CREATE TABLE `review` (
-	`rno`	bigint	NOT NULL,
+	`rno`	bigint	AUTO_INCREMENT PRIMARY KEY,
 	`uno`	bigint	NOT NULL,
 	`nickname`	varchar(64)	NOT NULL,
 	`re_rate`	float	NULL,
@@ -28,7 +30,7 @@ CREATE TABLE `schedule_role` (
 );
 
 CREATE TABLE `schedule` (
-	`sco`	bigint	NOT NULL,
+	`sco`	bigint AUTO_INCREMENT PRIMARY KEY,
 	`sche_name`	varchar(64)	NOT NULL,
 	`sche_start`	datetime	NOT NULL,
 	`sche_end`	datetime	NOT NULL,
@@ -47,17 +49,6 @@ CREATE TABLE `like` (
 	`code`	bigint	NOT NULL
 );
 
-ALTER TABLE `user` ADD CONSTRAINT `PK_USER` PRIMARY KEY (
-	`uno`
-);
-
-ALTER TABLE `review` ADD CONSTRAINT `PK_REVIEW` PRIMARY KEY (
-	`rno`
-);
-
-ALTER TABLE `schedule` ADD CONSTRAINT `PK_SCHEDULE` PRIMARY KEY (
-	`sco`
-);
 
 ALTER TABLE `review` ADD CONSTRAINT `FK_user_TO_review_1` FOREIGN KEY (
 	`uno`
@@ -65,6 +56,14 @@ ALTER TABLE `review` ADD CONSTRAINT `FK_user_TO_review_1` FOREIGN KEY (
 REFERENCES `user` (
 	`uno`
 );
+
+ALTER TABLE `auth` ADD CONSTRAINT `FK_user_TO_auth_1` FOREIGN KEY (
+	`uno`
+)
+REFERENCES `user` (
+	`uno`
+);
+
 
 ALTER TABLE `schedule_role` ADD CONSTRAINT `FK_schedule_TO_schedule_role_1` FOREIGN KEY (
 	`sco`
