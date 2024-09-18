@@ -4,6 +4,8 @@
 main {
     text-align: center;
     font-family: LINESeedKR-Rg;
+    margin:0;
+    padding:0;
 }
 .titleSection {
     width: 100%;
@@ -11,7 +13,7 @@ main {
     display: inline-block;
     position: relative;
     margin: 0 auto;
-    background-color: #dbdbdb;
+    background-color: #f9e6cf;
     border-bottom: 1px solid black;
 }
 
@@ -51,23 +53,18 @@ main {
     transform: scale(1.05);
 }
 
-button.prev, button.next {
+.prev, .next {
     cursor: pointer;
     position: absolute;
     top: 350px;
     transform: translateY(-50%);
-    width: 30px;
-    color: white;
-    font-size: 60px;
-    border: none;
-    border-radius: 30px;
-    background-color: transparent;
+    width: 50px;
 }
-button.prev {
-    left: 273px;
+.prev {
+    left: 267px;
 }
-button.next {
-    right: 194px;
+.next {
+    right: 171px;
 }
 .firstLine{
     height: 10px;

@@ -12,50 +12,50 @@ let mapx = 0;
 let mapy = 0;
 
 // 기본정보 가져오기
-// fetch(detailInfoUrl)
-//     .then(response => response.json())
-//     .then(data => {
-//         const jsonData = data.response.body.items.item[0];
-//         const locationDiv = document.querySelector('.location');
-//         let city = splitAddr(jsonData.addr1)[0];
-//         let district = splitAddr(jsonData.addr1)[1];
-//         let title = jsonData.title;
-//         locationDiv.innerHTML = `<span>${city} > </span><span>${district} > </span><span>${title}</span>`;
-//
-//         const mainImgUrl = jsonData.firstimage;
-//         imageUrls.push(mainImgUrl);
-//
-//         // 추가 이미지를 가져오고 슬라이더에 반영
-//         getImage(imgUrl).then(result => {
-//             imageUrls.push(...result);
-//             updateImages();
-//         });
-//
-//         contentTypeId = jsonData.contenttypeid;
-//         document.querySelector('.title').innerText = jsonData.title
-//         document.querySelector('.locationInfo').innerHTML = `주소 : ${jsonData.addr1}`;
-//
-//         getIntroInfo(contentTypeId).then(result=>{
-//             const introData = result.response.body.items.item[0];
-//             document.querySelector('.telInfo').innerHTML = `전화번호 : ${introData.infocenter}`
-//             document.querySelector('.restInfo').innerHTML = `쉬는날 : ${introData.restdate}`
-//             document.querySelector('.timeInfo').innerHTML = `이용시간 : ${introData.usetime}`
-//         })
-//         getAdditionalInfo(contentTypeId).then(result => {
-//             const additionalInfoData = result.response.body.items.item[0];
-//             document.querySelector('.priceInfo').innerHTML = `${additionalInfoData.infoname} : ${additionalInfoData.infotext}`
-//         })
-//         document.querySelector('.homepageInfo').innerHTML = `홈페이지 : ${jsonData.homepage}`
-//         document.querySelector('.details').innerHTML = `<p>소개</p><span>${jsonData.overview}</span>`;
-//         mapx = jsonData.mapx;
-//         mapy = jsonData.mapy;
-//         //주변정보
-//         processNearbySightsAndFood(mapx, mapy).then(result => {
-//             renderNearbySightsAndFood(result.sights, result.food);
-//         }).catch(error => {
-//             console.log(error)
-//         });
-//     });
+fetch(detailInfoUrl)
+    .then(response => response.json())
+    .then(data => {
+        const jsonData = data.response.body.items.item[0];
+        const locationDiv = document.querySelector('.location');
+        let city = splitAddr(jsonData.addr1)[0];
+        let district = splitAddr(jsonData.addr1)[1];
+        let title = jsonData.title;
+        locationDiv.innerHTML = `<span>${city} > </span><span>${district} > </span><span>${title}</span>`;
+
+        const mainImgUrl = jsonData.firstimage;
+        imageUrls.push(mainImgUrl);
+
+        // 추가 이미지를 가져오고 슬라이더에 반영
+        getImage(imgUrl).then(result => {
+            imageUrls.push(...result);
+            updateImages();
+        });
+
+        contentTypeId = jsonData.contenttypeid;
+        document.querySelector('.title').innerText = jsonData.title
+        document.querySelector('.locationInfo').innerHTML = `주소 : ${jsonData.addr1}`;
+
+        getIntroInfo(contentTypeId).then(result=>{
+            const introData = result.response.body.items.item[0];
+            document.querySelector('.telInfo').innerHTML = `전화번호 : ${introData.infocenter}`
+            document.querySelector('.restInfo').innerHTML = `쉬는날 : ${introData.restdate}`
+            document.querySelector('.timeInfo').innerHTML = `이용시간 : ${introData.usetime}`
+        })
+        getAdditionalInfo(contentTypeId).then(result => {
+            const additionalInfoData = result.response.body.items.item[0];
+            document.querySelector('.priceInfo').innerHTML = `${additionalInfoData.infoname} : ${additionalInfoData.infotext}`
+        })
+        document.querySelector('.homepageInfo').innerHTML = `홈페이지 : ${jsonData.homepage}`
+        document.querySelector('.details').innerHTML = `<p>소개</p><span>${jsonData.overview}</span>`;
+        mapx = jsonData.mapx;
+        mapy = jsonData.mapy;
+        //주변정보
+        processNearbySightsAndFood(mapx, mapy).then(result => {
+            renderNearbySightsAndFood(result.sights, result.food);
+        }).catch(error => {
+            console.log(error)
+        });
+    });
 
 // 주소 처리 함수
 function splitAddr(address) {
