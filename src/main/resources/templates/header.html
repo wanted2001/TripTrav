@@ -58,13 +58,13 @@
     </nav>
     <div id="myModal" class="modal">
         <div class="modal-content">
-            <form action="/user/login" method="post" class="LoginArea">
+            <form id="loginForm" action="/user/login" method="post" class="LoginArea">
             <section class="loginBox">
                 <button class="close-button" id="closeModal">&times;</button>
                 <p><img src="/" class="logoImg"></p>
                 <h2>로그인</h2>
-                <p><input type="text" placeholder="이메일을 입력하세요."></p>
-                <p><input type="password" placeholder="비밀번호를 입력하세요."></p>
+                <p><input type="text" id="email" name="email" placeholder="이메일을 입력하세요."></p>
+                <p><input type="password" id="pw" name="pw" placeholder="비밀번호를 입력하세요."></p>
                 <p><button type="submit">로그인</button></p>
             </section>
             </form>
@@ -81,6 +81,7 @@
         </div>
     </div>
     <script src="/dist/js/loginJoin.js"></script>
+    <script src="/dist/js/user/login.js"></script>
 </body>
 </th:block>
 </html>
