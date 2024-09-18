@@ -32,6 +32,7 @@
         }
         a{
             color: white;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -46,7 +47,7 @@
             <ul class="middleUl">
                 <li><a th:href="@{/}">Maps</a></li>
                 <li><a th:href="@{/}">Trips</a></li>
-                <li><a th:href="@{/?search=true}">Search</a></li>
+                <li><a id="searchA">Search</a></li>
             </ul>
         </div>
         <div class="rightBox">
