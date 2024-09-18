@@ -14,7 +14,7 @@
     <select id="searchUser" resultType="com.www.triptrav.domain.UserVO">
         select * from user where provider_id=#{providerId}
     </select>
-    <select id="checkEmail">
+    <select id="checkEmail"  resultType="com.www.triptrav.domain.UserVO">
         select * from user where email=#{email}
     </select>
     <select id="selectAuth" resultType="com.www.triptrav.domain.UserVO">
