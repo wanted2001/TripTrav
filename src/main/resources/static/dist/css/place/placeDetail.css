@@ -119,6 +119,7 @@ main {
     word-break: break-all;
     text-indent : 10px;
     margin-left: 10px;
+    margin-bottom: 30px;
 }
 .reviews{
     position: relative;
@@ -186,7 +187,6 @@ main {
     margin-top: 10px;
     margin-left: 10px;
 }
-
 
 .title{
     width: 100%;
