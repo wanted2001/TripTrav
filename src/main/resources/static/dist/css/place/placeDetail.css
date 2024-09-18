@@ -18,7 +18,7 @@ main {
 }
 
 .location {
-    width: auto;
+    width: 1400px;
     height: 50px;
     position: relative;
     top: 150px;
@@ -61,10 +61,10 @@ main {
     width: 50px;
 }
 .prev {
-    left: 267px;
+    left: 259px;
 }
 .next {
-    right: 171px;
+    right: 163px;
 }
 .firstLine{
     height: 10px;
@@ -179,18 +179,15 @@ main {
     margin-left: 300px;
     width: 1400px;
     height: auto;
-    background-color: #fb763f;
     border-bottom: 1px solid black;
 }
 .transportation>p{
     text-align: left;
     margin-top: 10px;
+    margin-left: 10px;
 }
-.transportation>div{
-    line-height: 30px;
-    margin-top: 10px;
 
-}
+
 .title{
     width: 100%;
 }

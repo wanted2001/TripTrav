@@ -5,7 +5,7 @@
     <title>상세페이지</title>
     <link rel="stylesheet" href="/dist/css/place/placeDetail.css">
     <script src="/dist/js/key.js"></script>
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2405143deeab244b2402da9e3bd9a581"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2405143deeab244b2402da9e3bd9a581&libraries=services,clusterer,drawing"></script>
 </head>
 <body>
 <th:block th:replace="~{header :: header}"></th:block>
@@ -14,8 +14,8 @@
         <div class="location">
         </div>
         <div class="imageUrls"></div>
-        <img src="/dist/image/arrow-left.svg" class="prev" alt="noPic">
-        <img src="/dist/image/arrow-right.svg" class="next" alt="noPic">
+        <img src="/dist/image/chevron-left.svg" class="prev" alt="noPic">
+        <img src="/dist/image/chevron-right.svg" class="next" alt="noPic">
     </section>
     <section class="infoSection">
         <div class="firstLine">
@@ -70,11 +70,8 @@
     </section>
     <section class="transportation">
         <p>찾아가는 길</p>
-        <div class="public-transportation">
-
-        </div>
+        <div id="staticMap" style="width:1000px;height:500px; margin: 0 auto"></div>
     </section>
-    <div id="map" style="width:500px;height:400px;"></div>
     <section class="nearby">
         <p>근처 관광지</p>
         <div class="attractions">
@@ -100,12 +97,7 @@
 </main>
 <script src="/dist/js/place/placeDetail.js"></script>
 <script>
-    // var container = document.getElementById('map');
-    // var options = {
-    //     center: new kakao.maps.LatLng(33.450701, 126.570667),
-    //     level: 3
-    // };
-    // var map = new kakao.maps.Map(container, options);
+
 </script>
 </body>
 </html>
