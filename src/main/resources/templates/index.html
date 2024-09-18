@@ -137,12 +137,11 @@
         }
 
         window.onload = changeImage;
-        let query = window.location.href
-        if(query.includes("search")){
+        document.getElementById('searchA').addEventListener('click',()=>{
             document.querySelector('.mainText').style.display = 'none';
             document.querySelector('.mainBtnDiv').style.display = 'none';
             document.querySelector('.inputWrap').style.display = '';
-        }
+        })
     </script>
     <script th:inline="javascript">
         window.onload = function () {
