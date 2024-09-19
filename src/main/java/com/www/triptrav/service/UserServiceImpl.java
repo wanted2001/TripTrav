@@ -19,4 +19,15 @@ public class UserServiceImpl implements UserService {
             userMapper.insertAuth(uvo.getEmail());
         }
     }
+
+    @Override
+    public UserVO checkEmail(String email) {
+        UserVO user = userMapper.checkEmail(email);
+        if (user != null) {
+            user.setAuthList(userMapper.selectAuth(email));
+            return user;
+        }
+        return null;
+    }
+
 }

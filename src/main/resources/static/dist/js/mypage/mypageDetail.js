@@ -1,4 +1,5 @@
 const bottom = document.getElementById("resultMyPage");
+const modal = document.querySelector(".updateModal");
 const js = "/dist/js/mypage";
 const tripList = "/tripList";
 const tripReview = "/tripReview";
@@ -6,6 +7,7 @@ const wishPlace = "/wishPlace";
 const wishTrip = "/wishTrip";
 
 pageCall(tripList);
+pageHover("tripList");
 
 document.querySelectorAll('#tripList,#tripReview,#wishPlace,#wishTrip').forEach(button=>{
     button.addEventListener('click',(e)=>{
@@ -32,16 +34,21 @@ document.querySelectorAll('#tripList,#tripReview,#wishPlace,#wishTrip').forEach(
     })
 })
 
-// 호버 관련하여 수정중
+// !important 키워드에 대한 사용법을 알게됨
+//페이지 호버
 function pageHover(id) {
-    document.querySelectorAll(".myPageList > li").forEach(li => {
-        li.classList.remove('highlighted');
+    const listItems = document.querySelectorAll(".myPageList > li");
+    listItems.forEach(item => {
+        const link = item.querySelector('a');
+        if (link.id === id) {
+            item.classList.add('active');
+        } else {
+            item.classList.remove('active');
+        }
     });
-    const selectedItem = document.getElementById(id).parentElement;
-    selectedItem.classList.add('highlighted');
 }
 
-
+// 페이지 호출
 function pageCall(page) {
     const mypage = "/mypage" + page;
     console.log(mypage);
@@ -61,6 +68,7 @@ function pageCall(page) {
         });
 }
 
+//js 호출
 function loadScript(page){
     const src = js+page+'.js';
     removeAllScript(src);
@@ -71,6 +79,7 @@ function loadScript(page){
     }
 }
 // src를 keep 할것인지 추후 결정 예정...
+//js 삭제
 function removeAllScript(src){
     const toKeep =['/dist/js/header.js','/dist/js/loginJoin.js',js+'/mypageDetail.js'];
     const scripts = document.getElementsByTagName('script');
@@ -87,6 +96,7 @@ function removeAllScript(src){
     }
 }
 
+//js 체크
 function isScriptAlreadyIncluded(src) {
     const scripts = document.getElementsByTagName('script');
     for (let i = 0; i < scripts.length; i++) {
@@ -96,4 +106,63 @@ function isScriptAlreadyIncluded(src) {
     }
     return false;
 }
+
+//모달 열기
+function openUpdateModal(){
+    modal.style.display = "flex";
+    disableScroll();
+}
+
+//모달 닫기
+function closeUpdateModal(){
+    modal.style.display = "none";
+    enableScroll();
+}
+
+//파일열기
+function fileOpen(){
+    document.getElementById("profileUpdateImg").click();
+}
+
+//스크롤 막기
+var keys = {37: 1, 38: 1, 39: 1, 40: 1};
+
+function preventDefault(e) {
+    e.preventDefault();
+}
+
+function preventDefaultForScrollKeys(e) {
+    if (keys[e.keyCode]) {
+        preventDefault(e);
+        return false;
+    }
+}
+
+var supportsPassive = false;
+try {
+    window.addEventListener("test", null, Object.defineProperty({}, 'passive', {
+        get: function () { supportsPassive = true; }
+    }));
+} catch(e) {}
+
+var wheelOpt = supportsPassive ? { passive: false } : false;
+var wheelEvent = 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel';
+
+// call this to Disable
+function disableScroll() {
+    window.addEventListener('DOMMouseScroll', preventDefault, false); // older FF
+    window.addEventListener(wheelEvent, preventDefault, wheelOpt); // modern desktop
+    window.addEventListener('touchmove', preventDefault, wheelOpt); // mobile
+    window.addEventListener('keydown', preventDefaultForScrollKeys, false);
+}
+
+// call this to Enable
+function enableScroll() {
+    window.removeEventListener('DOMMouseScroll', preventDefault, false);
+    window.removeEventListener(wheelEvent, preventDefault, wheelOpt);
+    window.removeEventListener('touchmove', preventDefault, wheelOpt);
+    window.removeEventListener('keydown', preventDefaultForScrollKeys, false);
+}
+
+
 

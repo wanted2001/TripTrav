@@ -16,10 +16,12 @@ public class CustomUserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserVO uvo = userMapper.checkEmail(email);
-        uvo.setAuthList(userMapper.selectAuth(email));
-        if(uvo!=null){
-            return new PrincipalDetails(uvo);
+
+        if (uvo == null) {
+            throw new UsernameNotFoundException("해당 이메일로 유저를 찾을 수 없슴! > > " + email);
         }
-        return (UserDetails) new AuthUser(uvo);
+
+        uvo.setAuthList(userMapper.selectAuth(email));
+        return new PrincipalDetails(uvo);
     }
 }

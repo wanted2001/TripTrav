@@ -5,7 +5,7 @@
     <title>상세페이지</title>
     <link rel="stylesheet" href="/dist/css/place/placeDetail.css">
     <script src="/dist/js/key.js"></script>
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2405143deeab244b2402da9e3bd9a581"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2405143deeab244b2402da9e3bd9a581&libraries=services,clusterer,drawing"></script>
 </head>
 <body>
 <th:block th:replace="~{header :: header}"></th:block>
@@ -13,13 +13,9 @@
     <section class="titleSection">
         <div class="location">
         </div>
-        <div class="carousel-container">
-            <div class="carousel">
-                <div class="carousel-item"></div>
-                <div class="carousel-item"></div>
-                <div class="carousel-item"></div>
-            </div>
-        </div>
+        <div class="imageUrls"></div>
+        <img src="/dist/image/chevron-left.svg" class="prev" alt="noPic">
+        <img src="/dist/image/chevron-right.svg" class="next" alt="noPic">
     </section>
     <section class="infoSection">
         <div class="firstLine">
@@ -35,22 +31,25 @@
         <a class="homepageInfo"></a>
     </section>
     <section class="buttonSection">
-        <button>개요</button>
-        <button>리뷰</button>
-        <button>찾아가는 길</button>
-        <button>주변정보</button>
+        <button class="outlineMove">개요</button>
+        <button class="reviewMove">리뷰</button>
+        <button class="findRouteMove">찾아가는 길</button>
+        <button class="nearbyMove">주변정보</button>
     </section>
-
-    <section class="details">
-    </section>
-
+    <section class="details"></section>
     <section class="reviews">
-        <p>리뷰</p>
+        <span>리뷰</span><span class="reviewCount">100개</span>
+        <div class="inputDiv">
+            <form action="/place/review" method="post">
+                <textarea class="reviewArea" cols="30" rows="5" placeholder="로그인 후 리뷰를 남겨보세요."></textarea><br>
+                <button class="cameraInput"><img src="">카메라</button>
+                <button class="addButton" type="button">등록</button>
+            </form>
+        </div>
         <div class="buttons">
             <button>높은 평점순</button>
             <button>낮은 평점순</button>
             <button>최신순</button>
-            <button>리뷰 작성하기</button>
         </div>
         <div class="review">
             <div class="review-info"><img class="profileImage" alt="noPic" src=""></img>
@@ -65,27 +64,11 @@
                 <span class="review-rating">⭐⭐⭐⭐☆(4.0)</span>
             </div>
         </div>
-        <div class="review">
-            <div class="review-info"><img class="profileImage" alt="noPic" src=""></img>
-                <span class="nickName">닉네임</span>
-                <span class="regDate">등록날짜</span>
-                <button class="helpButton">도움</button>
-                <button class="reportButton">신고</button>
-            </div>
-            <div class="review-detail">
-                <h3>리뷰 제목</h3>
-                <p>리뷰 내용...</p>
-                <span class="review-rating">⭐⭐⭐⭐⭐(5.0)</span>
-            </div>
-        </div>
     </section>
     <section class="transportation">
         <p>찾아가는 길</p>
-        <div class="public-transportation">
-
-        </div>
+        <div id="staticMap" style="width:1000px;height:500px; margin: 0 auto"></div>
     </section>
-    <div id="map" style="width:500px;height:400px;"></div>
     <section class="nearby">
         <p>근처 관광지</p>
         <div class="attractions">
@@ -107,16 +90,9 @@
                 </div>
             </div>
         </div>
+        <div class="blank"></div>
     </section>
 </main>
 <script src="/dist/js/place/placeDetail.js"></script>
-<script>
-    var container = document.getElementById('map');
-    var options = {
-        center: new kakao.maps.LatLng(33.450701, 126.570667),
-        level: 3
-    };
-    var map = new kakao.maps.Map(container, options);
-</script>
 </body>
 </html>

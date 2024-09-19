@@ -63,6 +63,42 @@
             width: 15px;
             margin-left: 4px;
         }
+        .inputWrap {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            text-align: center;
+            font-size: 40px;
+            font-family: LINESeedKR-Bd;
+            z-index: 10;
+        }
+        .inputWrap input {
+            width: 450px;
+            height: 50px;
+            margin-top: 50px;
+            font-size: 16px;
+            border: none;
+            border-radius: 15px;
+            padding-left: 10px;
+        }
+        .inputWrap>span{
+            letter-spacing: 8px;
+        }
+        .inputWrap>button>img{
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: inline-block;
+            transition: transform 0.5s ease;
+            margin-left: 10px;
+            transform: translate(0, 12px);
+        }
+        .inputWrap>button>img:hover {
+            transform: rotate(360deg);
+            transform-origin: top left;
+        }
     </style>
 </head>
     <body>
@@ -83,32 +119,11 @@
                 </button>
             </div>
         </div>
-<!--        <div id="myModal" class="modal">-->
-<!--            <div class="modal-content">-->
-<!--                <section class="loginBox">-->
-<!--                    <button class="close-button" id="closeModal">&times;</button>-->
-<!--                    <p><img src="/" class="logoImg"></p>-->
-<!--                    <h2>로그인</h2>-->
-<!--                    <p><input type="text" placeholder="이메일을 입력하세요."></p>-->
-<!--                    <p><input type="password" placeholder="비밀번호를 입력하세요."></p>-->
-<!--                    <p><button type="button">로그인</button></p>-->
-<!--                </section>-->
-<!--                <section class="joinBox">-->
-<!--                    <p>회원이 아니신가요? <a id="joinBtn">회원가입</a> </p>-->
-<!--                    <p>계정을 잊으셨나요? <a id="findBtn">아이디/비밀번호 찾기</a> </p>-->
-<!--                </section>-->
-<!--                <hr style="border: solid 0.5px lightgrey">-->
-<!--                <section class="snsJoinBox">-->
-<!--                    <button type="button">-->
-<!--                    </button>-->
-<!--                    <button type="button">-->
-<!--                    </button>-->
-<!--                    <button type="button">-->
-<!--                    </button>-->
-<!--                </section>-->
-<!--            </div>-->
-<!--        </div>-->
-
+        <div class="inputWrap" style="display: none">
+            <span>여행지를 검색해보세요!</span><br>
+            <input type="text" id="placeInput">
+            <button id="searchBtn"><img src="/dist/image/search.svg"></button>
+        </div>
     <script>
         function changeImage(){
             const images = document.querySelectorAll('.mainBackImg img');
@@ -122,15 +137,20 @@
         }
 
         window.onload = changeImage;
+        document.getElementById('searchA').addEventListener('click',()=>{
+            document.querySelector('.mainText').style.display = 'none';
+            document.querySelector('.mainBtnDiv').style.display = 'none';
+            document.querySelector('.inputWrap').style.display = '';
+        })
     </script>
-        <script th:inline="javascript">
-            window.onload = function () {
-                const urlParams = new URLSearchParams(window.location.search);
-                if (urlParams.has('joinMsg')) {
-                    alert('회원가입이 완료되었습니다!');
-                    history.replaceState(null, '', window.location.pathname);
-                }
-            };
-        </script>
+    <script th:inline="javascript">
+        window.onload = function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('joinMsg')) {
+                alert('회원가입이 완료되었습니다!');
+                history.replaceState(null, '', window.location.pathname);
+            }
+        };
+    </script>
     </body>
 </html>

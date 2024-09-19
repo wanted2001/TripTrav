@@ -19,6 +19,8 @@ closeBtn.addEventListener('click', () => {
     closeBtn.classList.remove("visible");
     closeBtn.classList.add("hidden");
     depth2.classList.add("hidden");
+    searchInput.value='';
+    document.querySelector('.searchResultDiv').innerHTML='';
 });
 
 //일정추가 2depth
@@ -103,26 +105,77 @@ function search(){
     if(searchInput.value===''){
         alert('검색어를 입력해주세요.')
     } else {
+        let currentPage = 1;
+        const itemsPage = 10;
+        let totalCount = 0;
         let resultDiv = '';
         let keyword = searchInput.value;
-        let url = `https://apis.data.go.kr/B551011/KorService1/searchKeyword1?serviceKey=${tourAPIKEY}&MobileApp=TripTrav&MobileOS=ETC&pageNo=1&numOfRows=10&listYN=Y&&arrange=A&contentTypeId=12&keyword=${keyword}&_type=json`;
-        searchKeyword(url).then(result=>{
-            console.log(result);
-            result.forEach(key=>{
-                resultDiv+=`
+        let url = `https://apis.data.go.kr/B551011/KorService1/searchKeyword1?serviceKey=${tourAPIKEY}&MobileApp=TripTrav&MobileOS=ETC&pageNo=&numOfRows=100&listYN=Y&&arrange=A&contentTypeId=12&keyword=${keyword}&_type=json`;
+
+        function displayResult(result){
+            totalCount = result.totalCount;
+
+            if(totalCount>=1){
+                const start = (currentPage-1)*itemsPage;
+                const end = Math.min(start+itemsPage, totalCount);
+                const itemsDisplay = result.items.item.slice(start, end);
+
+                itemsDisplay.forEach(key=>{
+                    resultDiv += `
                     <div class="depth2_search">
                         <div class="depth2_search_area">
-                            <div class="depth2_search_img"></div>
-                            <div class="depth2_search_name">${key.title}</div>
+                            <div class="depth2_search_img" data-image="${key.firstimage}"></div>
+                            <div class="depth2_search_name" data-id="${key.contentid}">${key.title}</div>
                             <div class="depth2_search_addr">${key.addr1}</div>
                         </div>
+                        <div class="addPlanBtn" onclick="newPlan(event)"><img src="/dist/image/plus.svg"></div>
                     </div>`;
-                document.querySelector('.searchResultDiv').innerHTML=resultDiv;
-                const imageDiv = document.querySelectorAll('.depth2_search_img');
-                imageDiv.forEach(img=>{
-                    img.style.backgroundImage=`url(${key.firstimage})`;
                 })
+
+                document.querySelector('.searchResultDiv').innerHTML=resultDiv;
+
+                if(totalCount > currentPage * itemsPage){
+                    const more = `<div class="morePlaceBtn">더보기<img src="/dist/image/chevron-down.svg"></div>`;
+                    document.querySelector('.searchResultDiv').innerHTML += more;
+
+                    // Attach event listener programmatically
+                    document.querySelector('.morePlaceBtn').addEventListener('click', loadMore);
+                    paddingSetting();
+                }
+
+                requestAnimationFrame(() => {
+                    const imageDivs = document.querySelectorAll('.depth2_search_img');
+                    imageDivs.forEach(img => {
+                        const imageUrl = img.getAttribute('data-image');
+                        img.style.backgroundImage = `url(${imageUrl})`;
+                    });
+                });
+                paddingSetting();
+            } else if(totalCount<1){
+                const noResult = `<div class="noResult"><img src="/dist/image/alert-circle.svg">검색결과가 없습니다</div>`
+                document.querySelector('.searchResultDiv').innerHTML=noResult;
+            }
+        }
+
+        function loadMore(){
+            currentPage++;
+            searchKeyword(url).then(result=>{
+                displayResult(result);
             })
+        }
+
+        function paddingSetting(){
+            const name = document.querySelectorAll('.depth2_search_name');
+            name.forEach(nameKey=>{
+                if (nameKey.innerText.length>=19){
+                    nameKey.style.paddingTop='0';
+                }
+            })
+        }
+
+        searchKeyword(url).then(result=>{
+            console.log(result);
+            displayResult(result);
         })
     }
 }
@@ -131,24 +184,48 @@ async function searchKeyword(url){
     try{
         const response = await fetch(url);
         const data = await response.json();
-        const items = data.response.body.items.item;
+        const items = data.response.body;
         return items;
     } catch(err){
         console.log(err);
     }
 }
 
-async function getImage(url) {
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
-        const items = data.response.body.items.item;
-        return items.map(item => item.firstimage);
-    } catch (error) {
-        console.log(error);
-        return [];
+//일정삽입하기
+function newPlan(event){
+    if(document.querySelector('.btnText').innerText==='편집'){
+         if(confirm('일정을 편집하시겠습니까?')){
+             const searchDiv = event.target.closest('.depth2_search');
+             const contentId = searchDiv.querySelector('.depth2_search_name').getAttribute('data-id');
+             const placeName = searchDiv.querySelector('.depth2_search_name').innerText
+             const placeAddress = searchDiv.querySelector('.depth2_search_addr').innerText;
+
+             const newLi = `<li class="oneContent" data-id="${contentId}" draggable="false">
+                            <div class="deletePlan hidden">×</div>
+                            <div class="drag hidden" draggable="true">
+                                <img src="/dist/image/drag.png" class="dragIcon">
+                            </div>
+                            <div class="name_cate">
+                                <span class="placeName">${placeName}</span>
+                                <span class="placeCate"></span>
+                            </div>
+                            <div class="rate_count">
+                                <span class="placeRate"></span>
+                                <span class="placeRateCount"></span>
+                            </div>
+                            <div class="placeImgDiv">
+                                <div class="placeImg"></div>
+                                <div class="placeImg"></div>
+                                <div class="placeImg"></div>
+                            </div>
+                        </li>`;
+             document.querySelector('.contentArea').insertAdjacentHTML('beforeend', newLi);
+             document.querySelector('.btnText').innerText='저장';
+             document.query
+         }
     }
 }
+
 
 //상단 일수별 슬라이드
 let slideWrap = document.querySelector('.slideWrap');
@@ -225,11 +302,14 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(result);
         let content='';
         result.forEach(key=>{
+            //카테고리 -> 관광지 / 음식점 같은 api 코드 넣기
+            //어차피 id별 이미지가져올꺼니까 주소도 가져와서 넣음되겠다
             //a태그 추가작업 필요
             content += `<li class="oneContent" data-id="${key.subcontentid}">
                     <div class="deletePlan hidden">&times;</div>
-                    <div class="drag hidden">
-                        <img src="/dist/image/drag.png" class="dragIcon">
+                    <div class="changePlan hidden">
+                        <img src="/dist/image/triangle.svg" class="triangle">
+                        <img src="/dist/image/triangle.svg" class="downTriangle">
                     </div>
                     <div class="name_cate">
                         <span class="placeName">${key.subname}</span>
@@ -248,6 +328,68 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('.contentArea').innerHTML=content;
         })
     })
+});
+
+window.addEventListener('load', function() {
+    const triangleButtons = document.querySelectorAll('.triangle');
+    const downTriangleButtons = document.querySelectorAll('.downTriangle');
+
+    console.log(triangleButtons.length + '개의 triangle 버튼 찾음');
+    console.log(downTriangleButtons.length + '개의 downTriangle 버튼 찾음');
+
+    // 상단으로 이동하는 triangle 버튼에 이벤트 추가
+    triangleButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            let currentLi = button.closest('.oneContent');
+            let prevLi = currentLi.previousElementSibling;
+
+            // 이전 li가 있을 때만 동작
+            if (prevLi) {
+                // 이동될 요소에 애니메이션 클래스 추가
+                currentLi.classList.add('moving-up');
+                prevLi.classList.add('moving-down'); // 위에 있던 요소는 아래로 내려가야 함
+
+                // 애니메이션을 실행하기 위해 브라우저에 그리기 요청
+                requestAnimationFrame(() => {
+                    // DOM 조작을 애니메이션이 적용된 후에 처리
+                    setTimeout(() => {
+                        currentLi.parentNode.insertBefore(currentLi, prevLi);
+                        currentLi.classList.remove('moving-up');
+                        prevLi.classList.remove('moving-down');
+                    }, 400); // CSS transition 시간과 맞춰줌
+                });
+            }
+            console.log("click button");
+        });
+        console.log("triangle 버튼 이벤트 바인딩 완료");
+    });
+
+    // 하단으로 이동하는 downTriangle 버튼에 이벤트 추가
+    downTriangleButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            let currentLi = button.closest('.oneContent');
+            let nextLi = currentLi.nextElementSibling;
+
+            // 다음 li가 있을 때만 동작
+            if (nextLi) {
+                // 이동될 요소에 애니메이션 클래스 추가
+                currentLi.classList.add('moving-down');
+                nextLi.classList.add('moving-up'); // 아래에 있던 요소는 위로 올라가야 함
+
+                // 애니메이션을 실행하기 위해 브라우저에 그리기 요청
+                requestAnimationFrame(() => {
+                    // DOM 조작을 애니메이션이 적용된 후에 처리
+                    setTimeout(() => {
+                        currentLi.parentNode.insertBefore(nextLi, currentLi);
+                        currentLi.classList.remove('moving-down');
+                        nextLi.classList.remove('moving-up');
+                    }, 400); // CSS transition 시간과 맞춰줌
+                });
+            }
+            console.log('click down button');
+        });
+        console.log("down triangle 버튼 이벤트 바인딩 완료");
+    });
 });
 
 //데이터 불러오기
@@ -335,149 +477,178 @@ function saveMemo(){
     }
 }
 
-//편집
-let draggingElement = null;
-let draggingIndex = null;
-let startY = 0;
+//버튼으로 일정순서 변경
 const container = document.querySelector('.mapContentBox');
 
-container.addEventListener('click', (e) => {
-    const target = e.target;
-    const dragElements = document.querySelectorAll('.drag');
+function editPlan(event){
+    const target = event.target;
     const deleteBtn = document.querySelectorAll('.deletePlan');
-    //oneContent 배열로 변환
-    const oneContents = Array.from(container.querySelectorAll('.oneContent'));
+    const changeBtn = document.querySelectorAll('.changePlan');
 
-    if (target.classList.contains('editBtn')) {
+    if(target.classList.contains('editBtn')){
         deleteBtn.forEach(btn=>{
             btn.classList.remove('hidden');
         })
-        dragElements.forEach((drag) => {
-            drag.classList.remove('hidden');
-            drag.setAttribute('draggable', true);
-
-            // 드래그 시작
-            drag.addEventListener('dragstart', (event) => {
-                draggingElement = event.target.closest('.oneContent');
-                draggingIndex = oneContents.indexOf(draggingElement);
-                startY = event.clientY;
-                draggingElement.classList.add('dragging');
-                draggingElement.style.transition = 'none'; // 드래그 중에는 transition 제거
-            });
-
-            // 드래그 종료
-            drag.addEventListener('dragend', () => {
-                draggingElement.classList.remove('dragging');
-                draggingElement.style.transition = 'transform 0.3s ease'; // 드래그 종료 후 애니메이션 추가
-                draggingElement.style.transform = 'none';
-
-                // 모든 요소 transform 초기화
-                oneContents.forEach(content => content.style.transform = 'none');
-                draggingElement = null;
-            });
-        });
-
+        changeBtn.forEach(btn=>{
+            btn.classList.remove('hidden');
+        })
         target.innerText = '저장';
         target.classList.remove('editBtn');
         target.classList.add('saveBtn');
-
-        // 드래그 중 위치 업데이트
-        container.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            if (!draggingElement) return;
-
-            const deltaY = e.clientY - startY;
-
-            // 드래그 중인 요소 이동
-            draggingElement.style.transform = `translateY(${deltaY}px)`;
-
-            // 다른 요소들의 위치 업데이트
-            oneContents.forEach((content, index) => {
-                if (content !== draggingElement) {
-                    const box = content.getBoundingClientRect();
-                    const oneThirdPoint = box.top + (box.height / 2);
-
-                    // 드래그된 요소가 아래로 내려갈 때
-                    if (e.clientY > oneThirdPoint && index > draggingIndex) {
-                        content.style.transition = 'transform 0.3s ease';
-                        content.style.transform = `translateY(-${draggingElement.offsetHeight}px)`
-                    }
-                    // 드래그된 요소가 위로 올라갈 때
-                    else if (e.clientY < oneThirdPoint && index < draggingIndex) {
-                        content.style.transition = 'transform 0.3s ease';
-                        content.style.transform = `translateY(${draggingElement.offsetHeight}px)`;
-                    } else {
-                        content.style.transform = 'none';
-                    }
-                }
-            });
-        });
-
-        // 드래그 종료 후 위치 고정
-        container.addEventListener('drop', (e) => {
-            e.preventDefault();
-            if (!draggingElement) return;
-
-            const overElement = getDragAfterElement(container, e.clientY);
-
-            if (overElement && container.contains(overElement)) {
-                if (oneContents.indexOf(draggingElement) < oneContents.indexOf(overElement)) {
-                    container.insertBefore(draggingElement, overElement.nextElementSibling);
-                } else {
-                    container.insertBefore(draggingElement, overElement);
-                }
-            } else {
-                container.appendChild(draggingElement);
-            }
-
-            // 모든 요소 transform 및 순서 초기화
-            oneContents.forEach(content => {
-                content.style.transition = 'none'; // 애니메이션을 종료한 후 transition 제거
-                content.style.transform = 'none'; // 위치 초기화
-            });
-            updateOneContentsOrder();
-        });
-
-        // 위치 계산 함수
-        function getDragAfterElement(container, y) {
-            const draggableElements = [...container.querySelectorAll('.oneContent:not(.dragging)')];
-
-            return draggableElements.reduce((closest, child) => {
-                const box = child.getBoundingClientRect();
-                const offset = y - box.top - box.height / 2;
-
-                if (offset < 0 && offset > closest.offset) {
-                    return { offset: offset, element: child };
-                } else {
-                    return closest;
-                }
-            }, { offset: Number.NEGATIVE_INFINITY }).element;
-        }
-
-        // DOM 순서 업데이트 함수
-        function updateOneContentsOrder() {
-            oneContents.length = 0;
-            container.querySelectorAll('.oneContent').forEach(content => {
-                oneContents.push(content); // 실제 DOM 순서에 맞게 배열 업데이트
-            });
-        }
     } else if (target.classList.contains('saveBtn')) {
         // 저장 버튼을 클릭했을 때
-        dragElements.forEach((drag)=>{
-            drag.classList.add('hidden');
-        })
-        deleteBtn.forEach(btn=>{
-            btn.classList.add('hidden');
-        })
         target.classList.remove('saveBtn');
         target.classList.add('editBtn');
         target.innerText = '편집';
-        oneContents.forEach(drag=>{
-            drag.setAttribute('draggable', false);
-        })
     }
-});
+}
+
+function dragElements(drags){
+    drags.forEach(drag=>{
+        drag.classList.remove('hidden');
+    })
+}
+
+// container.addEventListener('click', (e) => {
+//     const target = e.target;
+//     const dragElements = document.querySelectorAll('.drag');
+//     const deleteBtn = document.querySelectorAll('.deletePlan');
+//     //oneContent 배열로 변환
+//     const oneContents = Array.from(container.querySelectorAll('.oneContent'));
+//
+//     if (target.classList.contains('editBtn')) {
+//         deleteBtn.forEach(btn=>{
+//             btn.classList.remove('hidden');
+//         })
+//         dragElements.forEach((drag) => {
+//             drag.classList.remove('hidden');
+//             drag.setAttribute('draggable', true);
+//
+//             // 드래그 시작
+//             drag.addEventListener('dragstart', (event) => {
+//                 draggingElement = event.target.closest('.oneContent');
+//                 draggingIndex = oneContents.indexOf(draggingElement);
+//                 startY = event.clientY;
+//                 draggingElement.classList.add('dragging');
+//                 draggingElement.style.transition = 'none'; // 드래그 중에는 transition 제거
+//             });
+//
+//             // 드래그 종료
+//             drag.addEventListener('dragend', () => {
+//                 draggingElement.classList.remove('dragging');
+//                 draggingElement.style.transition = 'transform 0.3s ease'; // 드래그 종료 후 애니메이션 추가
+//                 draggingElement.style.transform = 'none';
+//
+//                 // 모든 요소 transform 초기화
+//                 oneContents.forEach(content => content.style.transform = 'none');
+//                 draggingElement = null;
+//             });
+//         });
+//
+//         target.innerText = '저장';
+//         target.classList.remove('editBtn');
+//         target.classList.add('saveBtn');
+//
+//         // 드래그 중 위치 업데이트
+//         container.addEventListener('dragover', (e) => {
+//             e.preventDefault();
+//             if (!draggingElement) return;
+//
+//             const deltaY = e.clientY - startY;
+//
+//             // 드래그 중인 요소 이동
+//             draggingElement.style.transform = `translateY(${deltaY}px)`;
+//
+//             // 다른 요소들의 위치 업데이트
+//             oneContents.forEach((content, index) => {
+//                 if (content !== draggingElement) {
+//                     const box = content.getBoundingClientRect();
+//                     const oneThirdPoint = box.top + (box.height / 2);
+//
+//                     // 드래그된 요소가 아래로 내려갈 때
+//                     if (e.clientY > oneThirdPoint && index > draggingIndex) {
+//                         content.style.transition = 'transform 0.3s ease';
+//                         content.style.transform = `translateY(-${draggingElement.offsetHeight}px)`
+//                     }
+//                     // 드래그된 요소가 위로 올라갈 때
+//                     else if (e.clientY < oneThirdPoint && index < draggingIndex) {
+//                         content.style.transition = 'transform 0.3s ease';
+//                         content.style.transform = `translateY(${draggingElement.offsetHeight}px)`;
+//                     } else {
+//                         content.style.transform = 'none';
+//                     }
+//                 }
+//             });
+//         });
+//
+//         // 드래그 종료 후 위치 고정
+//         container.addEventListener('drop', (e) => {
+//             e.preventDefault();
+//             if (!draggingElement) return;
+//
+//             const overElement = getDragAfterElement(container, e.clientY);
+//
+//             if (overElement && container.contains(overElement)) {
+//                 if (oneContents.indexOf(draggingElement) < oneContents.indexOf(overElement)) {
+//                     container.insertBefore(draggingElement, overElement.nextElementSibling);
+//                 } else {
+//                     container.insertBefore(draggingElement, overElement);
+//                 }
+//             } else {
+//                 container.appendChild(draggingElement);
+//             }
+//
+//             // 모든 요소 transform 및 순서 초기화
+//             oneContents.forEach(content => {
+//                 content.style.transition = 'none'; // 애니메이션을 종료한 후 transition 제거
+//                 content.style.transform = 'none'; // 위치 초기화
+//             });
+//             updateOneContentsOrder();
+//         });
+//
+//         // 위치 계산 함수
+//         function getDragAfterElement(container, y) {
+//             const draggableElements = [...container.querySelectorAll('.oneContent:not(.dragging)')];
+//
+//             return draggableElements.reduce((closest, child) => {
+//                 const box = child.getBoundingClientRect();
+//                 const offset = y - box.top - box.height / 2;
+//
+//                 if (offset < 0 && offset > closest.offset) {
+//                     return { offset: offset, element: child };
+//                 } else {
+//                     return closest;
+//                 }
+//             }, { offset: Number.NEGATIVE_INFINITY }).element;
+//         }
+//
+//         // DOM 순서 업데이트 함수
+//         function updateOneContentsOrder() {
+//             oneContents.length = 0;
+//             container.querySelectorAll('.oneContent').forEach(content => {
+//                 oneContents.push(content); // 실제 DOM 순서에 맞게 배열 업데이트
+//             });
+//         }
+//     } else if (target.classList.contains('saveBtn')) {
+//         // 저장 버튼을 클릭했을 때
+//         dragElements.forEach((drag)=>{
+//             drag.classList.add('hidden');
+//         })
+//         deleteBtn.forEach(btn=>{
+//             btn.classList.add('hidden');
+//         })
+//         target.classList.remove('saveBtn');
+//         target.classList.add('editBtn');
+//         target.innerText = '편집';
+//         oneContents.forEach(drag=>{
+//             drag.setAttribute('draggable', false);
+//         })
+//     }
+// });
 
 
 //고민점
 //투어 id 가져가서 각 id별 좌표값, 대표이미지, 서브이미지 가져오기(subname수만큼)
+//일정 편집 안들어갔는데 2depth 열어서 일정추가하면 일정을 편집하시겠습니까? confirm 띄우고 ok하면 일정편집으로 들어가기
+//2depth 닫으면 class on 추천 여행지로 돌아가게 만들기
+//일정편집 중에 닫기 버튼누르면 편집을 그만히시겠습니까? 띄우고 ok하면 해당 순서 배열로 저장, 버튼 저장으로 돌려서 닫기
