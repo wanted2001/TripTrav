@@ -164,5 +164,25 @@ function enableScroll() {
     window.removeEventListener('keydown', preventDefaultForScrollKeys, false);
 }
 
+//아코디언
+document.querySelectorAll('.accordionBtn').forEach(button => {
+    button.addEventListener('click', () => accordionToggle(button));
+});
+
+function accordionToggle(button) {
+    const list = button.nextElementSibling;
+    const isExpanded = button.getAttribute('aria-expanded') === 'true';
+
+    button.setAttribute('aria-expanded', !isExpanded);
+    list.classList.toggle('show', !isExpanded);
+
+    if (isExpanded) {
+        button.innerText = "펼치기";
+    } else {
+        button.innerText = "접기";
+    }
+}
+
+
 
 
