@@ -108,7 +108,6 @@ function checkBoundary() {
     const outerRect = slideWrap.getBoundingClientRect();
     const innerRect = innerSlide.getBoundingClientRect();
     const lastSlideItem = slideItems[slideItems.length - 1]; // 마지막 slideItem
-    const lastItemRect = lastSlideItem.getBoundingClientRect(); // 마지막 slideItem의 경계
 
     if (parseInt(innerSlide.style.left) > 0) {
         innerSlide.style.left = '0px';
@@ -176,25 +175,74 @@ let openBtn = document.querySelector('.mapOpenBtn');
 let closeBtn = document.querySelector('.mapCloseBtn');
 let mapContentBox = document.querySelector('.mapContentBox');
 
+function toggleVisibility(element, isVisible) {
+    element.classList.toggle("hidden", !isVisible);
+    element.classList.toggle("visible", isVisible);
+}
+
+function toggleVisibilityForEach(element, isVisible) {
+    element.forEach(el =>{
+        el.classList.toggle("hidden", !isVisible);
+    })
+    element.forEach(el=>{
+        el.classList.toggle("visible", isVisible);
+    })
+}
+
 openBtn.addEventListener('click', () => {
-    openBtn.classList.add("hidden");
-    mapContentBox.classList.remove("hidden");
-    mapContentBox.classList.add("visible");
-    closeBtn.classList.remove("hidden");
-    closeBtn.classList.add("visible");
-    closeBtn.style.left='520px';
+    toggleVisibility(openBtn, false);
+    toggleVisibility(mapContentBox, true);
+    toggleVisibility(closeBtn, true);
+    closeBtn.style.left = '520px';
 });
 
 closeBtn.addEventListener('click', () => {
-    openBtn.classList.remove("hidden");
-    mapContentBox.classList.remove("visible");
-    mapContentBox.classList.add("hidden");
-    closeBtn.classList.remove("visible");
-    closeBtn.classList.add("hidden");
-    depth2.classList.add("hidden");
-    searchInput.value='';
-    document.querySelector('.searchResultDiv').innerHTML='';
+    if(!depth2.classList.contains('hidden')){
+        depth2.classList.add('hidden');
+        closeBtn.style.left='520px'
+    } else {
+        if(btnText.innerText==='저장'){
+            if(confirm('현재 일정을 저장하시겠습니까?')){
+                closeContent();
+            }
+        } closeContent();
+
+    }
 });
+
+function closeContent(){
+    toggleVisibility(openBtn, true);
+    toggleVisibility(mapContentBox, false);
+    toggleVisibility(closeBtn, false);
+    depth2.classList.add("hidden");
+    searchInput.value = '';
+    document.querySelector('.searchResultDiv').innerHTML = '';
+
+    const deleteBtn = document.querySelectorAll('.deletePlan');
+    const changeBtn = document.querySelectorAll('.changePlan');
+    deleteBtn.forEach(btn=>{
+        btn.classList.add('hidden');
+    })
+    changeBtn.forEach(btn=>{
+        btn.classList.add('hidden');
+    })
+    btnText.innerText = '편집';
+    btnText.classList.remove('saveBtn');
+    btnText.classList.add('editBtn');
+
+    const li = ul.querySelectorAll('li');
+    li.forEach(item=>{
+        item.classList.toggle('on',item.getAttribute('data-number')==='1');
+    })
+    const depth2_recomm = document.querySelectorAll('.depth2_recomm');
+    const depth2_search = document.querySelectorAll('.depth2_search_input_area');
+    const depth2_heart = document.querySelectorAll('.depth2_heart');
+    const depth2_search_input = document.querySelector('.depth2_search_input_area');
+    toggleVisibilityForEach(depth2_recomm, true);
+    toggleVisibilityForEach(depth2_search, false);
+    toggleVisibilityForEach(depth2_heart, false);
+    toggleVisibility(depth2_search_input, false);
+}
 
 //일정추가 2depth
 const addPlan = document.querySelector('.addPlan');
@@ -220,13 +268,14 @@ ul.addEventListener('click',(e)=>{
         recommend:document.querySelectorAll('.depth2_recomm'),
         search:document.querySelectorAll('.depth2_search'),
         heart:document.querySelectorAll('.depth2_heart'),
-        searchInput:document.querySelector('.depth2_search_input_area')
+        searchInput:document.querySelector('.depth2_search_input_area'),
+        morePlaceBtn:document.querySelector('.morePlaceBtn')
     }
 
     const state= {
-        '1':{recommend: false, search: true, heart: true, searchInput: true},
-        '2':{ recommend: true, search: false, heart: true, searchInput: false },
-        '3':{ recommend: true, search: true, heart: false, searchInput: true }
+        '1':{ recommend: false, search: true, heart: true, searchInput: true, morePlaceBtn: true },
+        '2':{ recommend: true, search: false, heart: true, searchInput: false, morePlaceBtn: false },
+        '3':{ recommend: true, search: true, heart: false, searchInput: true, morePlaceBtn: true }
     }
 
     const currentState = state[clickNumber];
@@ -238,7 +287,9 @@ ul.addEventListener('click',(e)=>{
                 item.classList.toggle('hidden', currentState[key]);
             })
         } else {
-            element.classList.toggle('hidden', currentState[key]);
+            if(element){
+                element.classList.toggle('hidden', currentState[key]);
+            }
         }
     })
 })
@@ -348,18 +399,43 @@ async function searchKeyword(url){
 }
 
 //일정삽입하기
+const btnText = document.querySelector('.btnText');
 function newPlan(event){
-    if(document.querySelector('.btnText').innerText==='편집'){
+    if(btnText.innerText==='편집'){
          if(confirm('일정을 편집하시겠습니까?')){
-             const searchDiv = event.target.closest('.depth2_search');
-             const contentId = searchDiv.querySelector('.depth2_search_name').getAttribute('data-id');
-             const placeName = searchDiv.querySelector('.depth2_search_name').innerText
-             const placeAddress = searchDiv.querySelector('.depth2_search_addr').innerText;
+             const deleteBtn = document.querySelectorAll('.deletePlan');
+             const changeBtn = document.querySelectorAll('.changePlan');
+             deleteBtn.forEach(btn=>{
+                 btn.classList.remove('hidden');
+             })
+             changeBtn.forEach(btn=>{
+                 btn.classList.remove('hidden');
+             })
+             btnText.innerText = '저장';
+             btnText.classList.remove('editBtn');
+             btnText.classList.add('saveBtn');
 
-             const newLi = `<li class="oneContent" data-id="${contentId}" draggable="false">
-                            <div class="deletePlan hidden">×</div>
-                            <div class="drag hidden" draggable="true">
-                                <img src="/dist/image/drag.png" class="dragIcon">
+             newPlanF(event);
+             countTriangle();
+         }
+    } else {
+        editPlan(event);
+        newPlanF(event);
+        countTriangle();
+    }
+}
+
+function newPlanF(event){
+    const searchDiv = event.target.closest('.depth2_search');
+    const contentId = searchDiv.querySelector('.depth2_search_name').getAttribute('data-id');
+    const placeName = searchDiv.querySelector('.depth2_search_name').innerText
+    const placeAddress = searchDiv.querySelector('.depth2_search_addr').innerText;
+
+    const newLi = `<li class="oneContent" data-id="${contentId}" draggable="false">
+                            <div class="deletePlan">&times;</div>
+                            <div class="changePlan">
+                                <img src="/dist/image/triangle.svg" class="triangle">
+                                <img src="/dist/image/triangle.svg" class="downTriangle">
                             </div>
                             <div class="name_cate">
                                 <span class="placeName">${placeName}</span>
@@ -376,10 +452,8 @@ function newPlan(event){
                                 <div class="placeImg"></div>
                             </div>
                         </li>`;
-             document.querySelector('.contentArea').insertAdjacentHTML('beforeend', newLi);
-             document.querySelector('.btnText').innerText='저장';
-         }
-    }
+    document.querySelector('.contentArea').insertAdjacentHTML('beforeend', newLi);
+    document.querySelector('.btnText').innerText='저장';
 }
 
 //버튼으로 일정순서 변경
@@ -400,13 +474,19 @@ function editPlan(event){
         target.classList.add('saveBtn');
     } else if (target.classList.contains('saveBtn')) {
         // 저장 버튼을 클릭했을 때
+        deleteBtn.forEach(btn=>{
+            btn.classList.add('hidden');
+        })
+        changeBtn.forEach(btn=>{
+            btn.classList.add('hidden');
+        })
         target.classList.remove('saveBtn');
         target.classList.add('editBtn');
         target.innerText = '편집';
     }
 }
 
-window.addEventListener('load', function() {
+function countTriangle(){
     const triangleButtons = document.querySelectorAll('.triangle');
     const downTriangleButtons = document.querySelectorAll('.downTriangle');
 
@@ -455,6 +535,9 @@ window.addEventListener('load', function() {
             }
         });
     });
+}
+window.addEventListener('load', ()=>{
+    countTriangle();
 });
 
 //예제 데이터 불러오기
