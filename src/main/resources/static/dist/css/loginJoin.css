@@ -60,11 +60,12 @@ p button{
     border-radius: 5px;
     cursor: pointer;
 }
-p a{
+p a {
     font-family: 'LINESeedKR-Bd';
     font-size: 15px;
     color: orange;
     cursor: pointer;
+    text-decoration: none;
 }
 .joinBox {
     margin-top: 35px;
@@ -104,11 +105,15 @@ p a{
 .joinLine{
     margin-top: 30px;
 }
-#backButton{
+
+#backBtn{
+    z-index: 10;
+    pointer-events: auto; /* 클릭 가능하게하는 기능 */
     background: transparent;
     border: none;
     font-size: 24px;
     cursor: pointer;
     position: relative;
     right: 45%
+
 }
