@@ -4,9 +4,12 @@
     <insert id="joinUser">
         insert into user (email, nickname, pw) values (#{email}, #{nickname}, #{pw})
     </insert>
-    <insert id="insertAuth">
-        insert into auth values (#{email},'ROLE_USER')
+    <insert id="insertAuth" parameterType="map">
+        insert into auth (uno, role) values (#{uno}, 'ROLE_USER')
     </insert>
+    <select id="getInsertedUno" resultType="int">
+        select uno from user where email = #{email}
+    </select>
     <insert id="insertSocialUser">
         insert into user(email,pw,nickname, profile, provider,provider_id)
         values (#{email},#{pw},#{nickname},#{profile}, #{provider},#{providerId})
@@ -18,6 +21,6 @@
         select * from user where email=#{email}
     </select>
     <select id="selectAuth" resultType="com.www.triptrav.domain.UserVO">
-        select * from auth as a join user as u on u.email=a.email where a.email=#{email}
+        select * from auth as a join user as u on u.uno=a.uno where a.uno=#{unos}
     </select>
 </mapper>

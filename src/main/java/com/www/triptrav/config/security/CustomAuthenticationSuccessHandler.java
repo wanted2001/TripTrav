@@ -33,6 +33,7 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         if (returnUrl != null && !returnUrl.isEmpty()) {
             getRedirectStrategy().sendRedirect(request, response, returnUrl);
+            log.info("return url error!");
             return;
         }
 
