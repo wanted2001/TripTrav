@@ -387,6 +387,24 @@ button.depth2_searchBtn {
     opacity: 1;
     pointer-events: auto;
 }
+.dayDisplay {
+    display: flex;
+    position: absolute;
+    left: 18px;
+}
+.day {
+    margin-right: 12px;
+    padding: 10px 8px 1px;
+    font-family: 'LINESeedKR-Rg';
+    height: 19px;
+    font-size: 14px;
+    /* border-radius: 20px; */
+    border: none;
+    cursor: pointer;
+}
+.day:hover{
+    border-bottom:3px solid orange;
+}
 .contentTitle {
     width: 90%;
     height: 50px;
@@ -394,13 +412,16 @@ button.depth2_searchBtn {
     border-radius: 5px;
     margin: 10px 10px;
     font-family: 'LINESeedKR-Rg';
-    text-align: right;
     line-height: 50px;
     color: white;
     font-size: 20px;
-    padding-right: 17px;
+    padding-left: 17px;
 }
-.editBtn, .saveBtn {
+.saveBtn{
+    background: orange;
+    color: white;
+}
+.editBtn, .saveBtn{
     width: 50px;
     height: 30px;
     border: 1px solid orange;
@@ -439,11 +460,11 @@ button.depth2_searchBtn {
 }
 .oneContent.moved-up {
     transform: translateY(-100%);
-    transition: transform 0.4s ease;
+    /*transition: transform 0.4s ease;*/
 }
 .oneContent.moved-down {
     transform: translateY(100%);
-    transition: transform 0.4s ease
+    /*transition: transform 0.4s ease*/
 }
 .changePlan {
     position: absolute;
