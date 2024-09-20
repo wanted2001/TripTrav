@@ -69,7 +69,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
                 throw new RuntimeException(e);
             }
             userMapper.insertSocialUser(newUser);
-            userMapper.insertAuth(newUser.getEmail());
+            userMapper.insertAuth(newUser.getUno());
             return new PrincipalDetails(newUser, oAuth2User.getAttributes());
         } else {
             log.info("이미 있는 유저");
