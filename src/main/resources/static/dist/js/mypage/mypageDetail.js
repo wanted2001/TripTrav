@@ -1,13 +1,14 @@
 const bottom = document.getElementById("resultMyPage");
 const modal = document.querySelector(".updateModal");
+const accordionBtn = document.querySelector(".accordionBtn");
 const js = "/dist/js/mypage";
 const tripList = "/tripList";
 const tripReview = "/tripReview";
 const wishPlace = "/wishPlace";
 const wishTrip = "/wishTrip";
 
-pageCall(tripList);
-pageHover("tripList");
+pageCall(tripReview);
+pageHover("tripReview");
 
 document.querySelectorAll('#tripList,#tripReview,#wishPlace,#wishTrip').forEach(button=>{
     button.addEventListener('click',(e)=>{
@@ -81,7 +82,8 @@ function loadScript(page){
 // src를 keep 할것인지 추후 결정 예정...
 //js 삭제
 function removeAllScript(src){
-    const toKeep =['/dist/js/header.js','/dist/js/loginJoin.js',js+'/mypageDetail.js'];
+    console.log(src);
+    const toKeep =['/dist/js/header.js','/dist/js/loginJoin.js',js+'/mypageDetail.js',src];
     const scripts = document.getElementsByTagName('script');
     for(let i = 0; i<scripts.length; i++) {
         let isToKeep = false;
@@ -172,14 +174,19 @@ document.querySelectorAll('.accordionBtn').forEach(button => {
 function accordionToggle(button) {
     const list = button.nextElementSibling;
     const isExpanded = button.getAttribute('aria-expanded') === 'true';
-
     button.setAttribute('aria-expanded', !isExpanded);
     list.classList.toggle('show', !isExpanded);
-
     if (isExpanded) {
         button.innerText = "펼치기";
     } else {
         button.innerText = "접기";
+    }
+}
+
+// 가져온 정보의 array가 다섯개 이상이면 버튼으로 아코디언 숨김 처리
+function lengthOver(length){
+    if(length => 5) {
+        accordionBtn.backgroundColor = "red";
     }
 }
 

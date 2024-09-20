@@ -123,8 +123,16 @@
 }
 
 .bottomInfoWrap h1{
+    padding-left: 15px;
+    margin: 10px 0;
     font-size: 22px;
     font-weight: 600;
+}
+
+.bottomInfoWrap > div:is(.nextMyTrip, .prevMyTrip, .myWishTrip, .myWishPlace, .myTripReview) {
+    position: relative;
+    margin-top: 30px;
+
 }
 
 .tripImg{
@@ -140,7 +148,7 @@
     display: flex;
     flex-direction: row;
     padding: 15px;
-    border: 1px solid #B3B3B3;
+    border-bottom: 1px solid #B3B3B3;
 }
 
 .tripinfo{
@@ -163,33 +171,29 @@
     font-size: 20px;
 }
 
-
-
 /*내 여행 계획*/
-.nextMytrip > h1, .prevMyTrip > h1{
-    padding-left: 15px;
-    margin: 10px 0;
-}
-
 .tripSetting{
     background-color: black;
 
 }
 
 /*아코디언*/
-
-.nextTripList, .prevTripList {
-    max-height: 0;
-    overflow: hidden;
+:is(.nextTripList, .prevTripList, .tripReviewList ,.wishTrip ,.wishPlace){
+    max-height: 534px;
+    overflow: scroll;
+    overflow-x:  hidden;
     transition: max-height 0.3s ease-out;
 }
 
-.nextTripList.show, .prevTripList.show {
-    max-height: 700px; /* 충분히 큰 값으로 설정 */
-    display: block; /* show 클래스가 추가될 때 보이도록 */
+:is(.nextTripList, .prevTripList, .tripReviewList ,.wishTrip ,.wishPlace).show {
+    max-height: 890px;
+    display: block;
 }
 
 .accordionBtn {
+    position: absolute;
+    top : -10px;
+    left : 140px;
     cursor: pointer;
     padding: 10px;
     border: none;
@@ -308,6 +312,31 @@
         border-radius: 5px;
         cursor: pointer;
     }
+}
+
+/*스크롤바*/
+
+/* 전체 스크롤바 */
+::-webkit-scrollbar {
+    width: 12px; /* 너비 */
+    height: 12px; /* 높이 */
+}
+
+/* 스크롤바의 배경 */
+::-webkit-scrollbar-track {
+    background: rgb(219, 219, 219); /* 배경 색 */
+    border-radius: 2px; /* 모서리 둥글게 */
+}
+
+/* 스크롤바의 손잡이 */
+::-webkit-scrollbar-thumb {
+    background: #FFD477; /* 손잡이 색 */
+    border-radius: 2px; /* 모서리 둥글게 */
+}
+
+/* 손잡이를 hover했을 때 */
+::-webkit-scrollbar-thumb:hover {
+    background: #F3A701; /* hover 색 */
 }
 
 

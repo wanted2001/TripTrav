@@ -1,6 +1,6 @@
 console.log('trip in');
 
-const trip = document.querySelector(".wishTrip");
+var trip = document.querySelector(".wishTrip");
 
 for (let i = 0; i <= 5; i++) {
     const li = document.createElement("li");
