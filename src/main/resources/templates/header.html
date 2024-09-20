@@ -53,22 +53,23 @@
         </div>
         <div class="rightBox">
             <th:block sec:authorize="isAnonymous()">
-            <ul class="rightUl">
-                <li><a id="openModal"> Login / Join </a></li>
-            </ul>
+                <ul class="rightUl">
+                    <li><a id="openModal"> 로그인 / 회원가입 </a></li>
+                </ul>
             </th:block>
             <th:block sec:authorize="isAuthenticated()">
                 <ul class="rightUl">
-                    <li><a th:href="@{/user/logout}" id="logout"> logout </a></li>
+                    <li><a th:href="@{/user/logout}" id="logout"> 로그아웃  </a></li>
+                    <li><a th:href="@{/mypage/mypage.html}" id="mypage">   마이페이지 </a></li>
                 </ul>
             </th:block>
         </div>
     </nav>
     <div id="myModal" class="modal">
-        <div class="modal-content">
-            <form id="loginForm" action="/user/login" method="post" class="LoginArea">
+        <div class="modal-content" id="modalContent">
+            <button class="close-button" id="closeModal">&times;</button>
+            <form id="loginForm" action="/login" method="post" class="LoginArea">
             <section class="loginBox">
-                <button class="close-button" id="closeModal">&times;</button>
                 <p><img src="/" class="logoImg"></p>
                 <h2>로그인</h2>
                 <p><input type="text" id="username" name="email" placeholder="이메일을 입력하세요."></p>
@@ -86,6 +87,26 @@
                 <a href="/oauth2/authorization/google"><img src="/dist/image/googleLogin.png"></a>
                 <a href="/oauth2/authorization/naver"><img src="/dist/image/naverLogin.png"></a>
             </section>
+        </div>
+        <div id="joinModal" class="modal">
+        <p><a id="backButton"> < </a></p>
+        <section class="realJoinBox">
+            <p><img src="/static" class="logoImg"></p>
+            <h2>회원가입</h2>
+            <form action="/user/join" method="POST">
+                <p><input type="text"  id="nickname" name="nickname" placeholder="닉네임을 입력하세요."><span></span></p>
+                <p><input type="text" id="email" name="email" placeholder="이메일을 입력하세요."><span></span></p>
+                <p><input type="password" id="pw" name="pw" placeholder="비밀번호를 입력하세요."><span></span></p>
+                <p><input type="password" id="pwCheck" name="pwCheck" placeholder="비밀번호를 한 번 더 입력하세요."><span></span></p>
+                <p><button type="submit">회원가입</button></p>
+            </form>
+            <hr class="joinLine" style="border: solid 0.5px lightgrey">
+            <section class="snsJoinBox">
+                <a href="/oauth2/authorization/kakao"><img src="/dist/image/kakaoLogin.png"></a>
+                <a href="/oauth2/authorization/google"><img src="/dist/image/googleLogin.png"></a>
+                <a href="/oauth2/authorization/naver"><img src="/dist/image/naverLogin.png"></a>
+            </section>
+        </section>
         </div>
     </div>
     <script src="/dist/js/loginJoin.js"></script>
