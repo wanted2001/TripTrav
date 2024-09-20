@@ -129,23 +129,29 @@
     font-weight: 600;
 }
 
-.bottomInfoWrap > div:is(.nextMyTrip, .prevMyTrip, .myWishTrip, .myWishPlace, .myTripReview) {
+.bottomInfoWrap > div:is(.nextMyTrip, .prevMyTrip, .myWishTrip, .myWishPlace, .myPlaceTripReview, .myFoodTripReview) {
     position: relative;
     margin-top: 30px;
+}
 
+.tripImgDiv{
+    width: 120px;
+    height: 160px;
+    display: flex;
+    align-items: center;
 }
 
 .tripImg{
     width: 120px;
     height: 120px;
-    border-radius: 20px;
     border: 1px solid #B3B3B3;
     object-fit: cover;
-    margin: 10px 0;
 }
 
 .tripCard{
+    position: relative;
     display: flex;
+    height: 160px;
     flex-direction: row;
     padding: 15px;
     border-bottom: 1px solid #B3B3B3;
@@ -173,19 +179,25 @@
 
 /*내 여행 계획*/
 .tripSetting{
-    background-color: black;
-
+    /*background-color: black;*/
+    position: absolute;
+    right: 40px;
+    top: 35px;
+    z-index: 1;
+    ul a{
+        color: black;
+    }
 }
 
 /*아코디언*/
-:is(.nextTripList, .prevTripList, .tripReviewList ,.wishTrip ,.wishPlace){
-    max-height: 534px;
+:is(.nextTripList, .prevTripList, .tripPlaceReviewList, .tripFoodReviewList,.wishTrip ,.wishPlace){
+    max-height: 500px;
     overflow: scroll;
     overflow-x:  hidden;
     transition: max-height 0.3s ease-out;
 }
 
-:is(.nextTripList, .prevTripList, .tripReviewList ,.wishTrip ,.wishPlace).show {
+:is(.nextTripList, .prevTripList, .tripPlaceReviewList, .tripFoodReviewList ,.wishTrip ,.wishPlace).show {
     max-height: 890px;
     display: block;
 }
