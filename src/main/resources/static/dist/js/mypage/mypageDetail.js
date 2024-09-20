@@ -10,6 +10,7 @@ const wishTrip = "/wishTrip";
 pageCall(tripReview);
 pageHover("tripReview");
 
+
 document.querySelectorAll('#tripList,#tripReview,#wishPlace,#wishTrip').forEach(button=>{
     button.addEventListener('click',(e)=>{
         const id = e.target.id;
