@@ -1,5 +1,5 @@
 console.log("review in");
-const tripReview = document.querySelector(".tripReviewList");
+var tripReviewList = document.querySelector(".tripReviewList");
 
 // 비동기로 씌워서 작업할것
 for (let i = 0; i <= 5; i++) {
@@ -7,12 +7,13 @@ for (let i = 0; i <= 5; i++) {
     const div = document.createElement("div");
     div.classList.add("tripCard");
     div.innerHTML = `
-    <div class="tripImgDiv"><img src="/dist/image/poky.png" alt="프로필 사진" class="tripImg"></div>
+    <div class="tripReviewImgDiv"><img src="/dist/image/poky.png" alt="프로필 사진" class="tripReviewImg"></div>
     <div class="tripinfo">
         <ul>
-            <li><h3>장소이름</h3></li>
-            <li>리뷰내용</li>
-            <li>리뷰쓴 날짜</li>
+            <li><h3 class="reviewPlaceName">해동용궁사</h3></li>
+            <li>별점</li>
+            <li><p class="reviewRegDate">2024.09.20</p></li>
+            <li><p class="reviewContent">부처님오신날에는 여느 절처럼 연등을 켜는데, 바다 풍경과 어우러져 장관을 이룹니다. 특히 이 사찰은 동해 바닷가에 위치해 있어 부산 내에서 1월 1일 일출 명소로도 유명합니다. 따라서 새해 첫날에는 많은 사람들이 해돋이를 보러 찾아옵니다. 이처럼 입지와 풍광이 독특하여 특별한 날이 아니더라도 찾는 사람이 제법 많습니다. 다만 이 사찰은 입구가 좁은 편이라 방문객이 조금만 많아도 좁게 느껴질 수 있습니다.</p></li>
         </ul>
     </div>
     <div class="tripSetting">
@@ -22,5 +23,5 @@ for (let i = 0; i <= 5; i++) {
         </ul>
     </div>`;
     li.appendChild(div);
-    tripReview.appendChild(li);
+    tripReviewList.appendChild(li);
 }

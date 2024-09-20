@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <th:block th:fragment="header">
 <head>
     <meta charset="UTF-8">
@@ -51,9 +52,16 @@
             </ul>
         </div>
         <div class="rightBox">
+            <th:block sec:authorize="isAnonymous()">
             <ul class="rightUl">
                 <li><a id="openModal"> Login / Join </a></li>
             </ul>
+            </th:block>
+            <th:block sec:authorize="isAuthenticated()">
+                <ul class="rightUl">
+                    <li><a th:href="@{/user/logout}" id="logout"> logout </a></li>
+                </ul>
+            </th:block>
         </div>
     </nav>
     <div id="myModal" class="modal">
@@ -82,6 +90,25 @@
     </div>
     <script src="/dist/js/loginJoin.js"></script>
     <script src="/dist/js/user/login.js"></script>
+    <script>
+        let url = window.location.href;
+        document.getElementById('searchA').addEventListener('click', () => {
+            if (url === "http://localhost:8099/") {
+                changeSearch();
+            } else {
+                console.log("다른 페이지");
+                window.location.href = "http://localhost:8099/?search=true";
+            }
+        });
+
+
+        function changeSearch() {
+            document.querySelector('.mainText').style.display = 'none';
+            document.querySelector('.mainBtnDiv').style.display = 'none';
+            document.querySelector('.inputWrap').style.display = '';
+        }
+
+    </script>
 </body>
 </th:block>
 </html>

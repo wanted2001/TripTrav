@@ -136,21 +136,23 @@
             }, 30000);
         }
 
-        window.onload = changeImage;
-        document.getElementById('searchA').addEventListener('click',()=>{
-            document.querySelector('.mainText').style.display = 'none';
-            document.querySelector('.mainBtnDiv').style.display = 'none';
-            document.querySelector('.inputWrap').style.display = '';
-        })
-    </script>
-    <script th:inline="javascript">
         window.onload = function () {
+            changeImage();
+
             const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('search')) {
+                changeSearch();
+            }
             if (urlParams.has('joinMsg')) {
                 alert('회원가입이 완료되었습니다!');
                 history.replaceState(null, '', window.location.pathname);
             }
         };
+        function changeSearch() {
+            document.querySelector('.mainText').style.display = 'none';
+            document.querySelector('.mainBtnDiv').style.display = 'none';
+            document.querySelector('.inputWrap').style.display = '';
+        }
     </script>
     </body>
 </html>
