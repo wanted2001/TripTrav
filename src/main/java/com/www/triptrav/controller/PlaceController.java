@@ -17,10 +17,5 @@ public class PlaceController {
         return "place/placeDetail";
     }
 
-    @PostMapping("/review")
-    @ResponseBody
-    public String writeReview(@RequestBody ReviewVO rvo) {
-        log.info("rvo 체크: " + rvo);
-        return "test";
-    }
+
 }

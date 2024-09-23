@@ -141,7 +141,6 @@ main {
     margin-left: 250px;
     width: 900px;
     height: 170px;
-    background-color: #F3A701;
 }
 .reviewArea{
     width: 800px;
@@ -170,9 +169,36 @@ main {
     text-align: right;
     margin-right: 250px;
 }
+
 .review{
     margin-top: 25px;
     margin-left: 250px;
+}
+#fileCount{
+    margin-left: 500px;
+}
+.star-rating {
+    display: inline-block;
+    position: relative;
+}
+.stars {
+    display: flex;
+    cursor: pointer;
+}
+.star {
+    width: 25px;
+    height: 25px;
+    background: url('../../image/star-empty.png') no-repeat center;
+    background-size: contain;
+    position: relative;
+}
+.star.full {
+    background: url('../../image/star-full.png') no-repeat center;
+    background-size: contain;
+}
+.star.half {
+    background: url('../../image/star-half.png') no-repeat center;
+    background-size: contain;
 }
 
 .transportation{

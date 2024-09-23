@@ -181,10 +181,11 @@ async function getNearByFoodInfo(mapx, mapy, radius){
 //리뷰등록
 async function writeReview() {
     const data = {
-        reContent : document.querySelector('.reviewArea').value
+        reContent : document.querySelector('.reviewArea').value,
+        nickname : "Test",
     };
     try {
-        const url = '/place/review';
+        const url = '/review/POST';
         const config = {
             method: 'POST',
             headers: {
@@ -200,9 +201,61 @@ async function writeReview() {
     }
 }
 document.querySelector('.addButton').addEventListener('click', ()=>{
-    console.log(document.querySelector('.reviewArea').value)
     writeReview().then(result => console.log(result))
 })
+
+//리뷰 사진첨부관련
+function handleFileUpload(event) {
+    const files = event.target.files;
+    const fileCount = files.length;
+    if (fileCount > 3) {
+        alert('최대 3장만 업로드할 수 있습니다. ');
+        event.target.value = '';
+    } else {
+        document.getElementById('fileCount').innerText = `${fileCount}/3 첨부완료`;
+    }
+}
+document.addEventListener('DOMContentLoaded', function () {
+    const stars = document.getElementById('stars');
+    const ratingValue = document.getElementById('rating-value');
+    let currentRating = 0;
+
+    stars.addEventListener('mousemove', function (e) {
+        const rect = stars.getBoundingClientRect();
+        const offsetX = e.clientX - rect.left;
+        const starWidth = rect.width / 5;
+        const rating = Math.ceil((offsetX / starWidth) * 2) / 2;
+        highlightStars(rating);
+        ratingValue.textContent = rating;
+    });
+
+    stars.addEventListener('click', function () {
+        currentRating = parseFloat(ratingValue.textContent);
+    });
+
+    stars.addEventListener('mouseleave', function () {
+        highlightStars(currentRating);
+    });
+
+    function highlightStars(rating) {
+        const starElements = stars.children;
+        for (let i = 0; i < starElements.length; i++) {
+            const starValue = i + 1;
+            if (starValue <= rating) {
+                starElements[i].classList.add('full');
+                starElements[i].classList.remove('half');
+            } else if (starValue - 0.5 === rating) {
+                starElements[i].classList.add('half');
+                starElements[i].classList.remove('full');
+            } else {
+                starElements[i].classList.remove('full');
+                starElements[i].classList.remove('half');
+            }
+        }
+    }
+});
+
+
 
 // 주변 관광지와 음식점 조회 후 조건 처리 함수
 async function processNearbySightsAndFood(mapx, mapy) {
@@ -234,7 +287,6 @@ async function processNearbySightsAndFood(mapx, mapy) {
 function renderNearbySightsAndFood(sights, food) {
     foodContainer.innerHTML = '';
     attractionsContainer.innerHTML = '';
-
     food.forEach(item => {
         const foodDiv = document.createElement('div');
         foodDiv.classList.add('locations');
