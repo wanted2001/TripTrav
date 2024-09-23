@@ -24,5 +24,5 @@ public interface UserMapper {
 
     List<AuthVO> selectAuth(String email);
 
-    Integer getInsertedUno(UserVO uvo);
+    Integer getInsertedUno(String uvo);
 }

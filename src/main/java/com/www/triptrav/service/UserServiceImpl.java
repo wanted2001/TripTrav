@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
             if (uno != 0) {
                 userMapper.insertAuth(uno);
             } else {
-                int insertedUno = userMapper.getInsertedUno(uvo);
+                int insertedUno = userMapper.getInsertedUno(String.valueOf(uvo));
                 if (insertedUno != 0) {
                     userMapper.insertAuth(insertedUno);
                 } else {
