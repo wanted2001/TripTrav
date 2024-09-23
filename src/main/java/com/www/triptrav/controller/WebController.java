@@ -18,9 +18,4 @@ public class WebController {
     public String index() {
         return "index";
     }
-
-    @GetMapping("/index")
-    public String search(){
-        return "index";
-    }
 }

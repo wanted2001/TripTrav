@@ -18,6 +18,7 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         Cookie[] cookies = request.getCookies();
+        log.info("로그인 성공");
         String returnUrl = null;
         if (cookies != null) {
             for (Cookie cookie : cookies) {
@@ -32,6 +33,7 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         if (returnUrl != null && !returnUrl.isEmpty()) {
             getRedirectStrategy().sendRedirect(request, response, returnUrl);
+            log.info("return url error!");
             return;
         }
 

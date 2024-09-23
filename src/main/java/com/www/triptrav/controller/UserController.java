@@ -2,13 +2,13 @@ package com.www.triptrav.controller;
 
 import com.www.triptrav.domain.UserVO;
 import com.www.triptrav.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/user/*")
 @RequiredArgsConstructor
@@ -28,5 +28,15 @@ public class UserController {
         m.addAttribute("joinMsg","가입이 완료되었습니다!");
         return "redirect:/?joinMsg=true";
     }
+
+    @GetMapping("/login")
+    public void loginUser(){
+    }
+
+    @GetMapping("/join")
+    public void joinUser(){
+    }
+
+
 
 }
