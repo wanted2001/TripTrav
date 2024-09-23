@@ -9,7 +9,7 @@ let x;
 const slideItemWidth = 200;
 
 //메모모달
-const modal = document.querySelector('.memoModal');
+const memoModal = document.querySelector('.memoModal');
 const closeModalBtn = document.querySelector('.memoCloseBtn');
 const addMemoBtn = document.querySelector('.addMemoBtn');
 
@@ -49,10 +49,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //메모작성부분
     addMemoBtn.addEventListener('click', () => {
-        modal.style.display = 'flex';
+        memoModal.style.display = 'flex';
     });
     closeModalBtn.addEventListener('click',()=>{
-        modal.style.display='none';
+        memoModal.style.display='none';
     })
 
     //메모저장부분
@@ -62,9 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     //데이터 불러오기
-
     getData(detailCourseInfoUrl).then(result=>{
-        console.log(result);
+        console.log(result.totalCount);
         let content='';
         result.items.item.forEach(key=>{
             //카테고리 -> 관광지 / 음식점 같은 api 코드 넣기
@@ -124,6 +123,17 @@ function getImage(key){
     })
 }
 
+//지도 띄우기
+function initTmap() {
+    let map = new Tmapv3.Map("checkMap",
+        {
+            center: new Tmapv3.LatLng(37.566481622437934, 126.98502302169841), // 지도 초기 좌표
+            width: "1600px",
+            height: "800px",
+            zoom: 16
+        });
+}
+
 //주소삽입
 function getAddr(key){
     const detailInfoUrl = `https://apis.data.go.kr/B551011/KorService1/detailCommon1?MobileOS=ETC&MobileApp=TripTrav&contentId=${key}&defaultYN=Y&firstImageYN=Y&areacodeYN=Y&catcodeYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&serviceKey=${tourAPIKEY}&_type=json`;
@@ -134,6 +144,30 @@ function getAddr(key){
         })
     })
 }
+
+//동행자 추가 모달
+const addPerson = document.querySelector('.addPersonBtn');
+const personModal = document.querySelector('.personModal');
+const pmCloseBtn = document.querySelector('.pmCloseBtn');
+
+let clipboard = new ClipboardJS('.copyUrl');
+clipboard.on('success',function(e){
+    alert('클립보드에 복사되었습니다.');
+    console.log(e)
+})
+clipboard.on('error',function(e){
+    console.log(e);
+})
+
+addPerson.addEventListener('click',()=>{
+    const url = window.location.href;
+    document.querySelector('.pmShareValue').value=url;
+    personModal.style.display='flex';
+})
+
+pmCloseBtn.addEventListener('click',()=>{
+    personModal.style.display='none';
+})
 
 //상단 슬라이드 길이 계산 함수
 function updateInnerSlideWidth() {
@@ -206,7 +240,7 @@ function makeDot(){
 function saveMemo(){
     if(confirm('메모를 저장하시겠습니까?')) {
         console.log("메모저장")
-        modal.style.display='none';
+        memoModal.style.display='none';
     }
 }
 
@@ -502,6 +536,9 @@ function editPlan(event){
     const target = event.target;
     const deleteBtn = document.querySelectorAll('.deletePlan');
     const changeBtn = document.querySelectorAll('.changePlan');
+    const contentTitle = document.querySelector('.contentTitle');
+    const titleInput = document.querySelector('.titleInput');
+    const editPlanTitle = document.querySelector('.editPlanTitle');
 
     if(target.classList.contains('editBtn')){
         deleteBtn.forEach(btn=>{
@@ -513,18 +550,27 @@ function editPlan(event){
         target.innerText = '저장';
         target.classList.remove('editBtn');
         target.classList.add('saveBtn');
+        editPlanTitle.classList.remove('hidden');
     } else if (target.classList.contains('saveBtn')) {
         // 저장 버튼을 클릭했을 때
         if(confirm("일정을 저장하시겠습니까?")){
-            deleteBtn.forEach(btn=>{
-                btn.classList.add('hidden');
-            })
-            changeBtn.forEach(btn=>{
-                btn.classList.add('hidden');
-            })
-            target.classList.remove('saveBtn');
-            target.classList.add('editBtn');
-            target.innerText = '편집';
+            if(titleInput.value===''){
+                alert('일정의 제목은 비워둘 수 없습니다.')
+            } else {
+                deleteBtn.forEach(btn=>{
+                    btn.classList.add('hidden');
+                })
+                changeBtn.forEach(btn=>{
+                    btn.classList.add('hidden');
+                })
+                target.classList.remove('saveBtn');
+                target.classList.add('editBtn');
+                target.innerText = '편집';
+                contentTitle.innerText=titleInput.value;
+                titleInput.remove();
+                const img = `<img src="/dist/image/edit-3.svg" class="editPlanTitle hidden" onclick="editTitle()">`
+                contentTitle.innerHTML+=img;
+            }
         }
     }
 }
@@ -584,12 +630,21 @@ function deletePlan(event){
     if(confirm("해당 일정을 삭제하시겠습니까?")){
         if(event.target.classList.contains('deletePlan')){
             const li=event.target.closest('li');
-
             if(li){
                 li.remove();
             }
         }
     }
+}
+
+function editTitle(){
+    const titleInput = document.createElement('input');
+    const titleText = document.querySelector('.contentTitle');
+    titleInput.classList.add('titleInput');
+    titleInput.value=titleText.innerText;
+    titleInput.placeholder='일정의 제목을 작성해주세요.';
+    titleText.innerText='';
+    titleText.appendChild(titleInput);
 }
 
 window.addEventListener('load', ()=>{
