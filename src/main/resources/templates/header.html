@@ -54,13 +54,14 @@
         <div class="rightBox">
             <th:block sec:authorize="isAnonymous()">
                 <ul class="rightUl">
-                    <li><a id="openModal"> 로그인 / 회원가입 </a></li>
+                    <li><a id="openModal"> 로그인ㅤㅤ|ㅤ회원가입 </a></li>
                 </ul>
             </th:block>
             <th:block sec:authorize="isAuthenticated()">
                 <ul class="rightUl">
-                    <li><a th:href="@{/user/logout}" id="logout"> 로그아웃  </a></li>
-                    <li><a th:href="@{/mypage/mypage.html}" id="mypage">   마이페이지 </a></li>
+                    <li><a th:href="@{/user/logout}" id="logout"> 로그아웃</a></li>
+                    <li><a>ㅤ|ㅤ</a></li>
+                    <li><a th:href="@{/mypage/mypage}" id="mypage">   마이페이지 </a></li>
                 </ul>
             </th:block>
         </div>
