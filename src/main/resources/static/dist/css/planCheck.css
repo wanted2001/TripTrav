@@ -469,8 +469,8 @@ button.depth2_searchBtn {
 .changePlan {
     position: absolute;
     width: 10px;
-    right: 26px;
-    margin-top: 12px;
+    right: 12px;
+    margin-top: 14px;
 }
 .triangle {
     width: 15px;
@@ -499,13 +499,34 @@ button.depth2_searchBtn {
 .placeImgDiv {
     display: flex;
     justify-content: space-between;
+    margin-left: -5px;
 }
-.placeImg {
+.placeImg img{
     width: 100px;
     height: 100px;
     background: aliceblue;
-    margin: 11px 4px;
+    margin: 11px 5px 11px;
     border-radius: 8px;
+}
+.placeAddr {
+    font-family: 'LINESeedKR-Th';
+    font-weight: bold;
+    margin: 10px 0 4px;
+    line-height: 21px;
+}
+.rate_count {
+    font-family: 'LINESeedKR-Th';
+    font-weight: bold;
+    display: flex;
+}
+.rate_count img{
+    width: 18px;
+}
+.placeRate{
+    margin: 5px 2px 0 4px;
+}
+.placeRateCount{
+    margin-top: 5px;
 }
 /*일정편집*/
 .drag {
