@@ -62,38 +62,78 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     //데이터 불러오기
-    getData(detailInfoUrl).then(result=>{
+
+    getData(detailCourseInfoUrl).then(result=>{
         console.log(result);
         let content='';
-        result.forEach(key=>{
+        result.items.item.forEach(key=>{
             //카테고리 -> 관광지 / 음식점 같은 api 코드 넣기
             //어차피 id별 이미지가져올꺼니까 주소도 가져와서 넣음되겠다
             //a태그 추가작업 필요
             content += `<li class="oneContent" data-id="${key.subcontentid}">
-                    <div class="deletePlan hidden">&times;</div>
-                    <div class="changePlan hidden">
-                        <img src="/dist/image/triangle.svg" class="triangle">
-                        <img src="/dist/image/triangle.svg" class="downTriangle">
-                    </div>
-                    <div class="name_cate">
-                        <span class="placeName">${key.subname}</span>
-                        <span class="placeCate">장소카테고리</span>
-                    </div>
-                    <div class="placeAddr">장소</div>
-                    <div class="rate_count">
-                        <span class="placeRate">별점</span>
-                        <span class="placeRateCount">별점개수</span>
-                    </div>
-                    <div class="placeImgDiv">
-                        <div class="placeImg"></div>
-                        <div class="placeImg"></div>
-                        <div class="placeImg"></div>
-                    </div>
-                </li>`;
-            document.querySelector('.contentArea').innerHTML=content;
+                            <div class="deletePlan hidden" onclick="deletePlan(event)">&times;</div>
+                            <div class="changePlan hidden">
+                                <img src="/dist/image/triangle.svg" class="triangle">
+                                <img src="/dist/image/triangle.svg" class="downTriangle">
+                            </div>
+                            <div class="name_cate">
+                                <span class="placeName">${key.subname}</span>
+                                <span class="placeCate">장소카테고리</span>
+                            </div>
+                            <div class="placeAddr"></div>
+                            <div class="rate_count">
+                                <img src="/dist/image/star.svg">
+                                <div class="placeRate">4.0</div>
+                                <div class="placeRateCount">(356)</div>
+                            </div>
+                            <div class="placeImgDiv">
+                                <div class="placeImg"></div>
+                            </div>
+                        </li>`;
+        })
+        document.querySelector('.contentArea').innerHTML=content;
+
+        result.items.item.forEach(key=>{
+            getImage(key.subcontentid);
+            getAddr(key.subcontentid);
         })
     })
 });
+
+//이미지로드
+function getImage(key){
+    const url = `https://apis.data.go.kr/B551011/KorService1/detailImage1?MobileOS=ETC&MobileApp=TripTrav&_type=json&subImageYN=Y&contentId=${key}&serviceKey=${tourAPIKEY}`;
+    let imgCount = 0;
+    const imgLi = document.querySelector(`li[data-id="${key}"] .placeImg`);
+
+    getData(url).then(res=>{
+        if(res.totalCount<1){
+            if (imgLi) {
+                imgLi.innerHTML += `<img src="/dist/image/noimage.jpg">`;
+            }
+        } else{
+            res.items.item.forEach(img=>{
+                if(imgCount<3){
+                    if (imgLi) {
+                        imgLi.innerHTML += `<img src="${img.originimgurl}">`;
+                    }
+                    imgCount++;
+                }
+            })
+        }
+    })
+}
+
+//주소삽입
+function getAddr(key){
+    const detailInfoUrl = `https://apis.data.go.kr/B551011/KorService1/detailCommon1?MobileOS=ETC&MobileApp=TripTrav&contentId=${key}&defaultYN=Y&firstImageYN=Y&areacodeYN=Y&catcodeYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&serviceKey=${tourAPIKEY}&_type=json`;
+    const addrLi = document.querySelector(`li[data-id="${key}"] .placeAddr`);
+    getData(detailInfoUrl).then(res=>{
+        res.items.item.forEach(add=>{
+            addrLi.innerHTML=`${add.addr1}`;
+        })
+    })
+}
 
 //상단 슬라이드 길이 계산 함수
 function updateInnerSlideWidth() {
@@ -431,8 +471,8 @@ function newPlanF(event){
     const placeName = searchDiv.querySelector('.depth2_search_name').innerText
     const placeAddress = searchDiv.querySelector('.depth2_search_addr').innerText;
 
-    const newLi = `<li class="oneContent" data-id="${contentId}" draggable="false">
-                            <div class="deletePlan">&times;</div>
+    const newLi = `<li class="oneContent" data-id="${contentId}">
+                            <div class="deletePlan" onclick="deletePlan(event)">&times;</div>
                             <div class="changePlan">
                                 <img src="/dist/image/triangle.svg" class="triangle">
                                 <img src="/dist/image/triangle.svg" class="downTriangle">
@@ -441,19 +481,20 @@ function newPlanF(event){
                                 <span class="placeName">${placeName}</span>
                                 <span class="placeCate"></span>
                             </div>
-                            <div class="rate_count">
-                                <span class="placeRate">별점</span>
-                                <span class="placeRateCount">별점개수</span>
-                            </div>
                             <div class="placeAddr">${placeAddress}</div>
+                            <div class="rate_count">
+                                <img src="/dist/image/star.svg">
+                                <div class="placeRate">4.0</div>
+                                <div class="placeRateCount">(356)</div>
+                            </div>
                             <div class="placeImgDiv">
-                                <div class="placeImg"></div>
-                                <div class="placeImg"></div>
                                 <div class="placeImg"></div>
                             </div>
                         </li>`;
     document.querySelector('.contentArea').insertAdjacentHTML('beforeend', newLi);
     document.querySelector('.btnText').innerText='저장';
+
+    getImage(contentId);
 }
 
 //버튼으로 일정순서 변경
@@ -474,15 +515,17 @@ function editPlan(event){
         target.classList.add('saveBtn');
     } else if (target.classList.contains('saveBtn')) {
         // 저장 버튼을 클릭했을 때
-        deleteBtn.forEach(btn=>{
-            btn.classList.add('hidden');
-        })
-        changeBtn.forEach(btn=>{
-            btn.classList.add('hidden');
-        })
-        target.classList.remove('saveBtn');
-        target.classList.add('editBtn');
-        target.innerText = '편집';
+        if(confirm("일정을 저장하시겠습니까?")){
+            deleteBtn.forEach(btn=>{
+                btn.classList.add('hidden');
+            })
+            changeBtn.forEach(btn=>{
+                btn.classList.add('hidden');
+            })
+            target.classList.remove('saveBtn');
+            target.classList.add('editBtn');
+            target.innerText = '편집';
+        }
     }
 }
 
@@ -536,19 +579,32 @@ function countTriangle(){
         });
     });
 }
+
+function deletePlan(event){
+    if(confirm("해당 일정을 삭제하시겠습니까?")){
+        if(event.target.classList.contains('deletePlan')){
+            const li=event.target.closest('li');
+
+            if(li){
+                li.remove();
+            }
+        }
+    }
+}
+
 window.addEventListener('load', ()=>{
     countTriangle();
 });
 
 //예제 데이터 불러오기
 const contentId = '2383747';
-const detailInfoUrl = `https://apis.data.go.kr/B551011/KorService1/detailInfo1?ServiceKey=${tourAPIKEY}&contentTypeId=25&contentId=${contentId}&MobileOS=ETC&MobileApp=TripTrav&_type=json`;
+const detailCourseInfoUrl = `https://apis.data.go.kr/B551011/KorService1/detailInfo1?ServiceKey=${tourAPIKEY}&contentTypeId=25&contentId=${contentId}&MobileOS=ETC&MobileApp=TripTrav&_type=json`;
 
 async function getData(url){
     try{
         const response = await fetch(url);
         const data = await response.json();
-        const items = data.response.body.items.item;
+        const items = data.response.body;
         return items;
     } catch(err){
         console.log(err);
