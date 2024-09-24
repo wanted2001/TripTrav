@@ -1,0 +1,16 @@
+{
+  "mappings": {
+    "properties": {
+      "contentId": {
+        "type": "long"
+      },
+      "title": {
+        "type": "text",
+        "analyzer": "standard"
+      },
+      "contentTypeId": {
+        "type": "integer"
+      }
+    }
+  }
+}

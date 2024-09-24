@@ -5,6 +5,7 @@ import com.www.triptrav.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,27 +27,31 @@ public class ReviewController {
 
     @PostMapping("/POST")
     @ResponseBody
-    public String writeReview(@RequestParam(value = "image", required = false) MultipartFile[] files,
-                              @ModelAttribute ReviewVO rvo) throws IOException {
-        log.info("리뷰 데이터: " + rvo);
-        rvo.setUno(1);
+    @Transactional
+    public String writeReview(@RequestParam(value = "images", required = false) MultipartFile[] files,
+                              @RequestParam("uno") long uno,
+                              @RequestParam("nickname") String nickname,
+                              @RequestParam("reRate") float reRate,
+                              @RequestParam("reContent") String reContent,
+                              @RequestParam("reImageCount") int reImageCount,
+                              @RequestParam("reContentType") long reContentType) throws IOException {
+        ReviewVO rvo = new ReviewVO();
+        rvo.setUno(uno);
+        rvo.setNickname(nickname);
+        rvo.setReRate(reRate);
+        rvo.setReContent(reContent);
+        rvo.setReImageCount(reImageCount);
+        rvo.setReContentType(reContentType);
         int isPost = rsv.post(rvo);
-        log.info("리뷰 저장 여부: " + isPost);
         if (isPost > 0) {
             if (files != null && files.length > 0) {
-                int imageCount = files.length;
-                if (imageCount > 3) {
-                    return "이미지는 최대 3장까지 첨부 가능합니다.";
-                }
                 String uploadFolder = "C:/userImage";
                 SimpleDateFormat sdf = new SimpleDateFormat("yy/MM/dd");
                 String dateFolder = sdf.format(new Date());
                 File uploadPath = new File(uploadFolder, dateFolder);
-
                 if (!uploadPath.exists()) {
                     uploadPath.mkdirs();
                 }
-
                 for (MultipartFile file : files) {
                     if (!file.isEmpty()) {
                         String uuid = UUID.randomUUID().toString();
@@ -58,11 +63,13 @@ public class ReviewController {
                         file.transferTo(savePath.toFile());
 
                         rsv.saveReviewImage(rvo.getRno(), savePath.toString());
+                        return "imageSuccess";
                     }
                 }
             }
+        }else{
+            return "fail";
         }
-
-        return "리뷰 저장 완료";
+        return "success";
     }
 }
