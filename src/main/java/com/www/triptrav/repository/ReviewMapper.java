@@ -7,6 +7,6 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface ReviewMapper {
     int post(ReviewVO rvo);
-
     void insertReviewImage(@Param("rno") Long rno, @Param("imagePath") String imagePath);
 }
+

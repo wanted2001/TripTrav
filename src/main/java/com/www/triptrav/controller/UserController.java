@@ -5,6 +5,9 @@ import com.www.triptrav.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,10 +36,24 @@ public class UserController {
     public void loginUser(){
     }
 
+
     @GetMapping("/join")
     public void joinUser(){
     }
 
+    @PostMapping(value="/nick",consumes = "text/plain", produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> duplicationNick(@RequestBody String nickName){
+        int isOk = usv.duplicationNick(nickName);
+        return isOk==0? new ResponseEntity<String>("0", HttpStatus.OK):
+                new ResponseEntity<String>("1",HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
+    @PostMapping(value="/email",consumes = "text/plain", produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> duplicationEmail(@RequestBody String email){
+        log.info("email>>>>{}",email);
+        int isOk = usv.duplicationEmail(email);
+        return isOk==0? new ResponseEntity<String>("0", HttpStatus.OK):
+                new ResponseEntity<String>("1",HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
 }

@@ -145,8 +145,7 @@ async function getIntroInfo(contentTypeId) {
 //추가정보 조회 함수
 async function getAdditionalInfo(contentTypeId) {
     try{
-        //정온 contentTypeId 수정필요
-        const url = `https://apis.data.go.kr/B551011/KorService1/detailInfo1?MobileOS=ETC&MobileApp=TripTrav&_type=json&contentId=126676&contentTypeId=12&serviceKey=${tourAPIKEY}`
+        const url = `https://apis.data.go.kr/B551011/KorService1/detailInfo1?MobileOS=ETC&MobileApp=TripTrav&_type=json&contentId=126676&contentTypeId=${contentTypeId}&serviceKey=${tourAPIKEY}`
         const response = await fetch(url);
         const result = await response.json()
         return result;

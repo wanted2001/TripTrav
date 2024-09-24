@@ -25,4 +25,8 @@ public interface UserMapper {
     List<AuthVO> selectAuth(String email);
 
     Integer getInsertedUno(String uvo);
+
+    int duplicationNick(String nickName);
+
+    int duplicationEmail(String email);
 }
