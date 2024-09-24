@@ -32,7 +32,7 @@ let mapy = 0;
 //         });
 //
 //         contentTypeId = jsonData.contenttypeid;
-//         document.querySelector('.title').innerText = jsonData.title
+        // document.querySelector('.title').innerText = jsonData.title
 //         document.querySelector('.locationInfo').innerHTML = `주소 : ${jsonData.addr1}`;
 //
 //         getIntroInfo(contentTypeId).then(result=>{
@@ -154,26 +154,44 @@ async function getAdditionalInfo(contentTypeId) {
     }
 }
 
+//주변 관광지 조회 함수
+async function getNearBySights(mapx, mapy, radius) {
+    try {
+        const url = `https://apis.data.go.kr/B551011/KorService1/locationBasedList1?MobileOS=ETC&MobileApp=TripTrav&_type=json&arrange=O&mapX=${mapx}&mapY=${mapy}&radius=${radius}&contentTypeId=12&serviceKey=${tourAPIKEY}`;
+        const response = await fetch(url);
+        const result = await response.json();
+        return result.response.body.items.item;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+//주변 음식점 조회 함수
+async function getNearByFoodInfo(mapx, mapy, radius){
+    try {
+        const url = `https://apis.data.go.kr/B551011/KorService1/locationBasedList1?MobileOS=ETC&MobileApp=TripTrav&_type=json&arrange=O&mapX=${mapx}&mapY=${mapy}&radius=${radius}&contentTypeId=39&serviceKey=${tourAPIKEY}`
+        const response = await fetch(url);
+        const result = await response.json()
+        return result.response.body.items.item;
+    }catch (error){
+        console.log(error);
+    }
+}
 //리뷰관련 부분
 //리뷰등록
 async function writeReview() {
-    const files = document.getElementById('imageInput').files;
-    const data = new FormData();
-    data.append('reContent', document.querySelector('.reviewArea').value);
-    data.append('nickname', 'Test');
-    data.append('reRate', document.getElementById('rating-value').textContent);
-    data.append('reImageCount', files.length);
-    data.append('reContentType', 12); //임시값 나중에 불러와
-    data.append('uno', 1); // 임시값 나중에 불러와
-
-    for (let i = 0; i < files.length; i++) {
-        data.append('images', files[i]);
-    }
+    const data = {
+        reContent : document.querySelector('.reviewArea').value,
+        nickname : "Test",
+    };
     try {
         const url = '/review/POST';
         const config = {
             method: 'POST',
-            body: data
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8'
+            },
+            body: JSON.stringify(data)
         };
         const resp = await fetch(url, config);
         const result = await resp.text();
@@ -182,16 +200,9 @@ async function writeReview() {
         console.log(error);
     }
 }
-
-document.querySelector('.addButton').addEventListener('click', () => {
-    writeReview().then(result =>{
-        if(result == "success" || result == "imageSuccess"){
-            alert("댓글 작성 완료");
-        }else{
-            alert("댓글 작성 실패")
-        }
-    });
-});
+document.querySelector('.addButton').addEventListener('click', ()=>{
+    writeReview().then(result => console.log(result))
+})
 
 //리뷰 사진첨부관련
 function handleFileUpload(event) {
@@ -217,12 +228,15 @@ document.addEventListener('DOMContentLoaded', function () {
         highlightStars(rating);
         ratingValue.textContent = rating;
     });
+
     stars.addEventListener('click', function () {
         currentRating = parseFloat(ratingValue.textContent);
     });
+
     stars.addEventListener('mouseleave', function () {
         highlightStars(currentRating);
     });
+
     function highlightStars(rating) {
         const starElements = stars.children;
         for (let i = 0; i < starElements.length; i++) {
@@ -241,29 +255,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-//주변 관광지 조회 함수
-async function getNearBySights(mapx, mapy, radius) {
-    try {
-        const url = `https://apis.data.go.kr/B551011/KorService1/locationBasedList1?MobileOS=ETC&MobileApp=TripTrav&_type=json&arrange=O&mapX=${mapx}&mapY=${mapy}&radius=${radius}&contentTypeId=12&serviceKey=${tourAPIKEY}`;
-        const response = await fetch(url);
-        const result = await response.json();
-        return result.response.body.items.item;
-    } catch (error) {
-        console.log(error);
-    }
-}
 
-//주변 음식점 조회 함수
-async function getNearByFoodInfo(mapx, mapy, radius){
-    try {
-        const url = `https://apis.data.go.kr/B551011/KorService1/locationBasedList1?MobileOS=ETC&MobileApp=TripTrav&_type=json&arrange=O&mapX=${mapx}&mapY=${mapy}&radius=${radius}&contentTypeId=39&serviceKey=${tourAPIKEY}`
-        const response = await fetch(url);
-        const result = await response.json()
-        return result.response.body.items.item;
-    }catch (error){
-        console.log(error);
-    }
-}
 
 // 주변 관광지와 음식점 조회 후 조건 처리 함수
 async function processNearbySightsAndFood(mapx, mapy) {

@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>상세페이지</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <link rel="stylesheet" href="/dist/css/place/placeDetail.css">
     <script src="/dist/js/key.js"></script>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2405143deeab244b2402da9e3bd9a581&libraries=services,clusterer,drawing"></script>
@@ -14,7 +16,7 @@
         <div class="location">
         </div>
         <img src="/dist/image/heart.svg" alt="그림없음" class="placeHeart">
-        <img src="/dist/image/map.svg" alt="그림없음" class="placeMap">
+        <img src="/dist/image/map.svg" alt="그림없음" class="placeMap" onclick="savePlace()">
         <div class="savePlaceModal"></div>
         <div class="imageUrls"></div>
         <img src="/dist/image/chevron-left.svg" class="prev" alt="noPic">
@@ -53,14 +55,14 @@
                         <span class="star" data-value="4"></span>
                         <span class="star" data-value="5"></span>
                     </div>
-                    <p>현재 별점: <span id="rating-value">0</span></p>
                 </div>
                 <input type="file" id="imageInput" name="images" accept="image/jpeg, image/png" multiple style="display: none;" onchange="handleFileUpload(event)">
+                <input type="text" name="nickname" style="display: none;" value="test">
                 <button type="button" class="cameraInput" onclick="document.getElementById('imageInput').click();">
                     카메라
                 </button>
                 <span id="fileCount">0/3장 첨부완료</span>
-                <button class="addButton" type="button">등록</button>
+                <button class="addButton" type="submit">등록</button>
             </form>
         </div>
 
