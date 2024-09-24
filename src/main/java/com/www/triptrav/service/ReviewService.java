@@ -7,3 +7,4 @@ public interface ReviewService {
 
     void saveReviewImage(long rno, String imagePath);
 }
+

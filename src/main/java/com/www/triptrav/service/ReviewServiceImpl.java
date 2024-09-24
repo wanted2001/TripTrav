@@ -22,4 +22,5 @@ public class ReviewServiceImpl implements ReviewService{
     public void saveReviewImage(long rno, String imagePath) {
         reviewMapper.insertReviewImage(rno, imagePath);
     }
+
 }
