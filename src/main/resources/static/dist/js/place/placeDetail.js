@@ -387,4 +387,4 @@ function scrollToSection(buttonClass, sectionClass) {
 scrollToSection('.outlineMove', '.details');
 scrollToSection('.reviewMove', '.reviews');
 scrollToSection('.findRouteMove', '.transportation');
-scrollToSection('.nearbyInfoMove', '.nearby');
+scrollToSection('.nearbyMove', '.nearby');
