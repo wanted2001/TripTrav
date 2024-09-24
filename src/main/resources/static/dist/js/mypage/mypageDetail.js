@@ -1,6 +1,9 @@
+var params = new URLSearchParams(window.url);
+console.log(params);
 const bottom = document.getElementById("resultMyPage");
 const modal = document.querySelector(".updateModal");
 const accordionBtn = document.querySelector(".accordionBtn");
+
 const js = "/dist/js/mypage";
 const tripList = "/tripList";
 const tripReview = "/tripReview";
@@ -151,7 +154,6 @@ try {
 var wheelOpt = supportsPassive ? { passive: false } : false;
 var wheelEvent = 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel';
 
-// call this to Disable
 function disableScroll() {
     window.addEventListener('DOMMouseScroll', preventDefault, false); // older FF
     window.addEventListener(wheelEvent, preventDefault, wheelOpt); // modern desktop
@@ -159,7 +161,6 @@ function disableScroll() {
     window.addEventListener('keydown', preventDefaultForScrollKeys, false);
 }
 
-// call this to Enable
 function enableScroll() {
     window.removeEventListener('DOMMouseScroll', preventDefault, false);
     window.removeEventListener(wheelEvent, preventDefault, wheelOpt);
@@ -183,14 +184,3 @@ function accordionToggle(button) {
         button.innerText = "접기";
     }
 }
-
-// 가져온 정보의 array가 다섯개 이상이면 버튼으로 아코디언 숨김 처리
-function lengthOver(length){
-    if(length => 5) {
-        accordionBtn.backgroundColor = "red";
-    }
-}
-
-
-
-
