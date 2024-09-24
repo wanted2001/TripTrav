@@ -29,4 +29,10 @@
     <select id="selectAuth" resultType="com.www.triptrav.domain.UserVO">
         select * from auth as a join user as u on u.uno=a.uno where a.uno=#{unos}
     </select>
+    <select id="findUserPw" resultType="int">
+        select count(email) from user where email=#{email}
+    </select>
+    <update id="updatePw">
+        update user set pw=#{newPw} where email=#{email}
+    </update>
 </mapper>

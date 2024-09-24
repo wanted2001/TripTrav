@@ -14,6 +14,9 @@
             pageCall("join");
         } else if (e.target && e.target.id === 'openModal') {
             openModal();
+        } else if (e.target && e.target.id === 'findBtn'){
+            e.preventDefault();
+            pageCall("findPw");
         }
     });
 
@@ -44,7 +47,14 @@
             .then(data => {
                 modalContent.innerHTML = data;
                 const script = document.createElement('script');
-                script.src = '/dist/js/user/joinCheck.js';
+
+                // page 값에 따라 다른 스크립트 추가
+                if (page === 'join') {
+                    script.src = '/dist/js/user/joinCheck.js';
+                } else if (page === 'findPw') {
+                    script.src = '/dist/js/user/findPw.js';
+                }
+
                 document.body.appendChild(script);
             })
             .catch(error => {
