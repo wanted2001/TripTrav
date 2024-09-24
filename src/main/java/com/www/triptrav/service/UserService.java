@@ -6,4 +6,8 @@ public interface UserService{
     void joinUser(UserVO uvo);
 
     UserVO checkEmail(String email);
+
+    int duplicationNick(String nickName);
+
+    int duplicationEmail(String email);
 }

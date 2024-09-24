@@ -4,6 +4,12 @@
     <insert id="joinUser">
         insert into user (email, nickname, pw) values (#{email}, #{nickname}, #{pw})
     </insert>
+    <select id="duplicationNick" resultType="int">
+        select count(nickname) from user where nickname=#{nickName}
+    </select>
+    <select id="duplicationEmail" resultType="int">
+        select count(email) from user where email=#{email}
+    </select>
     <insert id="insertAuth" parameterType="map">
         insert into auth (uno, role) values (#{uno}, 'ROLE_USER')
     </insert>

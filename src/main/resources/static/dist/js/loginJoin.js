@@ -43,6 +43,9 @@
             })
             .then(data => {
                 modalContent.innerHTML = data;
+                const script = document.createElement('script');
+                script.src = '/dist/js/user/joinCheck.js';
+                document.body.appendChild(script);
             })
             .catch(error => {
                 console.error('There was a problem with the fetch operation:', error);
