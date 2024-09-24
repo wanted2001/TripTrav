@@ -28,6 +28,12 @@ main {
     font-size: 35px;
     z-index: 1;
 }
+.placeHeart{
+
+}
+.placeMap{
+
+}
 
 .imageUrls {
     display: flex;
