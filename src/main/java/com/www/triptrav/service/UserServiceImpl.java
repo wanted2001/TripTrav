@@ -55,5 +55,10 @@ public class UserServiceImpl implements UserService {
         return userMapper.duplicationEmail(email);
     }
 
+    @Override
+    public int findUserPw(String email) {
+        return userMapper.findUserPw(email);
+    }
+
 }
 

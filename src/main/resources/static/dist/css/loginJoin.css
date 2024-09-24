@@ -149,3 +149,34 @@ p a {
     position: relative;
     top: 14px;
 }
+
+.findPwBox{
+    /* background-color: #007bff; */
+    position: relative;
+    top: 65px;
+}
+
+.findPwTitle{
+    font-size: 20px;
+}
+
+.findPwMsg{
+    font-size: 14px;
+    line-height: 19px;
+    color: #666666;
+}
+
+.findPwEmailBtn{
+    background-color: orange;
+    width: 325px;
+    height: 50px;
+    border-radius: 5px;
+    margin: 30px auto;
+    font-size: 15px;
+    font-family: 'LINESeedKR-Rg';
+    color: white;
+}
+
+.findNoPw{
+    background-color: red;
+}

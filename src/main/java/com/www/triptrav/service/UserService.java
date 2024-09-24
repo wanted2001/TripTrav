@@ -10,4 +10,6 @@ public interface UserService{
     int duplicationNick(String nickName);
 
     int duplicationEmail(String email);
+
+    int findUserPw(String email);
 }

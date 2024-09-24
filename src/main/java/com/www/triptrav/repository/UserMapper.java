@@ -29,4 +29,8 @@ public interface UserMapper {
     int duplicationNick(String nickName);
 
     int duplicationEmail(String email);
+
+    void updatePw(String email, String newPw);
+
+    int findUserPw(String email);
 }
