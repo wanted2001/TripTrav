@@ -102,14 +102,12 @@
             }
         });
 
-
         function changeSearch() {
             document.querySelector('.mainText').style.display = 'none';
             document.querySelector('.mainBtnDiv').style.display = 'none';
             document.querySelector('.inputWrap').style.display = '';
         }
     </script>
-
     <script sec:authorize="isAuthenticated()">
         let currentId = `[[${#authentication.name}]]`;
         let userNickname = `[[${#authentication.getPrincipal().getUser().getNickname()}]]`;
