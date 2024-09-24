@@ -15,20 +15,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void joinUser(UserVO uvo) {
-        int isOk = userMapper.joinUser(uvo);
+        int isOk = userMapper.joinUser(uvo); // 가입 시도
         if (isOk == 1) {
             int uno = uvo.getUno();
             log.info("가입할 User의 uno >>>> {}", uno);
+
             if (uno != 0) {
                 userMapper.insertAuth(uno);
             } else {
-                int insertedUno = userMapper.getInsertedUno(String.valueOf(uvo));
+                int insertedUno = userMapper.getInsertedUno(uvo.getEmail());
                 if (insertedUno != 0) {
                     userMapper.insertAuth(insertedUno);
                 } else {
-                    log.info("uno 값이 존재하지 xxxxx");
+                    log.error("uno 값이 존재하지 않습니다. 가입 실패!");
                 }
             }
+        } else {
+            log.error("회원가입에 실패하였습니다.");
         }
     }
 
@@ -42,5 +45,15 @@ public class UserServiceImpl implements UserService {
                     return null;
                 }
 
-            }
+    @Override
+    public int duplicationNick(String nickName) {
+        return userMapper.duplicationNick(nickName);
+    }
+
+    @Override
+    public int duplicationEmail(String email) {
+        return userMapper.duplicationEmail(email);
+    }
+
+}
 
