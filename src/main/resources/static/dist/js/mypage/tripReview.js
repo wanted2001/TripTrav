@@ -12,8 +12,7 @@ for (let i = 0; i <= 5; i++) {
     <div class="tripReviewImgDiv">
     <img src="/dist/image/poky.png" alt="리뷰사진" class="tripReviewImg">
     <img src="/dist/image/poky.png" alt="리뷰사진" class="tripReviewImg">
-    <img src="/dist/image/poky.png" alt="리뷰사진" class="tripReviewImg">
-    <img src="/dist/image/poky.png" alt="리뷰사진" class="tripReviewImg">    
+    <img src="/dist/image/poky.png" alt="리뷰사진" class="tripReviewImg">   
     </div>
     <div class="tripReviewInfo">
         <ul class="tripReviewUl">
@@ -25,7 +24,7 @@ for (let i = 0; i <= 5; i++) {
     </div>
     <div class="tripSetting">
         <ul>
-            <li><a>수정</a></li>
+            <li><button type="button" onclick="showPopup()">수정</button></li>
             <li><a>삭제</a></li>
         </ul>
     </div>`;
@@ -34,7 +33,7 @@ for (let i = 0; i <= 5; i++) {
 }
 
 // 비동기로 씌워서 작업할것
-for (let i = 0; i <= 5; i++) {
+for (let i = 0; i <= 4; i++) {
     const li = document.createElement("li");
     const div = document.createElement("div");
     div.classList.add("tripCard");
@@ -54,10 +53,15 @@ for (let i = 0; i <= 5; i++) {
     </div>
     <div class="tripSetting">
         <ul>
-            <li><a>수정</a></li>
+            <li><button type="button" onclick="showPopup()">수정</button></li>
             <li><a>삭제</a></li>
         </ul>
     </div>`;
     li.appendChild(div);
     tripFoodReviewList.appendChild(li);
 }
+
+function showPopup() {
+    window.open("/mypage/reviewPopup?rno=1","blank", "width=800, height=800, left=400, top=400");
+}
+

@@ -187,6 +187,7 @@ document.querySelector('.addButton').addEventListener('click', () => {
     writeReview().then(result =>{
         if(result == "success" || result == "imageSuccess"){
             alert("댓글 작성 완료");
+            window.location.reload();
         }else{
             alert("댓글 작성 실패")
         }
@@ -197,13 +198,36 @@ document.querySelector('.addButton').addEventListener('click', () => {
 function handleFileUpload(event) {
     const files = event.target.files;
     const fileCount = files.length;
+
+    const fileCountElement = document.getElementById('fileCount');
+    const previewContainer = document.getElementById('previewContainer');
+
+    previewContainer.innerHTML = '';
+
     if (fileCount > 3) {
-        alert('최대 3장만 업로드할 수 있습니다. ');
+        alert('최대 3장만 업로드할 수 있습니다.');
         event.target.value = '';
+        fileCountElement.innerText = '';
     } else {
-        document.getElementById('fileCount').innerText = `${fileCount}/3 첨부완료`;
+        fileCountElement.innerText = `${fileCount}/3 첨부 완료`;
+        Array.from(files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.width = '75px';
+                img.style.height = '75px';
+                img.style.objectFit = 'cover';
+                img.style.margin = '5px';
+                previewContainer.appendChild(img);
+            }
+
+            reader.readAsDataURL(file);
+        });
     }
 }
+
+//별점관리
 document.addEventListener('DOMContentLoaded', function () {
     const stars = document.getElementById('stars');
     const ratingValue = document.getElementById('rating-value');
