@@ -10,24 +10,55 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
     private final UserMapper userMapper;
 
     @Override
     public void joinUser(UserVO uvo) {
-        int isOk = userMapper.joinUser(uvo);
-        if(isOk == 1){
-            userMapper.insertAuth(uvo.getEmail());
+        int isOk = userMapper.joinUser(uvo); // 가입 시도
+        if (isOk == 1) {
+            int uno = uvo.getUno();
+            log.info("가입할 User의 uno >>>> {}", uno);
+
+            if (uno != 0) {
+                userMapper.insertAuth(uno);
+            } else {
+                int insertedUno = userMapper.getInsertedUno(uvo.getEmail());
+                if (insertedUno != 0) {
+                    userMapper.insertAuth(insertedUno);
+                } else {
+                    log.error("uno 값이 존재하지 않습니다. 가입 실패!");
+                }
+            }
+        } else {
+            log.error("회원가입에 실패하였습니다.");
         }
+    }
+
+                @Override
+                public UserVO checkEmail (String email){
+                    UserVO user = userMapper.checkEmail(email);
+                    if (user != null) {
+                        user.setAuthList(userMapper.selectAuth(email));
+                        return user;
+                    }
+                    return null;
+                }
+
+    @Override
+    public int duplicationNick(String nickName) {
+        return userMapper.duplicationNick(nickName);
     }
 
     @Override
-    public UserVO checkEmail(String email) {
-        UserVO user = userMapper.checkEmail(email);
-        if (user != null) {
-            user.setAuthList(userMapper.selectAuth(email));
-            return user;
-        }
-        return null;
+    public int duplicationEmail(String email) {
+        return userMapper.duplicationEmail(email);
+    }
+
+    @Override
+    public int findUserPw(String email) {
+        return userMapper.findUserPw(email);
     }
 
 }
+

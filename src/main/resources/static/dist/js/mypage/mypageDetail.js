@@ -1,13 +1,18 @@
+var params = new URLSearchParams(window.url);
+console.log(params);
 const bottom = document.getElementById("resultMyPage");
 const modal = document.querySelector(".updateModal");
+const accordionBtn = document.querySelector(".accordionBtn");
+
 const js = "/dist/js/mypage";
 const tripList = "/tripList";
 const tripReview = "/tripReview";
 const wishPlace = "/wishPlace";
 const wishTrip = "/wishTrip";
 
-pageCall(tripList);
-pageHover("tripList");
+pageCall(tripReview);
+pageHover("tripReview");
+
 
 document.querySelectorAll('#tripList,#tripReview,#wishPlace,#wishTrip').forEach(button=>{
     button.addEventListener('click',(e)=>{
@@ -81,7 +86,8 @@ function loadScript(page){
 // src를 keep 할것인지 추후 결정 예정...
 //js 삭제
 function removeAllScript(src){
-    const toKeep =['/dist/js/header.js','/dist/js/loginJoin.js',js+'/mypageDetail.js'];
+    console.log(src);
+    const toKeep =['/dist/js/header.js','/dist/js/loginJoin.js',js+'/mypageDetail.js',src];
     const scripts = document.getElementsByTagName('script');
     for(let i = 0; i<scripts.length; i++) {
         let isToKeep = false;
@@ -148,7 +154,6 @@ try {
 var wheelOpt = supportsPassive ? { passive: false } : false;
 var wheelEvent = 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel';
 
-// call this to Disable
 function disableScroll() {
     window.addEventListener('DOMMouseScroll', preventDefault, false); // older FF
     window.addEventListener(wheelEvent, preventDefault, wheelOpt); // modern desktop
@@ -156,7 +161,6 @@ function disableScroll() {
     window.addEventListener('keydown', preventDefaultForScrollKeys, false);
 }
 
-// call this to Enable
 function enableScroll() {
     window.removeEventListener('DOMMouseScroll', preventDefault, false);
     window.removeEventListener(wheelEvent, preventDefault, wheelOpt);
@@ -164,5 +168,19 @@ function enableScroll() {
     window.removeEventListener('keydown', preventDefaultForScrollKeys, false);
 }
 
+//아코디언
+document.querySelectorAll('.accordionBtn').forEach(button => {
+    button.addEventListener('click', () => accordionToggle(button));
+});
 
-
+function accordionToggle(button) {
+    const list = button.nextElementSibling;
+    const isExpanded = button.getAttribute('aria-expanded') === 'true';
+    button.setAttribute('aria-expanded', !isExpanded);
+    list.classList.toggle('show', !isExpanded);
+    if (isExpanded) {
+        button.innerText = "펼치기";
+    } else {
+        button.innerText = "접기";
+    }
+}

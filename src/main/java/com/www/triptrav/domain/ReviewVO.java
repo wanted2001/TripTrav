@@ -13,8 +13,9 @@ public class ReviewVO {
     private String nickname;
     private float reRate;
     private String reContent;
-    private String reImage;
+    private int reImageCount;
     private String reDate;
     private long reUseful;
     private int reReport;
+    private long reContentType;
 }

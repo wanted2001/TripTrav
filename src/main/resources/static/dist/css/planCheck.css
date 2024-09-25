@@ -24,7 +24,7 @@
     font-family: 'LINESeedKR-Rg';
     margin-top: 21px;
 }
-.addMemoBtn {
+.addMemoBtn,.addPersonBtn {
     position: absolute;
     right: 325px;
     top: 129px;
@@ -37,9 +37,12 @@
     font-family: 'LINESeedKR-Rg';
     font-size: 14px;
 }
-.addMemoBtn:hover {
+.addMemoBtn:hover,.addPersonBtn:hover {
     cursor: pointer;
     background: #ffffff2e;
+}
+.addPersonBtn {
+    top: 171px;
 }
 .memoModal {
     display: none;
@@ -49,6 +52,11 @@
     height: 100%;
     top: 0;
     left: 0;
+    z-index: 1000;
+}
+.personModal{
+    display: none;
+    position: fixed;
     z-index: 1000;
 }
 .memoWrap {
@@ -79,6 +87,53 @@
 }
 .memoContents::-webkit-scrollbar{
     display: none;
+}
+.personModal {
+    display: none;
+    position: absolute;
+    z-index: 500;
+    background: #fdfdfd;
+    width: 20%;
+    height: 24%;
+    top: 212px;
+    right: 326px;
+    box-shadow: 4px 5px 8px 0px #9e9e9ecc;
+    border-radius: 5px;
+}
+.personModalWrap {
+    width: 100%;
+}
+.personModalWrap span {
+    display: block;
+    font-family: 'LINESeedKR-Rg';
+    text-align: center;
+    margin-top: 24px;
+    font-size: 18px;
+}
+.pmCloseBtn {
+    position: absolute;
+    top: 2px;
+    left: 357px;
+    font-size: larger;
+}
+.pmShareValue {
+    outline: none;
+    border: 1px solid #b7b7b7;
+    border-radius: 3px;
+    width: 89%;
+    height: 30px;
+    margin: 20px 0 0 16px;
+    padding-left: 6px;
+    font-family: auto;
+}
+.copyUrl img{
+    position: absolute;
+    top: 69px;
+    width: 20px;
+    right: 23px;
+    cursor: pointer;
+    border-left: 1px solid #b7b7b7;
+    padding-left: 6px;
 }
 .saveMemo {
     color: black;
@@ -387,6 +442,24 @@ button.depth2_searchBtn {
     opacity: 1;
     pointer-events: auto;
 }
+.dayDisplay {
+    display: flex;
+    position: absolute;
+    left: 18px;
+}
+.day {
+    margin-right: 12px;
+    padding: 10px 8px 1px;
+    font-family: 'LINESeedKR-Rg';
+    height: 19px;
+    font-size: 14px;
+    /* border-radius: 20px; */
+    border: none;
+    cursor: pointer;
+}
+.day:hover{
+    border-bottom:3px solid orange;
+}
 .contentTitle {
     width: 90%;
     height: 50px;
@@ -394,13 +467,16 @@ button.depth2_searchBtn {
     border-radius: 5px;
     margin: 10px 10px;
     font-family: 'LINESeedKR-Rg';
-    text-align: right;
     line-height: 50px;
     color: white;
     font-size: 20px;
-    padding-right: 17px;
+    padding-left: 17px;
 }
-.editBtn, .saveBtn {
+.saveBtn{
+    background: orange;
+    color: white;
+}
+.editBtn, .saveBtn{
     width: 50px;
     height: 30px;
     border: 1px solid orange;
@@ -410,6 +486,26 @@ button.depth2_searchBtn {
     font-family: 'LINESeedKR-Rg';
     margin-left: 300px;
     font-size: 14px;
+}
+.titleInput {
+    border: none;
+    outline: none;
+    background: none;
+    color: white;
+    font-family: 'LINESeedKR-Rg';
+    border-bottom: 2px solid;
+    width: 90%;
+    font-size: 18px;
+}
+.titleInput::placeholder{
+    color: white;
+    font-size: 16px;
+    opacity: 0.8;
+}
+.editPlanTitle {
+    transform: translate(3px, 6px);
+    width: 21px;
+    cursor: pointer;
 }
 .deletePlan {
     float: right;
@@ -439,17 +535,17 @@ button.depth2_searchBtn {
 }
 .oneContent.moved-up {
     transform: translateY(-100%);
-    transition: transform 0.4s ease;
+    /*transition: transform 0.4s ease;*/
 }
 .oneContent.moved-down {
     transform: translateY(100%);
-    transition: transform 0.4s ease
+    /*transition: transform 0.4s ease*/
 }
 .changePlan {
     position: absolute;
     width: 10px;
-    right: 26px;
-    margin-top: 12px;
+    right: 12px;
+    margin-top: 14px;
 }
 .triangle {
     width: 15px;
@@ -478,13 +574,34 @@ button.depth2_searchBtn {
 .placeImgDiv {
     display: flex;
     justify-content: space-between;
+    margin-left: -5px;
 }
-.placeImg {
+.placeImg img{
     width: 100px;
     height: 100px;
     background: aliceblue;
-    margin: 11px 4px;
+    margin: 11px 5px 11px;
     border-radius: 8px;
+}
+.placeAddr {
+    font-family: 'LINESeedKR-Th';
+    font-weight: bold;
+    margin: 10px 0 4px;
+    line-height: 21px;
+}
+.rate_count {
+    font-family: 'LINESeedKR-Th';
+    font-weight: bold;
+    display: flex;
+}
+.rate_count img{
+    width: 18px;
+}
+.placeRate{
+    margin: 5px 2px 0 4px;
+}
+.placeRateCount{
+    margin-top: 5px;
 }
 /*일정편집*/
 .drag {

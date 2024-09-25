@@ -5,20 +5,13 @@
     <title>Title</title>
     <link rel="stylesheet" th:href="@{/dist/css/planCheck.css}">
     <script src="/dist/js/key.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.10/clipboard.min.js"></script>
     <script src="https://toptmaptile2.tmap.co.kr/scriptSDKV3/tmapjs3.min.js?version=20231206"></script>
     <script type="text/javascript">
         const script = document.createElement('script');
         script.src = `https://apis.openapi.sk.com/tmap/vectorjs?version=1&appKey=${tMapAPIKEY}`;
         document.head.appendChild(script);
-        function initTmap() {
-            let map = new Tmapv3.Map("checkMap",
-                {
-                    center: new Tmapv3.LatLng(37.566481622437934, 126.98502302169841), // 지도 초기 좌표
-                    width: "1600px",
-                    height: "800px",
-                    zoom: 16
-                });
-        }
+
     </script>
 </head>
 <body onload="initTmap()">
@@ -29,14 +22,23 @@
             <p class="checkName">재미난 부산여행 2박3일</p>
             <p class="checkSche">스케줄쫙쫙.. 작성</p>
         </div>
-        <div class="addMemoBtn">
-            메모추가 +
-        </div>
+        <div class="addMemoBtn">메모추가 +</div>
         <div class="memoModal">
             <div class="memoWrap">
                 <button class="memoCloseBtn">&times;</button>
                 <textarea placeholder="메모를 작성하세요..." class="memoContents"></textarea>
                 <button class="saveMemo">저장</button>
+            </div>
+        </div>
+        <div class="addPersonBtn">동행자추가 +</div>
+        <div class="personModal">
+            <div class="personModalWrap">
+                <span>동행자 추가</span>
+                <button class="pmCloseBtn">&times;</button>
+                <input class="pmShareValue" readonly>
+                <button class="copyUrl" data-clipboard-target=".pmShareValue">
+                    <img src="/dist/image/paperclip.svg">
+                </button>
             </div>
         </div>
         <div class="slideWrap">
@@ -68,7 +70,11 @@
                 <button><img src="/dist/image/chevrons-left.svg"></button>
             </div>
             <div class="mapContentBox hidden" onclick="editPlan(event)">
-                <div class="contentTitle">1일차</div>
+                <div class="contentTitle">코스이름<img src="/dist/image/edit-3.svg" class="editPlanTitle hidden" onclick="editTitle()"></div>
+                <div class="dayDisplay">
+                    <div class="day day1">Day 1</div>
+                    <div class="day day2">Day 2</div>
+                </div>
                 <div class="editBtn btnText">편집</div>
                 <ul class="contentArea"></ul>
                 <div class="addPlan">여행지 추가 + </div>

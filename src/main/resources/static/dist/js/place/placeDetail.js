@@ -154,6 +154,117 @@ async function getAdditionalInfo(contentTypeId) {
     }
 }
 
+//리뷰관련 부분
+//리뷰등록
+async function writeReview() {
+    const files = document.getElementById('imageInput').files;
+    const data = new FormData();
+    data.append('reContent', document.querySelector('.reviewArea').value);
+    data.append('nickname', 'Test');
+    data.append('reRate', document.getElementById('rating-value').textContent);
+    data.append('reImageCount', files.length);
+    data.append('reContentType', 12); //임시값 나중에 불러와
+    data.append('uno', 1); // 임시값 나중에 불러와
+
+    for (let i = 0; i < files.length; i++) {
+        data.append('images', files[i]);
+    }
+    try {
+        const url = '/review/POST';
+        const config = {
+            method: 'POST',
+            body: data
+        };
+        const resp = await fetch(url, config);
+        const result = await resp.text();
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+document.querySelector('.addButton').addEventListener('click', () => {
+    writeReview().then(result =>{
+        if(result == "success" || result == "imageSuccess"){
+            alert("댓글 작성 완료");
+            window.location.reload();
+        }else{
+            alert("댓글 작성 실패")
+        }
+    });
+});
+
+//리뷰 사진첨부관련
+function handleFileUpload(event) {
+    const files = event.target.files;
+    const fileCount = files.length;
+
+    const fileCountElement = document.getElementById('fileCount');
+    const previewContainer = document.getElementById('previewContainer');
+
+    previewContainer.innerHTML = '';
+
+    if (fileCount > 3) {
+        alert('최대 3장만 업로드할 수 있습니다.');
+        event.target.value = '';
+        fileCountElement.innerText = '';
+    } else {
+        fileCountElement.innerText = `${fileCount}/3 첨부 완료`;
+        Array.from(files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.width = '75px';
+                img.style.height = '75px';
+                img.style.objectFit = 'cover';
+                img.style.margin = '5px';
+                previewContainer.appendChild(img);
+            }
+
+            reader.readAsDataURL(file);
+        });
+    }
+}
+
+//별점관리
+document.addEventListener('DOMContentLoaded', function () {
+    const stars = document.getElementById('stars');
+    const ratingValue = document.getElementById('rating-value');
+    let currentRating = 0;
+
+    stars.addEventListener('mousemove', function (e) {
+        const rect = stars.getBoundingClientRect();
+        const offsetX = e.clientX - rect.left;
+        const starWidth = rect.width / 5;
+        const rating = Math.ceil((offsetX / starWidth) * 2) / 2;
+        highlightStars(rating);
+        ratingValue.textContent = rating;
+    });
+    stars.addEventListener('click', function () {
+        currentRating = parseFloat(ratingValue.textContent);
+    });
+    stars.addEventListener('mouseleave', function () {
+        highlightStars(currentRating);
+    });
+    function highlightStars(rating) {
+        const starElements = stars.children;
+        for (let i = 0; i < starElements.length; i++) {
+            const starValue = i + 1;
+            if (starValue <= rating) {
+                starElements[i].classList.add('full');
+                starElements[i].classList.remove('half');
+            } else if (starValue - 0.5 === rating) {
+                starElements[i].classList.add('half');
+                starElements[i].classList.remove('full');
+            } else {
+                starElements[i].classList.remove('full');
+                starElements[i].classList.remove('half');
+            }
+        }
+    }
+});
+
 //주변 관광지 조회 함수
 async function getNearBySights(mapx, mapy, radius) {
     try {
@@ -177,32 +288,6 @@ async function getNearByFoodInfo(mapx, mapy, radius){
         console.log(error);
     }
 }
-//리뷰관련 부분
-//리뷰등록
-async function writeReview() {
-    const data = {
-        reContent : document.querySelector('.reviewArea').value
-    };
-    try {
-        const url = '/place/review';
-        const config = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json; charset=UTF-8'
-            },
-            body: JSON.stringify(data)
-        };
-        const resp = await fetch(url, config);
-        const result = await resp.text();
-        return result;
-    } catch (error) {
-        console.log(error);
-    }
-}
-document.querySelector('.addButton').addEventListener('click', ()=>{
-    console.log(document.querySelector('.reviewArea').value)
-    writeReview().then(result => console.log(result))
-})
 
 // 주변 관광지와 음식점 조회 후 조건 처리 함수
 async function processNearbySightsAndFood(mapx, mapy) {
@@ -234,7 +319,6 @@ async function processNearbySightsAndFood(mapx, mapy) {
 function renderNearbySightsAndFood(sights, food) {
     foodContainer.innerHTML = '';
     attractionsContainer.innerHTML = '';
-
     food.forEach(item => {
         const foodDiv = document.createElement('div');
         foodDiv.classList.add('locations');
@@ -303,4 +387,4 @@ function scrollToSection(buttonClass, sectionClass) {
 scrollToSection('.outlineMove', '.details');
 scrollToSection('.reviewMove', '.reviews');
 scrollToSection('.findRouteMove', '.transportation');
-scrollToSection('.nearbyInfoMove', '.nearby');
+scrollToSection('.nearbyMove', '.nearby');

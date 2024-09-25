@@ -42,7 +42,7 @@ public class SecurityConfig {
                 .formLogin(login -> login
                         .usernameParameter("email")
                         .passwordParameter("pw")
-                        .loginProcessingUrl("/user/login")
+                        .loginProcessingUrl("/login")
                         .successHandler(customAuthenticationSuccessHandler)
                         .failureHandler(customAuthenticationFailureHandler)
                         .permitAll()

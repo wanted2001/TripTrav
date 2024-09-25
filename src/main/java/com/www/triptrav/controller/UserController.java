@@ -1,10 +1,14 @@
 package com.www.triptrav.controller;
 
 import com.www.triptrav.domain.UserVO;
+import com.www.triptrav.service.MailService;
 import com.www.triptrav.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService usv;
+    private final MailService msv;
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/join")
@@ -28,28 +33,44 @@ public class UserController {
         m.addAttribute("joinMsg","가입이 완료되었습니다!");
         return "redirect:/?joinMsg=true";
     }
-    // 로그인 처리
-    @PostMapping("/login")
-    @ResponseBody
-    public String loginUser(@RequestBody UserVO uvo, HttpSession session) {
-        log.info("로그인 시도 이메일 >>> {}", uvo.getEmail());
 
-        UserVO user = usv.checkEmail(uvo.getEmail());
-        if (user == null) {
-            log.info("유저 없음!! >>>>>: {}", uvo.getEmail());
-            return "fail";
-        }
-
-        if (passwordEncoder.matches(uvo.getPw(), user.getPw())) {
-            session.setAttribute("user", user);
-            log.info("로그인 success Msg {} >>>> ", user.getEmail());
-            return "success";
-        } else {
-            log.info("비밀번호 불일치 >>> {}", uvo.getEmail());
-            return "fail";
-        }
+    @GetMapping("/login")
+    public void loginUser(){
     }
 
 
+    @GetMapping("/join")
+    public void joinUser(){
+    }
+
+    @GetMapping("/findPw")
+    public void findPw(){
+    }
+
+    @PostMapping(value="/nick",consumes = "text/plain", produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> duplicationNick(@RequestBody String nickName){
+        int isOk = usv.duplicationNick(nickName);
+        return isOk==0? new ResponseEntity<String>("0", HttpStatus.OK):
+                new ResponseEntity<String>("1",HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @PostMapping(value="/email",consumes = "text/plain", produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> duplicationEmail(@RequestBody String email){
+        log.info("email>>>>{}",email);
+        int isOk = usv.duplicationEmail(email);
+        return isOk==0? new ResponseEntity<String>("0", HttpStatus.OK):
+                new ResponseEntity<String>("1",HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    //비밀번호 찾기
+    @PostMapping("/find/{email}")
+    @ResponseBody
+    public String findUserPw(@PathVariable("email")String email){
+        if(usv.findUserPw(email)>0){
+            msv.sendNewPw(email);
+            return "1";
+        }
+        return "0";
+    }
 
 }

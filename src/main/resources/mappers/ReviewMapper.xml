@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.www.triptrav.repository.ReviewMapper">
+    <insert id="post" useGeneratedKeys="true" keyProperty="rno">
+        INSERT INTO review (uno, nickname, re_rate, re_content, re_content_type, re_image_count)
+        VALUES (#{uno}, #{nickname}, #{reRate}, #{reContent}, #{reContentType}, #{reImageCount})
+    </insert>
+    <insert id="insertReviewImage">
+        INSERT INTO review_image (rno, image_path, upload_date)
+        VALUES (#{rno}, #{imagePath}, NOW())
+    </insert>
+</mapper>

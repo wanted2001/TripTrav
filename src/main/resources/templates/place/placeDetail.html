@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>상세페이지</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <link rel="stylesheet" href="/dist/css/place/placeDetail.css">
     <script src="/dist/js/key.js"></script>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2405143deeab244b2402da9e3bd9a581&libraries=services,clusterer,drawing"></script>
@@ -13,6 +15,9 @@
     <section class="titleSection">
         <div class="location">
         </div>
+        <img src="/dist/image/heart.svg" alt="그림없음" class="placeHeart">
+        <img src="/dist/image/map.svg" alt="그림없음" class="placeMap" onclick="savePlace()">
+        <div class="savePlaceModal"></div>
         <div class="imageUrls"></div>
         <img src="/dist/image/chevron-left.svg" class="prev" alt="noPic">
         <img src="/dist/image/chevron-right.svg" class="next" alt="noPic">
@@ -38,14 +43,30 @@
     </section>
     <section class="details"></section>
     <section class="reviews">
-        <span>리뷰</span><span class="reviewCount">100개</span>
+        <span>리뷰</span><span class="reviewCount">개</span>
         <div class="inputDiv">
-            <form action="/place/review" method="post">
-                <textarea class="reviewArea" cols="30" rows="5" placeholder="로그인 후 리뷰를 남겨보세요."></textarea><br>
-                <button class="cameraInput"><img src="">카메라</button>
+            <form action="/review/POST" method="post" enctype="multipart/form-data">
+                <textarea class="reviewArea" name="reContent" cols="30" rows="5" placeholder="로그인 후 리뷰를 남겨보세요."></textarea><br>
+                <div class="star-rating">
+                    <div class="stars" id="stars">
+                        <span class="star" data-value="1"></span>
+                        <span class="star" data-value="2"></span>
+                        <span class="star" data-value="3"></span>
+                        <span class="star" data-value="4"></span>
+                        <span class="star" data-value="5"></span>
+                    </div>
+                    <p>현재 별점: <span id="rating-value">0</span></p>
+                </div>
+                <input type="file" id="imageInput" name="images" accept="image/jpeg, image/png" multiple style="display: none;" onchange="handleFileUpload(event)">
+                <button type="button" class="cameraInput" onclick="document.getElementById('imageInput').click();">
+                    카메라
+                </button>
+                <div id="previewContainer"></div>
+                <div id="fileCount"></div>
                 <button class="addButton" type="button">등록</button>
             </form>
         </div>
+
         <div class="buttons">
             <button>높은 평점순</button>
             <button>낮은 평점순</button>
@@ -94,5 +115,6 @@
     </section>
 </main>
 <script src="/dist/js/place/placeDetail.js"></script>
+<script src="/dist/js/place/savePlace.js"></script>
 </body>
 </html>

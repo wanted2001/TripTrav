@@ -1,42 +1,46 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <th:block th:fragment="header">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>title</title>
-    <link rel="stylesheet" th:href="@{/dist/css/reset.css}">
-    <link rel="stylesheet" th:href="@{/dist/css/loginJoin.css}">
-    <style>
-        .header-nav{
-            background: #ffffff00;
-            position: absolute;
-            z-index: 100;
-            width: 1440px;
-            top: 30px;
-            left: 52%;
-            transform: translateX(-50%);
-            display: flex;
-            justify-content: space-between;
-        }
-        .middleUl{
-            font-family: LINESeedKR-Bd;
-            width: 500px;
-            display: flex;
-            justify-content: space-around;
-            font-size: 19px;
-        }
-        .rightUl{
-            font-family: LINESeedKR-Rg;
-            display: flex;
-        }
-        a{
-            color: white;
-            cursor: pointer;
-        }
-    </style>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>title</title>
+        <link rel="stylesheet" th:href="@{/dist/css/reset.css}">
+        <link rel="stylesheet" th:href="@{/dist/css/loginJoin.css}">
+        <style>
+            .header-nav {
+                background: #ffffff00;
+                position: absolute;
+                z-index: 100;
+                width: 1440px;
+                top: 30px;
+                left: 52%;
+                transform: translateX(-50%);
+                display: flex;
+                justify-content: space-between;
+            }
+
+            .middleUl {
+                font-family: LINESeedKR-Bd;
+                width: 500px;
+                display: flex;
+                justify-content: space-around;
+                font-size: 19px;
+            }
+
+            .rightUl {
+                font-family: LINESeedKR-Rg;
+                display: flex;
+            }
+
+            a {
+                color: white;
+                cursor: pointer;
+            }
+        </style>
+    </head>
+    <body>
     <nav class="header-nav">
         <div class="leftBox">
             <a th:href="@{/}">
@@ -51,26 +55,39 @@
             </ul>
         </div>
         <div class="rightBox">
-            <ul class="rightUl">
-                <li><a id="openModal"> Login / Join </a></li>
-            </ul>
+            <th:block sec:authorize="isAnonymous()">
+                <ul class="rightUl">
+                    <li><a id="openModal"> 로그인ㅤㅤ|ㅤ회원가입 </a></li>
+                </ul>
+            </th:block>
+            <th:block sec:authorize="isAuthenticated()">
+                <ul class="rightUl">
+                    <li><a th:href="@{/user/logout}" id="logout"> 로그아웃</a></li>
+                    <li><a>ㅤ|ㅤ</a></li>
+                    <li>
+                        <a th:href="@{mypage/mypage(uno=${#authentication.getPrincipal().getUser().getUno()})}"
+                           id="mypage">마이페이지</a></li>
+                </ul>
+            </th:block>
         </div>
     </nav>
     <div id="myModal" class="modal">
-        <div class="modal-content">
-            <form id="loginForm" action="/user/login" method="post" class="LoginArea">
-            <section class="loginBox">
-                <button class="close-button" id="closeModal">&times;</button>
-                <p><img src="/" class="logoImg"></p>
-                <h2>로그인</h2>
-                <p><input type="text" id="email" name="email" placeholder="이메일을 입력하세요."></p>
-                <p><input type="password" id="pw" name="pw" placeholder="비밀번호를 입력하세요."></p>
-                <p><button type="submit">로그인</button></p>
-            </section>
+        <div class="modal-content" id="modalContent">
+            <button class="close-button" id="closeModal">&times;</button>
+            <form id="loginForm" action="/login" method="post" class="LoginArea">
+                <section class="loginBox">
+                    <p><img src="/" class="logoImg"></p>
+                    <h2>로그인</h2>
+                    <p><input type="text" id="username" name="email" placeholder="이메일을 입력하세요."></p>
+                    <p><input type="password" id="password" name="pw" placeholder="비밀번호를 입력하세요."></p>
+                    <p>
+                        <button type="submit">로그인</button>
+                    </p>
+                </section>
             </form>
             <section class="joinBox">
-                <p>회원이 아니신가요? <a id="joinBtn">회원가입</a> </p>
-                <p>계정을 잊으셨나요? <a id="findBtn">아이디/비밀번호 찾기</a> </p>
+                <p>회원이 아니신가요? <a id="joinBtn">회원가입</a></p>
+                <p>계정을 잊으셨나요? <a id="findBtn">아이디/비밀번호 찾기</a></p>
             </section>
             <hr style="border: solid 0.5px lightgrey">
             <section class="snsJoinBox">
@@ -81,7 +98,42 @@
         </div>
     </div>
     <script src="/dist/js/loginJoin.js"></script>
-    <script src="/dist/js/user/login.js"></script>
-</body>
+    <script>
+        let url = window.location.href;
+        document.getElementById('searchA').addEventListener('click', () => {
+            if (url === "http://localhost:8099/") {
+                changeSearch();
+            } else {
+                console.log("다른 페이지");
+                window.location.href = "http://localhost:8099/?search=true";
+            }
+        });
+
+        function changeSearch() {
+            document.querySelector('.mainText').style.display = 'none';
+            document.querySelector('.mainBtnDiv').style.display = 'none';
+            document.querySelector('.inputWrap').style.display = '';
+        }
+    </script>
+    <script sec:authorize="isAuthenticated()">
+        let unoNum = `[[${#authentication.getPrincipal().getUser().getUno()}]]`;
+        let userNickname = `[[${#authentication.getPrincipal().getUser().getNickname()}]]`;
+        var urlParams = new URLSearchParams(window.location.search);
+        const message = urlParams.get('message');
+        console.log(message);
+        console.log(userNickname);
+        if (message) {
+            alert("허용되지 않은 닉네임입니다.\n닉네임을 변경해주세요. ");
+            goToMyPage(unoNum);
+        } else if (userNickname.includes("_user") && message != null) {
+            alert("허용되지 않은 닉네임입니다.\n닉네임을 변경해주세요. ");
+            goToMyPage(unoNum);
+        }
+
+        function goToMyPage(unoNum) {
+            window.location.href = `/mypage/mypage?uno=${unoNum}`;
+        }
+    </script>
+    </body>
 </th:block>
 </html>

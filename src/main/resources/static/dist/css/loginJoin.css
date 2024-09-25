@@ -18,7 +18,7 @@
     border-radius: 10px;
     width: 375px;
     text-align: center;
-    height: 450px;
+    height: 525px;
     z-index: 1001;
 }
 .close-button {
@@ -39,7 +39,36 @@ section p{
     height: 46px;
     line-height: 46px;
 }
-p input{
+/*p input{*/
+/*    font-family: 'LINESeedKR-Rg';*/
+/*    padding: 10px;*/
+/*    width: 90%;*/
+/*    margin: 18px 0;*/
+/*    border: none;*/
+/*    background-color: #d3d3d361;*/
+/*    border-radius: 5px;*/
+/*    outline: none;*/
+/*}*/
+/*p button{*/
+/*    width: 98%;*/
+/*    margin: 24px 0;*/
+/*    height: 35px;*/
+/*    border: none;*/
+/*    font-family: 'LINESeedKR-Rg';*/
+/*    background-color: orange;*/
+/*    color: white;*/
+/*    border-radius: 5px;*/
+/*    cursor: pointer;*/
+/*}*/
+/*p a {*/
+/*    font-family: 'LINESeedKR-Bd';*/
+/*    font-size: 15px;*/
+/*    color: orange;*/
+/*    cursor: pointer;*/
+/*    text-decoration: none;*/
+/*}*/
+
+p input {
     font-family: 'LINESeedKR-Rg';
     padding: 10px;
     width: 90%;
@@ -49,7 +78,15 @@ p input{
     border-radius: 5px;
     outline: none;
 }
-p button{
+
+p {
+    width: 90%;
+    justify-content: center;
+    margin: 0 auto;
+    height: auto; /* 높이를 auto로 설정하여 스팬과 자연스럽게 맞춤 */
+    line-height: normal; /* 기본 줄 간격 유지 */
+}
+p button {
     width: 98%;
     margin: 24px 0;
     height: 35px;
@@ -60,11 +97,14 @@ p button{
     border-radius: 5px;
     cursor: pointer;
 }
-p a{
+
+/* 기타 스타일 유지 */
+p a {
     font-family: 'LINESeedKR-Bd';
     font-size: 15px;
     color: orange;
     cursor: pointer;
+    text-decoration: none;
 }
 .joinBox {
     margin-top: 35px;
@@ -82,33 +122,61 @@ p a{
     cursor: pointer;
     margin: 10px 12px;
 }
-/*.snsJoinBox a:nth-child(1) {*/
-/*    background-image: url("/dist/image/kakaoLogin.png");*/
-/*    background-position: center;*/
-/*    background-repeat: no-repeat;*/
-/*    background-size: cover;*/
-/*}*/
-/*.snsJoinBox button:nth-child(2) {*/
-/*    background-image: url("/dist/image/googleLogin.png");*/
-/*    background-position: center;*/
-/*    background-repeat: no-repeat;*/
-/*    background-size: cover;*/
-/*    border: 0.1px solid lightgray;*/
-/*}*/
-/*.snsJoinBox button:nth-child(3) {*/
-/*    background-image: url("/dist/image/naverLogin.png");*/
-/*    background-position: center;*/
-/*    background-repeat: no-repeat;*/
-/*    background-size: cover;*/
-/*}*/
+
 .joinLine{
     margin-top: 30px;
 }
-#backButton{
+
+#backBtn{
+    z-index: 10;
+    pointer-events: auto; /* 클릭 가능하게하는 기능 */
     background: transparent;
     border: none;
     font-size: 24px;
     cursor: pointer;
     position: relative;
     right: 45%
+
+}
+
+
+.JoinSpan {
+    display: block;
+    font-size: 13px;
+    color: grey;
+    text-align: center;
+    padding-top: -3px;
+    position: relative;
+    top: 14px;
+}
+
+.findPwBox{
+    /* background-color: #007bff; */
+    position: relative;
+    top: 65px;
+}
+
+.findPwTitle{
+    font-size: 20px;
+}
+
+.findPwMsg{
+    font-size: 14px;
+    line-height: 19px;
+    color: #666666;
+}
+
+.findPwEmailBtn{
+    background-color: orange;
+    width: 325px;
+    height: 50px;
+    border-radius: 5px;
+    margin: 30px auto;
+    font-size: 15px;
+    font-family: 'LINESeedKR-Rg';
+    color: white;
+}
+
+.findNoPw{
+    background-color: red;
 }

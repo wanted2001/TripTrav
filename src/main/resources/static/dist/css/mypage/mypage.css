@@ -16,7 +16,6 @@
 .topWrap{
     width: 1440px;
     height : 320px;
-    /*background-color: #fb763f;*/
 }
 
 .bottomWrap{
@@ -120,36 +119,104 @@
 .bottomInfoWrap{
     width: 1440px;
     height: 700px;
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
 .bottomInfoWrap h1{
+    padding-left: 15px;
+    margin: 10px 0;
     font-size: 22px;
     font-weight: 600;
+}
+
+.bottomInfoWrap > div:is(.nextMyTrip, .prevMyTrip, .myWishTrip, .myWishPlace, .myPlaceTripReview, .myFoodTripReview) {
+    position: relative;
+    margin-top: 30px;
+}
+
+.tripImgDiv{
+    width: 120px;
+    height: 160px;
+    display: flex;
+    align-items: center;
 }
 
 .tripImg{
     width: 120px;
     height: 120px;
-    border-radius: 20px;
     border: 1px solid #B3B3B3;
     object-fit: cover;
-    margin: 10px 0;
 }
 
 .tripCard{
+    position: relative;
     display: flex;
+    height: 160px;
     flex-direction: row;
+    padding: 15px;
+    border-bottom: 1px solid #B3B3B3;
 }
 
 .tripinfo{
     display: flex;
     align-items: center;
+    padding-left: 20px;
 }
 
 .tripinfo > ul {
     display: flex;
     flex-direction: column;
+    justify-content: space-around;
+    width: 500px;
+    height: 130px;
+
+}
+
+.tripinfo > ul > li{
+    margin: 10px 0;
+    font-size: 20px;
+}
+
+/*내 여행 계획*/
+.tripSetting{
+    /*background-color: black;*/
+    position: absolute;
+    right: 40px;
+    top: 35px;
+    z-index: 1;
+    ul a{
+        color: black;
+    }
+}
+
+/*아코디언*/
+:is(.nextTripList, .prevTripList, .tripPlaceReviewList, .tripFoodReviewList,.wishTrip ,.wishPlace){
+    max-height: 500px;
+    overflow: scroll;
+    overflow-x:  hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+:is(.nextTripList, .prevTripList, .tripPlaceReviewList, .tripFoodReviewList ,.wishTrip ,.wishPlace).show {
+    max-height: 890px;
+    display: block;
+}
+
+.accordionBtn {
+    position: absolute;
+    top : -10px;
+    left : 140px;
+    cursor: pointer;
+    padding: 10px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.accordionBtn:hover {
+    background-color: #0056b3;
 }
 
 /*모달창*/
@@ -257,6 +324,31 @@
         border-radius: 5px;
         cursor: pointer;
     }
+}
+
+/*스크롤바*/
+
+/* 전체 스크롤바 */
+::-webkit-scrollbar {
+    width: 12px; /* 너비 */
+    height: 12px; /* 높이 */
+}
+
+/* 스크롤바의 배경 */
+::-webkit-scrollbar-track {
+    background: rgb(219, 219, 219); /* 배경 색 */
+    border-radius: 2px; /* 모서리 둥글게 */
+}
+
+/* 스크롤바의 손잡이 */
+::-webkit-scrollbar-thumb {
+    background: #FFD477; /* 손잡이 색 */
+    border-radius: 2px; /* 모서리 둥글게 */
+}
+
+/* 손잡이를 hover했을 때 */
+::-webkit-scrollbar-thumb:hover {
+    background: #F3A701; /* hover 색 */
 }
 
 
