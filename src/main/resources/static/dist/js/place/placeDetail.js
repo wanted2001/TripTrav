@@ -232,21 +232,33 @@ document.addEventListener('DOMContentLoaded', function () {
     const stars = document.getElementById('stars');
     const ratingValue = document.getElementById('rating-value');
     let currentRating = 0;
+    let isClickSet = false;
 
     stars.addEventListener('mousemove', function (e) {
         const rect = stars.getBoundingClientRect();
         const offsetX = e.clientX - rect.left;
         const starWidth = rect.width / 5;
         const rating = Math.ceil((offsetX / starWidth) * 2) / 2;
-        highlightStars(rating);
-        ratingValue.textContent = rating;
+
+        if (offsetX >= 0 && offsetX <= rect.width) {
+            highlightStars(rating);
+            ratingValue.textContent = rating;
+        }
     });
+
     stars.addEventListener('click', function () {
         currentRating = parseFloat(ratingValue.textContent);
+        isClickSet = true;
     });
-    stars.addEventListener('mouseleave', function () {
-        highlightStars(currentRating);
+
+    stars.addEventListener('mouseleave', function (e) {
+        // Only restore the last clicked rating if mouse leaves
+        if (isClickSet) {
+            highlightStars(currentRating);
+            ratingValue.textContent = currentRating;
+        }
     });
+
     function highlightStars(rating) {
         const starElements = stars.children;
         for (let i = 0; i < starElements.length; i++) {
@@ -264,6 +276,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 });
+
 
 //주변 관광지 조회 함수
 async function getNearBySights(mapx, mapy, radius) {
@@ -388,3 +401,13 @@ scrollToSection('.outlineMove', '.details');
 scrollToSection('.reviewMove', '.reviews');
 scrollToSection('.findRouteMove', '.transportation');
 scrollToSection('.nearbyMove', '.nearby');
+
+checkLogin();
+//로그인 체크 함수
+function checkLogin(){
+    if(typeof userNickname !== 'undefined' && userNickname !== null){
+        document.querySelector('.reviewArea').placeholder = '타인에게 불쾌감을 줄 수 있는 리뷰는 삭제될 수 있습니다. ';
+    }else{
+        console.log("로그인")
+    }
+}
