@@ -252,7 +252,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     stars.addEventListener('mouseleave', function (e) {
-        // Only restore the last clicked rating if mouse leaves
         if (isClickSet) {
             highlightStars(currentRating);
             ratingValue.textContent = currentRating;
