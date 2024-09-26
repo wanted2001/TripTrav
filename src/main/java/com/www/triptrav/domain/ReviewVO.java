@@ -17,5 +17,6 @@ public class ReviewVO {
     private String reDate;
     private long reUseful;
     private int reReport;
+    private long reContentId;
     private long reContentType;
 }

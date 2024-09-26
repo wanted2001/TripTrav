@@ -4,11 +4,17 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.www.triptrav.repository.ReviewMapper">
     <insert id="post" useGeneratedKeys="true" keyProperty="rno">
-        INSERT INTO review (uno, nickname, re_rate, re_content, re_content_type, re_image_count)
-        VALUES (#{uno}, #{nickname}, #{reRate}, #{reContent}, #{reContentType}, #{reImageCount})
+        INSERT INTO review (uno, nickname, re_rate, re_content,re_content_id, re_content_type, re_image_count)
+        VALUES (#{uno}, #{nickname}, #{reRate}, #{reContent}, #{reContentId}, #{reContentType}, #{reImageCount})
     </insert>
     <insert id="insertReviewImage">
         INSERT INTO review_image (rno, image_path, upload_date)
         VALUES (#{rno}, #{imagePath}, NOW())
     </insert>
+    <select id="getList" resultType="com.www.triptrav.domain.ReviewVO">
+        select * from review where re_content_id = #{contentId}
+    </select>
+    <select id="getImagePathsByReviewId" resultType="String">
+        select image_path from review_image where rno = #{rno}
+    </select>
 </mapper>

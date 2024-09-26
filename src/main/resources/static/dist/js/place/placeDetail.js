@@ -165,6 +165,7 @@ async function writeReview() {
     data.append('reImageCount', files.length);
     data.append('reContentType', 12); //임시값 나중에 불러와
     data.append('uno', 1); // 임시값 나중에 불러와
+    data.append('reContentId', contentId)
 
     for (let i = 0; i < files.length; i++) {
         data.append('images', files[i]);
@@ -194,8 +195,8 @@ document.querySelector('.addButton').addEventListener('click', () => {
     });
 });
 
+//이미지업로드 관련 함수
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
-
 function handleFileUpload(event) {
     const files = Array.from(event.target.files);
     const fileCountElement = document.getElementById('fileCount');
@@ -233,7 +234,7 @@ function handleFileUpload(event) {
             img.style.height = '120px';
             img.style.objectFit = 'cover';
             const deleteButton = document.createElement('button');
-            deleteButton.innerText = 'x';
+            deleteButton.innerText = 'X';
             deleteButton.style.position = 'absolute';
             deleteButton.style.top = '2px';
             deleteButton.style.right = '2px';
@@ -300,6 +301,56 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     }
+});
+
+//리뷰가져오기
+async function getReviewList(){
+    try {
+        const url = "/review/GET/"+contentId;
+        const config = {
+            method: 'GET'
+        };
+        const resp = await fetch(url, config);
+        return await resp.json();
+    }catch (error){
+        console.log(error);
+    }
+}
+getReviewList().then(result => {
+    const reviewContainer = document.querySelector('.review');
+    result.forEach(reviewDTO => {
+        const review = reviewDTO.review;
+        const imagePaths = reviewDTO.imagePaths;
+
+        const reviewInfoDiv = document.createElement("div");
+        reviewInfoDiv.className = "review-info";
+        reviewInfoDiv.innerHTML = `<img class="profileImage" alt="noPic" src="">
+        <span class="nickName">${review.nickname}</span>
+        <span class="review-rating">${review.reRate}</span><br>
+        <span class="regDate">${review.reDate}</span>
+        <button class="helpButton"><img src="/dist/image/thumbs-up.svg">${review.reUseful}</button>
+        <button class="reportButton"><img src="/dist/image/alert-triangle.svg"></button>`;
+
+        const reviewDetailDiv = document.createElement("div");
+        reviewDetailDiv.className = "review-detail";
+        reviewDetailDiv.innerHTML = `<p class="reviewContent">${review.reContent}</p>`;
+
+        if (imagePaths && imagePaths.length > 0) {
+            const imageDiv = document.createElement("div");
+            imageDiv.className = "review-images";
+            imagePaths.forEach(imagePath => {
+                const relativePath = imagePath.replace("C:\\userImage\\", "");
+                const img = document.createElement("img");
+                img.src = `/reviewImages/${relativePath}`;
+                img.alt = "리뷰 이미지";
+                img.classList.add('review-img')
+                imageDiv.appendChild(img);
+            });
+            reviewDetailDiv.appendChild(imageDiv);
+        }
+        reviewContainer.appendChild(reviewInfoDiv);
+        reviewContainer.appendChild(reviewDetailDiv);
+    });
 });
 
 
