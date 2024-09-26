@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -21,6 +23,16 @@ public class ReviewServiceImpl implements ReviewService{
     @Override
     public void saveReviewImage(long rno, String imagePath) {
         reviewMapper.insertReviewImage(rno, imagePath);
+    }
+
+    @Override
+    public List<ReviewVO> getList(long contentId) {
+        return reviewMapper.getList(contentId);
+    }
+
+    @Override
+    public List<String> getImagePathsByReviewId(long rno) {
+        return reviewMapper.getImagePathsByReviewId(rno);
     }
 
 }

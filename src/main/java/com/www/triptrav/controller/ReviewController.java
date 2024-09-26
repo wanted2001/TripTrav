@@ -1,5 +1,6 @@
 package com.www.triptrav.controller;
 
+import com.www.triptrav.domain.ReviewDTO;
 import com.www.triptrav.domain.ReviewVO;
 import com.www.triptrav.service.ReviewService;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -34,6 +37,7 @@ public class ReviewController {
                               @RequestParam("reRate") float reRate,
                               @RequestParam("reContent") String reContent,
                               @RequestParam("reImageCount") int reImageCount,
+                              @RequestParam("reContentId") long reContentId,
                               @RequestParam("reContentType") long reContentType) throws IOException {
         ReviewVO rvo = new ReviewVO();
         rvo.setUno(uno);
@@ -41,6 +45,7 @@ public class ReviewController {
         rvo.setReRate(reRate);
         rvo.setReContent(reContent);
         rvo.setReImageCount(reImageCount);
+        rvo.setReContentId(reContentId);
         rvo.setReContentType(reContentType);
 
         int isPost = rsv.post(rvo);
@@ -60,7 +65,6 @@ public class ReviewController {
                         String originalFilename = file.getOriginalFilename();
                         String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
                         String savedFilename = uuid + extension;
-
                         Path savePath = Paths.get(uploadPath.getAbsolutePath(), savedFilename);
                         file.transferTo(savePath.toFile());
                         rsv.saveReviewImage(rvo.getRno(), savePath.toString());
@@ -72,5 +76,22 @@ public class ReviewController {
             return "fail";
         }
         return "success";
+    }
+
+    @GetMapping("/GET/{contentId}")
+    @ResponseBody
+    public List<ReviewDTO> getReviewList(@PathVariable("contentId") long contentId) {
+        List<ReviewVO> reviewList = rsv.getList(contentId);
+        List<ReviewDTO> reviewDTOList = new ArrayList<>();
+        for (ReviewVO review : reviewList) {
+            ReviewDTO reviewDTO = new ReviewDTO();
+            reviewDTO.setReview(review);
+            if (review.getReImageCount() > 0) {
+                List<String> imagePaths = rsv.getImagePathsByReviewId(review.getRno());
+                reviewDTO.setImagePaths(imagePaths);
+            }
+            reviewDTOList.add(reviewDTO);
+        }
+        return reviewDTOList;
     }
 }

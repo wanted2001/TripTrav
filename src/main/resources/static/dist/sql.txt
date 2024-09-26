@@ -24,6 +24,7 @@ CREATE TABLE `review` (
 	`re_useful` bigint NULL DEFAULT 0,
 	`re_report` int NULL DEFAULT 0,
 	`re_image_count` int NULL,
+	`re_content_id` bigint NOT NULL,
 	`re_content_type` bigint NOT NULL,
 	FOREIGN KEY (`uno`) REFERENCES `user`(`uno`)
 );
