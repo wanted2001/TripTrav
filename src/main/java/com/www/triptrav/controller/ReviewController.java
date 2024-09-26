@@ -42,6 +42,7 @@ public class ReviewController {
         rvo.setReContent(reContent);
         rvo.setReImageCount(reImageCount);
         rvo.setReContentType(reContentType);
+
         int isPost = rsv.post(rvo);
         if (isPost > 0) {
             if (files != null && files.length > 0) {
@@ -52,6 +53,7 @@ public class ReviewController {
                 if (!uploadPath.exists()) {
                     uploadPath.mkdirs();
                 }
+
                 for (MultipartFile file : files) {
                     if (!file.isEmpty()) {
                         String uuid = UUID.randomUUID().toString();
@@ -61,13 +63,12 @@ public class ReviewController {
 
                         Path savePath = Paths.get(uploadPath.getAbsolutePath(), savedFilename);
                         file.transferTo(savePath.toFile());
-
                         rsv.saveReviewImage(rvo.getRno(), savePath.toString());
-                        return "imageSuccess";
                     }
                 }
+                return "imageSuccess";
             }
-        }else{
+        } else {
             return "fail";
         }
         return "success";

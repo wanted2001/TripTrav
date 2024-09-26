@@ -194,38 +194,64 @@ document.querySelector('.addButton').addEventListener('click', () => {
     });
 });
 
-//리뷰 사진첨부관련
-function handleFileUpload(event) {
-    const files = event.target.files;
-    const fileCount = files.length;
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
+function handleFileUpload(event) {
+    const files = Array.from(event.target.files);
     const fileCountElement = document.getElementById('fileCount');
     const previewContainer = document.getElementById('previewContainer');
-
     previewContainer.innerHTML = '';
-
-    if (fileCount > 3) {
+    if (files.length > 3) {
         alert('최대 3장만 업로드할 수 있습니다.');
         event.target.value = '';
-        fileCountElement.innerText = '';
-    } else {
-        fileCountElement.innerText = `${fileCount}/3 첨부 완료`;
-        Array.from(files).forEach(file => {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                img.style.width = '75px';
-                img.style.height = '75px';
-                img.style.objectFit = 'cover';
-                img.style.margin = '5px';
-                previewContainer.appendChild(img);
-            }
-
-            reader.readAsDataURL(file);
-        });
+        return;
     }
+    let validFiles = [];
+    files.forEach(file => {
+        if (file.size > MAX_FILE_SIZE) {
+            alert(`파일 "${file.name}" 크기가 10MB를 초과했습니다. 다른 파일을 선택해주세요.`);
+        } else {
+            validFiles.push(file);
+        }
+    });
+    if (validFiles.length === 0) {
+        event.target.value = '';
+        fileCountElement.innerText = '';
+        return;
+    }
+    fileCountElement.innerText = `${validFiles.length}/3 첨부 완료`;
+    validFiles.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const imgContainer = document.createElement('div');
+            imgContainer.style.position = 'relative';
+            imgContainer.style.display = 'inline-block';
+            imgContainer.style.margin = '5px';
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.style.width = '120px';
+            img.style.height = '120px';
+            img.style.objectFit = 'cover';
+            const deleteButton = document.createElement('button');
+            deleteButton.innerText = 'x';
+            deleteButton.style.position = 'absolute';
+            deleteButton.style.top = '2px';
+            deleteButton.style.right = '2px';
+            deleteButton.style.fontSize = '20px';
+            deleteButton.style.color = 'white';
+            deleteButton.style.cursor = 'pointer';
+            deleteButton.onclick = function() {
+                validFiles.splice(index, 1);
+                handleFileUpload({ target: { files: new DataTransfer().files } });
+            };
+            imgContainer.appendChild(img);
+            imgContainer.appendChild(deleteButton);
+            previewContainer.appendChild(imgContainer);
+        };
+        reader.readAsDataURL(file);
+    });
 }
+
 
 //별점관리
 document.addEventListener('DOMContentLoaded', function () {
