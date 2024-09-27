@@ -30,7 +30,7 @@
     position: relative;
     right: 45%;
 }
-section p{
+.mainBox p{
     /* background-color: red; */
     width: 90%;
     justify-content: center;
@@ -39,35 +39,6 @@ section p{
     height: 46px;
     line-height: 46px;
 }
-/*p input{*/
-/*    font-family: 'LINESeedKR-Rg';*/
-/*    padding: 10px;*/
-/*    width: 90%;*/
-/*    margin: 18px 0;*/
-/*    border: none;*/
-/*    background-color: #d3d3d361;*/
-/*    border-radius: 5px;*/
-/*    outline: none;*/
-/*}*/
-/*p button{*/
-/*    width: 98%;*/
-/*    margin: 24px 0;*/
-/*    height: 35px;*/
-/*    border: none;*/
-/*    font-family: 'LINESeedKR-Rg';*/
-/*    background-color: orange;*/
-/*    color: white;*/
-/*    border-radius: 5px;*/
-/*    cursor: pointer;*/
-/*}*/
-/*p a {*/
-/*    font-family: 'LINESeedKR-Bd';*/
-/*    font-size: 15px;*/
-/*    color: orange;*/
-/*    cursor: pointer;*/
-/*    text-decoration: none;*/
-/*}*/
-
 p input {
     font-family: 'LINESeedKR-Rg';
     padding: 10px;

@@ -1,4 +1,4 @@
-    <section class="loginBox">
+    <section class="mainBox loginBox">
             <button class="close-button" id="closeModal">&times;</button>
             <form id="loginForm" action="/login" method="post" class="LoginArea">
             <p><img src="/static" class="logoImg"></p>
@@ -8,13 +8,12 @@
             <p><button type="submit">로그인</button></p>
             </form>
         </section>
-    <section class="joinBox">
+    <section class="mainBox joinBox">
         <p>회원이 아니신가요? <a id="joinBtn">회원가입</a> </p>
         <p>계정을 잊으셨나요? <a id="findBtn">아이디/비밀번호 찾기</a> </p>
     </section>
     <hr style="border: solid 0.5px lightgrey">
-    <section class="snsJoinBox">
-        <a href="/oauth2/authorization/kakao"><img src="/dist/image/kakaoLogin.png"></a>
+    <section class="mainBox snsJoinBox">
         <a href="/oauth2/authorization/google"><img src="/dist/image/googleLogin.png"></a>
         <a href="/oauth2/authorization/naver"><img src="/dist/image/naverLogin.png"></a>
     </section>

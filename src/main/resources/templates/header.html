@@ -7,7 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>title</title>
         <link rel="stylesheet" th:href="@{/dist/css/reset.css}">
-        <link rel="stylesheet" th:href="@{/dist/css/loginJoin.css}">
+        <link rel="stylesheet" th:href="@{/dist/css/user/loginJoin.css}">
         <style>
             .header-nav {
                 background: #ffffff00;
@@ -41,7 +41,7 @@
         </style>
     </head>
     <body>
-    <nav class="header-nav">
+    <nav class="header-nav" id="header">
         <div class="leftBox">
             <a th:href="@{/}">
                 <img src="/" class="logoImg">
@@ -49,7 +49,7 @@
         </div>
         <div class="middleBox">
             <ul class="middleUl">
-                <li><a th:href="@{/}">Maps</a></li>
+                <li><a id="goToMaps" th:href="@{/maps/mapsMain}">Maps</a></li>
                 <li><a th:href="@{/}">Trips</a></li>
                 <li><a id="searchA">Search</a></li>
             </ul>
@@ -57,7 +57,7 @@
         <div class="rightBox">
             <th:block sec:authorize="isAnonymous()">
                 <ul class="rightUl">
-                    <li><a id="openModal"> 로그인ㅤㅤ|ㅤ회원가입 </a></li>
+                    <li><a id="openModal"> 로그인ㅤ|ㅤ회원가입 </a></li>
                 </ul>
             </th:block>
             <th:block sec:authorize="isAuthenticated()">
@@ -100,6 +100,7 @@
     <script src="/dist/js/loginJoin.js"></script>
     <script>
         let url = window.location.href;
+
         document.getElementById('searchA').addEventListener('click', () => {
             if (url === "http://localhost:8099/") {
                 changeSearch();
@@ -133,6 +134,28 @@
         function goToMyPage(unoNum) {
             window.location.href = `/mypage/mypage?uno=${unoNum}`;
         }
+    </script>
+    <script>
+        function changeHeaderColor() {
+            const header = document.getElementById('header');
+            const currentURL = window.location.href;
+
+            // URL에 따라 배경색 변경
+            if (currentURL.includes('/maps')) {
+                header.style.position = 'absolute';
+                header.style.backgroundColor = 'orange';
+                header.style.height = '100px';
+                header.style.lineHeight = '100px';
+                header.style.width = '100%';
+                header.style.margin = '0 auto';
+                header.style.padding = '0 15px 0 15px';
+            } else {
+                header.style.backgroundColor = ''; // 기본 배경색
+            }
+        }
+
+        // 페이지 로드 시 실행
+        window.onload = changeHeaderColor;
     </script>
     </body>
 </th:block>
