@@ -10,71 +10,73 @@ let contentTypeId = 0;
 let imageUrls = [];
 let mapx = 0;
 let mapy = 0;
+let totalCount = 0;
+let sum = 0;
 
 // 기본정보 가져오기
-// fetch(detailInfoUrl)
-//     .then(response => response.json())
-//     .then(data => {
-//         const jsonData = data.response.body.items.item[0];
-//         const locationDiv = document.querySelector('.location');
-//         let city = splitAddr(jsonData.addr1)[0];
-//         let district = splitAddr(jsonData.addr1)[1];
-//         let title = jsonData.title;
-//         locationDiv.innerHTML = `<span>${city} > </span><span>${district} > </span><span>${title}</span>`;
-//
-//         const mainImgUrl = jsonData.firstimage;
-//         imageUrls.push(mainImgUrl);
-//
-//         // 추가 이미지를 가져오고 슬라이더에 반영
-//         getImage(imgUrl).then(result => {
-//             imageUrls.push(...result);
-//             updateImages();
-//         });
-//
-//         contentTypeId = jsonData.contenttypeid;
-//         document.querySelector('.title').innerText = jsonData.title
-//         document.querySelector('.locationInfo').innerHTML = `주소 : ${jsonData.addr1}`;
-//
-//         getIntroInfo(contentTypeId).then(result=>{
-//             const introData = result.response.body.items.item[0];
-//             document.querySelector('.telInfo').innerHTML = `전화번호 : ${introData.infocenter}`
-//             document.querySelector('.restInfo').innerHTML = `쉬는날 : ${introData.restdate}`
-//             document.querySelector('.timeInfo').innerHTML = `이용시간 : ${introData.usetime}`
-//         })
-//         getAdditionalInfo(contentTypeId).then(result => {
-//             const additionalInfoData = result.response.body.items.item[0];
-//             document.querySelector('.priceInfo').innerHTML = `${additionalInfoData.infoname} : ${additionalInfoData.infotext}`
-//         })
-//         document.querySelector('.homepageInfo').innerHTML = `홈페이지 : ${jsonData.homepage}`
-//         document.querySelector('.details').innerHTML = `<p>소개</p><span>${jsonData.overview}</span>`;
-//         mapx = jsonData.mapx;
-//         mapy = jsonData.mapy;
-//
-//         let marker = {
-//             position: new kakao.maps.LatLng(mapy, mapx),
-//             text: '눌러서 경로를 검색해보세요!'
-//         };
-//         let staticMapContainer  = document.getElementById('staticMap'),
-//             staticMapOption = {
-//                 center: new kakao.maps.LatLng(mapy, mapx),
-//                 level: 4,
-//                 marker: marker
-//             };
-//         let staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
-//         document.getElementById('staticMap').addEventListener('click', () => {
-//             const anchorTag = document.querySelector('#staticMap a');
-//             if (anchorTag) {
-//                 anchorTag.href = `https://map.kakao.com/link/to/${title},${mapy},${mapx}`;
-//             }
-//         });
-//
-//         //주변지역 처리
-//         processNearbySightsAndFood(mapx, mapy).then(result => {
-//             renderNearbySightsAndFood(result.sights, result.food);
-//         }).catch(error => {
-//             console.log(error)
-//         });
-//     });
+fetch(detailInfoUrl)
+    .then(response => response.json())
+    .then(data => {
+        const jsonData = data.response.body.items.item[0];
+        const locationDiv = document.querySelector('.location');
+        let city = splitAddr(jsonData.addr1)[0];
+        let district = splitAddr(jsonData.addr1)[1];
+        let title = jsonData.title;
+        locationDiv.innerHTML = `<span>${city} > </span><span>${district} > </span><span>${title}</span>`;
+
+        const mainImgUrl = jsonData.firstimage;
+        imageUrls.push(mainImgUrl);
+
+        // 추가 이미지를 가져오고 슬라이더에 반영
+        getImage(imgUrl).then(result => {
+            imageUrls.push(...result);
+            updateImages();
+        });
+
+        contentTypeId = jsonData.contenttypeid;
+        document.querySelector('.locationTitle').innerText = jsonData.title
+        document.querySelector('.locationInfo').innerHTML = `주소 : ${jsonData.addr1}`;
+
+        getIntroInfo(contentTypeId).then(result=>{
+            const introData = result.response.body.items.item[0];
+            document.querySelector('.telInfo').innerHTML = `전화번호 : ${introData.infocenter}`
+            document.querySelector('.restInfo').innerHTML = `쉬는날 : ${introData.restdate}`
+            document.querySelector('.timeInfo').innerHTML = `이용시간 : ${introData.usetime}`
+        })
+        getAdditionalInfo(contentTypeId).then(result => {
+            const additionalInfoData = result.response.body.items.item[0];
+            document.querySelector('.priceInfo').innerHTML = `${additionalInfoData.infoname} : ${additionalInfoData.infotext}`
+        })
+        document.querySelector('.homepageInfo').innerHTML = `홈페이지 : ${jsonData.homepage}`
+        document.querySelector('.details').innerHTML = `<p class="sectionTitle">소개</p><span>${jsonData.overview}</span>`;
+        mapx = jsonData.mapx;
+        mapy = jsonData.mapy;
+
+        let marker = {
+            position: new kakao.maps.LatLng(mapy, mapx),
+            text: '눌러서 경로를 검색해보세요!'
+        };
+        let staticMapContainer  = document.getElementById('staticMap'),
+            staticMapOption = {
+                center: new kakao.maps.LatLng(mapy, mapx),
+                level: 4,
+                marker: marker
+            };
+        let staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
+        document.getElementById('staticMap').addEventListener('click', () => {
+            const anchorTag = document.querySelector('#staticMap a');
+            if (anchorTag) {
+                anchorTag.href = `https://map.kakao.com/link/to/${title},${mapy},${mapx}`;
+            }
+        });
+
+        //주변지역 처리
+        processNearbySightsAndFood(mapx, mapy).then(result => {
+            renderNearbySightsAndFood(result.sights, result.food);
+        }).catch(error => {
+            console.log(error)
+        });
+    });
 
 // 주소 처리 함수
 function splitAddr(address) {
@@ -160,11 +162,11 @@ async function writeReview() {
     const files = document.getElementById('imageInput').files;
     const data = new FormData();
     data.append('reContent', document.querySelector('.reviewArea').value);
-    data.append('nickname', 'Test');
+    data.append('nickname', userNickname);
     data.append('reRate', document.getElementById('rating-value').textContent);
     data.append('reImageCount', files.length);
-    data.append('reContentType', 12); //임시값 나중에 불러와
-    data.append('uno', 1); // 임시값 나중에 불러와
+    data.append('reContentType', contentTypeId);
+    data.append('uno', unoNum);
     data.append('reContentId', contentId)
 
     for (let i = 0; i < files.length; i++) {
@@ -303,7 +305,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-//리뷰가져오기
+// 리뷰 가져오기 함수
 async function getReviewList(){
     try {
         const url = "/review/GET/"+contentId;
@@ -312,29 +314,47 @@ async function getReviewList(){
         };
         const resp = await fetch(url, config);
         return await resp.json();
-    }catch (error){
+    } catch (error) {
         console.log(error);
     }
 }
+
 getReviewList().then(result => {
     const reviewContainer = document.querySelector('.review');
+
     result.forEach(reviewDTO => {
         const review = reviewDTO.review;
         const imagePaths = reviewDTO.imagePaths;
 
+        const reviewWrapper = document.createElement("div");
+        reviewWrapper.className = "review-wrapper";
+
         const reviewInfoDiv = document.createElement("div");
         reviewInfoDiv.className = "review-info";
-        reviewInfoDiv.innerHTML = `<img class="profileImage" alt="noPic" src="">
-        <span class="nickName">${review.nickname}</span>
-        <span class="review-rating">${review.reRate}</span><br>
-        <span class="regDate">${review.reDate}</span>
-        <button class="helpButton"><img src="/dist/image/thumbs-up.svg">${review.reUseful}</button>
-        <button class="reportButton"><img src="/dist/image/alert-triangle.svg"></button>`;
+        sum += review.reRate;
+
+        let profileImgPath;
+        getUserProfile(review.uno).then(result => {
+            profileImgPath = result;
+
+            const starHTML = convertRatingToStars(review.reRate);
+
+            reviewInfoDiv.innerHTML = `
+                <img class="profileImage" alt="noPic" src="/profile/${profileImgPath}">
+                <span class="nickName">${review.nickname}</span><br>
+                <span class="review-rating">${starHTML}</span>
+                <span class="regDate">${review.reDate}</span>
+                <button class="helpButton">
+                    <span class="reUseful">${review.reUseful}</span><img src="/dist/image/thumbs-up.svg">
+                </button>
+                <button class="reportButton">
+                    <img src="/dist/image/alert-triangle.svg">
+                </button>`;
+        });
 
         const reviewDetailDiv = document.createElement("div");
         reviewDetailDiv.className = "review-detail";
         reviewDetailDiv.innerHTML = `<p class="reviewContent">${review.reContent}</p>`;
-
         if (imagePaths && imagePaths.length > 0) {
             const imageDiv = document.createElement("div");
             imageDiv.className = "review-images";
@@ -343,16 +363,73 @@ getReviewList().then(result => {
                 const img = document.createElement("img");
                 img.src = `/reviewImages/${relativePath}`;
                 img.alt = "리뷰 이미지";
-                img.classList.add('review-img')
+                img.classList.add('review-img');
                 imageDiv.appendChild(img);
             });
             reviewDetailDiv.appendChild(imageDiv);
         }
-        reviewContainer.appendChild(reviewInfoDiv);
-        reviewContainer.appendChild(reviewDetailDiv);
+        reviewWrapper.appendChild(reviewInfoDiv);
+        reviewWrapper.appendChild(reviewDetailDiv);
+        reviewContainer.appendChild(reviewWrapper);
     });
+    let displayScore = (sum/totalCount).toFixed(1);
+    document.querySelector('.score').innerHTML = `(${displayScore} 점)`;
+    document.querySelector('.rating').innerHTML = convertRatingToStars(sum/totalCount);
 });
 
+
+//별점 별로 변환함수
+function convertRatingToStars(rating) {
+    const starFull = '<img src="/dist/image/star-full.png" alt="Full Star">';
+    const starHalf = '<img src="/dist/image/star-half.png" alt="Half Star">';
+    const starEmpty = '<img src="/dist/image/star-empty.png" alt="Empty Star">';
+
+    let stars = '';
+
+    for (let i = 1; i <= 5; i++) {
+        if (rating >= i) {
+            stars += starFull;
+        } else if (rating >= i - 0.5) {
+            stars += starHalf;
+        } else {
+            stars += starEmpty;
+        }
+    }
+    return stars;
+}
+//유저프로필 가져오기
+async function getUserProfile(uno){
+    try{
+        const url = "/user/profile/"+uno;
+        const config = {
+            method: 'GET'
+        };
+        const resp = await fetch(url, config);
+        return await resp.text();
+    }catch(error){
+        console.log(error);
+    }
+}
+
+//전체 리뷰갯수 가져오기
+async function getReviewCount(){
+    try{
+        const url = "/review/getCount/"+contentId;
+        console.log(typeof contentId)
+        const config = {
+            method : "GET"
+        };
+        const resp = await fetch(url,config);
+        const result = await resp.text();
+        return parseInt(result);
+    }catch (error){
+        console.log(error)
+    }
+}
+getReviewCount().then(result => {
+    document.querySelector('.reviewCount').innerText = result+" 개"
+    totalCount = result;
+})
 
 //주변 관광지 조회 함수
 async function getNearBySights(mapx, mapy, radius) {

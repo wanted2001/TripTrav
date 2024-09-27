@@ -2,6 +2,14 @@
     color: black;
 }
 
+.myTripTitle>a{
+    color: black;
+    h3{
+        color: black;
+    }
+}
+
+
 .myPageWrap {
     display: flex;
     flex-direction: column;

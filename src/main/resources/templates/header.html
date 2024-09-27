@@ -65,7 +65,7 @@
                     <li><a th:href="@{/user/logout}" id="logout"> 로그아웃</a></li>
                     <li><a>ㅤ|ㅤ</a></li>
                     <li>
-                        <a th:href="@{mypage/mypage(uno=${#authentication.getPrincipal().getUser().getUno()})}"
+                        <a th:href="@{/mypage(uno=${#authentication.getPrincipal().getUser().getUno()})}"
                            id="mypage">마이페이지</a></li>
                 </ul>
             </th:block>
