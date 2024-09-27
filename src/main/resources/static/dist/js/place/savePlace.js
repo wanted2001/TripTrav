@@ -88,15 +88,15 @@ function setupTripFormListener() {
             const totalDays = (endDate - startDate) / (1000 * 60 * 60 * 24);
 
             const requestBody = {
-                planName: createPlanName,
-                departureDate: departureDate,
-                returnDate: returnDate,
-                totalDays: totalDays,
-                unoNum: unoNum
+                sche_name: createPlanName,
+                sche_start: departureDate,
+                sche_end: returnDate,
+                sche_count: totalDays,
+                uno: unoNum
             };
             console.log(requestBody);
 
-            fetch('/plan/createPlan', {
+            fetch(`/plan/createPlan/${contentId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

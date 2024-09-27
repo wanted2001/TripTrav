@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.www.triptrav.repository.ScheduleMapper">
+    <insert id="insertPlan" useGeneratedKeys="true" keyProperty="sco">
+        insert into schedule (sche_name, uno, sche_start, sche_end, sche_count)
+        values (#{scheName}, #{uno}, #{scheStart}, #{scheEnd}, #{scheCount})
+    </insert>
+
+    <select id="getSchedule" resultType="com.www.triptrav.domain.ScheduleDTO">
+        SELECT
+        s.sche_name, s.sche_start, s.sche_end, s.sche_count,
+        sd.sche_content_id, sd.sche_index
+        FROM
+        schedule s
+        JOIN
+        schedule_detail sd
+        ON
+        s.sco = sd.sco
+        Where
+        s.sco=${sco}
+    </select>
+</mapper>
