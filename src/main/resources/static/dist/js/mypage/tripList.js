@@ -8,7 +8,6 @@ var prevList = document.querySelector(".prevTripList");
 
 scheduleCall(unoNum).then(data=>{
     console.log(data);
-
     for (let i = 0; i <= data.length-1; i++) {
         const li = document.createElement("li");
         const div = document.createElement("div");
