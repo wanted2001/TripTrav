@@ -17,4 +17,7 @@
     <select id="getImagePathsByReviewId" resultType="String">
         select image_path from review_image where rno = #{rno}
     </select>
+    <select id="getCount" resultType="int">
+        select count(*) from review where re_content_id = #{contentId}
+    </select>
 </mapper>

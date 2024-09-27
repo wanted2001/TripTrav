@@ -14,5 +14,7 @@ public interface ReviewMapper {
     List<ReviewVO> getList(long contentId);
 
     List<String> getImagePathsByReviewId(long rno);
+
+    int getCount(String contentId);
 }
 

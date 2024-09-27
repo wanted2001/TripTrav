@@ -303,7 +303,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-//리뷰가져오기
+// 리뷰 가져오기 함수
 async function getReviewList(){
     try {
         const url = "/review/GET/"+contentId;
@@ -312,29 +312,45 @@ async function getReviewList(){
         };
         const resp = await fetch(url, config);
         return await resp.json();
-    }catch (error){
+    } catch (error) {
         console.log(error);
     }
 }
+
 getReviewList().then(result => {
     const reviewContainer = document.querySelector('.review');
+
     result.forEach(reviewDTO => {
         const review = reviewDTO.review;
         const imagePaths = reviewDTO.imagePaths;
 
+        const reviewWrapper = document.createElement("div");
+        reviewWrapper.className = "review-wrapper";
+
         const reviewInfoDiv = document.createElement("div");
         reviewInfoDiv.className = "review-info";
-        reviewInfoDiv.innerHTML = `<img class="profileImage" alt="noPic" src="">
-        <span class="nickName">${review.nickname}</span>
-        <span class="review-rating">${review.reRate}</span><br>
-        <span class="regDate">${review.reDate}</span>
-        <button class="helpButton"><img src="/dist/image/thumbs-up.svg">${review.reUseful}</button>
-        <button class="reportButton"><img src="/dist/image/alert-triangle.svg"></button>`;
+
+        let profileImgPath;
+        getUserProfile(review.uno).then(result => {
+            profileImgPath = result;
+            const starHTML = convertRatingToStars(review.reRate);
+
+            reviewInfoDiv.innerHTML = `
+                <img class="profileImage" alt="noPic" src="/profile/${profileImgPath}">
+                <span class="nickName">${review.nickname}</span><br>
+                <span class="review-rating">${starHTML}</span>
+                <span class="regDate">${review.reDate}</span>
+                <button class="helpButton">
+                    <span class="reUseful">${review.reUseful}</span><img src="/dist/image/thumbs-up.svg">
+                </button>
+                <button class="reportButton">
+                    <img src="/dist/image/alert-triangle.svg">
+                </button>`;
+        });
 
         const reviewDetailDiv = document.createElement("div");
         reviewDetailDiv.className = "review-detail";
         reviewDetailDiv.innerHTML = `<p class="reviewContent">${review.reContent}</p>`;
-
         if (imagePaths && imagePaths.length > 0) {
             const imageDiv = document.createElement("div");
             imageDiv.className = "review-images";
@@ -343,16 +359,74 @@ getReviewList().then(result => {
                 const img = document.createElement("img");
                 img.src = `/reviewImages/${relativePath}`;
                 img.alt = "리뷰 이미지";
-                img.classList.add('review-img')
+                img.classList.add('review-img');
                 imageDiv.appendChild(img);
             });
             reviewDetailDiv.appendChild(imageDiv);
+
         }
-        reviewContainer.appendChild(reviewInfoDiv);
-        reviewContainer.appendChild(reviewDetailDiv);
+
+
+
+        reviewWrapper.appendChild(reviewInfoDiv);
+        reviewWrapper.appendChild(reviewDetailDiv);
+
+        reviewContainer.appendChild(reviewWrapper);
     });
 });
 
+
+//별점 별로 변환함수
+function convertRatingToStars(rating) {
+    const starFull = '<img src="/dist/image/star-full.png" alt="Full Star">';
+    const starHalf = '<img src="/dist/image/star-half.png" alt="Half Star">';
+    const starEmpty = '<img src="/dist/image/star-empty.png" alt="Empty Star">';
+
+    let stars = '';
+
+    for (let i = 1; i <= 5; i++) {
+        if (rating >= i) {
+            stars += starFull;
+        } else if (rating >= i - 0.5) {
+            stars += starHalf;
+        } else {
+            stars += starEmpty;
+        }
+    }
+    return stars;
+}
+//유저프로필 가져오기
+async function getUserProfile(uno){
+    try{
+        const url = "/user/profile/"+uno;
+        const config = {
+            method: 'GET'
+        };
+        const resp = await fetch(url, config);
+        return await resp.text();
+    }catch(error){
+        console.log(error);
+    }
+}
+
+//전체 리뷰갯수 가져오기
+async function getReviewCount(){
+    try{
+        const url = "/review/getCount/"+contentId;
+        console.log(typeof contentId)
+        const config = {
+            method : "GET"
+        };
+        const resp = await fetch(url,config);
+        const result = await resp.text();
+        return parseInt(result);
+    }catch (error){
+        console.log(error)
+    }
+}
+getReviewCount().then(result => {
+    document.querySelector('.reviewCount').innerText = result+" 개"
+})
 
 //주변 관광지 조회 함수
 async function getNearBySights(mapx, mapy, radius) {
