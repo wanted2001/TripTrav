@@ -1,6 +1,7 @@
 package com.www.triptrav.controller;
 
 import com.www.triptrav.domain.PlanVO;
+import com.www.triptrav.service.PlanService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.javassist.expr.Instanceof;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class PlanController {
 
+    private final PlanService psv;
+
     @GetMapping("/check")
     public void checkPlan() {}
 
@@ -31,12 +34,13 @@ public class PlanController {
         pvo.setSche_name((String) plan.get("planName"));
         pvo.setSche_start((String) plan.get("departureDate"));
         pvo.setSche_end((String) plan.get("returnDate"));
-        log.info("소요일수 {}",plan.get("totalDays"));
-        log.info("소요일수체크 {}",  plan.get("totalDays").getClass().getName());
         pvo.setSche_count(((Long) plan.get("totalDays")).intValue());
         pvo.setUno(Long.parseLong((String)plan.get("unoNum")));
         log.info("pvo:{}", pvo);
-        return "1";
+
+        int isOk = psv.insertPlan(pvo);
+
+        return isOk>0?"1":"0";
     }
 
 
