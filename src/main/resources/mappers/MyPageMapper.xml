@@ -12,5 +12,4 @@
         select * from schedule where uno = #{uno}
     </select>
 
-
 </mapper>

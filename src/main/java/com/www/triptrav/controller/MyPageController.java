@@ -13,14 +13,15 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/mypage/*")
+@RequestMapping("/mypage")
 @Slf4j
 public class MyPageController {
 
     private final MyPageService msv;
 
-    @GetMapping("/mypage")
-    public void mypage(@RequestParam String uno) {
+    @GetMapping
+    public String mypage(@RequestParam long uno) {
+        return "/mypage/myPage";
     }
 
     @ResponseBody
