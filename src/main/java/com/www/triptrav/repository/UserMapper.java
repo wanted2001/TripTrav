@@ -12,7 +12,7 @@ public interface UserMapper {
     int joinUser(UserVO uvo);
 
     //일반 - 권한부여
-    void insertAuth(int uno);
+    void insertAuth(long uno);
 
     //provider ID 가지고 가서 user 객체 검색
     UserVO searchUser(String providerId);
@@ -24,7 +24,7 @@ public interface UserMapper {
 
     List<AuthVO> selectAuth(String email);
 
-    Integer getInsertedUno(String uvo);
+    long getInsertedUno(String uvo);
 
     int duplicationNick(String nickName);
 

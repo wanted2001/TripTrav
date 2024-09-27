@@ -10,6 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthVO {
-    private int uno;
+    private long uno;
     private String role;
 }

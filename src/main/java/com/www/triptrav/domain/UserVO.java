@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 public class UserVO {
-    private int uno;
+    private long uno;
     private String email;
     private String nickname;
     private String pw;

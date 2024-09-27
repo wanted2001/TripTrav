@@ -82,7 +82,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
             userMapper.insertSocialUser(newUser);
 
             // 삽입된 유저의 uno 가져오기
-            int insertedUno = userMapper.getInsertedUno(newUser.getEmail());
+            long insertedUno = userMapper.getInsertedUno(newUser.getEmail());
             if (insertedUno == 0) {
                 throw new RuntimeException("없는 유저");
             }
