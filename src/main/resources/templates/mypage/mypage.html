@@ -33,7 +33,8 @@
                            <img src="/dist/image/camera.svg">
                         </button>
                     </div>
-                    <p><input type="text" name="nickName" id="nickName" placeholder="닉네임"></p>
+                    <p><input type="text" name="nickName" id="nickName" placeholder="닉네임" th:value="${#authentication.getPrincipal().getUser().getNickname() != null ? #authentication.getPrincipal().getUser().getNickname() : ''}"
+                    ></p>
                     <p><input type="password" name="pw" id="pw" placeholder="비밀번호"></p>
                     <p><button type="submit">수정</button></p>
                     </form>
