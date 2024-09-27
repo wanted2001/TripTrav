@@ -24,9 +24,9 @@
     </section>
     <section class="infoSection">
         <div class="firstLine">
-            <span class="title"></span>
-            <span class="rating">⭐⭐⭐⭐⭐</span>
-            <span class="score">(5.0)</span>
+            <span class="locationTitle"></span>
+            <span class="rating"></span>
+            <span class="score"></span>
         </div><br>
         <span class="locationInfo"></span><br>
         <span class="telInfo"></span><br>
@@ -43,7 +43,7 @@
     </section>
     <section class="details"></section>
     <section class="reviews">
-        <span>리뷰</span><span class="reviewCount">개</span>
+        <span class="sectionTitle">리뷰</span><span class="reviewCount">개</span>
         <div class="inputDiv">
             <form action="/review/POST" method="post" enctype="multipart/form-data">
                 <textarea class="reviewArea" name="reContent" cols="30" rows="5" placeholder="로그인 후 리뷰를 남겨보세요."></textarea><br>
@@ -76,11 +76,11 @@
         </div>
     </section>
     <section class="transportation">
-        <p>찾아가는 길</p>
+        <p class="sectionTitle">찾아가는 길</p>
         <div id="staticMap" style="width:1000px;height:500px; margin: 0 auto"></div>
     </section>
     <section class="nearby">
-        <p>근처 관광지</p>
+        <p class="sectionTitle">근처 관광지</p>
         <div class="attractions">
             <div class="locations">
                 <img src="" alt="">
@@ -90,7 +90,7 @@
                 </div>
             </div>
         </div>
-        <p>근처 맛집</p>
+        <p class="sectionTitle">근처 맛집</p>
         <div class="food">
             <div class="locations">
                 <img src="" alt="">
