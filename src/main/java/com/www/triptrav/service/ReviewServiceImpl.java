@@ -35,4 +35,9 @@ public class ReviewServiceImpl implements ReviewService{
         return reviewMapper.getImagePathsByReviewId(rno);
     }
 
+    @Override
+    public int getCount(String contentId) {
+        return reviewMapper.getCount(contentId);
+    }
+
 }

@@ -12,5 +12,7 @@ public interface ReviewService {
     List<ReviewVO> getList(long contentId);
 
     List<String> getImagePathsByReviewId(long rno);
+
+    int getCount(String contentId);
 }
 

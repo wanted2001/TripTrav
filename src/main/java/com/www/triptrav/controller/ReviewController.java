@@ -94,4 +94,10 @@ public class ReviewController {
         }
         return reviewDTOList;
     }
+
+    @GetMapping("/getCount/{contentId}")
+    @ResponseBody
+    public int getCount(@PathVariable("contentId")String contentId){
+        return rsv.getCount(contentId);
+    }
 }
