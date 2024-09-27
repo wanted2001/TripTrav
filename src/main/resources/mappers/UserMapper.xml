@@ -35,4 +35,7 @@
     <update id="updatePw">
         update user set pw=#{newPw} where email=#{email}
     </update>
+    <select id="getPath">
+        select profile from user where uno = #{uno}
+    </select>
 </mapper>

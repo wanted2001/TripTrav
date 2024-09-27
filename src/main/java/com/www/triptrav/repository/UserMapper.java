@@ -33,4 +33,6 @@ public interface UserMapper {
     void updatePw(String email, String newPw);
 
     int findUserPw(String email);
+
+    String getPath(String uno);
 }
