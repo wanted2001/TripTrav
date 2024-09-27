@@ -17,13 +17,13 @@ public class UserServiceImpl implements UserService {
     public void joinUser(UserVO uvo) {
         int isOk = userMapper.joinUser(uvo); // 가입 시도
         if (isOk == 1) {
-            int uno = uvo.getUno();
+            long uno = uvo.getUno();
             log.info("가입할 User의 uno >>>> {}", uno);
 
             if (uno != 0) {
                 userMapper.insertAuth(uno);
             } else {
-                int insertedUno = userMapper.getInsertedUno(uvo.getEmail());
+                long insertedUno = userMapper.getInsertedUno(uvo.getEmail());
                 if (insertedUno != 0) {
                     userMapper.insertAuth(insertedUno);
                 } else {

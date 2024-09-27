@@ -13,7 +13,7 @@
     <insert id="insertAuth" parameterType="map">
         insert into auth (uno, role) values (#{uno}, 'ROLE_USER')
     </insert>
-    <select id="getInsertedUno" resultType="int">
+    <select id="getInsertedUno" resultType="long">
         select uno from user where email = #{email}
     </select>
     <insert id="insertSocialUser">
