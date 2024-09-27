@@ -103,7 +103,7 @@ function setupTripFormListener() {
                 },
                 body: JSON.stringify(requestBody)
             })
-                .then(response => response.json())
+                .then(response => response.text())
                 .then(data => {
                     console.log(data.message);
                     alert('일정이 성공적으로 저장되었습니다!');
