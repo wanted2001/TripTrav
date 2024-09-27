@@ -60,5 +60,10 @@ public class UserServiceImpl implements UserService {
         return userMapper.findUserPw(email);
     }
 
+    @Override
+    public String getPath(String uno) {
+        return userMapper.getPath(uno);
+    }
+
 }
 
