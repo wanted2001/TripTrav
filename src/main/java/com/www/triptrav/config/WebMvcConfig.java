@@ -38,6 +38,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         registry.addResourceHandler("/reviewImages/**")
                 .addResourceLocations("file:C:/userImage/");
+
     }
 }
 
