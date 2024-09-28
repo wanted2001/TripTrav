@@ -88,22 +88,18 @@
 </head>
 <body>
 <div id="editPopup" class="popup">
+    <th:block th:with="review=${review.review},image=${review.imagePaths}">
     <div class="popup-content">
         <h3>리뷰 수정</h3>
-
-        <!-- 리뷰 내용 입력 -->
-        <textarea id="reviewText" rows="5" placeholder="리뷰 내용을 수정하세요. (최대 200자)" maxlength="200"></textarea>
+        <textarea id="reviewText" rows="5" placeholder="리뷰 내용을 수정하세요. (최대 200자)" maxlength="200">[[${review.reContent}]]</textarea>
         <div id="charCount">0 / 200</div>
-
-        <!-- 이미지 업로드 -->
         <div class="image-upload">
             <input type="file" id="imageInput" accept="image/*" multiple>
         </div>
         <div class="image-preview" id="imagePreview"></div>
-
-        <!-- 저장 버튼 -->
         <button type="button" id="saveBtn" disabled>저장</button>
     </div>
+    </th:block>
 </div>
 
 <script>
