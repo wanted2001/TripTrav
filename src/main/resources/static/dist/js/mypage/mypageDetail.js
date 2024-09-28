@@ -17,7 +17,7 @@ isSocialUser(unoNum).then(data => {
     console.log(data.provider === null);
     if(data.provider !== null){
         console.log('들어옴');
-        document.getElementById("pw").display = "none";
+        document.getElementById("pw").disabled = true;
     }
 
 })
