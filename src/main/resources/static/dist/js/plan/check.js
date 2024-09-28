@@ -1,3 +1,13 @@
+const UrlParams = new URLSearchParams(window.location.search);
+const sco = UrlParams.get('sco');
+
+if(sco){
+    console.log("sco 있음");
+    getUserCourse(sco).then(r=>{
+        console.log(r);
+    })
+}
+
 //상단 회색바탕 위 드래그 슬라이드 구현
 //상단 일수별 슬라이드
 let slideWrap = document.querySelector('.slideWrap');
@@ -554,22 +564,34 @@ function editPlan(event){
     } else if (target.classList.contains('saveBtn')) {
         // 저장 버튼을 클릭했을 때
         if(confirm("일정을 저장하시겠습니까?")){
-            if(titleInput.value===''){
-                alert('일정의 제목은 비워둘 수 없습니다.')
-            } else {
-                deleteBtn.forEach(btn=>{
+            if(titleInput && titleInput.value.trim()===''){
+                alert('일정의 제목을 작성해주세요.')
+            } else if(titleInput){
+                deleteBtn.forEach(btn => {
                     btn.classList.add('hidden');
-                })
-                changeBtn.forEach(btn=>{
+                });
+                changeBtn.forEach(btn => {
                     btn.classList.add('hidden');
-                })
+                });
+
                 target.classList.remove('saveBtn');
                 target.classList.add('editBtn');
                 target.innerText = '편집';
-                contentTitle.innerText=titleInput.value;
+
+                contentTitle.innerText = titleInput.value;
                 titleInput.remove();
-                const img = `<img src="/dist/image/edit-3.svg" class="editPlanTitle hidden" onclick="editTitle()">`
-                contentTitle.innerHTML+=img;
+                editPlanTitle.classList.add('hidden');
+            } else {
+                deleteBtn.forEach(btn => {
+                    btn.classList.add('hidden');
+                });
+                changeBtn.forEach(btn => {
+                    btn.classList.add('hidden');
+                });
+
+                target.classList.remove('saveBtn');
+                target.classList.add('editBtn');
+                target.innerText = '편집';
             }
         }
     }
@@ -662,6 +684,20 @@ async function getData(url){
         const items = data.response.body;
         return items;
     } catch(err){
+        console.log(err);
+    }
+}
+
+async function getUserCourse(sco){
+    try{
+        const url="/plan/course/"+sco;
+        const config = {
+            method:'post'
+        }
+        const response = await fetch(url,config);
+        const result = await response.json();
+        return result;
+    } catch (err){
         console.log(err);
     }
 }

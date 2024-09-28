@@ -8,7 +8,7 @@
         select * from user where uno = #{uno}
     </select>
 
-    <select id="scheduleCall" resultType="com.www.triptrav.domain.PlanVO">
+    <select id="scheduleCall" resultType="com.www.triptrav.domain.ScheduleVO">
         select * from schedule where uno = #{uno}
     </select>
     <!--내가 쓴 리뷰 -->

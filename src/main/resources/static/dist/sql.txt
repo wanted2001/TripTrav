@@ -75,7 +75,7 @@ CREATE TABLE `schedule_role` (
 
 CREATE TABLE `schedule_detail` (
 	`sco` bigint NOT NULL,
-	`code` bigint NOT NULL,
+	`sche_content_id` bigint NOT NULL,
 	`sche_index` int NOT NULL,
 	FOREIGN KEY (`sco`) REFERENCES `schedule`(`sco`)
 );
