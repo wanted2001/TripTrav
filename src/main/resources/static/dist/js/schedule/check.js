@@ -3,8 +3,66 @@ const sco = UrlParams.get('sco');
 
 if(sco){
     console.log("sco 있음");
-    getUserCourse(sco).then(r=>{
-        console.log(r);
+    getUserCourse(sco).then(result=>{
+        console.log(result);
+        let content='';
+        content += `<li class="oneContent" data-id="${result.scheContentId}">
+                    <div class="deletePlan hidden" onclick="deletePlan(event)">&times;</div>
+                    <div class="changePlan hidden">
+                        <img src="/dist/image/triangle.svg" class="triangle">
+                        <img src="/dist/image/triangle.svg" class="downTriangle">
+                    </div>
+                    <div class="name_cate">
+                        <span class="placeName"></span>
+                        <span class="placeCate">장소카테고리</span>
+                    </div>
+                    <div class="placeAddr"></div>
+                    <div class="rate_count">
+                        <img src="/dist/image/star.svg">
+                        <div class="placeRate">4.0</div>
+                        <div class="placeRateCount">(356)</div>
+                    </div>
+                    <div class="placeImgDiv">
+                        <div class="placeImg"></div>
+                    </div>
+                </li>`;
+        document.querySelector('.checkName').innerText=`${result.scheName}`;
+        document.querySelector('.contentTitle').innerText=`${result.scheName}`;
+        document.querySelector('.checkDate').innerHTML=`<span class="duration">${result.scheStart.substring(0,10).replace('-','.')}
+                                        ~${result.scheEnd.substring(0,10).replace('-','.')}</span>`
+        if(result.scheCount===2){
+            document.querySelector('.day2').innerText='Day 2';
+        } else if(result.scheCount===3){
+            document.querySelector('.day3').innerText='Day 3';
+        }
+        // result.forEach(key=>{
+        //     //카테고리 -> 관광지 / 음식점 같은 api 코드 넣기
+        //     //어차피 id별 이미지가져올꺼니까 주소도 가져와서 넣음되겠다
+        //     //a태그 추가작업 필요
+        //     content += `<li class="oneContent" data-id="${key.contentid}">
+        //                     <div class="deletePlan hidden" onclick="deletePlan(event)">&times;</div>
+        //                     <div class="changePlan hidden">
+        //                         <img src="/dist/image/triangle.svg" class="triangle">
+        //                         <img src="/dist/image/triangle.svg" class="downTriangle">
+        //                     </div>
+        //                     <div class="name_cate">
+        //                         <span class="placeName">${key.title}</span>
+        //                         <span class="placeCate">장소카테고리</span>
+        //                     </div>
+        //                     <div class="placeAddr"></div>
+        //                     <div class="rate_count">
+        //                         <img src="/dist/image/star.svg">
+        //                         <div class="placeRate">4.0</div>
+        //                         <div class="placeRateCount">(356)</div>
+        //                     </div>
+        //                     <div class="placeImgDiv">
+        //                         <div class="placeImg"></div>
+        //                     </div>
+        //                 </li>`;
+        // })
+        document.querySelector('.contentArea').innerHTML=content;
+        getImage(result.scheContentId);
+        getAddr(result.scheContentId);
     })
 }
 
@@ -72,41 +130,41 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     //데이터 불러오기
-    getData(detailCourseInfoUrl).then(result=>{
-        console.log(result.totalCount);
-        let content='';
-        result.items.item.forEach(key=>{
-            //카테고리 -> 관광지 / 음식점 같은 api 코드 넣기
-            //어차피 id별 이미지가져올꺼니까 주소도 가져와서 넣음되겠다
-            //a태그 추가작업 필요
-            content += `<li class="oneContent" data-id="${key.subcontentid}">
-                            <div class="deletePlan hidden" onclick="deletePlan(event)">&times;</div>
-                            <div class="changePlan hidden">
-                                <img src="/dist/image/triangle.svg" class="triangle">
-                                <img src="/dist/image/triangle.svg" class="downTriangle">
-                            </div>
-                            <div class="name_cate">
-                                <span class="placeName">${key.subname}</span>
-                                <span class="placeCate">장소카테고리</span>
-                            </div>
-                            <div class="placeAddr"></div>
-                            <div class="rate_count">
-                                <img src="/dist/image/star.svg">
-                                <div class="placeRate">4.0</div>
-                                <div class="placeRateCount">(356)</div>
-                            </div>
-                            <div class="placeImgDiv">
-                                <div class="placeImg"></div>
-                            </div>
-                        </li>`;
-        })
-        document.querySelector('.contentArea').innerHTML=content;
-
-        result.items.item.forEach(key=>{
-            getImage(key.subcontentid);
-            getAddr(key.subcontentid);
-        })
-    })
+    // getData(detailCourseInfoUrl).then(result=>{
+    //     console.log(result.totalCount);
+    //     let content='';
+    //     result.items.item.forEach(key=>{
+    //         //카테고리 -> 관광지 / 음식점 같은 api 코드 넣기
+    //         //어차피 id별 이미지가져올꺼니까 주소도 가져와서 넣음되겠다
+    //         //a태그 추가작업 필요
+    //         content += `<li class="oneContent" data-id="${key.subcontentid}">
+    //                         <div class="deletePlan hidden" onclick="deletePlan(event)">&times;</div>
+    //                         <div class="changePlan hidden">
+    //                             <img src="/dist/image/triangle.svg" class="triangle">
+    //                             <img src="/dist/image/triangle.svg" class="downTriangle">
+    //                         </div>
+    //                         <div class="name_cate">
+    //                             <span class="placeName">${key.subname}</span>
+    //                             <span class="placeCate">장소카테고리</span>
+    //                         </div>
+    //                         <div class="placeAddr"></div>
+    //                         <div class="rate_count">
+    //                             <img src="/dist/image/star.svg">
+    //                             <div class="placeRate">4.0</div>
+    //                             <div class="placeRateCount">(356)</div>
+    //                         </div>
+    //                         <div class="placeImgDiv">
+    //                             <div class="placeImg"></div>
+    //                         </div>
+    //                     </li>`;
+    //     })
+    //     document.querySelector('.contentArea').innerHTML=content;
+    //
+    //     result.items.item.forEach(key=>{
+    //         getImage(key.subcontentid);
+    //         getAddr(key.subcontentid);
+    //     })
+    // })
 });
 
 //이미지로드
@@ -116,6 +174,7 @@ function getImage(key){
     const imgLi = document.querySelector(`li[data-id="${key}"] .placeImg`);
 
     getData(url).then(res=>{
+        console.log(res);
         if(res.totalCount<1){
             if (imgLi) {
                 imgLi.innerHTML += `<img src="/dist/image/noimage.jpg">`;
@@ -148,9 +207,12 @@ function initTmap() {
 function getAddr(key){
     const detailInfoUrl = `https://apis.data.go.kr/B551011/KorService1/detailCommon1?MobileOS=ETC&MobileApp=TripTrav&contentId=${key}&defaultYN=Y&firstImageYN=Y&areacodeYN=Y&catcodeYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&serviceKey=${tourAPIKEY}&_type=json`;
     const addrLi = document.querySelector(`li[data-id="${key}"] .placeAddr`);
+    const titleLi = document.querySelector(`li[data-id="${key}"] .placeName`)
     getData(detailInfoUrl).then(res=>{
-        res.items.item.forEach(add=>{
-            addrLi.innerHTML=`${add.addr1}`;
+        console.log(res)
+        res.items.item.forEach(result=>{
+            addrLi.innerHTML=`${result.addr1}`;
+            titleLi.innerHTML=`${result.title}`
         })
     })
 }
@@ -482,6 +544,22 @@ async function searchKeyword(url){
     }
 }
 
+//day 선택
+const days = document.querySelectorAll('.day');
+days.forEach(day=>{
+    day.addEventListener('click',(e)=>{
+        console.log(e.target);
+        days.forEach(d=>{
+            if(d!==e.target){
+                d.classList.remove('day_focus');
+            }
+        })
+        e.target.classList.add('day_focus');
+        const date = e.target.getAttribute('data-date');
+        console.log(date)
+    })
+})
+
 //일정삽입하기
 const btnText = document.querySelector('.btnText');
 function newPlan(event){
@@ -548,7 +626,7 @@ function editPlan(event){
     const changeBtn = document.querySelectorAll('.changePlan');
     const contentTitle = document.querySelector('.contentTitle');
     const titleInput = document.querySelector('.titleInput');
-    const editPlanTitle = document.querySelector('.editPlanTitle');
+    // const editPlanTitle = document.querySelector('.editPlanTitle');
 
     if(target.classList.contains('editBtn')){
         deleteBtn.forEach(btn=>{
@@ -560,11 +638,11 @@ function editPlan(event){
         target.innerText = '저장';
         target.classList.remove('editBtn');
         target.classList.add('saveBtn');
-        editPlanTitle.classList.remove('hidden');
+        // editPlanTitle.classList.remove('hidden');
     } else if (target.classList.contains('saveBtn')) {
         // 저장 버튼을 클릭했을 때
         if(confirm("일정을 저장하시겠습니까?")){
-            if(titleInput && titleInput.value.trim()===''){
+            if(titleInput && titleInput.value===''){
                 alert('일정의 제목을 작성해주세요.')
             } else if(titleInput){
                 deleteBtn.forEach(btn => {
@@ -578,9 +656,10 @@ function editPlan(event){
                 target.classList.add('editBtn');
                 target.innerText = '편집';
 
-                contentTitle.innerText = titleInput.value;
+                contentTitle.innerText += titleInput.value;
                 titleInput.remove();
-                editPlanTitle.classList.add('hidden');
+                // editPlanTitle.classList.add('hidden');
+                setPlanData(sco);
             } else {
                 deleteBtn.forEach(btn => {
                     btn.classList.add('hidden');
@@ -592,9 +671,41 @@ function editPlan(event){
                 target.classList.remove('saveBtn');
                 target.classList.add('editBtn');
                 target.innerText = '편집';
+                // editPlanTitle.classList.add('hidden');
+                setPlanData(sco);
             }
         }
     }
+}
+
+function setPlanData(sco){
+    const allLi = document.querySelectorAll('li.oneContent');
+
+    allLi.forEach((plan, index)=>{
+        const sche_content_id = plan.getAttribute('data-id');
+        const sche_name = document.querySelector('.contentTitle').innerText;
+        const sche_date = document.querySelector('.day_focus').getAttribute('data-date');
+
+        const planData = {
+            sche_content_id:sche_content_id,
+            sche_name:sche_name,
+            sche_date:sche_date,
+            planIndex:index+1,
+            sco:sco
+        }
+
+        fetch(`/schedule/modifyPlan/${sco}`,{
+            method:'post',
+            headers:{
+                'content-type':'application/json'
+            },
+            body:JSON.stringify(planData)
+        })
+            .then(response=>response.text())
+            .then(data=>{
+                console.log(data);
+            })
+    })
 }
 
 function countTriangle(){
@@ -674,8 +785,8 @@ window.addEventListener('load', ()=>{
 });
 
 //예제 데이터 불러오기
-const contentId = '2383747';
-const detailCourseInfoUrl = `https://apis.data.go.kr/B551011/KorService1/detailInfo1?ServiceKey=${tourAPIKEY}&contentTypeId=25&contentId=${contentId}&MobileOS=ETC&MobileApp=TripTrav&_type=json`;
+// const contentId = '2383747';
+// const detailCourseInfoUrl = `https://apis.data.go.kr/B551011/KorService1/detailInfo1?ServiceKey=${tourAPIKEY}&contentTypeId=25&contentId=${contentId}&MobileOS=ETC&MobileApp=TripTrav&_type=json`;
 
 async function getData(url){
     try{
@@ -690,7 +801,7 @@ async function getData(url){
 
 async function getUserCourse(sco){
     try{
-        const url="/plan/course/"+sco;
+        const url="/schedule/course/"+sco;
         const config = {
             method:'post'
         }

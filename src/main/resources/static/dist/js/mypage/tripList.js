@@ -16,7 +16,7 @@ scheduleCall(unoNum).then(data=>{
     <div class="tripImgDiv"><img src="/dist/image/poky.png" alt="프로필 사진" class="tripImg"></div>
     <div class="tripinfo">
         <ul>
-            <li class="myTripTitle"><a href="/plan/check?sco=${data[i].sco}"><h3>여행이름</h3></a></li>
+            <li class="myTripTitle"><a href="/schedule/check?sco=${data[i].sco}"><h3>여행이름</h3></a></li>
             <li class="myTripPlace">여행장소</li>
             <li class="myTripDate">여행날짜</li>
         </ul>

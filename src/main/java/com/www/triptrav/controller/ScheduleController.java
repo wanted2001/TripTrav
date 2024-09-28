@@ -8,6 +8,7 @@ import com.www.triptrav.service.ScheduleRoleService;
 import com.www.triptrav.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -15,8 +16,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 @Controller
-@RequestMapping("/plan/*")
+@RequestMapping("/schedule/*")
 @Slf4j
 @RequiredArgsConstructor
 public class ScheduleController {
@@ -32,6 +36,7 @@ public class ScheduleController {
     @ResponseBody
     @Transactional
     public String createPlan(@RequestBody JSONObject ScheVO, @PathVariable("contentId") long contentId) throws ParseException{
+        log.info("ScheVO : {}", ScheVO);
         JSONParser parser = new JSONParser();
         JSONObject sche = (JSONObject) parser.parse(ScheVO.toJSONString());
 
@@ -48,7 +53,7 @@ public class ScheduleController {
         int isOk = ssv.insertPlan(scheVO,contentId);
         if(isOk>0){
             srsv.insertRole(scheVO.getSco(), scheVO.getUno(), 1);
-            sdsv.insertDetailPlan(scheVO.getSco(), contentId, 1);
+            sdsv.insertDetailPlan(scheVO.getSco(), contentId, 1, 1);
         }
 
         return isOk>0?"1":"0";
@@ -62,5 +67,30 @@ public class ScheduleController {
         log.info("sdDTO : {}",sdDTO);
         return sdDTO;
     }
+
+    @PostMapping("/modifyPlan/{sco}")
+    @ResponseBody
+    public String modifyPlan(@RequestBody JSONObject sdto, @PathVariable("sco") long sco) throws ParseException {
+        log.info("sdvo : {}",sdto);
+        JSONParser parser = new JSONParser();
+        JSONObject sche = (JSONObject) parser.parse(sdto.toJSONString());
+
+        int planIndex = ((Long) sche.get("planIndex")).intValue();
+
+        ScheduleDTO scheDTO = new ScheduleDTO();
+        for(int i=0; i<planIndex; i++){
+            scheDTO.setScheContentId(Long.parseLong((String)sche.get("sche_content_id")));
+            scheDTO.setScheIndex(planIndex);
+            scheDTO.setScheDate(Integer.parseInt((String) sche.get("sche_date")));
+            scheDTO.setScheName((String) sche.get("sche_name"));
+            scheDTO.setSco(Long.parseLong((String) sche.get("sco")));
+            sdsv.updatePlan(scheDTO);
+        }
+        String scheName = (String) sche.get("sche_name");
+        int isOk = ssv.updatePlanName(scheName, sco);
+
+        return isOk>0?"1":"0";
+    }
+
 
 }

@@ -19,7 +19,8 @@
     <div class="checkBackImg">
         <div class="checkTitle">
             <img src="/dist/image/send.svg">
-            <p class="checkName">재미난 부산여행 2박3일</p>
+            <p class="checkName"></p>
+            <p class="checkDate"></p>
             <p class="checkSche">스케줄쫙쫙.. 작성</p>
         </div>
         <div class="addMemoBtn">메모추가 +</div>
@@ -70,10 +71,13 @@
                 <button><img src="/dist/image/chevrons-left.svg"></button>
             </div>
             <div class="mapContentBox hidden" onclick="editPlan(event)">
-                <div class="contentTitle">코스이름<img src="/dist/image/edit-3.svg" class="editPlanTitle hidden" onclick="editTitle()"></div>
+                <div class="contentTitle">
+                    <img src="/dist/image/edit-3.svg" class="editPlanTitle hidden" onclick="editTitle()">
+                </div>
                 <div class="dayDisplay">
-                    <div class="day day1">Day 1</div>
-                    <div class="day day2">Day 2</div>
+                    <div class="day day1 day_focus" data-date="1">Day 1</div>
+                    <div class="day day2" data-date="2"></div>
+                    <div class="day day3" data-date="3"></div>
                 </div>
                 <div class="editBtn btnText">편집</div>
                 <ul class="contentArea"></ul>
@@ -158,6 +162,6 @@
         </div>
         <div class="checkBottom"></div>
     </div>
-    <script src="/dist/js/plan/check.js"></script>
+    <script src="/dist/js/schedule/check.js"></script>
 </body>
 </html>

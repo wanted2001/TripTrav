@@ -10,11 +10,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ScheduleDTO {
-//    private long sco;
+    private long sco;
     private String scheName;
     private String scheStart;
     private String scheEnd;
     private int scheCount;
     private long scheContentId;
-    private int ScheIndex;
+    private int scheIndex; //여행순서
+    private int scheDate; //여행일차(1일차...)
 }
