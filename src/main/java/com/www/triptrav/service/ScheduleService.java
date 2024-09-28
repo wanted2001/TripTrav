@@ -7,4 +7,6 @@ public interface ScheduleService {
     int insertPlan(ScheduleVO scheVO, long contentId);
 
     ScheduleDTO getSchedule(long sco);
+
+    int updatePlanName(String scheName, long sco);
 }

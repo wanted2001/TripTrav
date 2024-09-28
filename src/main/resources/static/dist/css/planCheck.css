@@ -457,8 +457,9 @@ button.depth2_searchBtn {
     border: none;
     cursor: pointer;
 }
-.day:hover{
-    border-bottom:3px solid orange;
+.day_focus{
+    border-bottom: 2px solid orange;
+    font-weight: bold;
 }
 .contentTitle {
     width: 90%;

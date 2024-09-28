@@ -96,7 +96,7 @@ function setupTripFormListener() {
             };
             console.log(requestBody);
 
-            fetch(`/plan/createPlan/${contentId}`, {
+            fetch(`/schedule/createPlan/${contentId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

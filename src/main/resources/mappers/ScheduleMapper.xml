@@ -11,7 +11,7 @@
     <select id="getSchedule" resultType="com.www.triptrav.domain.ScheduleDTO">
         SELECT
         s.sche_name, s.sche_start, s.sche_end, s.sche_count,
-        sd.sche_content_id, sd.sche_index
+        sd.sche_content_id, sd.sche_index, sd.sche_date
         FROM
         schedule s
         JOIN
@@ -21,4 +21,8 @@
         Where
         s.sco=${sco}
     </select>
+
+    <update id="updatePlanName">
+        update schedule set sche_name=#{scheName} where sco=#{sco}
+    </update>
 </mapper>
