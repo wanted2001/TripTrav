@@ -9,6 +9,7 @@ import java.util.List;
 @Mapper
 public interface ReviewMapper {
     int post(ReviewVO rvo);
+
     void insertReviewImage(@Param("rno")Long rno, @Param("imagePath")String imagePath);
 
     List<ReviewVO> getList(long contentId);

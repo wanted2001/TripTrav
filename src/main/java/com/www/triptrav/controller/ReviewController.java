@@ -38,7 +38,8 @@ public class ReviewController {
                               @RequestParam("reContent") String reContent,
                               @RequestParam("reImageCount") int reImageCount,
                               @RequestParam("reContentId") long reContentId,
-                              @RequestParam("reContentType") long reContentType) throws IOException {
+                              @RequestParam("reContentType") long reContentType,
+                              @RequestParam("reContentName") String reContentName) throws IOException {
         ReviewVO rvo = new ReviewVO();
         rvo.setUno(uno);
         rvo.setNickname(nickname);
@@ -47,6 +48,7 @@ public class ReviewController {
         rvo.setReImageCount(reImageCount);
         rvo.setReContentId(reContentId);
         rvo.setReContentType(reContentType);
+        rvo.setReContentName(reContentName);
 
         int isPost = rsv.post(rvo);
         if (isPost > 0) {
