@@ -378,9 +378,8 @@ getReviewList().then(result => {
         reviewContainer.appendChild(reviewWrapper);
     });
     let displayScore = (sum/totalCount).toFixed(1);
-    document.querySelector('.score').innerHTML = `(${displayScore} 점)`;
+    document.querySelector('.score').innerHTML =  displayScore != "NaN"? `(${displayScore} 점)` : `(0 점)`;
     document.querySelector('.rating').innerHTML = convertRatingToStars(sum/totalCount);
-
 });
 
 
