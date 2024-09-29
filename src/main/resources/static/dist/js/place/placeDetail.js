@@ -7,11 +7,14 @@ const imageUrlsDiv = document.querySelector('.imageUrls');
 
 let currentIndex = 0;
 let contentTypeId = 0;
+let contentName = '';
 let imageUrls = [];
 let mapx = 0;
 let mapy = 0;
 let totalCount = 0;
 let sum = 0;
+let isLiked = false;
+
 
 // 기본정보 가져오기
 fetch(detailInfoUrl)
@@ -22,7 +25,8 @@ fetch(detailInfoUrl)
         let city = splitAddr(jsonData.addr1)[0];
         let district = splitAddr(jsonData.addr1)[1];
         let title = jsonData.title;
-        locationDiv.innerHTML = `<span>${city} > </span><span>${district} > </span><span>${title}</span>`;
+        contentName = jsonData.title;
+        locationDiv.innerHTML = `<span>${city}> </span><span>${district}> </span><span>${title}</span>`;
 
         const mainImgUrl = jsonData.firstimage;
         imageUrls.push(mainImgUrl);
@@ -168,6 +172,7 @@ async function writeReview() {
     data.append('reContentType', contentTypeId);
     data.append('uno', unoNum);
     data.append('reContentId', contentId)
+    data.append('reContentName', contentName)
 
     for (let i = 0; i < files.length; i++) {
         data.append('images', files[i]);
@@ -345,7 +350,7 @@ getReviewList().then(result => {
                 <span class="review-rating">${starHTML}</span>
                 <span class="regDate">${review.reDate}</span>
                 <button class="helpButton">
-                    <span class="reUseful">${review.reUseful}</span><img src="/dist/image/thumbs-up.svg">
+                    <span class="reUseful">${review.reUseful}</span><img id="thumbsUp" src="/dist/image/thumbs-up.svg" data-rno=${review.rno}>
                 </button>
                 <button class="reportButton">
                     <img src="/dist/image/alert-triangle.svg">
@@ -375,6 +380,7 @@ getReviewList().then(result => {
     let displayScore = (sum/totalCount).toFixed(1);
     document.querySelector('.score').innerHTML = `(${displayScore} 점)`;
     document.querySelector('.rating').innerHTML = convertRatingToStars(sum/totalCount);
+
 });
 
 
@@ -397,6 +403,8 @@ function convertRatingToStars(rating) {
     }
     return stars;
 }
+
+
 //유저프로필 가져오기
 async function getUserProfile(uno){
     try{
@@ -430,6 +438,29 @@ getReviewCount().then(result => {
     document.querySelector('.reviewCount').innerText = result+" 개"
     totalCount = result;
 })
+
+//리뷰 좋아요 처리
+document.addEventListener('click', function(event) {
+    if (event.target && event.target.id === 'thumbsUp') {
+        const rno = event.target.getAttribute('data-rno');
+
+    }
+});
+// 좋아요 상태 체크하는 함수
+async function checkReviewLike(rno){
+    try{
+        const url = "/review/checkReviewLike/"+rno+"/"+userNickname;
+        const config = {
+            method: 'GET'
+        }
+        const resp = await fetch(url,config);
+        return resp.text();
+    }catch (error){
+        console.log(error)
+    }
+}
+
+
 
 //주변 관광지 조회 함수
 async function getNearBySights(mapx, mapy, radius) {

@@ -19,4 +19,5 @@ public class ReviewVO {
     private int reReport;
     private long reContentId;
     private long reContentType;
+    private String reContentName;
 }
