@@ -1,63 +1,73 @@
-html{
-    width: 1900px;
-}
+
+
 body{
     background: linear-gradient(to bottom, orange 11%, white 100%);
     width: 100%;
     top: 0;
     position: relative;
 }
+
 .mainWrap{
     width: 1440px;
-    height: 100vh;
+    height: 113vh;
     overflow: hidden;
 }
+
 .mainTitle{
-    width: 90%;
+    width: 80%;
     align-items: center;
     position: absolute;
     color: white;
     top: 16%;
-    left: 16%;
-    transform: translate(-50%, -50%);
+    left: 50%;
+    transform: translate(-50%, 0);
     text-align: center;
     font-size: 2em;
     font-family: LINESeedKR-Bd;
     z-index: 10;
     display: flex;
-    justify-content: space-around;
-}
-.mainTitle li{
-    list-style: none;
-    width: 211px;
-    background-color: aqua;
+    justify-content: space-between;
 }
 
+
 .mapOutBox{
+    max-width: 100%;
     position: absolute;
-    top: 60%;
-    left: 53%;
-    transform: translate(-50%, -50%);
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, 0);
     width: 1700px;
     height: 900px;
-    border: 2px solid black;
     display: flex;
     justify-content: space-around;
     align-items: center;
 }
+
 .mapHere{
-    width: 700px;
+    width: 45%;
     height: 90%;
-    background-color: red;
+    border: 1px solid gray;
 }
+
 .infoHere{
-    width: 700px;
+    width: 45%;
     height: 90%;
-    background-color: yellow;
+    border: 1px solid gray;
 }
 
 #options {
     font-family:LINESeedKR-Rg;
     padding: 10px;
     font-size: 16px;
+    border-radius: 10px;
+    border: 1px solid gray;
+    padding: 12p
+}
+
+.title {
+    font-size: 1.5em;
+}
+
+.selectBox {
+    float: right;
 }

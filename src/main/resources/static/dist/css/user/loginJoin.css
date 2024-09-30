@@ -18,7 +18,7 @@
     border-radius: 10px;
     width: 375px;
     text-align: center;
-    height: 525px;
+    height: 472px;
     z-index: 1001;
 }
 .close-button {
@@ -43,7 +43,7 @@ p input {
     font-family: 'LINESeedKR-Rg';
     padding: 10px;
     width: 90%;
-    margin: 18px 0;
+    margin: 11px 0;
     border: none;
     background-color: #d3d3d361;
     border-radius: 5px;
@@ -81,7 +81,7 @@ p a {
     margin-top: 35px;
 }
 .joinBox p{
-    margin-top: -17px;
+    /*margin-top: -17px;*/
     font-size: 14px;
     color: #000000b8;
 }
