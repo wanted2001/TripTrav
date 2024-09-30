@@ -6,14 +6,14 @@ const attractionsContainer = document.querySelector('.attractions');
 const imageUrlsDiv = document.querySelector('.imageUrls');
 
 let currentIndex = 0;
-let contentTypeId = 0;
-let contentName = '';
+let contentTypeId = 12;     //추후수정
+let contentName = '용궁사';    //추후수정
 let imageUrls = [];
 let mapx = 0;
 let mapy = 0;
 let totalCount = 0;
-let sum = 0;
 let isLiked = false;
+let sum = 0;
 let isSortedByUseful = false;
 let isSortedByRate = false;
 let isSortedByDate = false;
@@ -397,55 +397,121 @@ function displayReviews(result) {
         const reviewInfoDiv = document.createElement("div");
         reviewInfoDiv.className = "review-info";
 
-        const starHTML = convertRatingToStars(review.reRate);
-        reviewInfoDiv.innerHTML = `
-            <span class="nickName">${review.nickname}</span><br>
-            <span class="review-rating">${starHTML}</span>
-            <span class="regDate">${review.reDate}</span>`;
+        checkReviewLike(review.rno).then(likeResult => {
+            isLiked = likeResult === "true";
+            const starHTML = convertRatingToStars(review.reRate);
+            console.log(isLiked);
 
-        if(typeof userNickname !== 'undefined' && userNickname !== null){
-            if (review.nickname === userNickname) {
-                const modifyButton = document.createElement("button");
-                modifyButton.innerText = "수정";
-                modifyButton.addEventListener("click", () => {
-                    fillReviewForm(review, imagePaths);
-                });
-                reviewInfoDiv.appendChild(modifyButton);
+            reviewInfoDiv.innerHTML = `
+                <span class="nickName">${review.nickname}</span><br>
+                <span class="review-rating">${starHTML}</span>
+                <span class="regDate">${review.reDate}</span>
+                <button class="helpButton">
+                    <span class="reUseful">${review.reUseful}</span>
+                    <img id="thumbsUp" src="${isLiked ? '/dist/image/thumbs-click.svg' : '/dist/image/thumbs-up.svg'}" data-rno="${review.rno}" data-isLiked="${isLiked}">
+                </button>
+                <button class="reportButton">
+                    <img src="/dist/image/alert-triangle.svg">
+                </button>`;
 
-                const deleteButton = document.createElement("button");
-                deleteButton.innerText = "삭제";
-                deleteButton.addEventListener("click", async () => {
-                    const confirmation = confirm("정말로 이 리뷰를 삭제하시겠습니까?");
-                    if (confirmation) {
-                        await deleteReview(review.rno);
-                        displayReviews(await getReviewList());
-                    }
+            if (typeof userNickname !== 'undefined' && userNickname !== null) {
+                if (review.nickname === userNickname) {
+                    const modifyButton = document.createElement("button");
+                    modifyButton.innerText = "수정";
+                    modifyButton.addEventListener("click", () => {
+                        fillReviewForm(review, imagePaths);
+                    });
+                    reviewInfoDiv.appendChild(modifyButton);
+
+                    const deleteButton = document.createElement("button");
+                    deleteButton.innerText = "삭제";
+                    deleteButton.addEventListener("click", async () => {
+                        const confirmation = confirm("정말로 이 리뷰를 삭제하시겠습니까?");
+                        if (confirmation) {
+                            await deleteReview(review.rno);
+                            displayReviews(await getReviewList());
+                        }
+                    });
+                    reviewInfoDiv.appendChild(deleteButton);
+                }
+            }
+
+            const reviewDetailDiv = document.createElement("div");
+            reviewDetailDiv.className = "review-detail";
+            reviewDetailDiv.innerHTML = `<p class="reviewContent">${review.reContent}</p>`;
+
+            if (imagePaths && imagePaths.length > 0) {
+                const imageDiv = document.createElement("div");
+                imageDiv.className = "review-images";
+                imagePaths.forEach(imagePath => {
+                    const relativePath = imagePath.replace("C:\\userImage\\", "");
+                    const img = document.createElement("img");
+                    img.src = `/reviewImages/${relativePath}`;
+                    img.alt = "리뷰 이미지";
+                    img.classList.add('review-img');
+                    imageDiv.appendChild(img);
                 });
-                reviewInfoDiv.appendChild(deleteButton);
+                reviewDetailDiv.appendChild(imageDiv);
+            }
+
+            reviewWrapper.appendChild(reviewInfoDiv);
+            reviewWrapper.appendChild(reviewDetailDiv);
+            reviewContainer.appendChild(reviewWrapper);
+        });
+    });
+}
+
+//리뷰 좋아요 처리
+document.addEventListener('click', function(event) {
+    if (event.target && event.target.id === 'thumbsUp') {
+        const rno = event.target.getAttribute('data-rno');
+        clickLike(rno).then(result =>{
+            if(result == "success"){
+                isLiked = true;
+            }
+        })
+
+    }
+});
+// 좋아요 상태 체크하는 함수
+async function checkReviewLike(rno){
+    try{
+        // const url = "/review/checkReviewLike/"+rno+"/"+unoNum; 로그인처리
+        const url = "/review/checkReviewLike/"+rno+"/"+1;
+        const config = {
+            method: 'GET'
+        }
+        const resp = await fetch(url,config);
+        return resp.text();
+    }catch (error){
+        console.log(error)
+    }
+}
+//좋아요 누르기
+async function clickLike(rno){
+    try{
+        // const url = "/review/clickLike/"+rno+"/"+unoNum
+        const url = "/review/clickLike/"+rno+"/"+1
+        const config = {
+            method: 'POST',
+            headers : {
+                "content-type":"text/plain"
             }
         }
-        const reviewDetailDiv = document.createElement("div");
-        reviewDetailDiv.className = "review-detail";
-        reviewDetailDiv.innerHTML = `<p class="reviewContent">${review.reContent}</p>`;
+        const resp = await fetch(url,config);
+        return resp.text();
+    }catch(error){
+        console.log(error)
+    }
+}
 
-        if (imagePaths && imagePaths.length > 0) {
-            const imageDiv = document.createElement("div");
-            imageDiv.className = "review-images";
-            imagePaths.forEach(imagePath => {
-                const relativePath = imagePath.replace("C:\\userImage\\", "");
-                const img = document.createElement("img");
-                img.src = `/reviewImages/${relativePath}`;
-                img.alt = "리뷰 이미지";
-                img.classList.add('review-img');
-                imageDiv.appendChild(img);
-            });
-            reviewDetailDiv.appendChild(imageDiv);
-        }
+//좋아요 취소
+async function unClickLike(){
+    try{
 
-        reviewWrapper.appendChild(reviewInfoDiv);
-        reviewWrapper.appendChild(reviewDetailDiv);
-        reviewContainer.appendChild(reviewWrapper);
-    });
+    }catch(error){
+        console.log(error)
+    }
 }
 
 
@@ -590,26 +656,7 @@ getReviewCount().then(result => {
     totalCount = result;
 })
 
-//리뷰 좋아요 처리
-document.addEventListener('click', function(event) {
-    if (event.target && event.target.id === 'thumbsUp') {
-        const rno = event.target.getAttribute('data-rno');
 
-    }
-});
-// 좋아요 상태 체크하는 함수
-async function checkReviewLike(rno){
-    try{
-        const url = "/review/checkReviewLike/"+rno+"/"+userNickname;
-        const config = {
-            method: 'GET'
-        }
-        const resp = await fetch(url,config);
-        return resp.text();
-    }catch (error){
-        console.log(error)
-    }
-}
 
 
 

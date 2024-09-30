@@ -102,4 +102,20 @@ public class ReviewController {
     public int getCount(@PathVariable("contentId")String contentId){
         return rsv.getCount(contentId);
     }
+
+    @GetMapping("/checkReviewLike/{rno}/{unoNum}")
+    @ResponseBody
+    public boolean checkReviewLike(@PathVariable("rno")String rno,@PathVariable("unoNum")String uno){
+        int isLiked = rsv.checkReviewLike(rno,uno);
+        return isLiked > 0;
+    }
+    @PostMapping("/clickLike/{rno}/{unoNum}")
+    @ResponseBody
+    public String clickLike(@PathVariable("rno")String rno,@PathVariable("unoNum")String uno){
+        int clickLike = rsv.clickLike(rno, uno);
+        if(clickLike > 0){
+            return "success";
+        }
+        return "fail";
+    }
 }

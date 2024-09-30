@@ -20,4 +20,10 @@
     <select id="getCount" resultType="int">
         select count(*) from review where re_content_id = #{contentId}
     </select>
+    <select id="checkReviewLike" resultType="int">
+        select count(*) from review_like where rno = #{rno} and uno = #{uno}
+    </select>
+    <insert id="clickLike">
+        insert into review_like (rno, uno) values (#{rno}, #{uno})
+    </insert>
 </mapper>
