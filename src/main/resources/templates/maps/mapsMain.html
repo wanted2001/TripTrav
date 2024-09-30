@@ -5,29 +5,32 @@
     <title>Maps Main</title>
     <link rel="stylesheet" th:href="@{/dist/css/maps/mapsMain.css}">
     <link rel="stylesheet" th:href="@{/dist/css/reset.css}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
 </head>
 <body>
 <th:block th:replace="~{header :: header}"></th:block>
     <div class="mainWrap">
         <div class="mainTitle">
-<!--            <li> 여행지 찾아보기 <li>-->
-<!--            <li>-->
-<!--                    <select id="options">-->
-<!--                        <option value="option1">관광지</option>-->
-<!--                        <option value="option2">맛집</option>-->
-<!--                        <option value="option3">다른</option>-->
-<!--                        <option value="option4">옵션</option>-->
-<!--                    </select>-->
-<!--            </li>-->
+            <span class="title"> 여행지 찾아보기 </span>
+            <span class="selectBox">
+                    <select id="options">
+                        <option value="option1">관광지</option>
+                        <option value="option2">맛집</option>
+                        <option value="option3">다른</option>
+                        <option value="option4">옵션</option>
+                    </select>
+            </span>
         </div>
         <div class="mapOutBox">
             <div class="mapHere">
-
+                <div id="map" style="height: 100%;"></div>
             </div>
             <div class="infoHere">
 
             </div>
         </div>
     </div>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script src="/dist/js/maps/loadMap.js"></script>
 </body>
 </html>
