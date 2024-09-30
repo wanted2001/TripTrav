@@ -1,12 +1,19 @@
 const UrlParams = new URLSearchParams(window.location.search);
 const sco = UrlParams.get('sco');
 
-if(sco){
-    console.log("sco 있음");
-    getUserCourse(sco).then(result=>{
-        console.log(result);
-        let content='';
-        content += `<li class="oneContent" data-id="${result.scheContentId}">
+window.addEventListener('click',(e)=>{
+    console.log(e.target);
+    let date =  e.target.getAttribute('data-date');
+    console.log(date);
+    if(sco && date){
+        console.log("sco 있음");
+        getUserCourse(sco,date).then(result=>{
+            console.log(result);
+            let content = '';
+            document.querySelector('.contentArea').innerHTML='';
+            result.forEach(key=>{
+                content=`
+                <li class="oneContent" data-id="${key.scheContentId}">
                     <div class="deletePlan hidden" onclick="deletePlan(event)">&times;</div>
                     <div class="changePlan hidden">
                         <img src="/dist/image/triangle.svg" class="triangle">
@@ -26,45 +33,38 @@ if(sco){
                         <div class="placeImg"></div>
                     </div>
                 </li>`;
-        document.querySelector('.checkName').innerText=`${result.scheName}`;
-        document.querySelector('.contentTitle').innerText=`${result.scheName}`;
-        document.querySelector('.checkDate').innerHTML=`<span class="duration">${result.scheStart.substring(0,10).replace('-','.')}
-                                        ~${result.scheEnd.substring(0,10).replace('-','.')}</span>`
-        if(result.scheCount===2){
-            document.querySelector('.day2').innerText='Day 2';
-        } else if(result.scheCount===3){
-            document.querySelector('.day3').innerText='Day 3';
-        }
-        // result.forEach(key=>{
-        //     //카테고리 -> 관광지 / 음식점 같은 api 코드 넣기
-        //     //어차피 id별 이미지가져올꺼니까 주소도 가져와서 넣음되겠다
-        //     //a태그 추가작업 필요
-        //     content += `<li class="oneContent" data-id="${key.contentid}">
-        //                     <div class="deletePlan hidden" onclick="deletePlan(event)">&times;</div>
-        //                     <div class="changePlan hidden">
-        //                         <img src="/dist/image/triangle.svg" class="triangle">
-        //                         <img src="/dist/image/triangle.svg" class="downTriangle">
-        //                     </div>
-        //                     <div class="name_cate">
-        //                         <span class="placeName">${key.title}</span>
-        //                         <span class="placeCate">장소카테고리</span>
-        //                     </div>
-        //                     <div class="placeAddr"></div>
-        //                     <div class="rate_count">
-        //                         <img src="/dist/image/star.svg">
-        //                         <div class="placeRate">4.0</div>
-        //                         <div class="placeRateCount">(356)</div>
-        //                     </div>
-        //                     <div class="placeImgDiv">
-        //                         <div class="placeImg"></div>
-        //                     </div>
-        //                 </li>`;
-        // })
-        document.querySelector('.contentArea').innerHTML=content;
-        getImage(result.scheContentId);
-        getAddr(result.scheContentId);
+                // document.querySelector('.contentArea').innerHTML+=content;
+                document.querySelector('.contentArea').insertAdjacentHTML('beforeend', content);
+                getAddr(key.scheContentId);
+                getImage(key.scheContentId);
+            })
+        })
+    }
+})
+
+
+
+//day 선택
+const days = document.querySelectorAll('.day');
+days.forEach(day=>{
+    day.addEventListener('click',(e)=>{
+        console.log(e.target);
+        days.forEach(d=>{
+            if(d!==e.target){
+                d.classList.remove('day_focus');
+            }
+        })
+        e.target.classList.add('day_focus');
+        const date = e.target.getAttribute('data-date');
+        getDatePlan(sco, date).then(r=>{
+            console.log(r)
+            if(r.length<1){
+                document.querySelector('.contentArea').innerHTML=`<div class="noPlanText">생성된 일정이 없습니다. 하단의 버튼으로 나만의 여행 일정을 만들어보세요!</div>`
+            }
+        });
+        console.log(date)
     })
-}
+})
 
 //상단 회색바탕 위 드래그 슬라이드 구현
 //상단 일수별 슬라이드
@@ -86,6 +86,52 @@ const editBtn = document.querySelector('.editBtn');
 const saveBtn = document.querySelector('.saveBtn');
 
 document.addEventListener('DOMContentLoaded', () => {
+    initTmap();
+    if(sco) {
+        getUserCourse(sco, 1).then(result => {
+            console.log(result);
+            let content = '';
+            result.forEach(key => {
+                content = `
+                <li class="oneContent" data-id="${key.scheContentId}">
+                    <div class="deletePlan hidden" onclick="deletePlan(event)">&times;</div>
+                    <div class="changePlan hidden">
+                        <img src="/dist/image/triangle.svg" class="triangle">
+                        <img src="/dist/image/triangle.svg" class="downTriangle">
+                    </div>
+                    <div class="name_cate">
+                        <span class="placeName"></span>
+                        <span class="placeCate">장소카테고리</span>
+                    </div>
+                    <div class="placeAddr"></div>
+                    <div class="rate_count">
+                        <img src="/dist/image/star.svg">
+                        <div class="placeRate">4.0</div>
+                        <div class="placeRateCount">(356)</div>
+                    </div>
+                    <div class="placeImgDiv">
+                        <div class="placeImg"></div>
+                    </div>
+                </li>`;
+                document.querySelector('.contentArea').insertAdjacentHTML('beforeend', content);
+                getAddr(key.scheContentId);
+                getImage(key.scheContentId);
+
+                document.querySelector('.checkName').innerText = result[0].scheName;
+                document.querySelector('.contentTitle').innerText = result[0].scheName;
+                const startDate = result[0].scheStart.substring(0, 10).replaceAll('-', '.')
+                const endDate = result[0].scheEnd.substring(0, 10).replaceAll('-', '.')
+                document.querySelector('.checkDate').innerHTML = `${startDate} ~ ${endDate}`;
+
+                if (result[0].scheCount === 2) {
+                    document.querySelector('.day2').innerText = 'Day 2';
+                } else if (result[0].scheCount === 3) {
+                    document.querySelector('.day3').innerText = 'Day 3';
+                }
+            })
+        })
+    }
+
     //드래그 슬라이드 부분
     updateInnerSlideWidth();
     makeDot();
@@ -128,43 +174,6 @@ document.addEventListener('DOMContentLoaded', () => {
     saveMemoBtn.addEventListener('click',()=>{
         saveMemo();
     })
-
-    //데이터 불러오기
-    // getData(detailCourseInfoUrl).then(result=>{
-    //     console.log(result.totalCount);
-    //     let content='';
-    //     result.items.item.forEach(key=>{
-    //         //카테고리 -> 관광지 / 음식점 같은 api 코드 넣기
-    //         //어차피 id별 이미지가져올꺼니까 주소도 가져와서 넣음되겠다
-    //         //a태그 추가작업 필요
-    //         content += `<li class="oneContent" data-id="${key.subcontentid}">
-    //                         <div class="deletePlan hidden" onclick="deletePlan(event)">&times;</div>
-    //                         <div class="changePlan hidden">
-    //                             <img src="/dist/image/triangle.svg" class="triangle">
-    //                             <img src="/dist/image/triangle.svg" class="downTriangle">
-    //                         </div>
-    //                         <div class="name_cate">
-    //                             <span class="placeName">${key.subname}</span>
-    //                             <span class="placeCate">장소카테고리</span>
-    //                         </div>
-    //                         <div class="placeAddr"></div>
-    //                         <div class="rate_count">
-    //                             <img src="/dist/image/star.svg">
-    //                             <div class="placeRate">4.0</div>
-    //                             <div class="placeRateCount">(356)</div>
-    //                         </div>
-    //                         <div class="placeImgDiv">
-    //                             <div class="placeImg"></div>
-    //                         </div>
-    //                     </li>`;
-    //     })
-    //     document.querySelector('.contentArea').innerHTML=content;
-    //
-    //     result.items.item.forEach(key=>{
-    //         getImage(key.subcontentid);
-    //         getAddr(key.subcontentid);
-    //     })
-    // })
 });
 
 //이미지로드
@@ -174,7 +183,7 @@ function getImage(key){
     const imgLi = document.querySelector(`li[data-id="${key}"] .placeImg`);
 
     getData(url).then(res=>{
-        console.log(res);
+        // console.log(res);
         if(res.totalCount<1){
             if (imgLi) {
                 imgLi.innerHTML += `<img src="/dist/image/noimage.jpg">`;
@@ -207,9 +216,9 @@ function initTmap() {
 function getAddr(key){
     const detailInfoUrl = `https://apis.data.go.kr/B551011/KorService1/detailCommon1?MobileOS=ETC&MobileApp=TripTrav&contentId=${key}&defaultYN=Y&firstImageYN=Y&areacodeYN=Y&catcodeYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&serviceKey=${tourAPIKEY}&_type=json`;
     const addrLi = document.querySelector(`li[data-id="${key}"] .placeAddr`);
-    const titleLi = document.querySelector(`li[data-id="${key}"] .placeName`)
+    const titleLi = document.querySelector(`li[data-id="${key}"] .placeName`);
     getData(detailInfoUrl).then(res=>{
-        console.log(res)
+        // console.log(res)
         res.items.item.forEach(result=>{
             addrLi.innerHTML=`${result.addr1}`;
             titleLi.innerHTML=`${result.title}`
@@ -544,27 +553,14 @@ async function searchKeyword(url){
     }
 }
 
-//day 선택
-const days = document.querySelectorAll('.day');
-days.forEach(day=>{
-    day.addEventListener('click',(e)=>{
-        console.log(e.target);
-        days.forEach(d=>{
-            if(d!==e.target){
-                d.classList.remove('day_focus');
-            }
-        })
-        e.target.classList.add('day_focus');
-        const date = e.target.getAttribute('data-date');
-        console.log(date)
-    })
-})
-
 //일정삽입하기
 const btnText = document.querySelector('.btnText');
 function newPlan(event){
     if(btnText.innerText==='편집'){
          if(confirm('일정을 편집하시겠습니까?')){
+             if(document.querySelector('.noPlanText')){
+                 document.querySelector('.contentArea').innerHTML='';
+             }
              const deleteBtn = document.querySelectorAll('.deletePlan');
              const changeBtn = document.querySelectorAll('.changePlan');
              deleteBtn.forEach(btn=>{
@@ -581,6 +577,9 @@ function newPlan(event){
              countTriangle();
          }
     } else {
+        if(document.querySelector('.noPlanText')){
+            document.querySelector('.contentArea').innerHTML='';
+        }
         editPlan(event);
         newPlanF(event);
         countTriangle();
@@ -704,6 +703,11 @@ function setPlanData(sco){
             .then(response=>response.text())
             .then(data=>{
                 console.log(data);
+                if(data=="1"){
+                    alert('일정이 저장되었습니다 !');
+                } else {
+                    alert('일정 저장 중 오류가 발생하였습니다. \n다시 시도해주세요.');
+                }
             })
     })
 }
@@ -799,12 +803,24 @@ async function getData(url){
     }
 }
 
-async function getUserCourse(sco){
+async function getUserCourse(sco, date){
     try{
-        const url="/schedule/course/"+sco;
+        const url="/schedule/course/"+sco+"/"+date;
         const config = {
             method:'post'
         }
+        const response = await fetch(url,config);
+        const result = await response.json();
+        return result;
+    } catch (err){
+        console.log(err);
+    }
+}
+
+async function getDatePlan(sco, date){
+    try{
+        const url = "/schedule/plan/"+sco+"/"+date;
+        const config={method:'post'}
         const response = await fetch(url,config);
         const result = await response.json();
         return result;

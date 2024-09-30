@@ -16,4 +16,8 @@
             sche_index = VALUES(sche_index),
             sche_date = VALUES(sche_date);
     </insert>
+
+    <select id="getPlanDate" resultType="com.www.triptrav.domain.ScheduleDetailVO">
+        select * from schedule_detail where sco=#{sco} and sche_date=#{date}
+    </select>
 </mapper>

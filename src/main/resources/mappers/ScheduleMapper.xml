@@ -20,6 +20,8 @@
         s.sco = sd.sco
         Where
         s.sco=${sco}
+        and
+        sd.sche_date = ${date}
     </select>
 
     <update id="updatePlanName">

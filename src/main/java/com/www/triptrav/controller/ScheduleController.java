@@ -59,11 +59,11 @@ public class ScheduleController {
         return isOk>0?"1":"0";
     }
 
-    @PostMapping("/course/{sco}")
+    @PostMapping("/course/{sco}/{date}")
     @ResponseBody
-    public ScheduleDTO course(@PathVariable("sco") long sco){
+    public List<ScheduleDTO> course(@PathVariable("sco") long sco, @PathVariable("date") int date){
         log.info(String.valueOf(sco));
-        ScheduleDTO sdDTO = ssv.getSchedule(sco);
+        List<ScheduleDTO> sdDTO = ssv.getSchedule(sco, date);
         log.info("sdDTO : {}",sdDTO);
         return sdDTO;
     }
@@ -89,8 +89,13 @@ public class ScheduleController {
         String scheName = (String) sche.get("sche_name");
         int isOk = ssv.updatePlanName(scheName, sco);
 
-        return isOk>0?"1":"0";
+        return isOk>0?"0":"1";
     }
 
-
+    @PostMapping("/plan/{sco}/{date}")
+    @ResponseBody
+    public List<ScheduleDetailVO> getPlanData(@PathVariable("sco")long sco, @PathVariable("date")int date){
+        List<ScheduleDetailVO> scheDVO = sdsv.getPlanDate(sco, date);
+        return scheDVO;
+    }
 }
