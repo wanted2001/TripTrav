@@ -40,4 +40,14 @@ public class ReviewServiceImpl implements ReviewService{
         return reviewMapper.getCount(contentId);
     }
 
+    @Override
+    public int checkReviewLike(String rno, String uno) {
+        return reviewMapper.checkReviewLike(rno, uno);
+    }
+
+    @Override
+    public int clickLike(String rno, String uno) {
+        return reviewMapper.clickLike(rno,uno);
+    }
+
 }

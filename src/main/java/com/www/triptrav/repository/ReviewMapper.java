@@ -17,5 +17,9 @@ public interface ReviewMapper {
     List<String> getImagePathsByReviewId(long rno);
 
     int getCount(String contentId);
+
+    int checkReviewLike(String rno, String uno);
+
+    int clickLike(String rno, String uno);
 }
 
