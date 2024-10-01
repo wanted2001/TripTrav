@@ -83,7 +83,7 @@ public class MyPageController {
         log.info("reviewDTOList = {}", reviewDTOList);
         model.addAttribute("review", reviewDTOList);
         log.info("model = {}", model);
-        return "/mypage/reviewPopup";
+        return "mypage/reviewPopup";
     }
 
     @GetMapping("/tripList")

@@ -3,6 +3,7 @@ console.log(params);
 const bottom = document.getElementById("resultMyPage");
 const modal = document.querySelector(".updateModal");
 const accordionBtn = document.querySelector(".accordionBtn");
+const liList = document.querySelector(".myPageList > li");
 
 const js = "/dist/js/mypage";
 const tripList = "/tripList";
@@ -23,7 +24,7 @@ isSocialUser(unoNum).then(data => {
 })
 
 
-document.querySelectorAll('#tripList,#tripReview,#wishPlace,#wishTrip').forEach(button => {
+document.querySelectorAll('.myPageList > li').forEach(button => {
     button.addEventListener('click', (e) => {
         const id = e.target.id;
         console.log(id);
@@ -42,9 +43,7 @@ document.querySelectorAll('#tripList,#tripReview,#wishPlace,#wishTrip').forEach(
             case 'wishTrip':
                 pageCall(wishTrip);
                 break;
-
         }
-
     })
 })
 
@@ -53,8 +52,8 @@ document.querySelectorAll('#tripList,#tripReview,#wishPlace,#wishTrip').forEach(
 function pageHover(id) {
     const listItems = document.querySelectorAll(".myPageList > li");
     listItems.forEach(item => {
-        const link = item.querySelector('a');
-        if (link.id === id) {
+        const link = item.querySelector('p');
+        if (link.className === id) {
             item.classList.add('active');
         } else {
             item.classList.remove('active');
@@ -97,7 +96,7 @@ function loadScript(page) {
 //js 삭제
 function removeAllScript(src) {
     console.log(src);
-    const toKeep = ['/dist/js/header.js', '/dist/js/loginJoin.js', js + '/mypageDetail.js', src];
+    const toKeep = ['/dist/js/header.js', '/dist/js/loginJoin.js', js + '/mypageDetail.js'];
     const scripts = document.getElementsByTagName('script');
     for (let i = 0; i < scripts.length; i++) {
         let isToKeep = false;
