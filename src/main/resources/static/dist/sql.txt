@@ -39,7 +39,6 @@ CREATE TABLE `review_image` (
 );
 
 CREATE TABLE `review_like` (
-    `rl_id` bigint AUTO_INCREMENT PRIMARY KEY,
     `rno` bigint NOT NULL,
     `uno` bigint NOT NULL,
     FOREIGN KEY (`rno`) REFERENCES `review`(`rno`) ON DELETE CASCADE,
