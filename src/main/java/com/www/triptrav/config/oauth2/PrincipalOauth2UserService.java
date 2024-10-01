@@ -29,6 +29,8 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+
+
         log.info("userRequest: {}", userRequest.getClientRegistration());
         OAuth2User oAuth2User = super.loadUser(userRequest);
         log.info("getAttributes >>> {}", oAuth2User.getAttributes());
@@ -54,6 +56,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
         // 기존 유저 확인
         UserVO originUser = userMapper.searchUser(providerId);
+
 
         if(originUser == null) {
             log.info("첫 로그인");
