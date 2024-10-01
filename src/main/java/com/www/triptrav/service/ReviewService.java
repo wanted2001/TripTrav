@@ -18,5 +18,19 @@ public interface ReviewService {
     int checkReviewLike(String rno, String uno);
 
     int clickLike(String rno, String uno);
+
+    int unClickLike(String rno, String uno);
+
+    int getLikeCount(String rno);
+
+    void plusCount(String rno);
+
+    void minusCount(String rno);
+
+    int put(ReviewVO rvo);
+
+    void delete(String rno);
+
+    void removeAllImagePath(long rno);
 }
 
