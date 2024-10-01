@@ -17,8 +17,8 @@ public class ScheduleDetailServiceImpl implements ScheduleDetailService{
 
 
     @Override
-    public void insertDetailPlan(long sco, long contentId, int i, int j) {
-        scheduleDetailMapper.insertDetailPlan(sco, contentId, i, j);
+    public void insertDetailPlan(long sco, long contentId, int i, int j, String placeTitle) {
+        scheduleDetailMapper.insertDetailPlan(sco, contentId, i, j, placeTitle);
     }
 
     @Override
@@ -29,5 +29,10 @@ public class ScheduleDetailServiceImpl implements ScheduleDetailService{
     @Override
     public List<ScheduleDetailVO> getPlanDate(long sco, int date) {
         return scheduleDetailMapper.getPlanDate(sco, date);
+    }
+
+    @Override
+    public void emptyPlan(long sco, int sche_date) {
+        scheduleDetailMapper.emptyPlan(sco, sche_date);
     }
 }

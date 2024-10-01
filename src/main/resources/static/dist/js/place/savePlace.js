@@ -82,6 +82,7 @@ function setupTripFormListener() {
             const createPlanName = document.querySelector(".createPlanName").value;
             const departureDate = document.getElementById("departureDate").value;
             const returnDate = document.getElementById("returnDate").value;
+            const currentPlaceName = document.querySelector('.currentPlaceName').innerText;
 
             const startDate = new Date(departureDate);
             const endDate = new Date(returnDate);
@@ -96,7 +97,7 @@ function setupTripFormListener() {
             };
             console.log(requestBody);
 
-            fetch(`/schedule/createPlan/${contentId}`, {
+            fetch(`/schedule/createPlan/${contentId}/${currentPlaceName}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -105,12 +106,15 @@ function setupTripFormListener() {
             })
                 .then(response => response.text())
                 .then(data => {
-                    console.log(data.message);
-                    alert('일정이 성공적으로 저장되었습니다!');
+                    //alert창 띄우는 조건 변경해야함
+                    if(data.message){
+                        alert('일정이 성공적으로 저장되었습니다!');
+                    } else {
+                        alert('일정 저장 중 오류가 발생했습니다. \n다시 시도해주세요.');
+                    }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('일정 저장 중 오류가 발생했습니다.');
                 });
         });
     } else {

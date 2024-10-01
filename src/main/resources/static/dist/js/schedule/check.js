@@ -2,11 +2,8 @@ const UrlParams = new URLSearchParams(window.location.search);
 const sco = UrlParams.get('sco');
 
 window.addEventListener('click',(e)=>{
-    console.log(e.target);
     let date =  e.target.getAttribute('data-date');
-    console.log(date);
     if(sco && date){
-        console.log("sco 있음");
         getUserCourse(sco,date).then(result=>{
             console.log(result);
             let content = '';
@@ -56,13 +53,14 @@ days.forEach(day=>{
         })
         e.target.classList.add('day_focus');
         const date = e.target.getAttribute('data-date');
+
         getDatePlan(sco, date).then(r=>{
             console.log(r)
-            if(r.length<1){
-                document.querySelector('.contentArea').innerHTML=`<div class="noPlanText">생성된 일정이 없습니다. 하단의 버튼으로 나만의 여행 일정을 만들어보세요!</div>`
+            if(r.length===0){
+                document.querySelector('.contentArea').innerHTML=`<div class="noPlanText"><span>생성된 일정이 없습니다.</span> 하단의 버튼으로 나만의 여행 일정을 만들어보세요!</div>`
             }
-        });
-        console.log(date)
+        })
+
     })
 })
 
@@ -118,14 +116,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 getImage(key.scheContentId);
 
                 document.querySelector('.checkName').innerText = result[0].scheName;
-                document.querySelector('.contentTitle').innerText = result[0].scheName;
+                document.querySelector('.nameZone').innerText = result[0].scheName;
                 const startDate = result[0].scheStart.substring(0, 10).replaceAll('-', '.')
                 const endDate = result[0].scheEnd.substring(0, 10).replaceAll('-', '.')
                 document.querySelector('.checkDate').innerHTML = `${startDate} ~ ${endDate}`;
 
-                if (result[0].scheCount === 2) {
+                if (result[0].scheCount === 1) {
                     document.querySelector('.day2').innerText = 'Day 2';
-                } else if (result[0].scheCount === 3) {
+                } else if (result[0].scheCount === 2) {
+                    document.querySelector('.day2').innerText = 'Day 2';
                     document.querySelector('.day3').innerText = 'Day 3';
                 }
             })
@@ -172,7 +171,22 @@ document.addEventListener('DOMContentLoaded', () => {
     //메모저장부분
     const saveMemoBtn = document.querySelector('.saveMemo');
     saveMemoBtn.addEventListener('click',()=>{
-        saveMemo();
+        const memo = document.querySelector('.memoContents').value;
+        console.log(memo);
+        if(confirm('메모를 저장하시겠습니까?')) {
+            fetch(`/schedule/memo/${sco}`,{
+                method: 'post',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify(memo)
+            })
+                .then(response => response.text())
+                .then(data=>{
+                    console.log(data)
+                })
+            memoModal.style.display='none';
+        }
     })
 });
 
@@ -317,14 +331,6 @@ function makeDot(){
     })
 }
 
-//메모저장(아직 DB X)
-function saveMemo(){
-    if(confirm('메모를 저장하시겠습니까?')) {
-        console.log("메모저장")
-        memoModal.style.display='none';
-    }
-}
-
 //map 위에 띄우는 content
 let openBtn = document.querySelector('.mapOpenBtn');
 let closeBtn = document.querySelector('.mapCloseBtn');
@@ -351,6 +357,22 @@ openBtn.addEventListener('click', () => {
     closeBtn.style.left = '520px';
 });
 
+//여행추가하기 버튼 contentArea 높이에 맞춰 위치 변경
+function checkHeight(){
+    const contentAreaHeight = document.querySelector('.contentArea');
+    let height = contentAreaHeight.offsetHeight;
+    console.log(height)
+    const addPlan = document.querySelector('.addPlan');
+
+    if(height>980) {
+        addPlan.style.marginTop='12px';
+        addPlan.style.marginBottom='12px';
+    } else {
+        addPlan.style.marginTop = '610px';
+        addPlan.style.marginBottom = '0px';
+    }
+}
+
 closeBtn.addEventListener('click', () => {
     if(!depth2.classList.contains('hidden')){
         depth2.classList.add('hidden');
@@ -372,6 +394,7 @@ function closeContent(){
     depth2.classList.add("hidden");
     searchInput.value = '';
     document.querySelector('.searchResultDiv').innerHTML = '';
+    document.querySelector('.editPlanTitle').classList.add('hidden');
 
     const deleteBtn = document.querySelectorAll('.deletePlan');
     const changeBtn = document.querySelectorAll('.changePlan');
@@ -623,9 +646,9 @@ function editPlan(event){
     const target = event.target;
     const deleteBtn = document.querySelectorAll('.deletePlan');
     const changeBtn = document.querySelectorAll('.changePlan');
-    const contentTitle = document.querySelector('.contentTitle');
+    const nameZone = document.querySelector('.nameZone');
     const titleInput = document.querySelector('.titleInput');
-    // const editPlanTitle = document.querySelector('.editPlanTitle');
+    const editPlanTitle = document.querySelector('.editPlanTitle');
 
     if(target.classList.contains('editBtn')){
         deleteBtn.forEach(btn=>{
@@ -637,7 +660,7 @@ function editPlan(event){
         target.innerText = '저장';
         target.classList.remove('editBtn');
         target.classList.add('saveBtn');
-        // editPlanTitle.classList.remove('hidden');
+        editPlanTitle.classList.remove('hidden');
     } else if (target.classList.contains('saveBtn')) {
         // 저장 버튼을 클릭했을 때
         if(confirm("일정을 저장하시겠습니까?")){
@@ -655,9 +678,9 @@ function editPlan(event){
                 target.classList.add('editBtn');
                 target.innerText = '편집';
 
-                contentTitle.innerText += titleInput.value;
+                nameZone.innerText += titleInput.value;
                 titleInput.remove();
-                // editPlanTitle.classList.add('hidden');
+                editPlanTitle.classList.add('hidden');
                 setPlanData(sco);
             } else {
                 deleteBtn.forEach(btn => {
@@ -670,7 +693,7 @@ function editPlan(event){
                 target.classList.remove('saveBtn');
                 target.classList.add('editBtn');
                 target.innerText = '편집';
-                // editPlanTitle.classList.add('hidden');
+                editPlanTitle.classList.add('hidden');
                 setPlanData(sco);
             }
         }
@@ -679,37 +702,65 @@ function editPlan(event){
 
 function setPlanData(sco){
     const allLi = document.querySelectorAll('li.oneContent');
+    const planArray = [];
+    let arrayKey = true;
 
-    allLi.forEach((plan, index)=>{
+    allLi.forEach((plan, index) => {
         const sche_content_id = plan.getAttribute('data-id');
-        const sche_name = document.querySelector('.contentTitle').innerText;
+        const sche_name = document.querySelector('.nameZone').innerText;
         const sche_date = document.querySelector('.day_focus').getAttribute('data-date');
+        const sche_title = plan.querySelector('.placeName').innerText;
 
         const planData = {
-            sche_content_id:sche_content_id,
-            sche_name:sche_name,
-            sche_date:sche_date,
-            planIndex:index+1,
-            sco:sco
+            sche_content_id: sche_content_id,
+            sche_name: sche_name,
+            sche_date: sche_date,
+            planIndex: index + 1,
+            sche_title: sche_title,
+            sco: sco
+        };
+
+        if (planArray.length > 0) {
+            const lastPlan = planArray[planArray.length - 1];
+            if (
+                lastPlan.sche_content_id !== planData.sche_content_id ||
+                lastPlan.sche_name !== planData.sche_name ||
+                lastPlan.sche_date !== planData.sche_date ||
+                lastPlan.planIndex !== planData.planIndex ||
+                lastPlan.sche_title !== planData.sche_title ||
+                lastPlan.sco !== planData.sco
+            ) {
+                arrayKey = false;
+            }
         }
 
-        fetch(`/schedule/modifyPlan/${sco}`,{
-            method:'post',
-            headers:{
-                'content-type':'application/json'
+        planArray.push(planData);
+
+        console.log(planArray);
+        console.log(arrayKey)
+    });
+    const sche_date = document.querySelector('.day_focus').getAttribute('data-date');
+    if (!arrayKey && planArray.length>0) {
+        fetch(`/schedule/modifyPlan/${sco}/${sche_date}`, {
+            method: 'post',
+            headers: {
+                'content-type': 'application/json'
             },
-            body:JSON.stringify(planData)
+            body: JSON.stringify(planArray)
         })
-            .then(response=>response.text())
-            .then(data=>{
+            .then(response => response.text())
+            .then(data => {
                 console.log(data);
-                if(data=="1"){
+                if (data == "1") {
                     alert('일정이 저장되었습니다 !');
                 } else {
                     alert('일정 저장 중 오류가 발생하였습니다. \n다시 시도해주세요.');
                 }
-            })
-    })
+            });
+    } else {
+        console.log("값 변화없음");
+        alert('일정이 저장되었습니다 !');
+    }
 }
 
 function countTriangle(){
@@ -751,7 +802,7 @@ function countTriangle(){
                 currentLi.classList.add('moving-down');
                 nextLi.classList.add('moving-up');
 
-                requestAnimationFrame(() => {
+             requestAnimationFrame(() => {
                     setTimeout(() => {
                         currentLi.parentNode.insertBefore(nextLi, currentLi);
                         currentLi.classList.remove('moving-down');
@@ -777,10 +828,13 @@ function deletePlan(event){
 function editTitle(){
     const titleInput = document.createElement('input');
     const titleText = document.querySelector('.contentTitle');
+    const editPlanTitle = document.querySelector('.editPlanTitle');
+    const nameZone = document.querySelector('.nameZone');
     titleInput.classList.add('titleInput');
     titleInput.value=titleText.innerText;
     titleInput.placeholder='일정의 제목을 작성해주세요.';
-    titleText.innerText='';
+    editPlanTitle.classList.add('hidden');
+    nameZone.innerText='';
     titleText.appendChild(titleInput);
 }
 
