@@ -1,27 +1,91 @@
 package com.www.triptrav.controller;
 
-
+import com.www.triptrav.domain.ReviewDTO;
+import com.www.triptrav.domain.ReviewImageVO;
+import com.www.triptrav.domain.ReviewVO;
+import com.www.triptrav.domain.UserVO;
+import com.www.triptrav.service.MyPageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/mypage/*")
+@RequestMapping("/mypage")
 @Slf4j
 public class MyPageController {
 
-    @GetMapping("/mypage")
-    public void mypage(@RequestParam String uno) {
+    private final MyPageService msv;
+
+    @GetMapping
+    public String mypage(@RequestParam long uno) {
+        return "/mypage/myPage";
     }
+
+    @ResponseBody
+    @GetMapping("/isSocial")
+    public UserVO isSocial(@RequestParam long uno) {
+        log.info("isSocialUser uno = {}", uno);
+        UserVO uvo = msv.isSocial(uno);
+        log.info("isSocialUser uvo = {}", uvo);
+        return uvo;
+    }
+
+    @ResponseBody
+    @GetMapping("/scheduleCall")
+    public List<UserVO> scheduleCall(@RequestParam long uno){
+        log.info("scheduleCall uno = {}", uno);
+        List<UserVO> scheList = msv.scheduleCall(uno);
+        return scheList;
+    }
+
+    @ResponseBody
+    @GetMapping("/getReview")
+    public List<ReviewDTO> getReviewList(@RequestParam long uno) {
+        List<ReviewVO> reList = msv.getReviewList(uno);
+        List<ReviewDTO> reviewDTOList = new ArrayList<>();
+        for (ReviewVO review : reList) {
+            ReviewDTO reviewDTO = new ReviewDTO();
+            reviewDTO.setReview(review); // 리뷰 정보 설정
+            List<ReviewImageVO> reImageList = msv.getReviewDTOList(review.getRno());
+            List<String> imagePaths = new ArrayList<>();
+            for (ReviewImageVO image : reImageList) {
+                imagePaths.add(image.getImagePath());
+            }
+            reviewDTO.setImagePaths(imagePaths);
+            reviewDTOList.add(reviewDTO);
+        }
+        log.info("reviewList = {}", reList);
+        log.info("reviewDTOList = {}", reviewDTOList);
+        return reviewDTOList;
+    }
+
 
     @GetMapping("/reviewPopup")
-    public void reviewPopup(@RequestParam String rno, Model model) {
-
+    public String reviewPopup(@RequestParam long rno, Model model) {
+        log.info("reviewPopup rno = {}", rno);
+        ReviewVO reList = msv.getPopReview(rno);
+        ReviewDTO reviewDTOList = new ReviewDTO();
+            reviewDTOList.setReview(reList); // 리뷰 정보 설정
+            List<ReviewImageVO> reImageList = msv.getReviewDTOList(rno);
+            List<String> imagePaths = new ArrayList<>();
+            for (ReviewImageVO image : reImageList) {
+                imagePaths.add(image.getImagePath());
+            }
+            reviewDTOList.setImagePaths(imagePaths);
+        log.info("reviewList >> {}",reList );
+        log.info("reviewDTOList = {}", reviewDTOList);
+        model.addAttribute("review", reviewDTOList);
+        log.info("model = {}", model);
+        return "mypage/reviewPopup";
     }
+
     @GetMapping("/tripList")
     public void tripList() {}
 

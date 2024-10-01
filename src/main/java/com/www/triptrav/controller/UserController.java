@@ -73,4 +73,9 @@ public class UserController {
         return "0";
     }
 
+    @GetMapping("/profile/{unoValue}")
+    @ResponseBody
+    public String getProfile(@PathVariable("unoValue")String uno) {
+        return usv.getPath(uno);
+    }
 }

@@ -1,11 +1,23 @@
-.header-nav a{
+.header-nav a {
     color: black;
 }
+
 main {
     text-align: center;
     font-family: LINESeedKR-Rg;
-    margin:0;
-    padding:0;
+    margin: 0;
+    padding: 0;
+}
+button{
+    cursor: pointer;
+}
+.sectionTitle{
+    font-size: 25px;
+    font-weight: bold;
+}
+.reviewCount{
+    font-size: 25px;
+    font-weight: bold;
 }
 .titleSection {
     width: 100%;
@@ -28,12 +40,15 @@ main {
     font-size: 35px;
     z-index: 1;
 }
-.placeHeart{
+
+.placeHeart {
 
 }
-.placeMap{
+
+.placeMap {
 
 }
+
 .savePlaceModal {
     display: none;
     position: fixed;
@@ -43,6 +58,7 @@ main {
     z-index: 1000;
     margin-top: -78px;
 }
+
 .spModalWrap {
     position: absolute;
     top: 43%;
@@ -53,6 +69,7 @@ main {
     height: 500px;
     border-radius: 5px;
 }
+
 .spModalCloseBtn {
     position: absolute;
     right: 6px;
@@ -60,13 +77,15 @@ main {
     font-size: x-large;
     cursor: pointer;
 }
+
 .myPlan {
     margin-top: 21px;
     font-family: 'LINESeedKR-Rg';
     font-size: large;
     text-align: center;
 }
-.createPlanBtn,.create {
+
+.createPlanBtn, .create {
     position: absolute;
     font-family: 'LINESeedKR-Rg';
     border: 1px solid orange;
@@ -76,13 +95,16 @@ main {
     width: 90%;
     padding: 10px 0 5px;
 }
+
 .create {
     top: 37px;
 }
-.createPlanBtn:hover,.create:hover{
+
+.createPlanBtn:hover, .create:hover {
     background: orange;
     color: white;
 }
+
 .createPlanName {
     width: 90%;
     font-family: 'LINESeedKR-Rg';
@@ -93,6 +115,7 @@ main {
     padding: 0px 0px 6px 5px;
     font-size: 16px;
 }
+
 .currentPlaceInfo {
     border: 1px solid #a4a4a4;
     width: 90%;
@@ -102,274 +125,441 @@ main {
     text-align: left;
     font-size: 15px;
 }
-.currentPlaceInfo img{
+
+.currentPlaceInfo img {
     width: 100px;
     padding: 5px;
     border-radius: 9px;
 }
+
 .currentPlaceName {
     width: 73%;
     margin-top: -69px;
     margin-left: 111px;
 }
+
 .currentPlaceAddr {
     width: 73%;
     margin-top: 9px;
     margin-left: 111px;
 }
-.imageUrls {
-display: flex;
-justify-content: space-between;
-width: 1400px;
-height: 300px;
-position: absolute;
-top: 220px;
-left: 300px;
-overflow: hidden;
-z-index: 0;
-}
 
+.imageUrls {
+    display: flex;
+    justify-content: space-between;
+    width: 1400px;
+    height: 300px;
+    position: absolute;
+    top: 220px;
+    left: 300px;
+    overflow: hidden;
+    z-index: 0;
+}
+.rating{
+    margin-right: 10px;
+    position: relative;
+    top: 0;
+    left: 5px;
+}
+.rating>img{
+    width: 20px;
+    height: 20px;
+}
+.score{
+    position: absolute;
+    top: -1px;
+    left: 240px;
+}
 .imageUrls img {
-height: 250px;
-width: 250px;
-border-radius: 10px;
-transition: transform 0.5s ease;
-object-fit: cover;
+    height: 250px;
+    width: 250px;
+    border-radius: 10px;
+    transition: transform 0.5s ease;
+    object-fit: cover;
 }
 
 .imageUrls img:hover {
-transform: scale(1.05);
+    transform: scale(1.05);
 }
 
 .prev, .next {
-cursor: pointer;
-position: absolute;
-top: 350px;
-transform: translateY(-50%);
-width: 50px;
+    cursor: pointer;
+    position: absolute;
+    top: 350px;
+    transform: translateY(-50%);
+    width: 50px;
 }
+
 .prev {
-left: 259px;
+    left: 259px;
 }
+
 .next {
-right: 163px;
+    right: 163px;
 }
-.firstLine{
-height: 10px;
+
+.firstLine {
+    height: 10px;
+    margin-top: 10px;
 }
-.infoSection{
-width: 1400px;
-height: 350px;
-text-align : left;
-position: relative;
-line-height: 50px;
-margin-left: 300px;
+
+.infoSection {
+    width: 1400px;
+    height: 350px;
+    text-align: left;
+    position: relative;
+    line-height: 50px;
+    margin-left: 300px;
 }
+
 .infoSection a {
-color: black;
-text-decoration: none;
+    color: black;
+    text-decoration: none;
 }
+
 .buttonSection {
-position: relative;
-width: 1400px;
-height: 50px;
-display: flex;
-margin-left: 300px;
-margin-top: 10px;
+    position: relative;
+    width: 1400px;
+    height: 50px;
+    display: flex;
+    margin-left: 300px;
+    margin-top: 10px;
 }
+
 .buttonSection > button {
-flex: 1;
-border: 1px solid black;
-background-color: white;
-text-align: center;
-font-size: 20px;
+    flex: 1;
+    border: 1px solid black;
+    background-color: white;
+    text-align: center;
+    font-size: 20px;
 }
+
 .buttonSection > button:nth-child(2),
 .buttonSection > button:nth-child(3),
 .buttonSection > button:nth-child(4) {
-border-left: none;
+    border-left: none;
 }
+
 .details {
-position: relative;
-margin-left: 300px;
-width: 1400px;
-height: auto;
-text-align: left;
-line-height: 40px;
-margin-top: 10px;
-border-bottom: 1px solid black;
+    position: relative;
+    margin-left: 300px;
+    width: 1400px;
+    height: auto;
+    text-align: left;
+    line-height: 40px;
+    margin-top: 10px;
+    border-bottom: 1px solid black;
 }
-.details>p{
-padding-right: 120px;
+
+.details > p {
+    padding-right: 120px;
 }
-.details>span{
-display: block;
-word-break: break-all;
-text-indent : 10px;
-margin-left: 10px;
-margin-bottom: 30px;
+
+.details > span {
+    display: block;
+    word-break: break-all;
+    text-indent: 10px;
+    margin-left: 10px;
+    margin-bottom: 30px;
 }
-.reviews{
-position: relative;
-margin-left: 300px;
-width: 1400px;
-height: auto;
-margin-top: 10px;
-text-align: left;
-border-bottom: 1px solid black;
+
+.reviews {
+    position: relative;
+    margin-left: 300px;
+    width: 1400px;
+    height: auto;
+    margin-top: 10px;
+    text-align: left;
+    border-bottom: 1px solid black;
 }
-.reviews>span:first-child{
-display: inline-block;
-padding-right: 20px;
-margin-top: 20px;
-margin-left: 10px;
+
+.reviews > span:first-child {
+    display: inline-block;
+    padding-right: 20px;
+    margin-top: 20px;
+    margin-left: 10px;
 }
-.inputDiv{
-margin-top: 30px;
-margin-left: 250px;
-width: 900px;
-height: 170px;
+
+.inputDiv {
+    margin-top: 30px;
+    margin-left: 250px;
+    width: 900px;
+    height: 170px;
 }
-.reviewArea{
-width: 800px;
-height: 75px;
-resize: none;
-margin-left: 43px;
-margin-top: 30px;
-font-size: 18px;
-padding-left: 10px;
-padding-top: 10px;
+
+.reviewArea {
+    width: 800px;
+    height: 75px;
+    resize: none;
+    margin-left: 43px;
+    margin-top: 30px;
+    font-size: 18px;
+    padding-left: 10px;
+    padding-top: 10px;
 }
-.reviewArea:hover{
-border: 1px solid black;
+
+.reviewArea:hover {
+    border: 1px solid black;
 }
-.inputDiv > form > button{
-margin-top: 7px;
-font-size: 17px;
-position: absolute;
-right: 293px;
+
+.inputDiv > form > button {
+    margin-top: 7px;
+    font-size: 17px;
+    position: absolute;
+    right: 293px;
+    top: 194px;
 }
-.cameraInput{
-margin-right: 60px;
+
+.cameraInput {
+    margin-right: 60px;
 }
-.buttons{
-margin-top: 30px;
-text-align: right;
-margin-right: 250px;
+
+.buttons {
+    margin-top: 50px;
+    text-align: right;
+}
+.buttons>button{
+    font-size: 18px;
+}
+
+.review {
+    height: auto;
+    margin-top: 25px;
+    margin-left: 250px;
+}
+#previewContainer{
+    position: absolute;
+    left: 462px;
+    top: 195px;
+}
+
+#fileCount {
+    position: absolute;
+    left: 878px;
+    top: 210px;
+}
+.modifyImg{
+    position: absolute;
+    top: -2px;
+    left: 692px;
+}
+.deleteImg{
+    position: absolute;
+    top: -3px;
+    left: 735px;
+}
+.star-rating {
+    display: inline-block;
+    position: relative;
+    top: 3px;
+    left: 40px;
+}
+
+.stars {
+    display: flex;
+    cursor: pointer;
+}
+
+.star {
+    width: 25px;
+    height: 25px;
+    background: url('../../image/star-empty.png') no-repeat center;
+    background-size: contain;
+    position: relative;
+}
+
+.star.full {
+    background: url('../../image/star-full.png') no-repeat center;
+    background-size: contain;
+}
+
+.star.half {
+    background: url('../../image/star-half.png') no-repeat center;
+    background-size: contain;
 }
 
 .review{
-margin-top: 25px;
-margin-left: 250px;
-}
-#fileCount{
-margin-left: 500px;
-}
-.star-rating {
-display: inline-block;
-position: relative;
-}
-.stars {
-display: flex;
-cursor: pointer;
-}
-.star {
-width: 25px;
-height: 25px;
-background: url('../../image/star-empty.png') no-repeat center;
-background-size: contain;
-position: relative;
-}
-.star.full {
-background: url('../../image/star-full.png') no-repeat center;
-background-size: contain;
-}
-.star.half {
-background: url('../../image/star-half.png') no-repeat center;
-background-size: contain;
+    margin-top: 35px;
+    position: relative;
 }
 
-.transportation{
-position: relative;
-margin-left: 300px;
-width: 1400px;
-height: auto;
-border-bottom: 1px solid black;
+.review-img{
+    width: 150px;
+    height: 150px;
+    margin-right: 25px;
 }
-.transportation>p{
-text-align: left;
-margin-top: 10px;
-margin-left: 10px;
+.profileImage{
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
 }
-
-.title{
-width: 100%;
+.review-wrapper{
+    position: relative;
+    border-bottom: 1px solid gray;
+    margin-top: 40px;
+    width: 880px;
 }
-.distance{
-width: 100%;
+.review-wrapper:last-child{
+    border-bottom: none;
 }
-.map{
-position: relative;
-margin-left: 300px;
+.nickName{
+    font-weight: bold;
+    font-size: 20px;
+    position: absolute;
+    top: -2px;
+    left: 60px;
 }
-.map .vsm-marker{
-position: absolute;
+.regDate{
+    font-size: 15px;
+    position: absolute;
+    top: 32px;
+    left: 193px;
 }
-.titlePopup{
-font-size: 15px;
-border-radius: 10px;
+.review-rating{
+    position: absolute;
+    top: 24px;
+    left: 60px;
 }
-
-.nearby{
-position: relative;
-margin-left: 300px;
-width: 1400px;
-height: auto;
+.review-rating>img{
+    width: 25px;
+    height: 25px;
 }
-.nearby>div{
-margin-top: 10px;
+.review-detail{
+    width: auto;
+    height: auto;
 }
-.nearby>p{
-text-align: left;
-margin-top: 10px;
+.review-images{
+    width: auto;
+    height: auto;
+    margin-left: 60px;
+    margin-bottom: 30px;
 }
-.nearby>div>div{
-margin-top: 20px;
-}
-.food, .attractions{
-display: flex;
-flex-direction: row;
-flex-wrap: nowrap;
-justify-content: space-evenly;
-align-items: stretch;
-text-align: center;
-}
-.food>div, .attractions>div {
-width: 200px;
-height: 250px;
-overflow: hidden;
-display: flex;
-flex-direction: column;
-align-items: center;
+.reviewContent{
+    height: auto;
+    text-align: left;
+    margin-left: 60px;
+    margin-top: 25px;
+    font-size: 20px;
+    margin-bottom: 25px;
 }
 
-.food>div img, .attractions>div img {
-width: 100%;
-height: 70%;
-object-fit: cover;
+.helpButton{
+    position: absolute;
+    top: -5px;
+    right: 50px;
+    cursor: pointer;
+}
+.reportButton{
+    position: absolute;
+    top: -5px;
+    right: 1px;
+    cursor: pointer;
+}
+.reUseful{
+    font-size: 22px;
+    position: absolute;
+    top: 3px;
+    right: 36px;
 }
 
-.food>div .info, .attractions>div .info {
-width: 100%;
-height: 30%;
-text-align: center;
-padding: 5px;
+.transportation {
+    position: relative;
+    margin-left: 300px;
+    width: 1400px;
+    height: auto;
+    border-bottom: 1px solid black;
 }
 
-.food>div .info p, .attractions>div .info p {
-margin: 3px 0;
+.transportation > p {
+    text-align: left;
+    margin-top: 10px;
+    margin-left: 10px;
 }
-.blank{
-width: 100%;
-height: 30px;
+
+.title {
+    width: 100%;
+}
+.locationTitle{
+    width: 100%;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.distance {
+    width: 100%;
+}
+
+.map {
+    position: relative;
+    margin-left: 300px;
+}
+
+.map .vsm-marker {
+    position: absolute;
+}
+
+.titlePopup {
+    font-size: 15px;
+    border-radius: 10px;
+}
+
+.nearby {
+    position: relative;
+    margin-left: 300px;
+    width: 1400px;
+    height: auto;
+}
+
+.nearby > div {
+    margin-top: 10px;
+}
+
+.nearby > p {
+    text-align: left;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.nearby > div > div {
+    margin-top: 20px;
+}
+
+.food, .attractions {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    align-items: stretch;
+    text-align: center;
+}
+
+.food > div, .attractions > div {
+    width: 200px;
+    height: 250px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.food > div img, .attractions > div img {
+    width: 100%;
+    height: 70%;
+    object-fit: cover;
+}
+
+.food > div .info, .attractions > div .info {
+    width: 100%;
+    height: 30%;
+    text-align: center;
+    padding: 5px;
+}
+
+.food > div .info p, .attractions > div .info p {
+    margin: 3px 0;
+}
+
+.blank {
+    width: 100%;
+    height: 30px;
 }

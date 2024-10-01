@@ -13,7 +13,7 @@
     <insert id="insertAuth" parameterType="map">
         insert into auth (uno, role) values (#{uno}, 'ROLE_USER')
     </insert>
-    <select id="getInsertedUno" resultType="int">
+    <select id="getInsertedUno" resultType="long">
         select uno from user where email = #{email}
     </select>
     <insert id="insertSocialUser">
@@ -35,4 +35,7 @@
     <update id="updatePw">
         update user set pw=#{newPw} where email=#{email}
     </update>
+    <select id="getPath">
+        select profile from user where uno = #{uno}
+    </select>
 </mapper>

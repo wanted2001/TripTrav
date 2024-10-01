@@ -14,6 +14,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 
 import java.io.IOException;
@@ -28,6 +29,8 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+
+
         log.info("userRequest: {}", userRequest.getClientRegistration());
         OAuth2User oAuth2User = super.loadUser(userRequest);
         log.info("getAttributes >>> {}", oAuth2User.getAttributes());
@@ -53,6 +56,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
         // 기존 유저 확인
         UserVO originUser = userMapper.searchUser(providerId);
+
 
         if(originUser == null) {
             log.info("첫 로그인");
@@ -82,7 +86,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
             userMapper.insertSocialUser(newUser);
 
             // 삽입된 유저의 uno 가져오기
-            int insertedUno = userMapper.getInsertedUno(newUser.getEmail());
+            long insertedUno = userMapper.getInsertedUno(newUser.getEmail());
             if (insertedUno == 0) {
                 throw new RuntimeException("없는 유저");
             }

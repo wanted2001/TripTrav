@@ -1,12 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>리뷰수정</title>
-    <link rel="stylesheet" th:href="@{/dist/css/reset.css}">
+    <title>리뷰 수정</title>
     <style>
-        /*팝업창*/
-        /* 팝업 스타일 */
+        /* 팝업창 */
         .popup {
             position: fixed;
             z-index: 1;
@@ -14,38 +12,216 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.7); /* 배경 어둡게 조정 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         /* 팝업 내용 스타일 */
         .popup-content {
             background-color: #fff;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            height: 70%;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             text-align: center;
         }
 
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            resize: none;
+            font-size: 14px;
+        }
+
+        #charCount {
+            text-align: right;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .image-upload {
+            margin-top: 15px;
+        }
+
+        .image-preview {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .image-preview img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        button:is(#saveBtn,#closeBtn) {
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #saveBtn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        input[type="file"] {
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
 <div id="editPopup" class="popup">
     <div class="popup-content">
         <h3>리뷰 수정</h3>
-        <textarea rows="5" placeholder="리뷰 내용을 수정하세요."></textarea>
-        <button type="button" id="saveBtn">저장</button>
+        <textarea id="reviewText" rows="5" placeholder="리뷰 내용을 수정하세요. (최대 200자)" maxlength="200"></textarea>
+        <div id="charCount">0 / 200</div>
+        <div class="image-upload">
+            <input type="file" id="imageInput" accept="image/*" multiple>
+        </div>
+        <div class="image-preview" id="imagePreview"></div>
+        <button type="button" id="saveBtn" disabled>저장</button>
+        <button type="button" id="closeBtn" onclick="closePopup(e)">닫기</button>
     </div>
 </div>
+
+<script th:inline="javascript">
+    var review = [[${review.review}]];
+    var imagePath = [[${review.imagePaths}]];
+</script>
 <script>
     const editPopup = document.getElementById("editPopup");
-    // 팝업 외부를 클릭하면 닫기
-    window.onclick = function(e) {
+    const reviewText = document.getElementById("reviewText");
+    const charCount = document.getElementById("charCount");
+    const imageInput = document.getElementById("imageInput");
+    const imagePreview = document.getElementById("imagePreview");
+    const saveBtn = document.getElementById("saveBtn");
+    const MAX_FILE_SIZE = 10 * 1024 * 1024;
+
+    initializeReview();
+
+    function initializeReview() {
+        console.log(review);
+        console.log(imagePath);
+        reviewText.innerText = review.reContent;
+
+        // 초기 이미지 미리보기 생성
+        imagePath.forEach(src => addImagePreview(src.replace("C:\\userImage\\", "/reviewImages/")));
+
+        // 이벤트 리스너 설정
+        setupEventListeners();
+    }
+
+    // 이미지 미리보기 추가
+    function addImagePreview(src) {
+        const imgDiv = createImageDiv();
+        const image = createImage(`${src}`);
+        const deleteButton = createDeleteButton(imgDiv);
+        imgDiv.appendChild(image);
+        imgDiv.appendChild(deleteButton);
+        imagePreview.appendChild(imgDiv);
+    }
+
+    // 이미지 Div 생성
+    function createImageDiv() {
+        const imgDiv = document.createElement("div");
+        imgDiv.classList.add("imgDiv");
+        imgDiv.style.position = "relative";
+        return imgDiv;
+    }
+
+    // 이미지 엘리먼트 생성
+    function createImage(src) {
+        const image = document.createElement("img");
+        image.classList.add("tripReviewImg");
+        image.src = src;
+        return image;
+    }
+
+    // 삭제 버튼 생성
+    function createDeleteButton(imgDiv) {
+        const deleteButton = document.createElement("button");
+        deleteButton.innerText = 'X';
+        deleteButton.style.position = 'absolute';
+        deleteButton.style.top = '2px';
+        deleteButton.style.right = '2px';
+        deleteButton.style.fontSize = '20px';
+        deleteButton.style.color = 'black';
+        deleteButton.style.cursor = 'pointer';
+        deleteButton.onclick = function () {
+            imgDiv.remove();
+            imageInput.value = ''; // 삭제 후 파일 선택 초기화
+        };
+        return deleteButton;
+    }
+
+    // 리뷰 텍스트 글자 수 업데이트
+    function updateCharCount() {
+        charCount.textContent = `${reviewText.value.length} / 200`;
+        validateForm();
+    }
+
+    // 파일 입력 처리
+    function handleFileInput() {
+        const files = imageInput.files;
+        imagePreview.innerText ="";
+        if (files.length > 3) {
+            alert('최대 3장의 이미지만 업로드할 수 있습니다.');
+            imageInput.value = ''; // 선택한 파일 초기화
+            return;
+        }
+        Array.from(files).forEach(file => {
+            console.log(file);
+            if (file.size > MAX_FILE_SIZE) {
+                alert("파일의 최대 크기는 10MB입니다.");
+                imageInput.value = ''; // 파일 크기 초과 시 초기화
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function (e) {
+
+                addImagePreview(e.target.result);
+            };
+            reader.readAsDataURL(file);
+        });
+
+        validateForm();
+    }
+
+    // 저장 버튼 활성화 여부 검사
+    function validateForm() {
+        const currentImageCount = document.querySelectorAll(".imgDiv").length;
+        saveBtn.disabled = !(reviewText.value.length > 0 && currentImageCount <= 3);
+    }
+
+    // 팝업 외부 클릭 시 닫기
+    function closePopup(e) {
         if (e.target === editPopup) {
             editPopup.style.display = "none";
         }
+    }
+
+    // 이벤트 리스너 설정
+    function setupEventListeners() {
+        reviewText.addEventListener('input', updateCharCount);
+        imageInput.addEventListener('change', handleFileInput);
+        window.addEventListener('click', closePopup);
     }
 </script>
 </body>

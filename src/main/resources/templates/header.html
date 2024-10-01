@@ -7,7 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>title</title>
         <link rel="stylesheet" th:href="@{/dist/css/reset.css}">
-        <link rel="stylesheet" th:href="@{/dist/css/loginJoin.css}">
+        <link rel="stylesheet" th:href="@{/dist/css/user/loginJoin.css}">
         <style>
             .header-nav {
                 background: #ffffff00;
@@ -41,7 +41,7 @@
         </style>
     </head>
     <body>
-    <nav class="header-nav">
+    <nav class="header-nav" id="header">
         <div class="leftBox">
             <a th:href="@{/}">
                 <img src="/" class="logoImg">
@@ -49,7 +49,7 @@
         </div>
         <div class="middleBox">
             <ul class="middleUl">
-                <li><a th:href="@{/}">Maps</a></li>
+                <li><a id="goToMaps" th:href="@{/maps/mapsMain}">Maps</a></li>
                 <li><a th:href="@{/}">Trips</a></li>
                 <li><a id="searchA">Search</a></li>
             </ul>
@@ -57,7 +57,7 @@
         <div class="rightBox">
             <th:block sec:authorize="isAnonymous()">
                 <ul class="rightUl">
-                    <li><a id="openModal"> 로그인ㅤㅤ|ㅤ회원가입 </a></li>
+                    <li><a id="openModal"> 로그인ㅤ|ㅤ회원가입 </a></li>
                 </ul>
             </th:block>
             <th:block sec:authorize="isAuthenticated()">
@@ -65,7 +65,7 @@
                     <li><a th:href="@{/user/logout}" id="logout"> 로그아웃</a></li>
                     <li><a>ㅤ|ㅤ</a></li>
                     <li>
-                        <a th:href="@{mypage/mypage(uno=${#authentication.getPrincipal().getUser().getUno()})}"
+                        <a th:href="@{/mypage(uno=${#authentication.getPrincipal().getUser().getUno()})}"
                            id="mypage">마이페이지</a></li>
                 </ul>
             </th:block>
@@ -73,24 +73,22 @@
     </nav>
     <div id="myModal" class="modal">
         <div class="modal-content" id="modalContent">
-            <button class="close-button" id="closeModal">&times;</button>
-            <form id="loginForm" action="/login" method="post" class="LoginArea">
-                <section class="loginBox">
-                    <p><img src="/" class="logoImg"></p>
+            <section class="mainBox loginBox">
+                <button class="close-button" id="closeModal">&times;</button>
+                <form id="loginForm" action="/login" method="post" class="LoginArea">
+                    <p class="pClass"><img class="logoImg"></p>
                     <h2>로그인</h2>
-                    <p><input type="text" id="username" name="email" placeholder="이메일을 입력하세요."></p>
-                    <p><input type="password" id="password" name="pw" placeholder="비밀번호를 입력하세요."></p>
-                    <p>
-                        <button type="submit">로그인</button>
-                    </p>
-                </section>
-            </form>
-            <section class="joinBox">
-                <p>회원이 아니신가요? <a id="joinBtn">회원가입</a></p>
-                <p>계정을 잊으셨나요? <a id="findBtn">아이디/비밀번호 찾기</a></p>
+                    <p class="pClass"><input type="text" id="username" name="email" placeholder="이메일을 입력하세요."></p>
+                    <p class="pClass"><input type="password" id="password" name="pw" placeholder="비밀번호를 입력하세요."></p>
+                    <p class="pClass"><button type="submit">로그인</button></p>
+                </form>
+            </section>
+            <section class="mainBox joinBox">
+                <p class="pClass">회원이 아니신가요? <a id="joinBtn">회원가입</a> </p>
+                <p class="pClass">계정을 잊으셨나요? <a id="findBtn">아이디/비밀번호 찾기</a> </p>
             </section>
             <hr style="border: solid 0.5px lightgrey">
-            <section class="snsJoinBox">
+            <section class="mainBox snsJoinBox">
                 <a href="/oauth2/authorization/kakao"><img src="/dist/image/kakaoLogin.png"></a>
                 <a href="/oauth2/authorization/google"><img src="/dist/image/googleLogin.png"></a>
                 <a href="/oauth2/authorization/naver"><img src="/dist/image/naverLogin.png"></a>
@@ -100,6 +98,7 @@
     <script src="/dist/js/loginJoin.js"></script>
     <script>
         let url = window.location.href;
+
         document.getElementById('searchA').addEventListener('click', () => {
             if (url === "http://localhost:8099/") {
                 changeSearch();
@@ -131,8 +130,27 @@
         }
 
         function goToMyPage(unoNum) {
-            window.location.href = `/mypage/mypage?uno=${unoNum}`;
+            window.location.href = `/mypage?uno=${unoNum}`;
         }
+    </script>
+    <script>
+        function changeHeaderColor() {
+            const header = document.getElementById('header');
+            const currentURL = window.location.href;
+
+            // URL에 따라 배경색 변경
+            if (currentURL.includes('/maps')) {
+                header.style.position = 'absolute';
+                header.style.backgroundColor = 'orange';
+                header.style.width = ' 1440px';
+                header.style.margin = '0 auto';
+            } else {
+                header.style.backgroundColor = ''; // 기본 배경색
+            }
+        }
+
+        // 페이지 로드 시 실행
+        window.onload = changeHeaderColor;
     </script>
     </body>
 </th:block>

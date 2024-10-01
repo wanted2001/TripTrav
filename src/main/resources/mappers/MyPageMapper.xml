@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.www.triptrav.repository.MyPageMapper">
+
+    <select id="isSocial" resultType="com.www.triptrav.domain.UserVO">
+        select * from user where uno = #{uno}
+    </select>
+
+    <select id="scheduleCall" resultType="com.www.triptrav.domain.ScheduleVO">
+        select * from schedule where uno = #{uno}
+    </select>
+    <!--내가 쓴 리뷰 -->
+    <select id="getReviewList" resultType="com.www.triptrav.domain.ReviewVO">
+       select * from review where uno =#{uno} order by re_date desc
+    </select>
+    <!--수정 리뷰   -->
+    <select id="getPopReview" resultType="com.www.triptrav.domain.ReviewVO">
+        select * from review where rno=#{rno}
+    </select>
+    <!--리뷰쓴 이미지 가져오기  -->
+    <select id="getReviewDTOList" resultType="com.www.triptrav.domain.ReviewImageVO">
+        select * from review_image where rno=#{rno}
+    </select>
+
+
+
+</mapper>

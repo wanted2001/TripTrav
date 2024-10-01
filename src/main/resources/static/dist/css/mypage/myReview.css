@@ -39,10 +39,7 @@
     height: 90px;
     display: flex;
     align-items: center;
-}
-
-.reviewRegDate {
-    margin: 8px 0;
+    line-height: unset;
 }
 
 .reviewPlaceName{

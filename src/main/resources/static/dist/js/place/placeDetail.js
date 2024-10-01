@@ -6,10 +6,20 @@ const attractionsContainer = document.querySelector('.attractions');
 const imageUrlsDiv = document.querySelector('.imageUrls');
 
 let currentIndex = 0;
-let contentTypeId = 0;
+let contentTypeId = 12;     //추후수정
+let contentName = '용궁사';    //추후수정
 let imageUrls = [];
 let mapx = 0;
 let mapy = 0;
+let totalCount = 0;
+let isLiked = false;
+let sum = 0;
+let isSortedByUseful = false;
+let isSortedByRate = false;
+let isSortedByDate = false;
+let reviewList = [];
+let isEditing = false;
+
 
 // 기본정보 가져오기
 // fetch(detailInfoUrl)
@@ -20,7 +30,8 @@ let mapy = 0;
 //         let city = splitAddr(jsonData.addr1)[0];
 //         let district = splitAddr(jsonData.addr1)[1];
 //         let title = jsonData.title;
-//         locationDiv.innerHTML = `<span>${city} > </span><span>${district} > </span><span>${title}</span>`;
+//         contentName = jsonData.title;
+//         locationDiv.innerHTML = `<span>${city}> </span><span>${district}> </span><span>${title}</span>`;
 //
 //         const mainImgUrl = jsonData.firstimage;
 //         imageUrls.push(mainImgUrl);
@@ -32,7 +43,7 @@ let mapy = 0;
 //         });
 //
 //         contentTypeId = jsonData.contenttypeid;
-//         document.querySelector('.title').innerText = jsonData.title
+//         document.querySelector('.locationTitle').innerText = jsonData.title
 //         document.querySelector('.locationInfo').innerHTML = `주소 : ${jsonData.addr1}`;
 //
 //         getIntroInfo(contentTypeId).then(result=>{
@@ -46,7 +57,7 @@ let mapy = 0;
 //             document.querySelector('.priceInfo').innerHTML = `${additionalInfoData.infoname} : ${additionalInfoData.infotext}`
 //         })
 //         document.querySelector('.homepageInfo').innerHTML = `홈페이지 : ${jsonData.homepage}`
-//         document.querySelector('.details').innerHTML = `<p>소개</p><span>${jsonData.overview}</span>`;
+//         document.querySelector('.details').innerHTML = `<p class="sectionTitle">소개</p><span>${jsonData.overview}</span>`;
 //         mapx = jsonData.mapx;
 //         mapy = jsonData.mapy;
 //
@@ -160,11 +171,13 @@ async function writeReview() {
     const files = document.getElementById('imageInput').files;
     const data = new FormData();
     data.append('reContent', document.querySelector('.reviewArea').value);
-    data.append('nickname', 'Test');
+    data.append('nickname', userNickname);
     data.append('reRate', document.getElementById('rating-value').textContent);
     data.append('reImageCount', files.length);
-    data.append('reContentType', 12); //임시값 나중에 불러와
-    data.append('uno', 1); // 임시값 나중에 불러와
+    data.append('reContentType', contentTypeId);
+    data.append('uno', unoNum);
+    data.append('reContentId', contentId)
+    data.append('reContentName', contentName)
 
     for (let i = 0; i < files.length; i++) {
         data.append('images', files[i]);
@@ -184,86 +197,552 @@ async function writeReview() {
 }
 
 document.querySelector('.addButton').addEventListener('click', () => {
-    writeReview().then(result =>{
-        if(result == "success" || result == "imageSuccess"){
-            alert("댓글 작성 완료");
-            window.location.reload();
-        }else{
-            alert("댓글 작성 실패")
-        }
-    });
+    if (!isEditing) {
+        writeReview().then(result => {
+            if (result === "success" || result === "imageSuccess") {
+                alert("댓글 작성 완료");
+                window.location.reload();
+            } else {
+                alert("댓글 작성 실패");
+            }
+        });
+    }
 });
 
-//리뷰 사진첨부관련
+//이미지업로드 관련 함수
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
 function handleFileUpload(event) {
-    const files = event.target.files;
-    const fileCount = files.length;
-
+    const files = Array.from(event.target.files);
     const fileCountElement = document.getElementById('fileCount');
     const previewContainer = document.getElementById('previewContainer');
-
     previewContainer.innerHTML = '';
-
-    if (fileCount > 3) {
+    if (files.length > 3) {
         alert('최대 3장만 업로드할 수 있습니다.');
         event.target.value = '';
+        return;
+    }
+    let validFiles = [];
+    files.forEach(file => {
+        if (file.size > MAX_FILE_SIZE) {
+            alert(`파일 "${file.name}" 크기가 10MB를 초과했습니다. 다른 파일을 선택해주세요.`);
+        } else {
+            validFiles.push(file);
+        }
+    });
+    if (validFiles.length === 0) {
+        event.target.value = '';
         fileCountElement.innerText = '';
-    } else {
-        fileCountElement.innerText = `${fileCount}/3 첨부 완료`;
-        Array.from(files).forEach(file => {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                img.style.width = '75px';
-                img.style.height = '75px';
-                img.style.objectFit = 'cover';
-                img.style.margin = '5px';
-                previewContainer.appendChild(img);
+        return;
+    }
+    fileCountElement.innerText = `${validFiles.length}/3 첨부 완료`;
+    validFiles.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const imgContainer = document.createElement('div');
+            imgContainer.style.position = 'relative';
+            imgContainer.style.display = 'inline-block';
+            imgContainer.style.margin = '5px';
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.style.width = '120px';
+            img.style.height = '120px';
+            img.style.objectFit = 'cover';
+            const deleteButton = document.createElement('button');
+            deleteButton.innerText = 'X';
+            deleteButton.style.position = 'absolute';
+            deleteButton.style.top = '2px';
+            deleteButton.style.right = '2px';
+            deleteButton.style.fontSize = '20px';
+            deleteButton.style.color = 'white';
+            deleteButton.style.cursor = 'pointer';
+            deleteButton.onclick = function() {
+                validFiles.splice(index, 1);
+                handleFileUpload({ target: { files: new DataTransfer().files } });
+            };
+            imgContainer.appendChild(img);
+            imgContainer.appendChild(deleteButton);
+            previewContainer.appendChild(imgContainer);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+starRating();
+//별점관리
+function starRating() {
+    document.addEventListener('DOMContentLoaded', function () {
+        const stars = document.getElementById('stars');
+        const ratingValue = document.getElementById('rating-value');
+        let currentRating = 0;
+        let isClickSet = false;
+        stars.addEventListener('mousemove', function (e) {
+            const rect = stars.getBoundingClientRect();
+            const offsetX = e.clientX - rect.left;
+            const starWidth = rect.width / 5;
+            const rating = Math.ceil((offsetX / starWidth) * 2) / 2;
+            if (offsetX >= 0 && offsetX <= rect.width) {
+                highlightStars(stars, rating);
+                ratingValue.textContent = rating;
             }
-
-            reader.readAsDataURL(file);
         });
+        stars.addEventListener('click', function () {
+            currentRating = parseFloat(ratingValue.textContent);
+            isClickSet = true;
+        });
+        stars.addEventListener('mouseleave', function () {
+            if (isClickSet) {
+                highlightStars(stars, currentRating);
+                ratingValue.textContent = currentRating;
+            }
+        });
+    });
+}
+
+function highlightStars(stars, rating) {
+    const starElements = stars.children;
+    for (let i = 0; i < starElements.length; i++) {
+        const starValue = i + 1;
+        if (starValue <= rating) {
+            starElements[i].classList.add('full');
+            starElements[i].classList.remove('half');
+        } else if (starValue - 0.5 === rating) {
+            starElements[i].classList.add('half');
+            starElements[i].classList.remove('full');
+        } else {
+            starElements[i].classList.remove('full');
+            starElements[i].classList.remove('half');
+        }
     }
 }
 
-//별점관리
-document.addEventListener('DOMContentLoaded', function () {
-    const stars = document.getElementById('stars');
-    const ratingValue = document.getElementById('rating-value');
-    let currentRating = 0;
 
-    stars.addEventListener('mousemove', function (e) {
-        const rect = stars.getBoundingClientRect();
-        const offsetX = e.clientX - rect.left;
-        const starWidth = rect.width / 5;
-        const rating = Math.ceil((offsetX / starWidth) * 2) / 2;
-        highlightStars(rating);
-        ratingValue.textContent = rating;
-    });
-    stars.addEventListener('click', function () {
-        currentRating = parseFloat(ratingValue.textContent);
-    });
-    stars.addEventListener('mouseleave', function () {
-        highlightStars(currentRating);
-    });
-    function highlightStars(rating) {
-        const starElements = stars.children;
-        for (let i = 0; i < starElements.length; i++) {
-            const starValue = i + 1;
-            if (starValue <= rating) {
-                starElements[i].classList.add('full');
-                starElements[i].classList.remove('half');
-            } else if (starValue - 0.5 === rating) {
-                starElements[i].classList.add('half');
-                starElements[i].classList.remove('full');
-            } else {
-                starElements[i].classList.remove('full');
-                starElements[i].classList.remove('half');
+// 리뷰 리스트 가져오기
+async function getReviewList() {
+    try {
+        const url = "/review/GET/" + contentId;
+        const config = {
+            method: 'GET'
+        };
+        const resp = await fetch(url, config);
+        let result = await resp.json();
+        console.log(result)
+        //로그인 유저가 쓴 게 제일 위로가게 정렬
+        if(typeof userNickname !== 'undefined' && userNickname !== null){
+            result = result.sort((a, b) => {
+                if (a.review.nickname === userNickname) return -1;
+                if (b.review.nickname === userNickname) return 1;
+                return 0;
+            });
+        }
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+//정렬 버튼
+// document.querySelector(".buttons").addEventListener("click", (e) => {
+//     const button = e.target;
+//     const buttonType = button.textContent;
+//
+//     document.querySelectorAll(".buttons button").forEach(btn => {
+//         btn.style.fontWeight = 'normal';
+//     });
+//
+//     let sortedList = [...result];
+//
+//     if (buttonType === "좋아요순") {
+//         isSortedByUseful = !isSortedByUseful;
+//         sortedList = sortedList.sort((a, b) => {
+//             if (isSortedByUseful) {
+//                 return b.review.reUseful - a.review.reUseful || new Date(b.review.reDate) - new Date(a.review.reDate);
+//             }
+//             return 0;
+//         });
+//         button.style.fontWeight = 'bold';
+//     } else if (buttonType === "평점 높은순") {
+//         isSortedByRate = !isSortedByRate;
+//         sortedList = sortedList.sort((a, b) => {
+//             if (isSortedByRate) {
+//                 return b.review.reRate - a.review.reRate || new Date(b.review.reDate) - new Date(a.review.reDate);
+//             }
+//             return 0;
+//         });
+//         button.style.fontWeight = 'bold';
+//     } else if (buttonType === "최신순") {
+//         isSortedByDate = !isSortedByDate;
+//         sortedList = sortedList.sort((a, b) => {
+//             if (isSortedByDate) {
+//                 return new Date(b.review.reDate) - new Date(a.review.reDate);
+//             }
+//             return 0;
+//         });
+//         button.style.fontWeight = 'bold';
+//     }
+//
+//     displayReviews(sortedList);
+// });
+
+// 리뷰 출력 함수
+async function displayReviews(result) {
+    const reviewContainer = document.querySelector('.review');
+    reviewContainer.innerHTML = '';
+
+    for (const reviewDTO of result) {
+        const review = reviewDTO.review;
+        const imagePaths = reviewDTO.imagePaths;
+        let profileImgPath;
+        profileImgPath = await getUserProfile(review.uno);
+
+        const reviewWrapper = document.createElement("div");
+        reviewWrapper.className = "review-wrapper";
+
+        const reviewInfoDiv = document.createElement("div");
+        reviewInfoDiv.className = "review-info";
+
+        if (typeof userNickname !== 'undefined' && userNickname !== null) {
+            checkReviewLike(review.rno).then(likeResult => {
+                isLiked = likeResult === "true";
+            });
+        }
+        const starHTML = convertRatingToStars(review.reRate);
+        reviewInfoDiv.innerHTML = `
+             <img class="profileImage" alt="noPic" src="${profileImgPath ? `/profile/${profileImgPath}` : '/dist/image/noimage.jpg'}">
+            <span class="nickName">${review.nickname}</span><br>
+            <span class="review-rating">${starHTML}</span>
+            <span class="regDate">${review.reDate}</span>
+            <button class="helpButton">
+                <span class="reUseful">${review.reUseful}</span>
+                <img id="thumbsUp" src="${isLiked ? '/dist/image/thumbs-click.svg' : '/dist/image/thumbs-up.svg'}" data-rno="${review.rno}" data-isLiked="${isLiked}">
+            </button>
+            <button class="reportButton">
+                <img src="/dist/image/alert-triangle.svg">
+            </button>`;
+
+        if (typeof userNickname !== 'undefined' && userNickname !== null) {
+            if (review.nickname === userNickname) {
+                const modifyButton = document.createElement("img");
+                modifyButton.src = "/dist/image/edit-2.svg"
+                modifyButton.classList.add('modifyImg');
+                modifyButton.addEventListener("click", () => {
+                    fillReviewForm(review, imagePaths);
+                    document.querySelector('.cameraInput').style.marginRight = "85px";
+                    document.getElementById('fileCount').style.marginRight = "3px";
+                });
+                reviewInfoDiv.appendChild(modifyButton);
+
+                const deleteButton = document.createElement("img");
+                deleteButton.src = "/dist/image/trash-2.svg"
+                deleteButton.classList.add('deleteImg');
+                deleteButton.addEventListener("click", async () => {
+                    const confirmation = confirm("정말로 이 리뷰를 삭제하시겠습니까?");
+                    if (confirmation) {
+                        await deleteReview(review.rno);
+                        displayReviews(await getReviewList());
+                    }
+                });
+                reviewInfoDiv.appendChild(deleteButton);
             }
+        }
+
+        const reviewDetailDiv = document.createElement("div");
+        reviewDetailDiv.className = "review-detail";
+        reviewDetailDiv.innerHTML = `<p class="reviewContent">${review.reContent}</p>`;
+
+        if (imagePaths && imagePaths.length > 0) {
+            const imageDiv = document.createElement("div");
+            imageDiv.className = "review-images";
+            imagePaths.forEach(imagePath => {
+                const relativePath = imagePath.replace("C:\\userImage\\", "");
+                const img = document.createElement("img");
+                img.src = `/reviewImages/${relativePath}`;
+                img.alt = "리뷰 이미지";
+                img.classList.add('review-img');
+                imageDiv.appendChild(img);
+            });
+            reviewDetailDiv.appendChild(imageDiv);
+        }
+
+        reviewWrapper.appendChild(reviewInfoDiv);
+        reviewWrapper.appendChild(reviewDetailDiv);
+        reviewContainer.appendChild(reviewWrapper);
+    }
+}
+
+//좋아요 누름처리
+document.addEventListener('click', function(event) {
+    if (event.target && event.target.id === 'thumbsUp') {
+        const rno = event.target.getAttribute('data-rno');
+        const currentLike = event.target.getAttribute('data-isLiked');
+        const reUseful = document.querySelector('.reUseful')
+        if(currentLike == "true") {
+            unClickLike(rno).then(result => {
+                if(result == "unClickSuccess") {
+                    event.target.src = '/dist/image/thumbs-up.svg';
+                    event.target.style.width = "24px"
+                    event.target.style.height = "24px"
+                    event.target.style.transform = "translate(0,0)"
+                    event.target.setAttribute('data-isLiked', 'false');
+                    getLikeCount(rno).then(result =>{
+                        const spanElement = event.target.previousElementSibling;
+                        spanElement.innerText = result;
+                    })
+                }
+            })
+        } else if(currentLike == "false") {
+            clickLike(rno).then(result => {
+                if(result == "clickSuccess") {
+                    event.target.src = '/dist/image/thumbs-click.svg';
+                    event.target.style.width = "28px"
+                    event.target.style.height = "28px"
+                    event.target.style.transform = "translate(3px,-3px)"
+                    event.target.setAttribute('data-isLiked', 'true');
+                    getLikeCount(rno).then(result =>{
+                        const spanElement = event.target.previousElementSibling;
+                        spanElement.innerText = result;
+                    })
+                }
+            })
         }
     }
 });
+//좋아요개수 가져오는함수
+async function getLikeCount(rno){
+    try{
+        const url = "/review/getLikeCount/"+rno
+        const config = {
+            method : "GET"
+        }
+        const resp = await fetch(url,config)
+        return resp.text()
+    }catch (error) {
+        console.log(error)
+    }
+}
+
+// 좋아요 상태 체크하는 함수
+async function checkReviewLike(rno){
+    try{
+        const url = "/review/checkReviewLike/"+rno+"/"+unoNum;
+        const config = {
+            method: 'GET'
+        }
+        const resp = await fetch(url,config);
+        return resp.text();
+    }catch (error){
+        console.log(error)
+    }
+}
+//좋아요 누르기
+async function clickLike(rno){
+    try{
+        const url = "/review/clickLike/"+rno+"/"+unoNum
+        const config = {
+            method: 'POST',
+            headers : {
+                "content-type":"text/plain"
+            }
+        }
+        const resp = await fetch(url,config);
+        return resp.text();
+    }catch(error){
+        console.log(error)
+    }
+}
+
+//좋아요 취소
+async function unClickLike(rno){
+    try{
+        const url = "/review/unClickLike/"+rno+"/"+unoNum
+        const config = {
+            method: 'DELETE',
+            headers : {
+                "content-type":"text/plain"
+            }
+        }
+        const resp = await fetch(url,config);
+        return resp.text();
+    }catch(error){
+        console.log(error)
+    }
+}
+
+
+// 리뷰 작성 input 숨김 처리
+getReviewList().then(result => {
+    if(typeof userNickname !== 'undefined' && userNickname !== null){
+        const hasUserReview = result.some(reviewDTO => reviewDTO.review.nickname === userNickname);
+        if (hasUserReview) {
+            document.querySelector('.inputDiv').style.display = 'none';
+        }
+    }
+    displayReviews(result);
+});
+async function deleteReview(rno) {
+    try {
+        const url = `/review/reviewDelete/${rno}`;
+        const config = {
+            method: 'DELETE'
+        };
+        const resp = await fetch(url, config);
+        if (resp.ok) {
+            alert("리뷰가 삭제되었습니다.");
+            window.location.reload();
+        } else {
+            alert("리뷰 삭제에 실패했습니다.");
+        }
+    } catch (error) {
+        console.log(error);
+        alert("오류가 발생했습니다.");
+    }
+}
+function fillReviewForm(review, imagePaths) {
+    document.querySelector('.inputDiv').style.display = '';
+    document.querySelector('.reviewArea').value = review.reContent;
+    starRating();
+    const stars = document.getElementById('stars');
+    highlightStars(stars, review.reRate)
+    document.getElementById('rating-value').innerText = review.reRate
+    const previewContainer = document.getElementById('previewContainer');
+    previewContainer.innerHTML = '';
+
+    if (imagePaths && imagePaths.length > 0) {
+        imagePaths.forEach((imagePath, index) => {
+            const relativePath = imagePath.replace("C:\\userImage\\", "");
+            const imgContainer = document.createElement('div');
+            imgContainer.style.position = 'relative';
+            imgContainer.style.display = 'inline-block';
+            imgContainer.style.margin = '5px';
+
+            const img = document.createElement('img');
+            img.src = `/reviewImages/${relativePath}`;
+            img.style.width = '120px';
+            img.style.height = '120px';
+            img.style.objectFit = 'cover';
+
+            const deleteButton = document.createElement('button');
+            deleteButton.innerText = 'X';
+            deleteButton.style.position = 'absolute';
+            deleteButton.style.top = '2px';
+            deleteButton.style.right = '2px';
+            deleteButton.style.fontSize = '20px';
+            deleteButton.style.color = 'white';
+            deleteButton.style.cursor = 'pointer';
+
+            deleteButton.onclick = function() {
+                imagePaths.splice(index, 1);
+                fillReviewForm(review, imagePaths);
+            };
+
+            imgContainer.appendChild(img);
+            imgContainer.appendChild(deleteButton);
+            previewContainer.appendChild(imgContainer);
+        });
+    }
+    isEditing = true;
+
+    const addButton = document.querySelector('.addButton');
+    addButton.innerText = '수정 완료';
+    addButton.onclick = async function() {
+        modifyReview(review.rno).then(result=>{
+            if(result == "success"){
+                alert("수정 완료");
+                window.location.reload()
+            }
+        });
+    };
+}
+
+
+async function modifyReview(rno) {
+    const files = document.getElementById('imageInput').files;
+    const data = new FormData();
+    data.append('reContent', document.querySelector('.reviewArea').value);
+    data.append('nickname', userNickname);
+    data.append('reRate', document.getElementById('rating-value').textContent);
+    data.append('reImageCount', files.length);
+    data.append('rno', rno);
+    data.append('reContentType', contentTypeId);
+    data.append('uno', unoNum);
+    data.append('reContentId', contentId);
+    data.append('reContentName', contentName);
+
+    for (let i = 0; i < files.length; i++) {
+        data.append('images', files[i]);
+    }
+    for(const [key,value] of data.entries()) {
+        console.log(key, value)
+    }
+    try {
+        const url = '/review/reviewUpdate/PUT';
+        const config = {
+            method: 'PUT',
+            body: data
+        };
+        const resp = await fetch(url, config);
+        const result = await resp.text();
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+//별점 별로 변환함수
+function convertRatingToStars(rating) {
+    const starFull = '<img src="/dist/image/star-full.png" alt="Full Star">';
+    const starHalf = '<img src="/dist/image/star-half.png" alt="Half Star">';
+    const starEmpty = '<img src="/dist/image/star-empty.png" alt="Empty Star">';
+
+    let stars = '';
+
+    for (let i = 1; i <= 5; i++) {
+        if (rating >= i) {
+            stars += starFull;
+        } else if (rating >= i - 0.5) {
+            stars += starHalf;
+        } else {
+            stars += starEmpty;
+        }
+    }
+    return stars;
+}
+
+//유저프로필 가져오기
+async function getUserProfile(unoValue){
+    try{
+        const url = "/user/profile/"+unoValue;
+        const config = {
+            method: 'GET'
+        };
+        const resp = await fetch(url, config);
+        return await resp.text();
+    }catch(error){
+        console.log(error);
+    }
+}
+
+//전체 리뷰갯수 가져오기
+async function getReviewCount(){
+    try{
+        const url = "/review/getCount/"+contentId;
+        const config = {
+            method : "GET"
+        };
+        const resp = await fetch(url,config);
+        const result = await resp.text();
+        return parseInt(result);
+    }catch (error){
+        console.log(error)
+    }
+}
+getReviewCount().then(result => {
+    document.querySelector('.reviewCount').innerText = result+" 개"
+    totalCount = result;
+})
+
+
+
+
 
 //주변 관광지 조회 함수
 async function getNearBySights(mapx, mapy, radius) {
@@ -388,3 +867,13 @@ scrollToSection('.outlineMove', '.details');
 scrollToSection('.reviewMove', '.reviews');
 scrollToSection('.findRouteMove', '.transportation');
 scrollToSection('.nearbyMove', '.nearby');
+
+checkLogin();
+//로그인 체크 함수
+function checkLogin(){
+    if(typeof userNickname !== 'undefined' && userNickname !== null){
+        document.querySelector('.reviewArea').placeholder = '타인에게 불쾌감을 줄 수 있는 리뷰는 삭제될 수 있습니다. ';
+    }else{
+        console.log("로그인")
+    }
+}

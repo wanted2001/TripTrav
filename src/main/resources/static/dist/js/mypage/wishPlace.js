@@ -1,6 +1,6 @@
 console.log('place in');
 
-var place = document.querySelector(".wishPlace");
+var place = document.querySelector(".wishPlaceDiv");
 
 for (let i = 0; i <= 5; i++) {
     const li = document.createElement("li");

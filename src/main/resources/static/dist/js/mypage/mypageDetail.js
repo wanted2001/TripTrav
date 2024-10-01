@@ -3,6 +3,7 @@ console.log(params);
 const bottom = document.getElementById("resultMyPage");
 const modal = document.querySelector(".updateModal");
 const accordionBtn = document.querySelector(".accordionBtn");
+const liList = document.querySelector(".myPageList > li");
 
 const js = "/dist/js/mypage";
 const tripList = "/tripList";
@@ -13,12 +14,21 @@ const wishTrip = "/wishTrip";
 pageCall(tripReview);
 pageHover("tripReview");
 
+isSocialUser(unoNum).then(data => {
+    console.log(data.provider === null);
+    if(data.provider !== null){
+        console.log('들어옴');
+        document.getElementById("pw").disabled = true;
+    }
 
-document.querySelectorAll('#tripList,#tripReview,#wishPlace,#wishTrip').forEach(button=>{
-    button.addEventListener('click',(e)=>{
+})
+
+
+document.querySelectorAll('.myPageList > li').forEach(button => {
+    button.addEventListener('click', (e) => {
         const id = e.target.id;
         console.log(id);
-        bottom.innerHTML= "";
+        bottom.innerHTML = "";
         pageHover(id);
         switch (id) {
             case 'tripList':
@@ -33,9 +43,7 @@ document.querySelectorAll('#tripList,#tripReview,#wishPlace,#wishTrip').forEach(
             case 'wishTrip':
                 pageCall(wishTrip);
                 break;
-
         }
-
     })
 })
 
@@ -44,8 +52,8 @@ document.querySelectorAll('#tripList,#tripReview,#wishPlace,#wishTrip').forEach(
 function pageHover(id) {
     const listItems = document.querySelectorAll(".myPageList > li");
     listItems.forEach(item => {
-        const link = item.querySelector('a');
-        if (link.id === id) {
+        const link = item.querySelector('p');
+        if (link.className === id) {
             item.classList.add('active');
         } else {
             item.classList.remove('active');
@@ -74,29 +82,30 @@ function pageCall(page) {
 }
 
 //js 호출
-function loadScript(page){
-    const src = js+page+'.js';
+function loadScript(page) {
+    const src = js + page + '.js';
     removeAllScript(src);
-    if(!isScriptAlreadyIncluded(src)){
+    if (!isScriptAlreadyIncluded(src)) {
         const script = document.createElement('script');
         script.src = src;
         document.body.appendChild(script);
     }
 }
+
 // src를 keep 할것인지 추후 결정 예정...
 //js 삭제
-function removeAllScript(src){
+function removeAllScript(src) {
     console.log(src);
-    const toKeep =['/dist/js/header.js','/dist/js/loginJoin.js',js+'/mypageDetail.js',src];
+    const toKeep = ['/dist/js/header.js', '/dist/js/loginJoin.js', js + '/mypageDetail.js'];
     const scripts = document.getElementsByTagName('script');
-    for(let i = 0; i<scripts.length; i++) {
+    for (let i = 0; i < scripts.length; i++) {
         let isToKeep = false;
         for (let j = 0; j < toKeep.length; j++) {
-            if(scripts[i].src.includes(toKeep[j])){
+            if (scripts[i].src.includes(toKeep[j])) {
                 isToKeep = true;
             }
         }
-        if(!isToKeep){
+        if (!isToKeep) {
             document.body.removeChild(scripts[i]);
         }
     }
@@ -114,19 +123,19 @@ function isScriptAlreadyIncluded(src) {
 }
 
 //모달 열기
-function openUpdateModal(){
+function openUpdateModal() {
     modal.style.display = "flex";
     disableScroll();
 }
 
 //모달 닫기
-function closeUpdateModal(){
+function closeUpdateModal() {
     modal.style.display = "none";
     enableScroll();
 }
 
 //파일열기
-function fileOpen(){
+function fileOpen() {
     document.getElementById("profileUpdateImg").click();
 }
 
@@ -147,11 +156,14 @@ function preventDefaultForScrollKeys(e) {
 var supportsPassive = false;
 try {
     window.addEventListener("test", null, Object.defineProperty({}, 'passive', {
-        get: function () { supportsPassive = true; }
+        get: function () {
+            supportsPassive = true;
+        }
     }));
-} catch(e) {}
+} catch (e) {
+}
 
-var wheelOpt = supportsPassive ? { passive: false } : false;
+var wheelOpt = supportsPassive ? {passive: false} : false;
 var wheelEvent = 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel';
 
 function disableScroll() {
@@ -182,5 +194,21 @@ function accordionToggle(button) {
         button.innerText = "펼치기";
     } else {
         button.innerText = "접기";
+    }
+}
+
+//회원정보
+async function isSocialUser(uno) {
+    try {
+        const config = {
+            method: "GET",
+            headers: {
+                'Content-Type':'application/json'
+            }
+        }
+        const url = await fetch("/mypage/isSocial?uno=" + uno,config);
+        return await url.json();
+    } catch (e) {
+        console.log(e);
     }
 }

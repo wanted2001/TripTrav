@@ -12,4 +12,6 @@ public interface UserService{
     int duplicationEmail(String email);
 
     int findUserPw(String email);
+
+    String getPath(String uno);
 }
