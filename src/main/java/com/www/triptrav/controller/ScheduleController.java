@@ -115,6 +115,6 @@ public class ScheduleController {
         if(isOk>0){
             memoResult = smsv.insertMemoContent(memo, sco);
         }
-        return memoResult>0?"0":"1";
+        return memoResult>0?"1":"0";
     }
 }
