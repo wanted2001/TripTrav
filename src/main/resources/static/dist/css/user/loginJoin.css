@@ -18,7 +18,7 @@
     border-radius: 10px;
     width: 375px;
     text-align: center;
-    height: 472px;
+    height: 530px;
     z-index: 1001;
 }
 .close-button {
@@ -39,7 +39,7 @@
     height: 46px;
     line-height: 46px;
 }
-p input {
+.pClass input {
     font-family: 'LINESeedKR-Rg';
     padding: 10px;
     width: 90%;
@@ -50,14 +50,14 @@ p input {
     outline: none;
 }
 
-p {
+.pClass {
     width: 90%;
     justify-content: center;
     margin: 0 auto;
-    height: auto; /* 높이를 auto로 설정하여 스팬과 자연스럽게 맞춤 */
-    line-height: normal; /* 기본 줄 간격 유지 */
+    height: auto;
+    line-height: normal;
 }
-p button {
+.pClass button {
     width: 98%;
     margin: 24px 0;
     height: 35px;
@@ -69,8 +69,7 @@ p button {
     cursor: pointer;
 }
 
-/* 기타 스타일 유지 */
-p a {
+.pClass a {
     font-family: 'LINESeedKR-Bd';
     font-size: 15px;
     color: orange;
@@ -118,7 +117,7 @@ p a {
     text-align: center;
     padding-top: -3px;
     position: relative;
-    top: 14px;
+    top: 8px;
 }
 
 .findPwBox{
