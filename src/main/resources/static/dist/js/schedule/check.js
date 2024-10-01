@@ -184,6 +184,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(response => response.text())
                 .then(data=>{
                     console.log(data)
+                    if(data==="1"){
+                        alert("메모가 저장되었습니다!")
+                    } else {
+                        alert("메모 저장 중 오류가 발생했습니다. \n다시 시도해주세요.");
+                    }
                 })
             memoModal.style.display='none';
         }
