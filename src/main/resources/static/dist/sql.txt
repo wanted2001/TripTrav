@@ -60,7 +60,7 @@ CREATE TABLE `schedule` (
 	`sche_start` datetime NOT NULL,
 	`sche_end` datetime NOT NULL,
 	`sche_count` int NOT NULL,
-	`sche_memo` text NULL,
+	`sche_memo` int NULL DEFAULT 0,
 	`uno` bigint NOT NULL,
 	FOREIGN KEY (`uno`) REFERENCES `user`(`uno`)
 );
@@ -81,6 +81,13 @@ CREATE TABLE `schedule_detail` (
 	`sche_date` int NOT NULL,
 	FOREIGN KEY (`sco`) REFERENCES `schedule`(`sco`)
 );
+
+CREATE TABLE `schedule_memo` (
+    `sco` bigint NOT NULL,
+    `sche_memo_writer` varchar(64) NULL,
+    `sche_memo_content` text NULL,
+    FOREIGN KEY (`sco`) REFERENCES `schedule`(`sco`)
+)
 
 CREATE TABLE `like` (
 	`uno` bigint NOT NULL,

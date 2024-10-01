@@ -27,7 +27,11 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public int updatePlanName(String scheName, long sco) {
-        scheduleMapper.updatePlanName(scheName, sco);
-        return 0;
+        return scheduleMapper.updatePlanName(scheName, sco);
+    }
+
+    @Override
+    public int insertMemo(int i, long sco) {
+        return scheduleMapper.insertMemo(i, sco);
     }
 }

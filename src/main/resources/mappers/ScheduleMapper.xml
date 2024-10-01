@@ -27,4 +27,9 @@
     <update id="updatePlanName">
         update schedule set sche_name=#{scheName} where sco=#{sco}
     </update>
+
+    <update id="insertMemo">
+        update schedule set sche_memo = #{i}
+        where sco = #{sco}
+    </update>
 </mapper>

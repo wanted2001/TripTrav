@@ -12,6 +12,7 @@ import lombok.Setter;
 public class ScheduleDTO {
     private long sco;
     private String scheName;
+    private String scheTitle;
     private String scheStart;
     private String scheEnd;
     private int scheCount;

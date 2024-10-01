@@ -504,7 +504,7 @@ button.depth2_searchBtn {
     opacity: 0.8;
 }
 .editPlanTitle {
-    transform: translate(3px, 6px);
+    transform: translate(-2px, 4px);
     width: 21px;
     cursor: pointer;
 }

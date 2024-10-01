@@ -11,4 +11,6 @@ public interface ScheduleService {
     List<ScheduleDTO> getSchedule(long sco, int date);
 
     int updatePlanName(String scheName, long sco);
+
+    int insertMemo(int i, long sco);
 }

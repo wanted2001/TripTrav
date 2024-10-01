@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" th:href="@{/dist/css/planCheck.css}">
+    <link rel="stylesheet" th:href="@{/dist/css/schedule/check.css}">
     <script src="/dist/js/key.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.10/clipboard.min.js"></script>
     <script src="https://toptmaptile2.tmap.co.kr/scriptSDKV3/tmapjs3.min.js?version=20231206"></script>
@@ -72,6 +72,7 @@
             </div>
             <div class="mapContentBox hidden" onclick="editPlan(event)">
                 <div class="contentTitle">
+                    <span class="nameZone"></span>
                     <img src="/dist/image/edit-3.svg" class="editPlanTitle hidden" onclick="editTitle()">
                 </div>
                 <div class="dayDisplay">

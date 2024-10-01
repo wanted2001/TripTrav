@@ -4,6 +4,7 @@ import com.www.triptrav.domain.ScheduleDTO;
 import com.www.triptrav.domain.ScheduleVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 
@@ -13,5 +14,7 @@ public interface ScheduleMapper {
 
     List<ScheduleDTO> getSchedule(@Param("sco") long sco, @Param("date") int date);
 
-    void updatePlanName(@Param("scheName") String scheName, @Param("sco") long sco);
+    int updatePlanName(@Param("scheName") String scheName, @Param("sco") long sco);
+
+    int insertMemo(@Param("i") int i, @Param("sco") long sco);
 }

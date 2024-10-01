@@ -10,6 +10,7 @@ import lombok.*;
 public class ScheduleDetailVO {
     private long sco;
     private long scheContentId;
+    private String scheTItle; //장소이름
     private int scheIndex;
     private int scheDate;
 }
