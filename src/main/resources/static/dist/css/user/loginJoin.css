@@ -18,7 +18,7 @@
     border-radius: 10px;
     width: 375px;
     text-align: center;
-    height: 472px;
+    height: 530px;
     z-index: 1001;
 }
 .close-button {
@@ -117,7 +117,7 @@
     text-align: center;
     padding-top: -3px;
     position: relative;
-    top: 14px;
+    top: 8px;
 }
 
 .findPwBox{
