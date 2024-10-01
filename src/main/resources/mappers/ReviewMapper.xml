@@ -7,6 +7,21 @@
         INSERT INTO review (uno, nickname, re_rate, re_content,re_content_id, re_content_type, re_content_name, re_image_count)
         VALUES (#{uno}, #{nickname}, #{reRate}, #{reContent}, #{reContentId}, #{reContentType}, #{reContentName}, #{reImageCount})
     </insert>
+    <update id="put">
+        UPDATE review
+        SET
+        nickname = #{nickname},
+        re_rate = #{reRate},
+        re_content = #{reContent},
+        re_content_id = #{reContentId},
+        re_content_type = #{reContentType},
+        re_content_name = #{reContentName},
+        re_image_count = #{reImageCount}
+        WHERE rno = #{rno}
+    </update>
+    <delete id="delete">
+        delete from review where rno = #{rno}
+    </delete>
     <insert id="insertReviewImage">
         INSERT INTO review_image (rno, image_path, upload_date)
         VALUES (#{rno}, #{imagePath}, NOW())
@@ -26,4 +41,19 @@
     <insert id="clickLike">
         insert into review_like (rno, uno) values (#{rno}, #{uno})
     </insert>
+    <delete id="unClickLike">
+        delete from review_like where rno = #{rno} and uno = #{uno}
+    </delete>
+    <select id="getLikeCount" resultType="int">
+        select count(*) from review_like where rno = #{rno}
+    </select>
+    <update id="plusCount">
+        update review set re_useful = re_useful + 1 where rno = #{rno}
+    </update>
+    <update id="minusCount">
+        update review set re_useful = re_useful - 1 where rno = #{rno}
+    </update>
+    <delete id="removeAllImagePath">
+        delete from review_image where rno = #{rno}
+    </delete>
 </mapper>

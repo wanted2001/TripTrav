@@ -5,6 +5,7 @@ import com.www.triptrav.repository.ReviewMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -48,6 +49,41 @@ public class ReviewServiceImpl implements ReviewService{
     @Override
     public int clickLike(String rno, String uno) {
         return reviewMapper.clickLike(rno,uno);
+    }
+
+    @Override
+    public int unClickLike(String rno, String uno) {
+        return reviewMapper.unClickLike(rno,uno);
+    }
+
+    @Override
+    public int getLikeCount(String rno) {
+        return reviewMapper.getLikeCount(rno);
+    }
+
+    @Override
+    public void plusCount(String rno) {
+        reviewMapper.plusCount(rno);
+    }
+
+    @Override
+    public void minusCount(String rno) {
+        reviewMapper.minusCount(rno);
+    }
+
+    @Override
+    public int put(ReviewVO rvo) {
+        return reviewMapper.put(rvo);
+    }
+
+    @Override
+    public void delete(String rno) {
+        reviewMapper.delete(rno);
+    }
+
+    @Override
+    public void removeAllImagePath(long rno) {
+        reviewMapper.removeAllImagePath(rno);
     }
 
 }

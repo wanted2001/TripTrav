@@ -330,15 +330,24 @@ button{
 #previewContainer{
     position: absolute;
     left: 462px;
-    top: 184px;
+    top: 195px;
 }
 
 #fileCount {
     position: absolute;
     left: 878px;
-    top: 197px;
+    top: 210px;
 }
-
+.modifyImg{
+    position: absolute;
+    top: -2px;
+    left: 692px;
+}
+.deleteImg{
+    position: absolute;
+    top: -3px;
+    left: 735px;
+}
 .star-rating {
     display: inline-block;
     position: relative;
@@ -403,12 +412,12 @@ button{
 .regDate{
     font-size: 15px;
     position: absolute;
-    top: 27px;
+    top: 32px;
     left: 193px;
 }
 .review-rating{
     position: absolute;
-    top: 18px;
+    top: 24px;
     left: 60px;
 }
 .review-rating>img{
@@ -422,7 +431,6 @@ button{
 .review-images{
     width: auto;
     height: auto;
-    margin-top: 25px;
     margin-left: 60px;
     margin-bottom: 30px;
 }
@@ -430,17 +438,22 @@ button{
     height: auto;
     text-align: left;
     margin-left: 60px;
+    margin-top: 25px;
+    font-size: 20px;
+    margin-bottom: 25px;
 }
 
 .helpButton{
     position: absolute;
     top: -5px;
     right: 50px;
+    cursor: pointer;
 }
 .reportButton{
     position: absolute;
     top: -5px;
     right: 1px;
+    cursor: pointer;
 }
 .reUseful{
     font-size: 22px;

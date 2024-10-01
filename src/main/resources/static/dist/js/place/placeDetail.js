@@ -18,6 +18,7 @@ let isSortedByUseful = false;
 let isSortedByRate = false;
 let isSortedByDate = false;
 let reviewList = [];
+let isEditing = false;
 
 
 // 기본정보 가져오기
@@ -196,14 +197,16 @@ async function writeReview() {
 }
 
 document.querySelector('.addButton').addEventListener('click', () => {
-    writeReview().then(result =>{
-        if(result == "success" || result == "imageSuccess"){
-            alert("댓글 작성 완료");
-            window.location.reload();
-        }else{
-            alert("댓글 작성 실패")
-        }
-    });
+    if (!isEditing) {
+        writeReview().then(result => {
+            if (result === "success" || result === "imageSuccess") {
+                alert("댓글 작성 완료");
+                window.location.reload();
+            } else {
+                alert("댓글 작성 실패");
+            }
+        });
+    }
 });
 
 //이미지업로드 관련 함수
@@ -263,56 +266,53 @@ function handleFileUpload(event) {
         reader.readAsDataURL(file);
     });
 }
-
-
+starRating();
 //별점관리
-document.addEventListener('DOMContentLoaded', function () {
-    const stars = document.getElementById('stars');
-    const ratingValue = document.getElementById('rating-value');
-    let currentRating = 0;
-    let isClickSet = false;
-
-    stars.addEventListener('mousemove', function (e) {
-        const rect = stars.getBoundingClientRect();
-        const offsetX = e.clientX - rect.left;
-        const starWidth = rect.width / 5;
-        const rating = Math.ceil((offsetX / starWidth) * 2) / 2;
-
-        if (offsetX >= 0 && offsetX <= rect.width) {
-            highlightStars(rating);
-            ratingValue.textContent = rating;
-        }
-    });
-
-    stars.addEventListener('click', function () {
-        currentRating = parseFloat(ratingValue.textContent);
-        isClickSet = true;
-    });
-
-    stars.addEventListener('mouseleave', function (e) {
-        if (isClickSet) {
-            highlightStars(currentRating);
-            ratingValue.textContent = currentRating;
-        }
-    });
-
-    function highlightStars(rating) {
-        const starElements = stars.children;
-        for (let i = 0; i < starElements.length; i++) {
-            const starValue = i + 1;
-            if (starValue <= rating) {
-                starElements[i].classList.add('full');
-                starElements[i].classList.remove('half');
-            } else if (starValue - 0.5 === rating) {
-                starElements[i].classList.add('half');
-                starElements[i].classList.remove('full');
-            } else {
-                starElements[i].classList.remove('full');
-                starElements[i].classList.remove('half');
+function starRating() {
+    document.addEventListener('DOMContentLoaded', function () {
+        const stars = document.getElementById('stars');
+        const ratingValue = document.getElementById('rating-value');
+        let currentRating = 0;
+        let isClickSet = false;
+        stars.addEventListener('mousemove', function (e) {
+            const rect = stars.getBoundingClientRect();
+            const offsetX = e.clientX - rect.left;
+            const starWidth = rect.width / 5;
+            const rating = Math.ceil((offsetX / starWidth) * 2) / 2;
+            if (offsetX >= 0 && offsetX <= rect.width) {
+                highlightStars(stars, rating);
+                ratingValue.textContent = rating;
             }
+        });
+        stars.addEventListener('click', function () {
+            currentRating = parseFloat(ratingValue.textContent);
+            isClickSet = true;
+        });
+        stars.addEventListener('mouseleave', function () {
+            if (isClickSet) {
+                highlightStars(stars, currentRating);
+                ratingValue.textContent = currentRating;
+            }
+        });
+    });
+}
+
+function highlightStars(stars, rating) {
+    const starElements = stars.children;
+    for (let i = 0; i < starElements.length; i++) {
+        const starValue = i + 1;
+        if (starValue <= rating) {
+            starElements[i].classList.add('full');
+            starElements[i].classList.remove('half');
+        } else if (starValue - 0.5 === rating) {
+            starElements[i].classList.add('half');
+            starElements[i].classList.remove('full');
+        } else {
+            starElements[i].classList.remove('full');
+            starElements[i].classList.remove('half');
         }
     }
-});
+}
 
 
 // 리뷰 리스트 가져오기
@@ -324,9 +324,8 @@ async function getReviewList() {
         };
         const resp = await fetch(url, config);
         let result = await resp.json();
-
-
         console.log(result)
+        //로그인 유저가 쓴 게 제일 위로가게 정렬
         if(typeof userNickname !== 'undefined' && userNickname !== null){
             result = result.sort((a, b) => {
                 if (a.review.nickname === userNickname) return -1;
@@ -340,56 +339,59 @@ async function getReviewList() {
     }
 }
 
-document.querySelector(".buttons").addEventListener("click", (e) => {
-    const button = e.target;
-    const buttonType = button.textContent;
-
-    document.querySelectorAll(".buttons button").forEach(btn => {
-        btn.style.fontWeight = 'normal';
-    });
-
-    let sortedList = [...result];
-
-    if (buttonType === "좋아요순") {
-        isSortedByUseful = !isSortedByUseful;
-        sortedList = sortedList.sort((a, b) => {
-            if (isSortedByUseful) {
-                return b.review.reUseful - a.review.reUseful || new Date(b.review.reDate) - new Date(a.review.reDate);
-            }
-            return 0;
-        });
-        button.style.fontWeight = 'bold';
-    } else if (buttonType === "평점 높은순") {
-        isSortedByRate = !isSortedByRate;
-        sortedList = sortedList.sort((a, b) => {
-            if (isSortedByRate) {
-                return b.review.reRate - a.review.reRate || new Date(b.review.reDate) - new Date(a.review.reDate);
-            }
-            return 0;
-        });
-        button.style.fontWeight = 'bold';
-    } else if (buttonType === "최신순") {
-        isSortedByDate = !isSortedByDate;
-        sortedList = sortedList.sort((a, b) => {
-            if (isSortedByDate) {
-                return new Date(b.review.reDate) - new Date(a.review.reDate);
-            }
-            return 0;
-        });
-        button.style.fontWeight = 'bold';
-    }
-
-    displayReviews(sortedList);
-});
+//정렬 버튼
+// document.querySelector(".buttons").addEventListener("click", (e) => {
+//     const button = e.target;
+//     const buttonType = button.textContent;
+//
+//     document.querySelectorAll(".buttons button").forEach(btn => {
+//         btn.style.fontWeight = 'normal';
+//     });
+//
+//     let sortedList = [...result];
+//
+//     if (buttonType === "좋아요순") {
+//         isSortedByUseful = !isSortedByUseful;
+//         sortedList = sortedList.sort((a, b) => {
+//             if (isSortedByUseful) {
+//                 return b.review.reUseful - a.review.reUseful || new Date(b.review.reDate) - new Date(a.review.reDate);
+//             }
+//             return 0;
+//         });
+//         button.style.fontWeight = 'bold';
+//     } else if (buttonType === "평점 높은순") {
+//         isSortedByRate = !isSortedByRate;
+//         sortedList = sortedList.sort((a, b) => {
+//             if (isSortedByRate) {
+//                 return b.review.reRate - a.review.reRate || new Date(b.review.reDate) - new Date(a.review.reDate);
+//             }
+//             return 0;
+//         });
+//         button.style.fontWeight = 'bold';
+//     } else if (buttonType === "최신순") {
+//         isSortedByDate = !isSortedByDate;
+//         sortedList = sortedList.sort((a, b) => {
+//             if (isSortedByDate) {
+//                 return new Date(b.review.reDate) - new Date(a.review.reDate);
+//             }
+//             return 0;
+//         });
+//         button.style.fontWeight = 'bold';
+//     }
+//
+//     displayReviews(sortedList);
+// });
 
 // 리뷰 출력 함수
-function displayReviews(result) {
+async function displayReviews(result) {
     const reviewContainer = document.querySelector('.review');
     reviewContainer.innerHTML = '';
 
-    result.forEach(reviewDTO => {
+    for (const reviewDTO of result) {
         const review = reviewDTO.review;
         const imagePaths = reviewDTO.imagePaths;
+        let profileImgPath;
+        profileImgPath = await getUserProfile(review.uno);
 
         const reviewWrapper = document.createElement("div");
         reviewWrapper.className = "review-wrapper";
@@ -397,87 +399,130 @@ function displayReviews(result) {
         const reviewInfoDiv = document.createElement("div");
         reviewInfoDiv.className = "review-info";
 
-        checkReviewLike(review.rno).then(likeResult => {
-            isLiked = likeResult === "true";
-            const starHTML = convertRatingToStars(review.reRate);
-            console.log(isLiked);
+        if (typeof userNickname !== 'undefined' && userNickname !== null) {
+            checkReviewLike(review.rno).then(likeResult => {
+                isLiked = likeResult === "true";
+            });
+        }
+        const starHTML = convertRatingToStars(review.reRate);
+        reviewInfoDiv.innerHTML = `
+             <img class="profileImage" alt="noPic" src="${profileImgPath ? `/profile/${profileImgPath}` : '/dist/image/noimage.jpg'}">
+            <span class="nickName">${review.nickname}</span><br>
+            <span class="review-rating">${starHTML}</span>
+            <span class="regDate">${review.reDate}</span>
+            <button class="helpButton">
+                <span class="reUseful">${review.reUseful}</span>
+                <img id="thumbsUp" src="${isLiked ? '/dist/image/thumbs-click.svg' : '/dist/image/thumbs-up.svg'}" data-rno="${review.rno}" data-isLiked="${isLiked}">
+            </button>
+            <button class="reportButton">
+                <img src="/dist/image/alert-triangle.svg">
+            </button>`;
 
-            reviewInfoDiv.innerHTML = `
-                <span class="nickName">${review.nickname}</span><br>
-                <span class="review-rating">${starHTML}</span>
-                <span class="regDate">${review.reDate}</span>
-                <button class="helpButton">
-                    <span class="reUseful">${review.reUseful}</span>
-                    <img id="thumbsUp" src="${isLiked ? '/dist/image/thumbs-click.svg' : '/dist/image/thumbs-up.svg'}" data-rno="${review.rno}" data-isLiked="${isLiked}">
-                </button>
-                <button class="reportButton">
-                    <img src="/dist/image/alert-triangle.svg">
-                </button>`;
-
-            if (typeof userNickname !== 'undefined' && userNickname !== null) {
-                if (review.nickname === userNickname) {
-                    const modifyButton = document.createElement("button");
-                    modifyButton.innerText = "수정";
-                    modifyButton.addEventListener("click", () => {
-                        fillReviewForm(review, imagePaths);
-                    });
-                    reviewInfoDiv.appendChild(modifyButton);
-
-                    const deleteButton = document.createElement("button");
-                    deleteButton.innerText = "삭제";
-                    deleteButton.addEventListener("click", async () => {
-                        const confirmation = confirm("정말로 이 리뷰를 삭제하시겠습니까?");
-                        if (confirmation) {
-                            await deleteReview(review.rno);
-                            displayReviews(await getReviewList());
-                        }
-                    });
-                    reviewInfoDiv.appendChild(deleteButton);
-                }
-            }
-
-            const reviewDetailDiv = document.createElement("div");
-            reviewDetailDiv.className = "review-detail";
-            reviewDetailDiv.innerHTML = `<p class="reviewContent">${review.reContent}</p>`;
-
-            if (imagePaths && imagePaths.length > 0) {
-                const imageDiv = document.createElement("div");
-                imageDiv.className = "review-images";
-                imagePaths.forEach(imagePath => {
-                    const relativePath = imagePath.replace("C:\\userImage\\", "");
-                    const img = document.createElement("img");
-                    img.src = `/reviewImages/${relativePath}`;
-                    img.alt = "리뷰 이미지";
-                    img.classList.add('review-img');
-                    imageDiv.appendChild(img);
+        if (typeof userNickname !== 'undefined' && userNickname !== null) {
+            if (review.nickname === userNickname) {
+                const modifyButton = document.createElement("img");
+                modifyButton.src = "/dist/image/edit-2.svg"
+                modifyButton.classList.add('modifyImg');
+                modifyButton.addEventListener("click", () => {
+                    fillReviewForm(review, imagePaths);
+                    document.querySelector('.cameraInput').style.marginRight = "85px";
+                    document.getElementById('fileCount').style.marginRight = "3px";
                 });
-                reviewDetailDiv.appendChild(imageDiv);
-            }
+                reviewInfoDiv.appendChild(modifyButton);
 
-            reviewWrapper.appendChild(reviewInfoDiv);
-            reviewWrapper.appendChild(reviewDetailDiv);
-            reviewContainer.appendChild(reviewWrapper);
-        });
-    });
+                const deleteButton = document.createElement("img");
+                deleteButton.src = "/dist/image/trash-2.svg"
+                deleteButton.classList.add('deleteImg');
+                deleteButton.addEventListener("click", async () => {
+                    const confirmation = confirm("정말로 이 리뷰를 삭제하시겠습니까?");
+                    if (confirmation) {
+                        await deleteReview(review.rno);
+                        displayReviews(await getReviewList());
+                    }
+                });
+                reviewInfoDiv.appendChild(deleteButton);
+            }
+        }
+
+        const reviewDetailDiv = document.createElement("div");
+        reviewDetailDiv.className = "review-detail";
+        reviewDetailDiv.innerHTML = `<p class="reviewContent">${review.reContent}</p>`;
+
+        if (imagePaths && imagePaths.length > 0) {
+            const imageDiv = document.createElement("div");
+            imageDiv.className = "review-images";
+            imagePaths.forEach(imagePath => {
+                const relativePath = imagePath.replace("C:\\userImage\\", "");
+                const img = document.createElement("img");
+                img.src = `/reviewImages/${relativePath}`;
+                img.alt = "리뷰 이미지";
+                img.classList.add('review-img');
+                imageDiv.appendChild(img);
+            });
+            reviewDetailDiv.appendChild(imageDiv);
+        }
+
+        reviewWrapper.appendChild(reviewInfoDiv);
+        reviewWrapper.appendChild(reviewDetailDiv);
+        reviewContainer.appendChild(reviewWrapper);
+    }
 }
 
-//리뷰 좋아요 처리
+//좋아요 누름처리
 document.addEventListener('click', function(event) {
     if (event.target && event.target.id === 'thumbsUp') {
         const rno = event.target.getAttribute('data-rno');
-        clickLike(rno).then(result =>{
-            if(result == "success"){
-                isLiked = true;
-            }
-        })
-
+        const currentLike = event.target.getAttribute('data-isLiked');
+        const reUseful = document.querySelector('.reUseful')
+        if(currentLike == "true") {
+            unClickLike(rno).then(result => {
+                if(result == "unClickSuccess") {
+                    event.target.src = '/dist/image/thumbs-up.svg';
+                    event.target.style.width = "24px"
+                    event.target.style.height = "24px"
+                    event.target.style.transform = "translate(0,0)"
+                    event.target.setAttribute('data-isLiked', 'false');
+                    getLikeCount(rno).then(result =>{
+                        const spanElement = event.target.previousElementSibling;
+                        spanElement.innerText = result;
+                    })
+                }
+            })
+        } else if(currentLike == "false") {
+            clickLike(rno).then(result => {
+                if(result == "clickSuccess") {
+                    event.target.src = '/dist/image/thumbs-click.svg';
+                    event.target.style.width = "28px"
+                    event.target.style.height = "28px"
+                    event.target.style.transform = "translate(3px,-3px)"
+                    event.target.setAttribute('data-isLiked', 'true');
+                    getLikeCount(rno).then(result =>{
+                        const spanElement = event.target.previousElementSibling;
+                        spanElement.innerText = result;
+                    })
+                }
+            })
+        }
     }
 });
+//좋아요개수 가져오는함수
+async function getLikeCount(rno){
+    try{
+        const url = "/review/getLikeCount/"+rno
+        const config = {
+            method : "GET"
+        }
+        const resp = await fetch(url,config)
+        return resp.text()
+    }catch (error) {
+        console.log(error)
+    }
+}
+
 // 좋아요 상태 체크하는 함수
 async function checkReviewLike(rno){
     try{
-        // const url = "/review/checkReviewLike/"+rno+"/"+unoNum; 로그인처리
-        const url = "/review/checkReviewLike/"+rno+"/"+1;
+        const url = "/review/checkReviewLike/"+rno+"/"+unoNum;
         const config = {
             method: 'GET'
         }
@@ -490,8 +535,7 @@ async function checkReviewLike(rno){
 //좋아요 누르기
 async function clickLike(rno){
     try{
-        // const url = "/review/clickLike/"+rno+"/"+unoNum
-        const url = "/review/clickLike/"+rno+"/"+1
+        const url = "/review/clickLike/"+rno+"/"+unoNum
         const config = {
             method: 'POST',
             headers : {
@@ -506,9 +550,17 @@ async function clickLike(rno){
 }
 
 //좋아요 취소
-async function unClickLike(){
+async function unClickLike(rno){
     try{
-
+        const url = "/review/unClickLike/"+rno+"/"+unoNum
+        const config = {
+            method: 'DELETE',
+            headers : {
+                "content-type":"text/plain"
+            }
+        }
+        const resp = await fetch(url,config);
+        return resp.text();
     }catch(error){
         console.log(error)
     }
@@ -517,10 +569,8 @@ async function unClickLike(){
 
 // 리뷰 작성 input 숨김 처리
 getReviewList().then(result => {
-
     if(typeof userNickname !== 'undefined' && userNickname !== null){
         const hasUserReview = result.some(reviewDTO => reviewDTO.review.nickname === userNickname);
-
         if (hasUserReview) {
             document.querySelector('.inputDiv').style.display = 'none';
         }
@@ -529,13 +579,14 @@ getReviewList().then(result => {
 });
 async function deleteReview(rno) {
     try {
-        const url = `/review/DELETE/${rno}`;
+        const url = `/review/reviewDelete/${rno}`;
         const config = {
             method: 'DELETE'
         };
         const resp = await fetch(url, config);
         if (resp.ok) {
             alert("리뷰가 삭제되었습니다.");
+            window.location.reload();
         } else {
             alert("리뷰 삭제에 실패했습니다.");
         }
@@ -547,29 +598,60 @@ async function deleteReview(rno) {
 function fillReviewForm(review, imagePaths) {
     document.querySelector('.inputDiv').style.display = '';
     document.querySelector('.reviewArea').value = review.reContent;
-    document.getElementById('rating-value').textContent = review.reRate;
-
+    starRating();
+    const stars = document.getElementById('stars');
+    highlightStars(stars, review.reRate)
+    document.getElementById('rating-value').innerText = review.reRate
     const previewContainer = document.getElementById('previewContainer');
     previewContainer.innerHTML = '';
 
     if (imagePaths && imagePaths.length > 0) {
-        imagePaths.forEach(imagePath => {
+        imagePaths.forEach((imagePath, index) => {
+            const relativePath = imagePath.replace("C:\\userImage\\", "");
+            const imgContainer = document.createElement('div');
+            imgContainer.style.position = 'relative';
+            imgContainer.style.display = 'inline-block';
+            imgContainer.style.margin = '5px';
+
             const img = document.createElement('img');
-            img.src = `/reviewImages/${imagePath}`;
+            img.src = `/reviewImages/${relativePath}`;
             img.style.width = '120px';
             img.style.height = '120px';
             img.style.objectFit = 'cover';
-            previewContainer.appendChild(img);
+
+            const deleteButton = document.createElement('button');
+            deleteButton.innerText = 'X';
+            deleteButton.style.position = 'absolute';
+            deleteButton.style.top = '2px';
+            deleteButton.style.right = '2px';
+            deleteButton.style.fontSize = '20px';
+            deleteButton.style.color = 'white';
+            deleteButton.style.cursor = 'pointer';
+
+            deleteButton.onclick = function() {
+                imagePaths.splice(index, 1);
+                fillReviewForm(review, imagePaths);
+            };
+
+            imgContainer.appendChild(img);
+            imgContainer.appendChild(deleteButton);
+            previewContainer.appendChild(imgContainer);
         });
     }
-
+    isEditing = true;
 
     const addButton = document.querySelector('.addButton');
     addButton.innerText = '수정 완료';
     addButton.onclick = async function() {
-        await modifyReview(review.rno);
+        modifyReview(review.rno).then(result=>{
+            if(result == "success"){
+                alert("수정 완료");
+                window.location.reload()
+            }
+        });
     };
 }
+
 
 async function modifyReview(rno) {
     const files = document.getElementById('imageInput').files;
@@ -587,9 +669,11 @@ async function modifyReview(rno) {
     for (let i = 0; i < files.length; i++) {
         data.append('images', files[i]);
     }
-
+    for(const [key,value] of data.entries()) {
+        console.log(key, value)
+    }
     try {
-        const url = '/review/PUT';
+        const url = '/review/reviewUpdate/PUT';
         const config = {
             method: 'PUT',
             body: data
@@ -601,6 +685,7 @@ async function modifyReview(rno) {
         console.log(error);
     }
 }
+
 
 //별점 별로 변환함수
 function convertRatingToStars(rating) {
@@ -623,9 +708,9 @@ function convertRatingToStars(rating) {
 }
 
 //유저프로필 가져오기
-async function getUserProfile(uno){
+async function getUserProfile(unoValue){
     try{
-        const url = "/user/profile/"+uno;
+        const url = "/user/profile/"+unoValue;
         const config = {
             method: 'GET'
         };
@@ -640,7 +725,6 @@ async function getUserProfile(uno){
 async function getReviewCount(){
     try{
         const url = "/review/getCount/"+contentId;
-        console.log(typeof contentId)
         const config = {
             method : "GET"
         };
