@@ -34,4 +34,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     public int insertMemo(int i, long sco) {
         return scheduleMapper.insertMemo(i, sco);
     }
+
+    @Override
+    public int getMemoYN(long sco) {
+        return scheduleMapper.getMemoYN(sco);
+    }
 }

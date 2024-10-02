@@ -23,10 +23,10 @@
             <p class="checkDate"></p>
             <p class="checkSche">스케줄쫙쫙.. 작성</p>
         </div>
-        <div class="addMemoBtn">메모추가 +</div>
+        <div class="addMemoBtn" onclick="openModal()">메모추가 +</div>
         <div class="memoModal">
             <div class="memoWrap">
-                <button class="memoCloseBtn">&times;</button>
+                <button class="memoCloseBtn" onclick="closeModal()">&times;</button>
                 <textarea placeholder="메모를 작성하세요..." class="memoContents"></textarea>
                 <button class="saveMemo">저장</button>
             </div>
