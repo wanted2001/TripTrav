@@ -41,12 +41,20 @@ button{
     z-index: 1;
 }
 
-.placeHeart {
-
+.placeHeart{
+    position: absolute;
+    top: 170px;
+    right: 265px;
+    cursor: pointer;
+    z-index: 100;
 }
 
-.placeMap {
-
+.placeMap{
+    position: absolute;
+    top: 170px;
+    right: 220px;
+    cursor: pointer;
+    z-index: 100;
 }
 
 .savePlaceModal {

@@ -87,10 +87,11 @@ CREATE TABLE `schedule_memo` (
     `sche_memo_writer` varchar(64) NULL,
     `sche_memo_content` text NULL,
     FOREIGN KEY (`sco`) REFERENCES `schedule`(`sco`)
-)
+);
 
 CREATE TABLE `like` (
 	`uno` bigint NOT NULL,
-	`code` bigint NOT NULL,
+	`like_code` bigint NOT NULL,
+	`like_name` text NOT NULL,
 	FOREIGN KEY (`uno`) REFERENCES `user`(`uno`)
 );

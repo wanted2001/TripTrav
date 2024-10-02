@@ -22,73 +22,74 @@ let isEditing = false;
 let validFiles = [];
 let currentReviewList = [];
 let originalReviewList = [];
+let placeLikeResult = false;
 
 
 // 기본정보 가져오기
-fetch(detailInfoUrl)
-    .then(response => response.json())
-    .then(data => {
-        const jsonData = data.response.body.items.item[0];
-        const locationDiv = document.querySelector('.location');
-        let city = splitAddr(jsonData.addr1)[0];
-        let district = splitAddr(jsonData.addr1)[1];
-        let title = jsonData.title;
-        contentName = jsonData.title;
-        locationDiv.innerHTML = `<span>${city}> </span><span>${district}> </span><span>${title}</span>`;
-
-        const mainImgUrl = jsonData.firstimage;
-        imageUrls.push(mainImgUrl);
-
-        // 추가 이미지를 가져오고 슬라이더에 반영
-        getImage(imgUrl).then(result => {
-            imageUrls.push(...result);
-            updateImages();
-        });
-
-        contentTypeId = jsonData.contenttypeid;
-        document.querySelector('.locationTitle').innerText = jsonData.title
-        document.querySelector('.locationInfo').innerHTML = `주소 : ${jsonData.addr1}`;
-
-        getIntroInfo(contentTypeId).then(result=>{
-            const introData = result.response.body.items.item[0];
-            document.querySelector('.telInfo').innerHTML = `전화번호 : ${introData.infocenter}`
-            document.querySelector('.restInfo').innerHTML = `쉬는날 : ${introData.restdate}`
-            document.querySelector('.timeInfo').innerHTML = `이용시간 : ${introData.usetime}`
-        })
-        getAdditionalInfo(contentTypeId).then(result => {
-            const additionalInfoData = result.response.body.items.item[0];
-            document.querySelector('.priceInfo').innerHTML = `${additionalInfoData.infoname} : ${additionalInfoData.infotext}`
-        })
-        document.querySelector('.homepageInfo').innerHTML = `홈페이지 : ${jsonData.homepage}`
-        document.querySelector('.details').innerHTML = `<p class="sectionTitle">소개</p><span>${jsonData.overview}</span>`;
-        mapx = jsonData.mapx;
-        mapy = jsonData.mapy;
-
-        let marker = {
-            position: new kakao.maps.LatLng(mapy, mapx),
-            text: '눌러서 경로를 검색해보세요!'
-        };
-        let staticMapContainer  = document.getElementById('staticMap'),
-            staticMapOption = {
-                center: new kakao.maps.LatLng(mapy, mapx),
-                level: 4,
-                marker: marker
-            };
-        let staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
-        document.getElementById('staticMap').addEventListener('click', () => {
-            const anchorTag = document.querySelector('#staticMap a');
-            if (anchorTag) {
-                anchorTag.href = `https://map.kakao.com/link/to/${title},${mapy},${mapx}`;
-            }
-        });
-
-        //주변지역 처리
-        processNearbySightsAndFood(mapx, mapy).then(result => {
-            renderNearbySightsAndFood(result.sights, result.food);
-        }).catch(error => {
-            console.log(error)
-        });
-    });
+// fetch(detailInfoUrl)
+//     .then(response => response.json())
+//     .then(data => {
+//         const jsonData = data.response.body.items.item[0];
+//         const locationDiv = document.querySelector('.location');
+//         let city = splitAddr(jsonData.addr1)[0];
+//         let district = splitAddr(jsonData.addr1)[1];
+//         let title = jsonData.title;
+//         contentName = jsonData.title;
+//         locationDiv.innerHTML = `<span>${city}> </span><span>${district}> </span><span>${title}</span>`;
+//
+//         const mainImgUrl = jsonData.firstimage;
+//         imageUrls.push(mainImgUrl);
+//
+//         // 추가 이미지를 가져오고 슬라이더에 반영
+//         getImage(imgUrl).then(result => {
+//             imageUrls.push(...result);
+//             updateImages();
+//         });
+//
+//         contentTypeId = jsonData.contenttypeid;
+//         document.querySelector('.locationTitle').innerText = jsonData.title
+//         document.querySelector('.locationInfo').innerHTML = `주소 : ${jsonData.addr1}`;
+//
+//         getIntroInfo(contentTypeId).then(result=>{
+//             const introData = result.response.body.items.item[0];
+//             document.querySelector('.telInfo').innerHTML = `전화번호 : ${introData.infocenter}`
+//             document.querySelector('.restInfo').innerHTML = `쉬는날 : ${introData.restdate}`
+//             document.querySelector('.timeInfo').innerHTML = `이용시간 : ${introData.usetime}`
+//         })
+//         getAdditionalInfo(contentTypeId).then(result => {
+//             const additionalInfoData = result.response.body.items.item[0];
+//             document.querySelector('.priceInfo').innerHTML = `${additionalInfoData.infoname} : ${additionalInfoData.infotext}`
+//         })
+//         document.querySelector('.homepageInfo').innerHTML = `홈페이지 : ${jsonData.homepage}`
+//         document.querySelector('.details').innerHTML = `<p class="sectionTitle">소개</p><span>${jsonData.overview}</span>`;
+//         mapx = jsonData.mapx;
+//         mapy = jsonData.mapy;
+//
+//         let marker = {
+//             position: new kakao.maps.LatLng(mapy, mapx),
+//             text: '눌러서 경로를 검색해보세요!'
+//         };
+//         let staticMapContainer  = document.getElementById('staticMap'),
+//             staticMapOption = {
+//                 center: new kakao.maps.LatLng(mapy, mapx),
+//                 level: 4,
+//                 marker: marker
+//             };
+//         let staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
+//         document.getElementById('staticMap').addEventListener('click', () => {
+//             const anchorTag = document.querySelector('#staticMap a');
+//             if (anchorTag) {
+//                 anchorTag.href = `https://map.kakao.com/link/to/${title},${mapy},${mapx}`;
+//             }
+//         });
+//
+//         //주변지역 처리
+//         processNearbySightsAndFood(mapx, mapy).then(result => {
+//             renderNearbySightsAndFood(result.sights, result.food);
+//         }).catch(error => {
+//             console.log(error)
+//         });
+//     });
 
 // 주소 처리 함수
 function splitAddr(address) {
@@ -894,5 +895,86 @@ function checkLogin(){
         document.querySelector('.reviewArea').placeholder = '타인에게 불쾌감을 줄 수 있는 리뷰는 삭제될 수 있습니다. ';
     }else{
         console.log("로그인")
+    }
+}
+if(typeof userNickname !== 'undefined' && userNickname !== null){
+    getLikeStatus(unoNum, contentId).then(result =>{
+        if(result == "on"){
+            placeLikeResult = true;
+            document.querySelector('.placeHeart').src = "/dist/image/heart-on.svg"
+        }
+    })
+}
+//장소찜하기
+document.querySelector('.placeHeart').addEventListener('click',()=>{
+    if(typeof userNickname !== 'undefined' && userNickname !== null){
+        if(placeLikeResult == true){
+            alert("찜 취소 하시겠습니까?")
+            deleteLike(unoNum, contentId).then(result =>{
+                if(result == "deleteSuccess"){
+                    document.querySelector('.placeHeart').src = "/dist/image/heart.svg"
+                    alert("취소 완료")
+                    placeLikeResult = false;
+                }
+            })
+        }else if(placeLikeResult == false){
+            alert("찜하시겠습니까?")
+            addLike(unoNum, contentId, contentName).then(result => {
+                if(result == "success"){
+                    document.querySelector('.placeHeart').src = "/dist/image/heart-on.svg"
+                    alert("등록 완료");
+                    placeLikeResult = true;
+                }
+            })
+        }
+    }
+})
+
+async function addLike(uno, likeCode, likeName) {
+    try {
+        const url = '/place/like';
+        const data = { uno, likeCode, likeName };
+        const config = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        };
+        const resp = await fetch(url, config);
+        return await resp.text();
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function getLikeStatus(uno, likeCode){
+    try {
+        const url = "/place/like/" + uno+"/"+likeCode;
+        const config = {
+            method: 'GET'
+        };
+        const resp = await fetch(url, config);
+        return await resp.text();
+    }catch (error) {
+        console.log(error);
+    }
+}
+
+async function deleteLike(uno, likeCode){
+    try {
+        const url = '/place/like';
+        const data = { uno, likeCode};
+        const config = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        };
+        const resp = await fetch(url, config);
+        return await resp.text();
+    } catch (error) {
+        console.log(error);
     }
 }
