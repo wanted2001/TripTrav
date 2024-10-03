@@ -73,7 +73,7 @@ public class ScheduleController {
         return sdDTO;
     }
 
-    @PostMapping("/modifyPlan/{sco}/{sche_date}")
+    @PutMapping("/modifyPlan/{sco}/{sche_date}")
     @ResponseBody
     public String modifyPlan(@RequestBody List<JSONObject> sdtoList, @PathVariable("sco") long sco, @PathVariable("sche_date") int sche_date) throws ParseException {
         log.info("sdtoList : {}", sdtoList);
@@ -132,7 +132,7 @@ public class ScheduleController {
         }
     }
 
-    @PostMapping("/memoodify/${sco}")
+    @PutMapping("/memoModify/{sco}")
     @ResponseBody
     public String modifyMemo(@PathVariable("sco")long sco, @RequestBody String memo){
         memo = memo.substring(1, memo.length()-1);

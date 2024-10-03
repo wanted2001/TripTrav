@@ -194,17 +194,17 @@ function modifyMemoContent(){
     memoContent.readOnly=false;
     memoContent.focus();
     const memo = memoContent.value;
-    // fetch(`/schedule/memoModify/${sco}`,{
-    //     method:'post',
-    //     headers:{
-    //         'content-type':'application/json'
-    //     },
-    //     body:JSON.stringify(memo)
-    // })
-    //     .then(response=>response.text())
-    //     .then(data=>{
-    //         console.log(data)
-    //     })
+    fetch(`/schedule/memoModify/${sco}`,{
+        method:'put',
+        headers:{
+            'content-type':'application/json'
+        },
+        body:JSON.stringify(memo)
+    })
+        .then(response=>response.text())
+        .then(data=>{
+            console.log(data)
+        })
 }
 
 //메모저장부분
@@ -790,7 +790,7 @@ function setPlanData(sco){
     const sche_date = document.querySelector('.day_focus').getAttribute('data-date');
     if (!arrayKey && planArray.length>0) {
         fetch(`/schedule/modifyPlan/${sco}/${sche_date}`, {
-            method: 'post',
+            method: 'put',
             headers: {
                 'content-type': 'application/json'
             },
