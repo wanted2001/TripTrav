@@ -47,6 +47,9 @@
     <select id="getLikeCount" resultType="int">
         select count(*) from review_like where rno = #{rno}
     </select>
+    <select id="getPlaceScore" resultType="int">
+        select sum(re_rate) from review where re_content_id = #{contentId}
+    </select>
     <update id="plusCount">
         update review set re_useful = re_useful + 1 where rno = #{rno}
     </update>

@@ -163,6 +163,12 @@ public class ReviewController {
         return rsv.getCount(contentId);
     }
 
+    @GetMapping("/getPlaceScore/{contentId}")
+    @ResponseBody
+    public int getPlaceScore(@PathVariable("contentId")String contentId){
+        return rsv.getPlaceScore(contentId);
+    }
+
     @GetMapping("/checkReviewLike/{rno}/{unoNum}")
     @ResponseBody
     public boolean checkReviewLike(@PathVariable("rno")String rno,@PathVariable("unoNum")String uno){

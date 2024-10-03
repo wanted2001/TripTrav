@@ -35,5 +35,7 @@ public interface ReviewMapper {
     void delete(String rno);
 
     void removeAllImagePath(long rno);
+
+    int getPlaceScore(String contentId);
 }
 
