@@ -32,5 +32,7 @@ public interface ReviewService {
     void delete(String rno);
 
     void removeAllImagePath(long rno);
+
+    int getPlaceScore(String contentId);
 }
 

@@ -13,7 +13,6 @@ let mapx = 0;
 let mapy = 0;
 let totalCount = 0;
 let isLiked = false;
-let sum = 0;
 let isSortedByUseful = false;
 let isSortedByRate = false;
 let isSortedByDate = false;
@@ -38,6 +37,7 @@ fetch(detailInfoUrl)
         let city = splitAddr(jsonData.addr1)[0];
         let district = splitAddr(jsonData.addr1)[1];
         let title = jsonData.title;
+
         contentName = jsonData.title;
         locationDiv.innerHTML = `<span>${city}> </span><span>${district}> </span><span>${title}</span>`;
 
@@ -49,6 +49,12 @@ fetch(detailInfoUrl)
             imageUrls.push(...result);
             updateImages();
         });
+        //장소 평점가져오기
+        getPlaceScore().then(result => {
+            let displayScore = (result/totalCount).toFixed(1);
+            document.querySelector('.score').innerHTML = `(${displayScore} 점)`;
+            document.querySelector('.rating').innerHTML = convertRatingToStars(result/totalCount);
+        })
 
         contentTypeId = jsonData.contenttypeid;
         document.querySelector('.locationTitle').innerText = jsonData.title
@@ -437,7 +443,6 @@ async function displayReviews(result) {
         const imagePaths = reviewDTO.imagePaths;
         let profileImgPath;
         profileImgPath = await getUserProfile(review.uno);
-
         const reviewWrapper = document.createElement("div");
         reviewWrapper.className = "review-wrapper";
 
@@ -768,6 +773,21 @@ getReviewCount().then(result => {
     document.querySelector('.reviewCount').innerText = result+" 개"
     totalCount = result;
 })
+
+//장소 평점 가져오기
+async function getPlaceScore(){
+    try{
+        const url = "/review/getPlaceScore/"+contentId;
+        const config = {
+            method : "GET"
+        };
+        const resp = await fetch(url,config);
+        return await resp.text()
+    }catch (error){
+        console.log(error)
+    }
+}
+
 
 //주변 관광지 조회 함수
 async function getNearBySights(mapx, mapy, radius) {

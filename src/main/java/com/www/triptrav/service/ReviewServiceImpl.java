@@ -86,4 +86,9 @@ public class ReviewServiceImpl implements ReviewService{
         reviewMapper.removeAllImagePath(rno);
     }
 
+    @Override
+    public int getPlaceScore(String contentId) {
+        return reviewMapper.getPlaceScore(contentId);
+    }
+
 }
