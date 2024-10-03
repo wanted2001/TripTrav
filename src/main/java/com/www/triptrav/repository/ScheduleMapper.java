@@ -17,4 +17,6 @@ public interface ScheduleMapper {
     int updatePlanName(@Param("scheName") String scheName, @Param("sco") long sco);
 
     int insertMemo(@Param("i") int i, @Param("sco") long sco);
+
+    int getMemoYN(long sco);
 }

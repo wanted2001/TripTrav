@@ -13,4 +13,6 @@ public interface ScheduleService {
     int updatePlanName(String scheName, long sco);
 
     int insertMemo(int i, long sco);
+
+    int getMemoYN(long sco);
 }

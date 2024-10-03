@@ -1,5 +1,6 @@
 package com.www.triptrav.service;
 
+import com.www.triptrav.domain.ScheduleMemoVO;
 import com.www.triptrav.repository.ScheduleMemoMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,5 +15,15 @@ public class ScheduleMemoServiceImpl implements ScheduleMemoService {
     @Override
     public int insertMemoContent(String memo, long sco) {
         return scheduleMemoMapper.insertMemoContent(memo, sco);
+    }
+
+    @Override
+    public ScheduleMemoVO getMemo(long sco) {
+        return scheduleMemoMapper.getMemo(sco);
+    }
+
+    @Override
+    public int modifyMemo(String memo, long sco) {
+        return scheduleMemoMapper.modifyMemo(memo, sco);
     }
 }

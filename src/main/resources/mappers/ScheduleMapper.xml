@@ -32,4 +32,8 @@
         update schedule set sche_memo = #{i}
         where sco = #{sco}
     </update>
+
+    <select id="getMemoYN" resultType="int">
+        select sche_memo from schedule where sco=#{sco}
+    </select>
 </mapper>

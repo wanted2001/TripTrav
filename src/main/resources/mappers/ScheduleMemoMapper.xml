@@ -7,4 +7,13 @@
         insert into schedule_memo (sche_memo_content, sco)
         values (#{memo}, #{sco})
     </insert>
+
+    <select id="getMemo" resultType="com.www.triptrav.domain.ScheduleMemoVO">
+        select * from schedule_memo where sco=#{sco}
+    </select>
+
+    <update id="modifyMemo">
+        update schedule_memo set sche_memo_content=#{memo}
+        where sco=#{sco}
+    </update>
 </mapper>

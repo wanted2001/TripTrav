@@ -78,6 +78,8 @@ const slideItemWidth = 200;
 const memoModal = document.querySelector('.memoModal');
 const closeModalBtn = document.querySelector('.memoCloseBtn');
 const addMemoBtn = document.querySelector('.addMemoBtn');
+const saveMemo = document.querySelector('.saveMemo');
+const memoWrap = document.querySelector('.memoWrap');
 
 //일정편집
 const editBtn = document.querySelector('.editBtn');
@@ -85,6 +87,8 @@ const saveBtn = document.querySelector('.saveBtn');
 
 document.addEventListener('DOMContentLoaded', () => {
     initTmap();
+
+    //일차별 일정출력
     if(sco) {
         getUserCourse(sco, 1).then(result => {
             console.log(result);
@@ -131,6 +135,22 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     }
 
+    //메모여부확인
+    getMemo(sco).then(r=>{
+        console.log(r)
+        const memoContents = document.querySelector('.memoContents');
+        if(r){
+            console.log("메모있음")
+            addMemoBtn.innerText='메모확인';
+            memoContents.innerHTML=`${r.scheMemoContent}`;
+            memoContents.readOnly=true;
+            saveMemo.innerText='확인';
+            memoWrap.innerHTML+=`<button class="modifyMemo" onclick="modifyMemoContent()">수정</button>`
+        } else {
+            console.log("메모없음")
+        }
+    });
+
     //드래그 슬라이드 부분
     updateInnerSlideWidth();
     makeDot();
@@ -159,18 +179,39 @@ document.addEventListener('DOMContentLoaded', () => {
     slideWrap.addEventListener('mouseleave', () => {
         pressed = false;
     });
+});
 
-    //메모작성부분
-    addMemoBtn.addEventListener('click', () => {
-        memoModal.style.display = 'flex';
-    });
-    closeModalBtn.addEventListener('click',()=>{
-        memoModal.style.display='none';
+//메모모달 오픈
+function openModal(){
+    memoModal.style.display = 'flex';
+}
+function closeModal(){
+    memoModal.style.display='none';
+}
+
+function modifyMemoContent(){
+    const memoContent = document.querySelector('.memoContents');
+    memoContent.readOnly=false;
+    memoContent.focus();
+    const memo = memoContent.value;
+    fetch(`/schedule/memoModify/${sco}`,{
+        method:'put',
+        headers:{
+            'content-type':'application/json'
+        },
+        body:JSON.stringify(memo)
     })
+        .then(response=>response.text())
+        .then(data=>{
+            console.log(data)
+        })
+}
 
-    //메모저장부분
-    const saveMemoBtn = document.querySelector('.saveMemo');
-    saveMemoBtn.addEventListener('click',()=>{
+//메모저장부분
+const saveMemoBtn = document.querySelector('.saveMemo');
+saveMemoBtn.addEventListener('click',()=>{
+    console.log(saveMemoBtn.innerText);
+    if(saveMemoBtn.innerText==='저장'){
         const memo = document.querySelector('.memoContents').value;
         console.log(memo);
         if(confirm('메모를 저장하시겠습니까?')) {
@@ -192,8 +233,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
             memoModal.style.display='none';
         }
-    })
-});
+    } else {
+        closeModal();
+    }
+})
 
 //이미지로드
 function getImage(key){
@@ -747,7 +790,7 @@ function setPlanData(sco){
     const sche_date = document.querySelector('.day_focus').getAttribute('data-date');
     if (!arrayKey && planArray.length>0) {
         fetch(`/schedule/modifyPlan/${sco}/${sche_date}`, {
-            method: 'post',
+            method: 'put',
             headers: {
                 'content-type': 'application/json'
             },
@@ -884,6 +927,18 @@ async function getDatePlan(sco, date){
         const result = await response.json();
         return result;
     } catch (err){
+        console.log(err);
+    }
+}
+
+async function getMemo(sco){
+    try{
+        const url = "/schedule/getMemo/"+sco;
+        const config = {method:'post'}
+        const response = await fetch(url, config);
+        const result = await response.json();
+        return result;
+    } catch(err){
         console.log(err);
     }
 }
