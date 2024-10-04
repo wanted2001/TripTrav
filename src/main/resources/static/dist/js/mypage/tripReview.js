@@ -4,6 +4,10 @@ var tripFoodReviewList = document.querySelector(".tripFoodReviewList");
 
 getReviewList(unoNum)
     .then(data => {
+        console.log(data.length);
+        if(data.length === 0){
+            document.querySelector(".resultMyPage").innerHTML =`<p>리뷰가 없습니다.</p>`;
+        }
         console.log(data);
         data.forEach(datas => {
             const review = datas.review;
@@ -13,6 +17,7 @@ getReviewList(unoNum)
             } else {
                 // console.log(imagePaths);
             }
+
             const li = document.createElement("li");
             const div = document.createElement("div");
             div.classList.add("tripCard");
@@ -21,8 +26,8 @@ getReviewList(unoNum)
                 <div class="tripReviewInfo">
                     <ul class="tripReviewUl">
                         <li><h3 class="reviewPlaceName">${review.reContentId}</h3></li>
-                        <li><p class="reviewRating">⭐⭐⭐⭐⭐ ${review.reRate}</p></li>
-                        <li><p class="reviewRegDate">${review.reDate}</p></li>
+                        <li><p class="reviewRating">${convertRatingToStars(`${review.reRate}`)}</p></li>
+                        <li><p class="reviewRegDate">${changeDate(`${review.reDate}`)}</p></li>
                         <li><p class="reviewContent">${review.reContent}</p></li>
                     </ul>
                 </div>
@@ -71,5 +76,33 @@ async function getReviewList(unoNum) {
         console.log(e);
     }
 }
+
+function changeDate(text) {
+    const datePattern = /\d{4}-\d{2}-\d{2}/;  // 날짜 패턴 (YYYY-MM-DD)
+    const match = text.match(datePattern);
+    return match ? match[0] : null;  // 매칭된 결과가 있으면 반환, 없으면 null 반환
+}
+
+//별점 별로 변환함수
+function convertRatingToStars(rating) {
+    const starFull = '<img src="/dist/image/star-full.png" alt="Full Star">';
+    const starHalf = '<img src="/dist/image/star-half.png" alt="Half Star">';
+    const starEmpty = '<img src="/dist/image/star-empty.png" alt="Empty Star">';
+
+    let stars = '';
+
+    for (let i = 1; i <= 5; i++) {
+        if (rating >= i) {
+            stars += starFull;
+        } else if (rating >= i - 0.5) {
+            stars += starHalf;
+        } else {
+            stars += starEmpty;
+        }
+    }
+    return stars;
+}
+
+
 
 
