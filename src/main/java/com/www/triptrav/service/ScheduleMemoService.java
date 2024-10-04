@@ -8,4 +8,6 @@ public interface ScheduleMemoService {
     ScheduleMemoVO getMemo(long sco);
 
     int modifyMemo(String memo, long sco);
+
+    int deleteMemo(long sco);
 }

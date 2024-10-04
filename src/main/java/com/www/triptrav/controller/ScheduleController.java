@@ -139,4 +139,24 @@ public class ScheduleController {
         int isOk = smsv.modifyMemo(memo, sco);
         return isOk>0?"1":"0";
     }
+
+    @DeleteMapping("/memoDelete/{sco}")
+    @ResponseBody
+    public String deleteMemo(@PathVariable("sco")long sco){
+        int isOk = smsv.deleteMemo(sco);
+        if(isOk>0){
+            ssv.updateMemoYN(sco);
+            return "1";
+        } else{
+            return "0";
+        }
+    }
+
+    @PostMapping("/allCourse/{sco}")
+    @ResponseBody
+    public List<ScheduleDetailVO> getAllCourse(@PathVariable("sco")long sco){
+        List<ScheduleDetailVO> sdvo = sdsv.getAllCourse(sco);
+        return sdvo;
+    }
+
 }

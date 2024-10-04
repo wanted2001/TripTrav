@@ -16,4 +16,8 @@
         update schedule_memo set sche_memo_content=#{memo}
         where sco=#{sco}
     </update>
+
+    <delete id="deleteMemo">
+        delete from schedule_memo where sco=#{sco}
+    </delete>
 </mapper>
