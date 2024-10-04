@@ -40,6 +40,7 @@ body {
 }
 
 .mapHere {
+    border-radius: 10px;
     flex: 1;
     border: 1px solid gray;
     justify-content: space-around;
@@ -49,6 +50,7 @@ body {
 }
 
 .infoHere {
+    border-radius: 10px;
     flex: 1;
     border: 1px solid gray;
     margin: 20px;
@@ -84,4 +86,19 @@ body {
     top:50%;
     left:50%;
     transform:translate(-50%,-50%);
+}
+
+.infoHere{
+    position: relative;
+}
+.infoBox{
+    font-family: LINESeedKR-Rg;
+    font-size: 1.3em;
+    color: #8a8a8a;
+    text-shadow: -1px 0px white, 0px 1px white, 1px 0px white, 0px -1px white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
 }
