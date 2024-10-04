@@ -16,4 +16,7 @@ public class MapsController {
     public void goToMaps(){
     }
 
+    @GetMapping("/searchRegion")
+    public void searchRegion() {}
+
 }
