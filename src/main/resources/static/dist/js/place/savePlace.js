@@ -1,8 +1,14 @@
 const savePlaceModal = document.querySelector('.savePlaceModal');
 
-function savePlace(){
-    savePlaceModal.style.display='flex';
-    const modal = `<div class="spModalWrap">
+function savePlace(event){
+    if (typeof userNickname === 'undefined') {
+        event.preventDefault();
+        if(confirm("로그인 한 사용자만 이용가능 한 서비스입니다. \n로그인 페이지로 이동하시겠습니까?")){
+            document.getElementById('myModal').style.display = 'flex';
+        }
+    }else{
+        savePlaceModal.style.display='flex';
+        const modal = `<div class="spModalWrap">
                             <div class="spModalCloseBtn" onclick="closeModal()">&times;</div>
                             <div class="myPlan">
                                 <span>내 여행일정</span>
@@ -10,7 +16,8 @@ function savePlace(){
                                 <button class="createPlanBtn" onclick="createPlan()">새로운 일정 생성하기</button>
                             </div>
                         </div>`
-    savePlaceModal.innerHTML=modal;
+        savePlaceModal.innerHTML=modal;
+    }
 }
 
 function closeModal(){

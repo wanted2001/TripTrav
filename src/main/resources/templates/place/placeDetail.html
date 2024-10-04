@@ -16,7 +16,7 @@
         <div class="location">
         </div>
         <img src="/dist/image/heart.svg" alt="그림없음" class="placeHeart">
-        <img src="/dist/image/map.svg" alt="그림없음" class="placeMap" onclick="savePlace()">
+        <img src="/dist/image/map.svg" alt="그림없음" class="placeMap" onclick="savePlace(event)">
         <div class="savePlaceModal"></div>
         <div class="imageUrls"></div>
         <img src="/dist/image/chevron-left.svg" class="prev" alt="noPic">
@@ -45,7 +45,7 @@
     <section class="reviews">
         <span class="sectionTitle">리뷰</span><span class="reviewCount">개</span>
         <div class="inputDiv">
-            <form action="/review/POST" method="post" enctype="multipart/form-data">
+            <form action="/review/POST" method="post" enctype="multipart/form-data" class="reviewForm">
                 <textarea class="reviewArea" name="reContent" cols="30" rows="5" placeholder="로그인 후 리뷰를 남겨보세요."></textarea><br>
                 <div class="star-rating">
                     <div class="stars" id="stars">
