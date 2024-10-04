@@ -29,80 +29,80 @@ spinner.style.display = 'block';
 overlay.style.display = 'block';
 
 // 기본정보 가져오기
-fetch(detailInfoUrl)
-    .then(response => response.json())
-    .then(data => {
-        const jsonData = data.response.body.items.item[0];
-        const locationDiv = document.querySelector('.location');
-        let city = splitAddr(jsonData.addr1)[0];
-        let district = splitAddr(jsonData.addr1)[1];
-        let title = jsonData.title;
-
-        contentName = jsonData.title;
-        locationDiv.innerHTML = `<span>${city}> </span><span>${district}> </span><span>${title}</span>`;
-
-        const mainImgUrl = jsonData.firstimage;
-        imageUrls.push(mainImgUrl);
-
-        // 추가 이미지를 가져오고 슬라이더에 반영
-        getImage(imgUrl).then(result => {
-            imageUrls.push(...result);
-            updateImages();
-        });
-        //장소 평점가져오기
-        getPlaceScore().then(result => {
-            let displayScore = (result/totalCount).toFixed(1);
-            document.querySelector('.score').innerHTML = `(${displayScore} 점)`;
-            document.querySelector('.rating').innerHTML = convertRatingToStars(result/totalCount);
-        })
-
-        contentTypeId = jsonData.contenttypeid;
-        document.querySelector('.locationTitle').innerText = jsonData.title
-        document.querySelector('.locationInfo').innerHTML = `주소 : ${jsonData.addr1}`;
-
-        getIntroInfo(contentTypeId).then(result=>{
-            const introData = result.response.body.items.item[0];
-            document.querySelector('.telInfo').innerHTML = `전화번호 : ${introData.infocenter}`
-            document.querySelector('.restInfo').innerHTML = `쉬는날 : ${introData.restdate}`
-            document.querySelector('.timeInfo').innerHTML = `이용시간 : ${introData.usetime}`
-        })
-        getAdditionalInfo(contentTypeId).then(result => {
-            const additionalInfoData = result.response.body.items.item[0];
-            document.querySelector('.priceInfo').innerHTML = `${additionalInfoData.infoname} : ${additionalInfoData.infotext}`
-        })
-        document.querySelector('.homepageInfo').innerHTML = `홈페이지 : ${jsonData.homepage}`
-        document.querySelector('.details').innerHTML = `<p class="sectionTitle">소개</p><span>${jsonData.overview}</span>`;
-        mapx = jsonData.mapx;
-        mapy = jsonData.mapy;
-
-        let marker = {
-            position: new kakao.maps.LatLng(mapy, mapx),
-            text: '눌러서 경로를 검색해보세요!'
-        };
-        let staticMapContainer  = document.getElementById('staticMap'),
-            staticMapOption = {
-                center: new kakao.maps.LatLng(mapy, mapx),
-                level: 4,
-                marker: marker
-            };
-        let staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
-        document.getElementById('staticMap').addEventListener('click', () => {
-            const anchorTag = document.querySelector('#staticMap a');
-            if (anchorTag) {
-                anchorTag.href = `https://map.kakao.com/link/to/${title},${mapy},${mapx}`;
-            }
-        });
-
-        //주변지역 처리
-        processNearbySightsAndFood(mapx, mapy).then(result => {
-            renderNearbySightsAndFood(result.sights, result.food);
-        }).catch(error => {
-            console.log(error);
-        }).finally(() => {
+// fetch(detailInfoUrl)
+//     .then(response => response.json())
+//     .then(data => {
+//         const jsonData = data.response.body.items.item[0];
+//         const locationDiv = document.querySelector('.location');
+//         let city = splitAddr(jsonData.addr1)[0];
+//         let district = splitAddr(jsonData.addr1)[1];
+//         let title = jsonData.title;
+//
+//         contentName = jsonData.title;
+//         locationDiv.innerHTML = `<span>${city}> </span><span>${district}> </span><span>${title}</span>`;
+//
+//         const mainImgUrl = jsonData.firstimage;
+//         imageUrls.push(mainImgUrl);
+//
+//         // 추가 이미지를 가져오고 슬라이더에 반영
+//         getImage(imgUrl).then(result => {
+//             imageUrls.push(...result);
+//             updateImages();
+//         });
+//         //장소 평점가져오기
+//         getPlaceScore().then(result => {
+//             let displayScore = (result/totalCount).toFixed(1);
+//             document.querySelector('.score').innerHTML = `(${displayScore} 점)`;
+//             document.querySelector('.rating').innerHTML = convertRatingToStars(result/totalCount);
+//         })
+//
+//         contentTypeId = jsonData.contenttypeid;
+//         document.querySelector('.locationTitle').innerText = jsonData.title
+//         document.querySelector('.locationInfo').innerHTML = `주소 : ${jsonData.addr1}`;
+//
+//         getIntroInfo(contentTypeId).then(result=>{
+//             const introData = result.response.body.items.item[0];
+//             document.querySelector('.telInfo').innerHTML = `전화번호 : ${introData.infocenter}`
+//             document.querySelector('.restInfo').innerHTML = `쉬는날 : ${introData.restdate}`
+//             document.querySelector('.timeInfo').innerHTML = `이용시간 : ${introData.usetime}`
+//         })
+//         getAdditionalInfo(contentTypeId).then(result => {
+//             const additionalInfoData = result.response.body.items.item[0];
+//             document.querySelector('.priceInfo').innerHTML = `${additionalInfoData.infoname} : ${additionalInfoData.infotext}`
+//         })
+//         document.querySelector('.homepageInfo').innerHTML = `홈페이지 : ${jsonData.homepage}`
+//         document.querySelector('.details').innerHTML = `<p class="sectionTitle">소개</p><span>${jsonData.overview}</span>`;
+//         mapx = jsonData.mapx;
+//         mapy = jsonData.mapy;
+//
+//         let marker = {
+//             position: new kakao.maps.LatLng(mapy, mapx),
+//             text: '눌러서 경로를 검색해보세요!'
+//         };
+//         let staticMapContainer  = document.getElementById('staticMap'),
+//             staticMapOption = {
+//                 center: new kakao.maps.LatLng(mapy, mapx),
+//                 level: 4,
+//                 marker: marker
+//             };
+//         let staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
+//         document.getElementById('staticMap').addEventListener('click', () => {
+//             const anchorTag = document.querySelector('#staticMap a');
+//             if (anchorTag) {
+//                 anchorTag.href = `https://map.kakao.com/link/to/${title},${mapy},${mapx}`;
+//             }
+//         });
+//
+//         //주변지역 처리
+//         processNearbySightsAndFood(mapx, mapy).then(result => {
+//             renderNearbySightsAndFood(result.sights, result.food);
+//         }).catch(error => {
+//             console.log(error);
+//         }).finally(() => {
             spinner.style.display = 'none';
             overlay.style.display = 'none';
-        });
-    });
+//         });
+//     });
 
 // 주소 처리 함수
 function splitAddr(address) {
@@ -223,6 +223,14 @@ document.querySelector('.addButton').addEventListener('click', () => {
         });
     }
 });
+document.querySelector('.reviewForm').addEventListener('click',(e)=>{
+    if (typeof userNickname === 'undefined') {
+        e.preventDefault();
+        if(confirm("로그인 한 사용자만 이용가능 한 서비스입니다. \n로그인 페이지로 이동하시겠습니까?")){
+            document.getElementById('myModal').style.display = 'flex';
+        }
+    }
+})
 
 //이미지업로드 관련 함수
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
@@ -382,6 +390,7 @@ getReviewList().then(async (result) => {
 });
 
 
+
 // 정렬 버튼 로직
 document.querySelector(".buttons").addEventListener("click", (e) => {
     const button = e.target;
@@ -432,7 +441,6 @@ document.querySelector(".buttons").addEventListener("click", (e) => {
     displayReviews(currentReviewList);
 });
 
-
 // 리뷰 출력 함수
 async function displayReviews(result) {
     const reviewContainer = document.querySelector('.review');
@@ -460,7 +468,7 @@ async function displayReviews(result) {
                 <img id="thumbsUp" src="${reviewDTO.isLiked ? '/dist/image/thumbs-click.svg' : '/dist/image/thumbs-up.svg'}" data-rno="${review.rno}" data-isLiked="${reviewDTO.isLiked}">
             </button>
             <button class="reportButton">
-                <img src="/dist/image/alert-triangle.svg">
+                <img src="/dist/image/alert-triangle.svg" class="reportImg">
             </button>`;
 
         // 사용자 리뷰 수정/삭제 버튼 처리 코드
@@ -551,6 +559,16 @@ document.addEventListener('click', function(event) {
         }
     }
 });
+document.addEventListener('click', (event) => {
+    if((event.target && event.target.id === 'thumbsUp') || (event.target && event.target.className === "reportImg")){
+        if (typeof userNickname === 'undefined') {
+            event.preventDefault();
+            if(confirm("로그인 한 사용자만 이용가능 한 서비스입니다. \n로그인 페이지로 이동하시겠습니까?")){
+                document.getElementById('myModal').style.display = 'flex';
+            }
+        }
+    }
+})
 
 //좋아요개수 가져오는함수
 async function getLikeCount(rno){
@@ -952,6 +970,10 @@ document.querySelector('.placeHeart').addEventListener('click',()=>{
                     placeLikeResult = true;
                 }
             })
+        }
+    }else{
+        if(confirm("로그인 한 사용자만 이용가능 한 서비스입니다. \n로그인 페이지로 이동하시겠습니까?")){
+            document.getElementById('myModal').style.display = 'flex';
         }
     }
 })
