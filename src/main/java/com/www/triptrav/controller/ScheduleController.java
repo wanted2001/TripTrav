@@ -3,6 +3,7 @@ package com.www.triptrav.controller;
 import ch.qos.logback.core.rolling.helper.IntegerTokenConverter;
 import com.www.triptrav.domain.ScheduleDTO;
 import com.www.triptrav.domain.ScheduleDetailVO;
+import com.www.triptrav.domain.ScheduleMemoVO;
 import com.www.triptrav.domain.ScheduleVO;
 import com.www.triptrav.service.ScheduleDetailService;
 import com.www.triptrav.service.ScheduleMemoService;
@@ -72,7 +73,7 @@ public class ScheduleController {
         return sdDTO;
     }
 
-    @PostMapping("/modifyPlan/{sco}/{sche_date}")
+    @PutMapping("/modifyPlan/{sco}/{sche_date}")
     @ResponseBody
     public String modifyPlan(@RequestBody List<JSONObject> sdtoList, @PathVariable("sco") long sco, @PathVariable("sche_date") int sche_date) throws ParseException {
         log.info("sdtoList : {}", sdtoList);
@@ -108,13 +109,34 @@ public class ScheduleController {
     @ResponseBody
     @Transactional
     public String saveMemo(@PathVariable("sco") long sco, @RequestBody String memo){
-        log.info("memo :{}", memo);
         int isOk = ssv.insertMemo(1, sco);
         int memoResult = 0;
-
+        memo = memo.substring(1, memo.length()-1);
+        log.info("memo :{}", memo);
         if(isOk>0){
             memoResult = smsv.insertMemoContent(memo, sco);
         }
         return memoResult>0?"1":"0";
+    }
+
+    @PostMapping("/getMemo/{sco}")
+    @ResponseBody
+    public ScheduleMemoVO getMemo(@PathVariable("sco") long sco){
+        int memo = ssv.getMemoYN(sco);
+        log.info("memo YN : {}",memo);
+        if(memo==1){
+            ScheduleMemoVO sdmVO = smsv.getMemo(sco);
+            return sdmVO;
+        } else {
+            return null;
+        }
+    }
+
+    @PutMapping("/memoModify/{sco}")
+    @ResponseBody
+    public String modifyMemo(@PathVariable("sco")long sco, @RequestBody String memo){
+        memo = memo.substring(1, memo.length()-1);
+        int isOk = smsv.modifyMemo(memo, sco);
+        return isOk>0?"1":"0";
     }
 }
