@@ -80,7 +80,7 @@
                     <h2>로그인</h2>
                     <p class="pClass"><input type="text" id="username" name="email" placeholder="이메일을 입력하세요."></p>
                     <p class="pClass"><input type="password" id="password" name="pw" placeholder="비밀번호를 입력하세요."></p>
-                    <p class="pClass"><button type="submit">로그인</button></p>
+                    <p class="pClass"><button type="submit" id="loginBtn">로그인</button></p>
                 </form>
             </section>
             <section class="mainBox joinBox">
@@ -151,6 +151,33 @@
 
         // 페이지 로드 시 실행
         window.onload = changeHeaderColor;
+
+
+
+        function openLoginModal() {
+            // 모달 창을 다시 보여주는 로직 추가
+            const loginModal = document.querySelector('#myModal');
+            loginModal.style.display = 'block';
+        }
+
+        document.getElementById('loginBtn').addEventListener('click', function (e) {
+            e.preventDefault();
+
+            const userId = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (!userId && !password) {
+                alert('아이디와 비밀번호를 입력해주세요.');
+            } else if (!userId) {
+                alert('아이디를 입력해주세요.');
+            } else if (!password) {
+                alert('비밀번호를 입력해주세요.');
+            } else {
+                // 아이디와 비밀번호가 모두 입력된 경우, 로그인 요청을 보냄
+                document.getElementById('loginForm').submit();
+            }
+        });
+
     </script>
     </body>
 </th:block>
