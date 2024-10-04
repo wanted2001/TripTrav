@@ -374,6 +374,24 @@ pmCloseBtn.addEventListener('click',()=>{
     personModal.style.display='none';
 })
 
+async function generateInviteUrl(){
+    const response = await fetch("/invite",{
+        method:'get',
+        headers:{
+            'content-type':'application/json'
+        },
+        body:JSON.stringify({sco:sco, uno:unoNum})
+    })
+
+    const result = await response.json();
+
+    if(response.ok){
+        console.log("초대")
+    } else {
+        console.log("초대 오류"+result.message);
+    }
+}
+
 //상단 슬라이드 길이 계산 함수
 function updateInnerSlideWidth() {
     //div 개수따라 totalWidth 값 설정되도록
@@ -793,6 +811,7 @@ function editPlan(event){
                 editPlanTitle.classList.add('hidden');
                 setPlanData(sco);
                 location.reload();
+                alert('일정이 저장되었습니다!');
             } else {
                 deleteBtn.forEach(btn => {
                     btn.classList.add('hidden');
@@ -807,6 +826,7 @@ function editPlan(event){
                 editPlanTitle.classList.add('hidden');
                 setPlanData(sco);
                 location.reload();
+                alert('일정이 저장되었습니다!');
             }
         }
     }
@@ -864,7 +884,7 @@ function setPlanData(sco){
             .then(data => {
                 console.log(data);
                 if (data == "1") {
-                    alert('일정이 저장되었습니다 !');
+                    alert('일정이 저장되었습니다!');
                     location.reload();
                 } else {
                     alert('일정 저장 중 오류가 발생하였습니다. \n다시 시도해주세요.');

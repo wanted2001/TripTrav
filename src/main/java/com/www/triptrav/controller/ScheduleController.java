@@ -32,6 +32,7 @@ public class ScheduleController {
     private final ScheduleDetailService sdsv;
     private final ScheduleRoleService srsv;
     private final ScheduleMemoService smsv;
+    private final InviteToken inviteToken;
 
     @GetMapping("/check")
     public void checkPlan() {}
@@ -157,6 +158,12 @@ public class ScheduleController {
     public List<ScheduleDetailVO> getAllCourse(@PathVariable("sco")long sco){
         List<ScheduleDetailVO> sdvo = sdsv.getAllCourse(sco);
         return sdvo;
+    }
+
+    @GetMapping("/invite")
+    @ResponseBody
+    public ResponseEntity<?> handleInvite(@RequestParam String token){
+
     }
 
 }
