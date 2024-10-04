@@ -52,7 +52,7 @@ overlay.style.display = 'block';
 //         //장소 평점가져오기
 //         getPlaceScore().then(result => {
 //             let displayScore = (result/totalCount).toFixed(1);
-//             document.querySelector('.score').innerHTML = `(${displayScore} 점)`;
+//             document.querySelector('.score').innerHTML = displayScore != "NaN" ?  `(${displayScore} 점)`:  `(0 점)`;
 //             document.querySelector('.rating').innerHTML = convertRatingToStars(result/totalCount);
 //         })
 //
@@ -183,6 +183,15 @@ async function getAdditionalInfo(contentTypeId) {
 
 //리뷰관련 부분
 async function writeReview() {
+    const reviewContent = document.querySelector('.reviewArea').value.trim();
+    const starRate = document.getElementById('rating-value').textContent;
+    if (reviewContent === '') {
+        alert("리뷰 내용을 입력해주세요. ");
+        return;
+    }else if(starRate == 0){
+        alert("별점을 등록해주세요. ")
+        return;
+    }
     const files = document.getElementById('imageInput').files;
     const data = new FormData();
     data.append('reContent', document.querySelector('.reviewArea').value);
@@ -211,16 +220,20 @@ async function writeReview() {
     }
 }
 
-document.querySelector('.addButton').addEventListener('click', () => {
+document.querySelector('.addButton').addEventListener('click', (event) => {
+    const textarea = document.querySelector('.reviewArea').value.trim();
     if (!isEditing) {
-        writeReview().then(result => {
-            if (result === "success" || result === "imageSuccess") {
-                alert("댓글 작성 완료");
-                window.location.reload();
-            } else {
-                alert("댓글 작성 실패");
-            }
-        });
+        if (textarea === '') {
+            event.preventDefault();
+            alert("내용을 입력해주세요.");
+        }else{
+            writeReview().then(result => {
+                if (result === "success" || result === "imageSuccess") {
+                    alert("댓글 작성 완료");
+                    window.location.reload();
+                }
+            });
+        }
     }
 });
 document.querySelector('.reviewForm').addEventListener('click',(e)=>{
@@ -800,7 +813,12 @@ async function getPlaceScore(){
             method : "GET"
         };
         const resp = await fetch(url,config);
-        return await resp.text()
+        const text = await resp.text();
+        const score = parseFloat(text);
+        if (isNaN(score)) {
+            return 0;
+        }
+        return score;
     }catch (error){
         console.log(error)
     }
@@ -946,6 +964,8 @@ if(typeof userNickname !== 'undefined' && userNickname !== null){
         if(result == "on"){
             placeLikeResult = true;
             document.querySelector('.placeHeart').src = "/dist/image/heart-on.svg"
+        }else{
+            placeLikeResult = false;
         }
     })
 }
