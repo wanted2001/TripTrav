@@ -166,7 +166,8 @@ public class ReviewController {
     @GetMapping("/getPlaceScore/{contentId}")
     @ResponseBody
     public int getPlaceScore(@PathVariable("contentId")String contentId){
-        return rsv.getPlaceScore(contentId);
+        Integer score = rsv.getPlaceScore(contentId);
+        return score != null ? score : 0;
     }
 
     @GetMapping("/checkReviewLike/{rno}/{unoNum}")
