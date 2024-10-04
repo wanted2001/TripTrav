@@ -9,10 +9,12 @@
     align-items: center;
     justify-content: center;
     z-index: 1000;
-    transform: none; /
+    /* transform 제거 */
 }
+
 .modal-content {
     font-family: LINESeedKR-Rg;
+    position: fixed;
     background: white;
     padding: 20px;
     border-radius: 10px;
@@ -20,25 +22,30 @@
     text-align: center;
     height: 530px;
     z-index: 1001;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
+
 .close-button {
     color: orange;
     background: transparent;
     border: none;
     font-size: 24px;
     cursor: pointer;
-    position: relative;
-    right: 45%;
+    position: absolute; /* relative를 absolute로 수정 */
+    top: 10px; /* 모달 내부 상단에 고정 */
+    right: 10px; /* 우측에 고정 */
 }
+
 .mainBox p{
-    /* background-color: red; */
     width: 90%;
     justify-content: center;
-    /* align-items: center; */
     margin: 0 auto;
     height: 46px;
     line-height: 46px;
 }
+
 .pClass input {
     font-family: 'LINESeedKR-Rg';
     padding: 10px;
@@ -57,6 +64,7 @@
     height: auto;
     line-height: normal;
 }
+
 .pClass button {
     width: 98%;
     margin: 24px 0;
@@ -76,15 +84,17 @@
     cursor: pointer;
     text-decoration: none;
 }
+
 .joinBox {
     margin-top: 35px;
 }
-.joinBox p{
-    /*margin-top: -17px;*/
+
+.joinBox p {
     font-size: 14px;
     color: #000000b8;
 }
-.snsJoinBox a img{
+
+.snsJoinBox a img {
     width: 50px;
     height: 50px;
     border: none;
@@ -93,50 +103,47 @@
     margin: 10px 12px;
 }
 
-.joinLine{
+.joinLine {
     margin-top: 30px;
 }
 
-#backBtn{
+#backBtn {
     z-index: 10;
-    pointer-events: auto; /* 클릭 가능하게하는 기능 */
+    pointer-events: auto;
     background: transparent;
     border: none;
     font-size: 24px;
     cursor: pointer;
-    position: relative;
-    right: 45%
-
+    position: absolute; /* relative를 absolute로 수정 */
+    top: 10px; /* 상단 고정 */
+    left: 10px; /* 좌측 고정 */
 }
-
 
 .JoinSpan {
     display: block;
     font-size: 13px;
     color: grey;
     text-align: center;
-    padding-top: -3px;
     position: relative;
     top: 8px;
 }
 
-.findPwBox{
-    /* background-color: #007bff; */
+.findPwBox {
     position: relative;
     top: 65px;
 }
 
-.findPwTitle{
+.findPwTitle {
     font-size: 20px;
 }
 
-.findPwMsg{
+.findPwMsg {
     font-size: 14px;
     line-height: 19px;
     color: #666666;
 }
 
-.findPwEmailBtn{
+.findPwEmailBtn {
     background-color: orange;
     width: 325px;
     height: 50px;
@@ -147,6 +154,6 @@
     color: white;
 }
 
-.findNoPw{
+.findNoPw {
     background-color: red;
 }
