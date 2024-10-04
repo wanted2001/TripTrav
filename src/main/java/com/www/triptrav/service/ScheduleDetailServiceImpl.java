@@ -35,4 +35,9 @@ public class ScheduleDetailServiceImpl implements ScheduleDetailService{
     public void emptyPlan(long sco, int sche_date) {
         scheduleDetailMapper.emptyPlan(sco, sche_date);
     }
+
+    @Override
+    public List<ScheduleDetailVO> getAllCourse(long sco) {
+        return scheduleDetailMapper.getAllCourse(sco);
+    }
 }

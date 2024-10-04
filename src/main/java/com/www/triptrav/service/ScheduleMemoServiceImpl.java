@@ -26,4 +26,9 @@ public class ScheduleMemoServiceImpl implements ScheduleMemoService {
     public int modifyMemo(String memo, long sco) {
         return scheduleMemoMapper.modifyMemo(memo, sco);
     }
+
+    @Override
+    public int deleteMemo(long sco) {
+        return scheduleMemoMapper.deleteMemo(sco);
+    }
 }
