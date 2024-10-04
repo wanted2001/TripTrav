@@ -6,9 +6,9 @@ var nextList = document.querySelector(".nextTripList");
 var prevList = document.querySelector(".prevTripList");
 
 
-scheduleCall(unoNum).then(data=>{
+scheduleCall(unoNum).then(data => {
     console.log(data);
-    for (let i = 0; i <= data.length-1; i++) {
+    for (let i = 0; i <= data.length - 1; i++) {
         const li = document.createElement("li");
         const div = document.createElement("div");
         div.classList.add("tripCard");
@@ -22,10 +22,7 @@ scheduleCall(unoNum).then(data=>{
         </ul>
     </div>
     <div class="tripSetting">
-        <ul>
-            <li><a>수정</a></li>
-            <li><a>삭제</a></li>
-        </ul>
+           <button type="button" id="tripListBtn">X</button>
     </div>`;
         li.appendChild(div);
         nextList.appendChild(li);
@@ -80,18 +77,18 @@ scheduleCall(unoNum).then(data=>{
 //     prevList.appendChild(li);
 // }
 
-async function scheduleCall(unoNum){
-    try{
+async function scheduleCall(unoNum) {
+    try {
         const config = {
-            method : "GET",
-            headers :{
-                'Content-Type':'application/json'
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
             }
         }
-        const url = '/mypage/scheduleCall?uno='+unoNum;
-        const result = await fetch(url,config);
+        const url = '/mypage/scheduleCall?uno=' + unoNum;
+        const result = await fetch(url, config);
         return await result.json();
-    }catch (e) {
+    } catch (e) {
         console.log(e);
     }
 }
