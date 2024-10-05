@@ -345,22 +345,33 @@
     height: 12px; /* 높이 */
 }
 
+/* .tripPlaceReview와 .tripFoodReview에만 스크롤바 스타일 적용 */
+.tripPlaceReview::-webkit-scrollbar,
+.tripFoodReview::-webkit-scrollbar {
+    width: 12px; /* 너비 */
+    height: 12px; /* 높이 */
+}
+
 /* 스크롤바의 배경 */
-::-webkit-scrollbar-track {
+.tripPlaceReview::-webkit-scrollbar-track,
+.tripFoodReview::-webkit-scrollbar-track {
     background: rgb(219, 219, 219); /* 배경 색 */
     border-radius: 2px; /* 모서리 둥글게 */
 }
 
 /* 스크롤바의 손잡이 */
-::-webkit-scrollbar-thumb {
+.tripPlaceReview::-webkit-scrollbar-thumb,
+.tripFoodReview::-webkit-scrollbar-thumb {
     background: #FFD477; /* 손잡이 색 */
     border-radius: 2px; /* 모서리 둥글게 */
 }
 
 /* 손잡이를 hover했을 때 */
-::-webkit-scrollbar-thumb:hover {
+.tripPlaceReview::-webkit-scrollbar-thumb:hover,
+.tripFoodReview::-webkit-scrollbar-thumb:hover {
     background: #F3A701; /* hover 색 */
 }
+
 
 
 

@@ -177,6 +177,7 @@
         document.getElementById("rating-value").innerText = review.reRate;
         highlightStars(stars, review.reRate);
         starRating();
+        updateCharCount();
 
         // 초기 이미지 미리보기 생성
         imagePath.forEach(src => addImagePreview(src.replace("C:\\userImage\\", "/reviewImages/")));
@@ -225,28 +226,23 @@
             imageInput.value = '';
             const imgSrcList = document.querySelectorAll(".tripReviewImg");
             for (let img of imgSrcList) {
-                const file = await getFileFromImgSrc(img.src); // img.src를 File 객체로 변환
-                validFiles.push(file); // File 객체를 validFiles 배열에 추가
+                const file = await getFileFromImgSrc(img.src);
+                validFiles.push(file);
             }
-            console.log(validFiles); // 파일 객체로 저장된 validFiles 배열 출력
+            console.log(validFiles);
         };
         return deleteButton;
     }
 
     // 이미지 URL을 File 객체로 변환하는 함수
     async function getFileFromImgSrc(imgSrc) {
-        // 이미지 URL을 fetch하여 Blob으로 변환
         const response = await fetch(imgSrc);
         const blob = await response.blob();
-
-        // Blob을 사용하여 File 객체 생성
-        const fileName = 'image.jpg'; // 적절한 파일 이름 지정
+        const fileName = 'image.jpg';
         const file = new File([blob], fileName, { type: blob.type });
-
-        return file; // 생성된 File 객체 반환
+        return file;
     }
 
-    // 리뷰 텍스트 글자 수 업데이트
     function updateCharCount() {
         charCount.textContent = `${reviewText.value.length} / 200`;
         validateForm();
