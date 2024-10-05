@@ -1,24 +1,22 @@
 package com.www.triptrav.controller;
 
 import ch.qos.logback.core.rolling.helper.IntegerTokenConverter;
-import com.www.triptrav.domain.ScheduleDTO;
-import com.www.triptrav.domain.ScheduleDetailVO;
-import com.www.triptrav.domain.ScheduleMemoVO;
-import com.www.triptrav.domain.ScheduleVO;
-import com.www.triptrav.service.ScheduleDetailService;
-import com.www.triptrav.service.ScheduleMemoService;
-import com.www.triptrav.service.ScheduleRoleService;
-import com.www.triptrav.service.ScheduleService;
+import com.www.triptrav.domain.*;
+import com.www.triptrav.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +30,9 @@ public class ScheduleController {
     private final ScheduleDetailService sdsv;
     private final ScheduleRoleService srsv;
     private final ScheduleMemoService smsv;
+    private final InviteService inviteService;
+    @Value("${invite.secret-key}")
+    private String secretKey;
 
     @GetMapping("/check")
     public void checkPlan() {}
@@ -157,6 +158,40 @@ public class ScheduleController {
     public List<ScheduleDetailVO> getAllCourse(@PathVariable("sco")long sco){
         List<ScheduleDetailVO> sdvo = sdsv.getAllCourse(sco);
         return sdvo;
+    }
+
+    @PostMapping("/generateInviteUrl")
+    @ResponseBody
+    public ResponseEntity<?> inviteToken(@RequestBody InviteVO inviteVO) {
+        log.info("sco: {}, uno: {}", inviteVO.getSco(), inviteVO.getUno());
+        try {
+            String dataToEncrypt = inviteVO.getSco() + ":" + inviteVO.getUno();
+            String inviteToken = InviteService.encrypt(dataToEncrypt, secretKey);
+            log.info("inviteToken {}", inviteToken);
+
+            String inviteUrl = "http://localhost:8099/schedule/invite?token="+inviteToken;
+
+            return ResponseEntity.ok(Collections.singletonMap("inviteUrl", inviteUrl));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+         .body(Collections.singletonMap("message", "초대 URL 생성 중 오류가 발생했습니다."));
+        }
+    }
+
+    @GetMapping("/invite")
+    public ResponseEntity<?> inviteUser(@RequestParam String token){
+        try {
+            String decryptedData = InviteService.decrypt(token, secretKey);
+            log.info("decryptedData : {}", decryptedData);
+
+            String[] parts = decryptedData.split(":");
+            String sco = parts[0];
+            String uno = parts[1];
+
+            return ResponseEntity.ok("초대된 유저. sco:"+sco+" uno:"+uno);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("잘못된 초대 URL입니다.");
+        }
     }
 
 }
