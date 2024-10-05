@@ -1,6 +1,5 @@
 const UrlParams = new URLSearchParams(window.location.search);
 const sco = UrlParams.get('sco');
-
 window.addEventListener('click',(e)=>{
     let date =  e.target.getAttribute('data-date');
     if(sco && date){
@@ -355,19 +354,26 @@ const addPerson = document.querySelector('.addPersonBtn');
 const personModal = document.querySelector('.personModal');
 const pmCloseBtn = document.querySelector('.pmCloseBtn');
 
-let clipboard = new ClipboardJS('.copyUrl');
-clipboard.on('success',function(e){
-    alert('클립보드에 복사되었습니다.');
-    console.log(e)
-})
-clipboard.on('error',function(e){
-    console.log(e);
-})
-
 addPerson.addEventListener('click',()=>{
     const url = window.location.href;
     document.querySelector('.pmShareValue').value=url;
     personModal.style.display='flex';
+    generateInviteUrl(sco, unoNum)
+        .then(result => {
+            let clipboard = new ClipboardJS('.copyUrl',{
+                text: function() {
+                    return result.inviteUrl;
+                }
+            });
+            clipboard.on('success',function(e){
+                alert('클립보드에 복사되었습니다.');
+                console.log(e)
+            })
+            clipboard.on('error',function(e){
+                console.log(e);
+            })
+            console.log(result);
+        })
 })
 
 pmCloseBtn.addEventListener('click',()=>{
@@ -1014,6 +1020,29 @@ async function getAllCourse(sco){
     } catch(err){
         console.log(err);
     }
+}
+
+
+async function generateInviteUrl(sco, unoNum) {
+    const response = await fetch("/schedule/generateInviteUrl", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ sco: sco, uno: unoNum })
+    });
+
+    // 서버로부터 초대 URL을 받아옴
+    const result = await response.json();
+
+    if (response.ok) {
+        // 초대 URL을 페이지에 표시
+        console.log(result.inviteUrl);
+    } else {
+        console.log(result.message)
+    }
+
+    return result; // 이 줄은 마지막에 두어야 함
 }
 
 //고민점
