@@ -1052,3 +1052,44 @@ async function deleteLike(uno, likeCode){
         console.log(error);
     }
 }
+
+//취향분석용 타이머
+let viewingTime = 0;
+let timer;
+function startTimer() {
+    timer = setInterval(() => {
+        viewingTime += 1; // 1초씩 증가
+        console.log(`Viewing time: ${viewingTime} seconds`);
+    }, 1000);
+}
+function stopTimer() {
+    clearInterval(timer);
+}
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === 'visible') {
+        startTimer();
+    } else {
+        stopTimer();
+    }
+});
+startTimer();
+
+/*
+AI 추천
+첫번째 40퍼
+회원가입 후 ai 추천받기 버튼을 누르면
+제일 처음 접근시 성별 나이대를 받고
+특정 태그들 을 띄워준다
+자연 인문 문화 대분류
+중분류 까지 처리? 소분류는 너무세분화
+누르면  db 에 3개~5개 저장시킨다
+
+두번째 20퍼
+특정장소화면을 얼마나봤는지 체크해서 (45초이상)
+db에 contentId랑 name 저장
+
+세번째 40퍼
+리뷰남기는 점수체크, 장소 찜하기로 점수분석
+
+점수제는 안됨 추천관광지를 보여줘야하는데 모든 관광지에 점수를 매 유저마다 매길 순 없음
+*/
