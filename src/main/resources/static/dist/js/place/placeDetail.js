@@ -73,7 +73,7 @@ fetch(detailInfoUrl)
             const additionalInfoData = result.response.body.items.item[0];
             document.querySelector('.priceInfo').innerHTML = `${additionalInfoData.infoname} : ${additionalInfoData.infotext}`
         })
-        document.querySelector('.homepageInfo').innerHTML = `홈페이지 : ${jsonData.homepage}`
+        document.querySelector('.homepageInfo').innerHTML = `홈페이지 :`+`${jsonData.homepage ? ` ${jsonData.homepage}` :"등록된 페이지가 없습니다. "}`
         document.querySelector('.details').innerHTML = `<p class="sectionTitle">소개</p><span>${jsonData.overview}</span>`;
         mapx = jsonData.mapx;
         mapy = jsonData.mapy;
@@ -884,6 +884,9 @@ function renderNearbySightsAndFood(sights, food) {
     foodContainer.innerHTML = '';
     attractionsContainer.innerHTML = '';
     food.forEach(item => {
+        const foodLink = document.createElement('a');
+        foodLink.href = `/place/${item.contentid}`;
+        foodLink.classList.add('food-link');
         const foodDiv = document.createElement('div');
         foodDiv.classList.add('locations');
         const img = document.createElement('img');
@@ -901,10 +904,14 @@ function renderNearbySightsAndFood(sights, food) {
         infoDiv.appendChild(titleP);
         infoDiv.appendChild(distP);
         foodDiv.appendChild(infoDiv);
-        foodContainer.appendChild(foodDiv);
+        foodLink.appendChild(foodDiv);
+        foodContainer.appendChild(foodLink);
     });
 
     sights.forEach(item => {
+        const sightsLink = document.createElement('a');
+        sightsLink.href = `/place/${item.contentid}`;
+        sightsLink.classList.add('sights-link');
         const sightDiv = document.createElement('div');
         sightDiv.classList.add('locations');
         const img = document.createElement('img');
@@ -922,7 +929,8 @@ function renderNearbySightsAndFood(sights, food) {
         infoDiv.appendChild(titleP);
         infoDiv.appendChild(distP);
         sightDiv.appendChild(infoDiv);
-        attractionsContainer.appendChild(sightDiv);
+        sightsLink.appendChild(sightDiv);
+        attractionsContainer.appendChild(sightsLink);
     });
 }
 
