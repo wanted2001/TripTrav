@@ -9,10 +9,10 @@
 .tripReviewImgDiv{
     position: absolute;
     display: flex;
-    width: 80px;
+    width: 250px;
     height: 80px;
     top: 15px;
-    left: 185px;
+    left: 220px;
 }
 
 .tripReviewImg{
@@ -45,6 +45,15 @@
 .reviewPlaceName{
     margin-bottom: 8px;
     font-size: 26px;
+}
+
+.reviewRegDate{
+    margin-top: 8px;
+}
+
+.reviewRating > img{
+    width: 20px;
+    height: 20px;
 }
 
 

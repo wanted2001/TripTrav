@@ -17,4 +17,6 @@ public interface ScheduleDetailMapper {
     List<ScheduleDetailVO> getPlanDate(@Param("sco") long sco, @Param("date") int date);
 
     void emptyPlan(@Param("sco") long sco, @Param("sche_date") int sche_date);
+
+    List<ScheduleDetailVO> getAllCourse(long sco);
 }

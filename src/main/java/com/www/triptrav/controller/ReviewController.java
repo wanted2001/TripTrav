@@ -102,8 +102,7 @@ public class ReviewController {
         rvo.setRno(rno);
 
         rsv.removeAllImagePath(rvo.getRno());
-
-
+        log.info("files >>> {}" , files);
         if (files != null && files.length > 0) {
             String uploadFolder = "C:/userImage";
             SimpleDateFormat sdf = new SimpleDateFormat("yy/MM/dd");
@@ -166,7 +165,8 @@ public class ReviewController {
     @GetMapping("/getPlaceScore/{contentId}")
     @ResponseBody
     public int getPlaceScore(@PathVariable("contentId")String contentId){
-        return rsv.getPlaceScore(contentId);
+        Integer score = rsv.getPlaceScore(contentId);
+        return score != null ? score : 0;
     }
 
     @GetMapping("/checkReviewLike/{rno}/{unoNum}")

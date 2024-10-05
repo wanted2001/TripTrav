@@ -15,4 +15,6 @@ public interface ScheduleService {
     int insertMemo(int i, long sco);
 
     int getMemoYN(long sco);
+
+    void updateMemoYN(long sco);
 }

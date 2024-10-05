@@ -18,8 +18,8 @@ public class PlaceController {
 
     private final LikeService lsv;
 
-    @GetMapping("/")
-    public String placeIndex() {
+    @GetMapping("/{contentId}")
+    public String placeIndex(@PathVariable String contentId) {
         return "place/placeDetail";
     }
 

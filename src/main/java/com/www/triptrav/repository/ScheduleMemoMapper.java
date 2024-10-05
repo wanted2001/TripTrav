@@ -11,4 +11,6 @@ public interface ScheduleMemoMapper {
     ScheduleMemoVO getMemo(long sco);
 
     int modifyMemo(@Param("memo") String memo, @Param("sco") long sco);
+
+    int deleteMemo(long sco);
 }

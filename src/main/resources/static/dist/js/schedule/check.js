@@ -69,6 +69,8 @@ days.forEach(day=>{
 let slideWrap = document.querySelector('.slideWrap');
 let innerSlide = document.querySelector('.innerSlide');
 let slideItems = document.querySelectorAll('.slideItem');
+console.log(slideItems.length);
+
 let pressed = false;
 let startPoint;
 let x;
@@ -87,7 +89,14 @@ const saveBtn = document.querySelector('.saveBtn');
 
 document.addEventListener('DOMContentLoaded', () => {
     initTmap();
+    console.log(slideItems.length);
 
+    getAllCourse(sco).then(result=>{
+        console.log(result)
+        result.forEach(key=>{
+            getSlideImg(key.scheContentId);
+        })
+    })
     //일차별 일정출력
     if(sco) {
         getUserCourse(sco, 1).then(result => {
@@ -139,14 +148,18 @@ document.addEventListener('DOMContentLoaded', () => {
     getMemo(sco).then(r=>{
         console.log(r)
         const memoContents = document.querySelector('.memoContents');
+        saveMemo.removeEventListener('click',saveMemoF);
+        saveMemo.removeEventListener('click',closeModal);
         if(r){
             console.log("메모있음")
             addMemoBtn.innerText='메모확인';
             memoContents.innerHTML=`${r.scheMemoContent}`;
             memoContents.readOnly=true;
             saveMemo.innerText='확인';
+            saveMemo.addEventListener('click',()=>{memoModal.style.display='none'});
             memoWrap.innerHTML+=`<button class="modifyMemo" onclick="modifyMemoContent()">수정</button>`
         } else {
+            saveMemo.addEventListener('click',saveMemoF);
             console.log("메모없음")
         }
     });
@@ -179,9 +192,10 @@ document.addEventListener('DOMContentLoaded', () => {
     slideWrap.addEventListener('mouseleave', () => {
         pressed = false;
     });
+
 });
 
-//메모모달 오픈
+//메모모달 열기/닫기
 function openModal(){
     memoModal.style.display = 'flex';
 }
@@ -189,31 +203,65 @@ function closeModal(){
     memoModal.style.display='none';
 }
 
+//메모수정
+let isEditing = false; //편집상태 저장
 function modifyMemoContent(){
     const memoContent = document.querySelector('.memoContents');
-    memoContent.readOnly=false;
-    memoContent.focus();
-    const memo = memoContent.value;
-    fetch(`/schedule/memoModify/${sco}`,{
-        method:'put',
-        headers:{
-            'content-type':'application/json'
-        },
-        body:JSON.stringify(memo)
-    })
-        .then(response=>response.text())
-        .then(data=>{
-            console.log(data)
-        })
+    if(!isEditing){
+        memoContent.readOnly=false;
+        memoContent.focus();
+        isEditing=true;
+    } else {
+        const memo = memoContent.value;
+        if(memo===''){
+            if(confirm("모든 메모를 지우시겠습니까?")){
+                fetch(`/schedule/memoDelete/${sco}`,{
+                    method:'delete'
+                })
+                    .then(response=>response.text())
+                    .then(data=>{
+                        console.log(data)
+                        if(data==="1"){
+                            alert("메모가 삭제되었습니다.")
+                            document.querySelector('.modifyMemo').remove();
+                            memoModal.style.display='none';
+                            location.reload();
+                        }
+                    })
+            }
+        } else {
+            fetch(`/schedule/memoModify/${sco}`,{
+                method:'put',
+                headers:{
+                    'content-type':'application/json'
+                },
+                body:JSON.stringify(memo)
+            })
+                .then(response=>response.text())
+                .then(data=>{
+                    console.log(data)
+                    if(data==="1"){
+                        alert("메모 수정이 완료되었습니다.")
+                        memoContent.readOnly=true;
+                        isEditing=false;
+                        location.reload();
+                        memoModal.style.display='flex';
+                    } else {
+                        alert("메모 수정에 오류가 발생했습니다.\n다시 시도해주세요.")
+                    }
+                })
+        }
+    }
 }
 
 //메모저장부분
-const saveMemoBtn = document.querySelector('.saveMemo');
-saveMemoBtn.addEventListener('click',()=>{
-    console.log(saveMemoBtn.innerText);
-    if(saveMemoBtn.innerText==='저장'){
-        const memo = document.querySelector('.memoContents').value;
-        console.log(memo);
+function saveMemoF(){
+    const memo = document.querySelector('.memoContents').value;
+    console.log(memo);
+    if(memo===''){
+        alert('먼저 메모를 작성해주세요.');
+        document.querySelector('.memoContents').focus();
+    } else {
         if(confirm('메모를 저장하시겠습니까?')) {
             fetch(`/schedule/memo/${sco}`,{
                 method: 'post',
@@ -227,16 +275,15 @@ saveMemoBtn.addEventListener('click',()=>{
                     console.log(data)
                     if(data==="1"){
                         alert("메모가 저장되었습니다!")
+                        location.reload();
+                        memoModal.style.display='flex';
                     } else {
                         alert("메모 저장 중 오류가 발생했습니다. \n다시 시도해주세요.");
                     }
                 })
-            memoModal.style.display='none';
         }
-    } else {
-        closeModal();
     }
-})
+}
 
 //이미지로드
 function getImage(key){
@@ -252,16 +299,31 @@ function getImage(key){
             }
         } else{
             res.items.item.forEach(img=>{
-                if(imgCount<3){
-                    if (imgLi) {
-                        imgLi.innerHTML += `<img src="${img.originimgurl}">`;
-                    }
+                if (imgCount < 3 && imgLi) {
+                    imgLi.innerHTML += `<img src="${img.originimgurl}">`;
                     imgCount++;
                 }
             })
         }
     })
 }
+
+function getSlideImg(key){
+    const url = `https://apis.data.go.kr/B551011/KorService1/detailImage1?MobileOS=ETC&MobileApp=TripTrav&_type=json&subImageYN=Y&contentId=${key}&serviceKey=${tourAPIKEY}`;
+    const innerSlide = document.querySelector('.innerSlide');
+    let addedLocations = new Set();
+
+    getData(url).then(res=>{
+        res.items.item.forEach(img => {
+            if (!addedLocations.has(img.contentid)) {
+                innerSlide.innerHTML += `<div class="slideItem" style="background-image: url('${img.originimgurl}'); background-size: cover; background-position: center; background-repeat: no-repeat;"></div>`;
+
+                addedLocations.add(img.contentid);
+            }
+        });
+    })
+}
+
 
 //지도 띄우기
 function initTmap() {
@@ -730,6 +792,7 @@ function editPlan(event){
                 titleInput.remove();
                 editPlanTitle.classList.add('hidden');
                 setPlanData(sco);
+                location.reload();
             } else {
                 deleteBtn.forEach(btn => {
                     btn.classList.add('hidden');
@@ -743,6 +806,7 @@ function editPlan(event){
                 target.innerText = '편집';
                 editPlanTitle.classList.add('hidden');
                 setPlanData(sco);
+                location.reload();
             }
         }
     }
@@ -801,6 +865,7 @@ function setPlanData(sco){
                 console.log(data);
                 if (data == "1") {
                     alert('일정이 저장되었습니다 !');
+                    location.reload();
                 } else {
                     alert('일정 저장 중 오류가 발생하였습니다. \n다시 시도해주세요.');
                 }
@@ -890,10 +955,6 @@ window.addEventListener('load', ()=>{
     countTriangle();
 });
 
-//예제 데이터 불러오기
-// const contentId = '2383747';
-// const detailCourseInfoUrl = `https://apis.data.go.kr/B551011/KorService1/detailInfo1?ServiceKey=${tourAPIKEY}&contentTypeId=25&contentId=${contentId}&MobileOS=ETC&MobileApp=TripTrav&_type=json`;
-
 async function getData(url){
     try{
         const response = await fetch(url);
@@ -934,6 +995,18 @@ async function getDatePlan(sco, date){
 async function getMemo(sco){
     try{
         const url = "/schedule/getMemo/"+sco;
+        const config = {method:'post'}
+        const response = await fetch(url, config);
+        const result = await response.json();
+        return result;
+    } catch(err){
+        console.log(err);
+    }
+}
+
+async function getAllCourse(sco){
+    try{
+        const url = "/schedule/allCourse/"+sco;
         const config = {method:'post'}
         const response = await fetch(url, config);
         const result = await response.json();

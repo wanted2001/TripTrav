@@ -19,4 +19,6 @@ public interface ScheduleMapper {
     int insertMemo(@Param("i") int i, @Param("sco") long sco);
 
     int getMemoYN(long sco);
+
+    void updateMemoYN(long sco);
 }

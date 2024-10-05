@@ -1,4 +1,6 @@
-const contentId = "126676";
+const path = window.location.pathname;
+const id = path.match(/\d+/)[0];
+let contentId = id;
 const imgUrl = `https://apis.data.go.kr/B551011/KorService1/detailImage1?MobileOS=ETC&MobileApp=TripTrav&_type=json&subImageYN=Y&contentId=${contentId}&serviceKey=${tourAPIKEY}`;
 const detailInfoUrl = `https://apis.data.go.kr/B551011/KorService1/detailCommon1?MobileOS=ETC&MobileApp=TripTrav&contentId=${contentId}&defaultYN=Y&firstImageYN=Y&areacodeYN=Y&catcodeYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&serviceKey=${tourAPIKEY}&_type=json`;
 const foodContainer = document.querySelector('.food');
@@ -6,8 +8,8 @@ const attractionsContainer = document.querySelector('.attractions');
 const imageUrlsDiv = document.querySelector('.imageUrls');
 
 let currentIndex = 0;
-let contentTypeId = 12;     //추후수정
-let contentName = '용궁사';    //추후수정
+let contentTypeId = 0;
+let contentName = '';
 let imageUrls = [];
 let mapx = 0;
 let mapy = 0;
@@ -27,6 +29,7 @@ const overlay = document.getElementById('overlay');
 
 spinner.style.display = 'block';
 overlay.style.display = 'block';
+
 
 // 기본정보 가져오기
 fetch(detailInfoUrl)
@@ -52,7 +55,7 @@ fetch(detailInfoUrl)
         //장소 평점가져오기
         getPlaceScore().then(result => {
             let displayScore = (result/totalCount).toFixed(1);
-            document.querySelector('.score').innerHTML = `(${displayScore} 점)`;
+            document.querySelector('.score').innerHTML = displayScore != "NaN" ?  `(${displayScore} 점)`:  `(0 점)`;
             document.querySelector('.rating').innerHTML = convertRatingToStars(result/totalCount);
         })
 
@@ -183,6 +186,15 @@ async function getAdditionalInfo(contentTypeId) {
 
 //리뷰관련 부분
 async function writeReview() {
+    const reviewContent = document.querySelector('.reviewArea').value.trim();
+    const starRate = document.getElementById('rating-value').textContent;
+    if (reviewContent === '') {
+        alert("리뷰 내용을 입력해주세요. ");
+        return;
+    }else if(starRate == 0){
+        alert("별점을 등록해주세요. ")
+        return;
+    }
     const files = document.getElementById('imageInput').files;
     const data = new FormData();
     data.append('reContent', document.querySelector('.reviewArea').value);
@@ -211,18 +223,30 @@ async function writeReview() {
     }
 }
 
-document.querySelector('.addButton').addEventListener('click', () => {
+document.querySelector('.addButton').addEventListener('click', (event) => {
+    const textarea = document.querySelector('.reviewArea').value.trim();
     if (!isEditing) {
-        writeReview().then(result => {
-            if (result === "success" || result === "imageSuccess") {
-                alert("댓글 작성 완료");
-                window.location.reload();
-            } else {
-                alert("댓글 작성 실패");
-            }
-        });
+        if (textarea === '') {
+            event.preventDefault();
+            alert("내용을 입력해주세요.");
+        }else{
+            writeReview().then(result => {
+                if (result === "success" || result === "imageSuccess") {
+                    alert("댓글 작성 완료");
+                    window.location.reload();
+                }
+            });
+        }
     }
 });
+document.querySelector('.reviewForm').addEventListener('click',(e)=>{
+    if (typeof userNickname === 'undefined') {
+        e.preventDefault();
+        if(confirm("로그인 한 사용자만 이용가능 한 서비스입니다. \n로그인 페이지로 이동하시겠습니까?")){
+            document.getElementById('myModal').style.display = 'flex';
+        }
+    }
+})
 
 //이미지업로드 관련 함수
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
@@ -382,6 +406,7 @@ getReviewList().then(async (result) => {
 });
 
 
+
 // 정렬 버튼 로직
 document.querySelector(".buttons").addEventListener("click", (e) => {
     const button = e.target;
@@ -432,7 +457,6 @@ document.querySelector(".buttons").addEventListener("click", (e) => {
     displayReviews(currentReviewList);
 });
 
-
 // 리뷰 출력 함수
 async function displayReviews(result) {
     const reviewContainer = document.querySelector('.review');
@@ -460,7 +484,7 @@ async function displayReviews(result) {
                 <img id="thumbsUp" src="${reviewDTO.isLiked ? '/dist/image/thumbs-click.svg' : '/dist/image/thumbs-up.svg'}" data-rno="${review.rno}" data-isLiked="${reviewDTO.isLiked}">
             </button>
             <button class="reportButton">
-                <img src="/dist/image/alert-triangle.svg">
+                <img src="/dist/image/alert-triangle.svg" class="reportImg">
             </button>`;
 
         // 사용자 리뷰 수정/삭제 버튼 처리 코드
@@ -551,6 +575,16 @@ document.addEventListener('click', function(event) {
         }
     }
 });
+document.addEventListener('click', (event) => {
+    if((event.target && event.target.id === 'thumbsUp') || (event.target && event.target.className === "reportImg")){
+        if (typeof userNickname === 'undefined') {
+            event.preventDefault();
+            if(confirm("로그인 한 사용자만 이용가능 한 서비스입니다. \n로그인 페이지로 이동하시겠습니까?")){
+                document.getElementById('myModal').style.display = 'flex';
+            }
+        }
+    }
+})
 
 //좋아요개수 가져오는함수
 async function getLikeCount(rno){
@@ -782,7 +816,12 @@ async function getPlaceScore(){
             method : "GET"
         };
         const resp = await fetch(url,config);
-        return await resp.text()
+        const text = await resp.text();
+        const score = parseFloat(text);
+        if (isNaN(score)) {
+            return 0;
+        }
+        return score;
     }catch (error){
         console.log(error)
     }
@@ -928,6 +967,8 @@ if(typeof userNickname !== 'undefined' && userNickname !== null){
         if(result == "on"){
             placeLikeResult = true;
             document.querySelector('.placeHeart').src = "/dist/image/heart-on.svg"
+        }else{
+            placeLikeResult = false;
         }
     })
 }
@@ -952,6 +993,10 @@ document.querySelector('.placeHeart').addEventListener('click',()=>{
                     placeLikeResult = true;
                 }
             })
+        }
+    }else{
+        if(confirm("로그인 한 사용자만 이용가능 한 서비스입니다. \n로그인 페이지로 이동하시겠습니까?")){
+            document.getElementById('myModal').style.display = 'flex';
         }
     }
 })

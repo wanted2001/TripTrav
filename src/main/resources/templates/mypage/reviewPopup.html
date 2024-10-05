@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>리뷰 수정</title>
@@ -84,12 +84,52 @@
         input[type="file"] {
             margin-top: 10px;
         }
+
+        .star-rating {
+            display: inline-block;
+            position: relative;
+            top: 3px;
+        }
+
+        .stars {
+            display: flex;
+            cursor: pointer;
+        }
+
+        .star {
+            width: 25px;
+            height: 25px;
+            background: url('/dist/image/star-empty.png') no-repeat center;
+            background-size: contain;
+            position: relative;
+        }
+
+        .star.full {
+            background: url('/dist/image/star-full.png') no-repeat center;
+            background-size: contain;
+        }
+
+        .star.half {
+            background: url('/dist/image/star-half.png') no-repeat center;
+            background-size: contain;
+        }
     </style>
 </head>
 <body>
 <div id="editPopup" class="popup">
     <div class="popup-content">
         <h3>리뷰 수정</h3>
+        <form action="/review/POST" method="post" enctype="multipart/form-data">
+        <div class="star-rating">
+            <div class="stars" id="stars">
+                <span class="star" data-value="1"></span>
+                <span class="star" data-value="2"></span>
+                <span class="star" data-value="3"></span>
+                <span class="star" data-value="4"></span>
+                <span class="star" data-value="5"></span>
+            </div>
+            <p>별점: <span id="rating-value">0</span></p>
+        </div>
         <textarea id="reviewText" rows="5" placeholder="리뷰 내용을 수정하세요. (최대 200자)" maxlength="200"></textarea>
         <div id="charCount">0 / 200</div>
         <div class="image-upload">
@@ -97,8 +137,10 @@
         </div>
         <div class="image-preview" id="imagePreview"></div>
         <button type="button" id="saveBtn" disabled>저장</button>
+        </form>
         <button type="button" id="closeBtn" onclick="closePopup(e)">닫기</button>
     </div>
+
 </div>
 
 <script th:inline="javascript">
@@ -106,24 +148,38 @@
     var imagePath = [[${review.imagePaths}]];
 </script>
 <script>
-    const editPopup = document.getElementById("editPopup");
     const reviewText = document.getElementById("reviewText");
     const charCount = document.getElementById("charCount");
     const imageInput = document.getElementById("imageInput");
     const imagePreview = document.getElementById("imagePreview");
     const saveBtn = document.getElementById("saveBtn");
+    var stars = document.getElementById("stars");
     const MAX_FILE_SIZE = 10 * 1024 * 1024;
+    var validFiles = [];
 
     initializeReview();
 
     function initializeReview() {
         console.log(review);
+        console.log(review.rno);
+        console.log(review.reRate);
+        console.log(review.nickname)
         console.log(imagePath);
+        document.getElementById("saveBtn").onclick = async function() {
+            modifyReview(review.rno).then(result=>{
+                if(result == "success"){
+                    alert("수정 완료");
+                    window.location.reload()
+                }
+            });
+        };
         reviewText.innerText = review.reContent;
+        document.getElementById("rating-value").innerText = review.reRate;
+        highlightStars(stars, review.reRate);
+        starRating();
 
         // 초기 이미지 미리보기 생성
         imagePath.forEach(src => addImagePreview(src.replace("C:\\userImage\\", "/reviewImages/")));
-
         // 이벤트 리스너 설정
         setupEventListeners();
     }
@@ -166,7 +222,13 @@
         deleteButton.style.cursor = 'pointer';
         deleteButton.onclick = function () {
             imgDiv.remove();
-            imageInput.value = ''; // 삭제 후 파일 선택 초기화
+            validFiles.splice(0);
+            imageInput.value = '';// 삭제 후 파일 선택 초기화
+            var imgSrc = document.querySelectorAll(".tripReviewImg");
+            imgSrc.forEach(file=>{
+                validFiles.push(file.src);
+                console.log(validFiles);
+            })
         };
         return deleteButton;
     }
@@ -180,7 +242,7 @@
     // 파일 입력 처리
     function handleFileInput() {
         const files = imageInput.files;
-        imagePreview.innerText ="";
+        imagePreview.innerText = "";
         if (files.length > 3) {
             alert('최대 3장의 이미지만 업로드할 수 있습니다.');
             imageInput.value = ''; // 선택한 파일 초기화
@@ -193,14 +255,14 @@
                 imageInput.value = ''; // 파일 크기 초과 시 초기화
                 return;
             }
+            validFiles.push(file);
+            console.log(validFiles);
             const reader = new FileReader();
             reader.onload = function (e) {
-
                 addImagePreview(e.target.result);
             };
             reader.readAsDataURL(file);
         });
-
         validateForm();
     }
 
@@ -212,8 +274,8 @@
 
     // 팝업 외부 클릭 시 닫기
     function closePopup(e) {
-        if (e.target === editPopup) {
-            editPopup.style.display = "none";
+        if (e.target.id === "closeBtn") {
+            window.close();
         }
     }
 
@@ -221,8 +283,96 @@
     function setupEventListeners() {
         reviewText.addEventListener('input', updateCharCount);
         imageInput.addEventListener('change', handleFileInput);
+        imagePreview.addEventListener('click', validateForm);
         window.addEventListener('click', closePopup);
     }
+
+    //수정로직
+    async function modifyReview(rno) {
+        const data = new FormData();
+        data.append('reContent', document.getElementById("reviewText").value);
+        data.append('nickname', review.nickname);
+        data.append('reRate', document.getElementById('rating-value').textContent);
+        data.append('reImageCount', validFiles.length);
+        data.append('rno', rno);
+        data.append('reContentType', review.reContentType);
+        data.append('uno', review.uno);
+        data.append('reContentId', review.reContentId);
+        data.append('reContentName', review.reContentName);
+
+         validFiles.forEach(file => {
+             data.append('images', file);
+             console.log(file);
+         });
+
+
+        try {
+            const url = '/review/reviewUpdate/PUT';
+            console.log(data);
+            const config = {
+                method: 'PUT',
+                body: data
+            };
+            const resp = await fetch(url, config);
+            const result = await resp.text();
+            return result;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    function starRating() {
+        document.addEventListener('DOMContentLoaded', function () {
+            const stars = document.getElementById('stars');
+            const ratingValue = document.getElementById('rating-value');
+            let currentRating = 0;
+            let isClickSet = false;
+            stars.addEventListener('mousemove', function (e) {
+                const rect = stars.getBoundingClientRect();
+                const offsetX = e.clientX - rect.left;
+                const starWidth = rect.width / 5;
+                const rating = Math.ceil((offsetX / starWidth) * 2) / 2;
+                if (offsetX >= 0 && offsetX <= rect.width) {
+                    highlightStars(stars, rating);
+                    ratingValue.textContent = rating;
+                }
+            });
+            stars.addEventListener('click', function () {
+                currentRating = parseFloat(ratingValue.textContent);
+                highlightStars(stars, currentRating);
+                isClickSet = true;
+            });
+            stars.addEventListener('mouseleave', function () {
+                highlightStars(stars,review.reRate);
+                ratingValue.textContent = review.reRate;
+                if (isClickSet) {
+                    highlightStars(stars, currentRating);
+                    ratingValue.textContent = currentRating;
+                    validateForm();
+                }
+            });
+        });
+    }
+
+        //별점 넣기
+        function highlightStars(stars, rating) {
+            const starElements = stars.children;
+            for (let i = 0; i < starElements.length; i++) {
+                const starValue = i + 1;
+                if (starValue <= rating) {
+                    starElements[i].classList.add('full');
+                    starElements[i].classList.remove('half');
+                } else if (starValue - 0.5 === rating) {
+                    starElements[i].classList.add('half');
+                    starElements[i].classList.remove('full');
+                } else {
+                    starElements[i].classList.remove('full');
+                    starElements[i].classList.remove('half');
+                }
+            }
+        }
+        starRating();
+
 </script>
 </body>
 </html>

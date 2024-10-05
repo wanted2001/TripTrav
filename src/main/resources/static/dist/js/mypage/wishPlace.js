@@ -16,7 +16,7 @@ for (let i = 0; i <= 5; i++) {
     </div>
     <div class="tripSetting">
         <ul>
-            <li><a>삭제</a></li>
+            <li><a>X</a></li>
         </ul>
     </div>`;
     li.appendChild(div);
