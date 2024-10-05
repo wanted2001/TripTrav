@@ -179,7 +179,7 @@ public class ScheduleController {
     }
 
     @GetMapping("/invite")
-    public ResponseEntity<?> inviteUser(@RequestParam String token){
+    public String inviteUser(@RequestParam String token){
         try {
             String decryptedData = InviteService.decrypt(token, secretKey);
             log.info("decryptedData : {}", decryptedData);
@@ -188,9 +188,9 @@ public class ScheduleController {
             String sco = parts[0];
             String uno = parts[1];
 
-            return ResponseEntity.ok("초대된 유저. sco:"+sco+" uno:"+uno);
+            return "redirect:/schedule/check?sco="+sco;
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("잘못된 초대 URL입니다.");
+            return"잘못된 초대 URL입니다.";
         }
     }
 
