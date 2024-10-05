@@ -1,9 +1,6 @@
 package com.www.triptrav.controller;
 
-import com.www.triptrav.domain.ReviewDTO;
-import com.www.triptrav.domain.ReviewImageVO;
-import com.www.triptrav.domain.ReviewVO;
-import com.www.triptrav.domain.UserVO;
+import com.www.triptrav.domain.*;
 import com.www.triptrav.service.MyPageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,10 +36,21 @@ public class MyPageController {
 
     @ResponseBody
     @GetMapping("/scheduleCall")
-    public List<UserVO> scheduleCall(@RequestParam long uno){
+    public List<ScheduleDTO> scheduleCall(@RequestParam long uno){
         log.info("scheduleCall uno = {}", uno);
-        List<UserVO> scheList = msv.scheduleCall(uno);
-        return scheList;
+        List<ScheduleVO> scheList = msv.scheduleCall(uno);
+        List<ScheduleDTO> scheduleDTOList = new ArrayList<>();
+        for(ScheduleVO svo : scheList){
+            ScheduleDTO scheDTO = new ScheduleDTO();
+            ScheduleDetailVO sdvo = msv.getScheduleDetail(svo.getSco());
+            scheDTO.setSco(svo.getSco());
+            scheDTO.setScheName(svo.getScheName());
+            scheDTO.setScheStart(svo.getScheStart());
+            scheDTO.setScheEnd(svo.getScheEnd());
+            scheDTO.setScheTitle(sdvo.getScheTItle());
+            scheduleDTOList.add(scheDTO);
+        }
+        return scheduleDTOList;
     }
 
     @ResponseBody

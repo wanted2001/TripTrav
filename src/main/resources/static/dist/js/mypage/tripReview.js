@@ -54,11 +54,18 @@ getReviewList(unoNum)
                     tripPlaceReviewList.appendChild(li);
                     break;
             }
+            if(!tripPlaceReviewList.hasChildNodes()){
+                tripPlaceReviewList.appendChild(noChild("review"));
+            }
+            if(!!tripFoodReviewList.hasChildNodes()){
+                tripFoodReviewList.appendChild(noChild("review"));
+            }
         });
     })
     .catch(err => {
         console.log(err); // 에러 로그 출력
     });
+
 
 function showPopup(rno) {
     window.open("/mypage/reviewPopup?rno="+rno, "blank", "width=800, height=800, left=400, top=400");
@@ -75,12 +82,6 @@ async function getReviewList(unoNum) {
     } catch (e) {
         console.log(e);
     }
-}
-
-function changeDate(text) {
-    const datePattern = /\d{4}-\d{2}-\d{2}/;  // 날짜 패턴 (YYYY-MM-DD)
-    const match = text.match(datePattern);
-    return match ? match[0] : null;  // 매칭된 결과가 있으면 반환, 없으면 null 반환
 }
 
 //별점 별로 변환함수
@@ -102,7 +103,3 @@ function convertRatingToStars(rating) {
     }
     return stars;
 }
-
-
-
-

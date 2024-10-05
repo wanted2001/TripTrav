@@ -24,6 +24,10 @@
         select * from review_image where rno=#{rno}
     </select>
 
+    <select id="getScheduleDetail" resultType="com.www.triptrav.domain.ScheduleDetailVO">
+        select * from schedule_detail where sco=#{sco}
+    </select>
+
 
 
 </mapper>

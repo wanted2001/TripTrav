@@ -2,8 +2,8 @@ var params = new URLSearchParams(window.url);
 console.log(params);
 const bottom = document.getElementById("resultMyPage");
 const modal = document.querySelector(".updateModal");
-const accordionBtn = document.querySelector(".accordionBtn");
-const liList = document.querySelector(".myPageList > li");
+// const accordionBtn = document.querySelector(".accordionBtn");
+// const liList = document.querySelector(".myPageList > li");
 
 const js = "/dist/js/mypage";
 const tripList = "/tripList";
@@ -16,13 +16,12 @@ pageHover("tripReview");
 
 isSocialUser(unoNum).then(data => {
     console.log(data.provider === null);
-    if(data.provider !== null){
+    if (data.provider !== null) {
         console.log('들어옴');
         document.getElementById("pw").disabled = true;
     }
 
 })
-
 
 document.querySelectorAll('.myPageList > li').forEach(button => {
     button.addEventListener('click', (e) => {
@@ -203,12 +202,52 @@ async function isSocialUser(uno) {
         const config = {
             method: "GET",
             headers: {
-                'Content-Type':'application/json'
+                'Content-Type': 'application/json'
             }
         }
-        const url = await fetch("/mypage/isSocial?uno=" + uno,config);
+        const url = await fetch("/mypage/isSocial?uno=" + uno, config);
         return await url.json();
     } catch (e) {
         console.log(e);
     }
+}
+
+function changeDate(text) {
+    const datePattern = /\d{4}-\d{2}-\d{2}/;  // 날짜 패턴 (YYYY-MM-DD)
+    const match = text.match(datePattern);
+    return match ? match[0] : null;  // 매칭된 결과가 있으면 반환, 없으면 null 반환
+}
+
+function compareDate(text) {
+    var date = new Date();
+    var endDate = new Date(text);
+    return date > endDate;
+}
+
+function noChild(trip) {
+    const div = document.createElement("div");
+    const p = document.createElement("p");
+    div.style.width = "1440px";
+    div.style.height = "600px";
+    p.style.textAlign = "center";
+    p.innerText = ''; // 초기화
+    switch (trip) {
+        case "review":
+            p.innerText = "작성한 리뷰가 없습니다.";
+            break;
+        case "list":
+            p.innerText = "생성한 일정이 없습니다.";
+            break;
+        case "wishPlace":
+            p.innerText = "찜한 장소가 없습니다.";
+            break;
+        case "wishTrip":
+            p.innerText = "찜한 여행 일정이 없습니다.";
+            break;
+        default:
+            p.innerText = "알 수 없는 옵션입니다.";
+            break;
+    }
+    div.appendChild(p);
+    return div;
 }
