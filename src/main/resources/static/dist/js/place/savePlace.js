@@ -89,7 +89,7 @@ function setupTripFormListener() {
             const createPlanName = document.querySelector(".createPlanName").value;
             const departureDate = document.getElementById("departureDate").value;
             const returnDate = document.getElementById("returnDate").value;
-            // const currentPlaceName = document.querySelector('.currentPlaceName').innerText;
+            const currentPlaceName = document.querySelector('.currentPlaceName').innerText;
 
             const startDate = new Date(departureDate);
             const endDate = new Date(returnDate);
@@ -104,7 +104,7 @@ function setupTripFormListener() {
             };
             console.log(requestBody);
 
-            fetch(`/schedule/createPlan/${contentId}/${createPlanName}`, {
+            fetch(`/schedule/createPlan/${contentId}/${currentPlaceName}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
