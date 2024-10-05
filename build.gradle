@@ -32,7 +32,6 @@ dependencies {
     implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16'
     implementation 'com.mysql:mysql-connector-j'
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
-    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
@@ -43,9 +42,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
-}
-ext {
-    set('elasticsearch.version', '8.15.2')
 }
 
 tasks.named('test') {

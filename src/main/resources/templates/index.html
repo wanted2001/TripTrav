@@ -74,20 +74,29 @@
             font-family: LINESeedKR-Bd;
             z-index: 10;
         }
+
         .inputWrap input {
             width: 450px;
-            height: 50px;
+            height: 35px;
             margin-top: 50px;
             font-size: 16px;
             border: none;
             border-radius: 15px;
             padding-left: 10px;
             outline: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
         }
-        .inputWrap>span{
+
+        .inputWrap input:focus {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .inputWrap>span {
             letter-spacing: 8px;
         }
-        .inputWrap>button>img{
+
+        .inputWrap>button>img {
             cursor: pointer;
             width: 40px;
             height: 40px;
@@ -96,10 +105,81 @@
             margin-left: 10px;
             transform: translate(0, 13px);
         }
+
         .inputWrap>button>img:hover {
             transform: rotate(360deg);
         }
+
+        #suggestions {
+            width: 462px;
+            margin: 0 auto;
+            padding: 0;
+            border-radius: 10px;
+            border-top-right-radius: 0;
+            border-top-left-radius: 0;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            color: #333;
+            max-height: 200px;
+            overflow: hidden;
+            overflow-y: auto;
+            z-index: 100;
+            position: absolute;
+            top: 126px;
+            text-align: left;
+            font-weight: normal;
+        }
+        #suggestions>a{
+            color: black;
+            font-weight: lighter;
+        }
+
+        #suggestions li {
+            padding: 10px 10px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            color: black;
+        }
+
+        #suggestions>li:first-child{
+            border-top: 1px solid #eee;
+        }
+
+        #suggestions li a{
+            color: black;
+        }
+
+        #suggestions li:last-child {
+            border-bottom: none;
+        }
+
+        #suggestions li:hover {
+            background-color: #f0f0f0;
+            transform: translateX(5px);
+        }
+
+        #suggestions li:focus {
+            background-color: #e0e0e0;
+            outline: none;
+        }
+
+        #suggestions::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #suggestions::-webkit-scrollbar-thumb {
+            background-color: #ccc;
+            border-radius: 10px;
+        }
+
+        #suggestions::-webkit-scrollbar-thumb:hover {
+            background-color: #bbb;
+        }
+
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
     <body>
         <th:block th:replace="~{header :: header}"></th:block>
@@ -121,9 +201,11 @@
         </div>
         <div class="inputWrap" style="display: none">
             <span>여행지를 검색해보세요!</span><br>
-            <input type="text" id="placeInput">
-            <button id="searchBtn"><img src="/dist/image/search.svg"></button>
+            <input type="text" id="placeInput" onkeyup="fetchSuggestions()" >
+            <button id="searchBtn" onclick="fetchSuggestions()"><img src="/dist/image/search.svg"></button>
+            <ul id="suggestions"></ul>
         </div>
+
         <script>
             function changeImage() {
                 const images = document.querySelectorAll('.mainBackImg img');
@@ -135,24 +217,24 @@
                     images[currentImg].classList.add('active');
                 }, 30000);
             }
-        window.onload = function () {
-        changeImage();
+            window.onload = function () {
+            changeImage();
 
-        const urlParams = new URLSearchParams(window.location.search);
+            const urlParams = new URLSearchParams(window.location.search);
 
-        //search page로 이동
-        if (urlParams.has('search')) {
-        changeSearch();
-        }
+            //search page로 이동
+            if (urlParams.has('search')) {
+                changeSearch();
+            }
 
-        //회원가입 완료 메시지
-        if (urlParams.has('joinMsg')) {
-        alert('회원가입이 완료되었습니다!');
-        history.replaceState(null, '', window.location.pathname); // URL 클린업
-        }
+            //회원가입 완료 메시지
+            if (urlParams.has('joinMsg')) {
+                alert('회원가입이 완료되었습니다!');
+                history.replaceState(null, '', window.location.pathname); // URL 클린업
+            }
 
-        //로그인 실패 메시지
-        if (urlParams.has('false')) {
+            //로그인 실패 메시지
+            if (urlParams.has('false')) {
                     alert('아이디와 비밀번호를 확인해주세요.');
                     openLoginModal();
                 }
@@ -163,6 +245,37 @@
                 document.querySelector('.mainBtnDiv').style.display = 'none';
                 document.querySelector('.inputWrap').style.display = '';
             }
+            //검색 자동완성
+            function fetchSuggestions() {
+                const query = document.getElementById('placeInput').value;
+                const suggestions = document.getElementById('suggestions');
+                if (query.length < 2) {
+                    return;
+                }
+                const encodedQuery = encodeURIComponent(query);
+                fetch(`/autocomplete?query=${encodedQuery}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('placeInput').style.borderBottomRightRadius = "0px";
+                        document.getElementById('placeInput').style.borderBottomLeftRadius = "0px";
+                        suggestions.innerHTML = "";
+                        if (data.length === 0) {
+                            const noResultLi = document.createElement('li');
+                            noResultLi.textContent = "검색 결과가 없습니다";
+                            suggestions.appendChild(noResultLi);
+                        } else {
+                            data.forEach(item => {
+                                const li = document.createElement('li');
+                                li.innerHTML = item;
+                                suggestions.appendChild(li);
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error fetching suggestions:", error);
+                    });
+            }
+
         </script>
     </body>
 </html>
