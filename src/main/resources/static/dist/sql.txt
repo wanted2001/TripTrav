@@ -66,7 +66,7 @@ CREATE TABLE `schedule` (
 );
 
 CREATE TABLE `schedule_role` (
-	`sche_role` int NOT NULL,
+	`sche_role` int NOT NULL DEFAULT 0,
 	`sco` bigint NOT NULL,
 	`uno` bigint NOT NULL,
 	FOREIGN KEY (`sco`) REFERENCES `schedule`(`sco`),
@@ -87,6 +87,14 @@ CREATE TABLE `schedule_memo` (
     `sche_memo_writer` varchar(64) NULL,
     `sche_memo_content` text NULL,
     FOREIGN KEY (`sco`) REFERENCES `schedule`(`sco`)
+);
+
+CREATE TABLE `schedule_companion` (
+    `uno` bigint NOT NULL,
+    `sco` bigint NOT NULL,
+    FOREIGN KEY (`uno`) REFERENCES `user`(`uno`) ON DELETE CASCADE,
+    FOREIGN KEY (`sco`) REFERENCES `schedule`(`sco`) ON DELETE CASCADE,
+    UNIQUE (`uno`)
 );
 
 CREATE TABLE `like` (

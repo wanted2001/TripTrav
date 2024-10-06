@@ -41,4 +41,12 @@
         update schedule set sche_memo=0
         where sco=#{sco}
     </update>
+
+    <select id="getScheduleMaker" resultType="long">
+        select uno from schedule where sco = #{sco}
+    </select>
+
+    <select id="getScheduleVO" resultType="com.www.triptrav.domain.ScheduleVO">
+        select * from schedule where sco=#{sco}
+    </select>
 </mapper>

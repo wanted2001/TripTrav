@@ -7,4 +7,11 @@
         insert into schedule_role (sco, sche_role, uno)
         values (#{sco}, #{i}, #{uno})
     </insert>
+    <select id="checkScheduleRole" resultType="com.www.triptrav.domain.ScheduleRoleVO">
+        select * from schedule_role where sco=#{sco} and uno=#{uno}
+    </select>
+    <insert id="addScheduleRole">
+        insert into schedule_role (sco, uno)
+        value (#{sco}, #{uno})
+    </insert>
 </mapper>

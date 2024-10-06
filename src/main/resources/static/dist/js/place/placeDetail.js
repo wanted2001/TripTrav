@@ -1062,25 +1062,25 @@ async function deleteLike(uno, likeCode){
 }
 
 //취향분석용 타이머
-let viewingTime = 0;
-let timer;
-function startTimer() {
-    timer = setInterval(() => {
-        viewingTime += 1; // 1초씩 증가
-        console.log(`Viewing time: ${viewingTime} seconds`);
-    }, 1000);
-}
-function stopTimer() {
-    clearInterval(timer);
-}
-document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === 'visible') {
-        startTimer();
-    } else {
-        stopTimer();
-    }
-});
-startTimer();
+// let viewingTime = 0;
+// let timer;
+// function startTimer() {
+//     timer = setInterval(() => {
+//         viewingTime += 1; // 1초씩 증가
+//         console.log(`Viewing time: ${viewingTime} seconds`);
+//     }, 1000);
+// }
+// function stopTimer() {
+//     clearInterval(timer);
+// }
+// document.addEventListener("visibilitychange", () => {
+//     if (document.visibilityState === 'visible') {
+//         startTimer();
+//     } else {
+//         stopTimer();
+//     }
+// });
+// startTimer();
 
 /*
 AI 추천
