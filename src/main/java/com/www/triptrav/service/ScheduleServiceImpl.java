@@ -44,4 +44,15 @@ public class ScheduleServiceImpl implements ScheduleService {
     public void updateMemoYN(long sco) {
         scheduleMapper.updateMemoYN(sco);
     }
+
+    @Override
+    public long getScheduleMaker(long sco) {
+        return scheduleMapper.getScheduleMaker(sco);
+    }
+
+    @Override
+    public ScheduleVO getScheduleVO(long sco) {
+        return scheduleMapper.getScheduleVO(sco);
+    }
+
 }
