@@ -1,13 +1,11 @@
 package com.www.triptrav.controller;
 
-import ch.qos.logback.core.rolling.helper.IntegerTokenConverter;
 import com.www.triptrav.domain.*;
 import com.www.triptrav.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -18,11 +16,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/schedule/*")
@@ -153,7 +149,7 @@ public class ScheduleController {
     public String modifyMemo(@PathVariable("sco") long sco, @RequestBody String memo) {
         memo = memo.substring(1, memo.length() - 1);
         int isOk = smsv.modifyMemo(memo, sco);
-        return isOk > 0 ? "1" : "0";
+         return isOk > 0 ? "1" : "0";
     }
 
     @DeleteMapping("/memoDelete/{sco}")
@@ -221,12 +217,16 @@ public class ScheduleController {
     @ResponseBody
     public ScheduleVO addScheduleRole(@PathVariable long uno, @PathVariable long sco) {
         ScheduleRoleVO user = srsv.checkScheduleRole(uno, sco);
+        log.info("inviteUser : {}", user);
         if (user == null) {
             int isIn = srsv.addScheduleRole(uno, sco);
+
             if (isIn > 0) {
                 int isOk = scsv.inviteUserAddPlan(uno, sco);
+                log.info("isOk : {}", isOk);
                 if (isOk > 0) {
                     ScheduleVO scheVO = ssv.getScheduleVO(sco);
+                    log.info("inviteUser scheVO : {}", scheVO);
                     return scheVO;
                 }
             } else {
@@ -236,6 +236,13 @@ public class ScheduleController {
             return null;
         }
         return null;
+    }
+
+    @GetMapping("/getUserRole/{uno}/{sco}")
+    @ResponseBody
+    public ScheduleRoleVO getUserRole(@PathVariable long uno, @PathVariable long sco) {
+        ScheduleRoleVO result = srsv.checkScheduleRole(uno, sco);
+        return result;
     }
 
 }
