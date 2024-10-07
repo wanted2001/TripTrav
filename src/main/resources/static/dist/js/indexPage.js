@@ -8,6 +8,7 @@ function changeImage() {
         images[currentImg].classList.add('active');
     }, 30000);
 }
+
 window.onload = function () {
     changeImage();
 
@@ -34,7 +35,9 @@ window.onload = function () {
 function changeSearch() {
     document.querySelector('.mainText').style.display = 'none';
     document.querySelector('.mainBtnDiv').style.display = 'none';
+    document.querySelector('.tasteDiv').style.display = 'none';
     document.querySelector('.inputWrap').style.display = '';
+
 }
 //검색 자동완성
 function fetchSuggestions() {
@@ -66,3 +69,31 @@ function fetchSuggestions() {
             console.error(error);
         });
 }
+
+function loadTaste(){
+    document.querySelector('.tasteDiv').style.display = '';
+    document.querySelector('.mainText').style.display = 'none';
+    document.querySelector('.mainBtnDiv').style.display = 'none';
+}
+
+const buttons = document.querySelectorAll('.taste-button');
+let selectedButtons = [];
+
+buttons.forEach(button => {
+    button.addEventListener('click', function() {
+        const buttonText = this.innerText;
+        if (selectedButtons.includes(buttonText)) {
+            selectedButtons = selectedButtons.filter(item => item !== buttonText);
+            this.classList.remove('active');
+        }
+        else if (selectedButtons.length < 5) {
+            selectedButtons.push(buttonText);
+            this.classList.add('active');
+        }
+        else {
+            alert('최대 5개까지 선택할 수 있습니다.');
+        }
+
+        console.log(selectedButtons);
+    });
+});
