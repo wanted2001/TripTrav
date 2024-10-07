@@ -47,7 +47,7 @@ public class MyPageController {
             scheDTO.setScheName(svo.getScheName());
             scheDTO.setScheStart(svo.getScheStart());
             scheDTO.setScheEnd(svo.getScheEnd());
-            scheDTO.setScheTitle(sdvo.getScheTItle());
+            scheDTO.setScheTitle(sdvo.getScheTitle());
             scheduleDTOList.add(scheDTO);
         }
         return scheduleDTOList;

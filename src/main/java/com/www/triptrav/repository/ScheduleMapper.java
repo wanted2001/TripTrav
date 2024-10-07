@@ -25,4 +25,6 @@ public interface ScheduleMapper {
     long getScheduleMaker(long sco);
 
     ScheduleVO getScheduleVO(long sco);
+
+    List<ScheduleVO> getUserSchedule(long uno);
 }

@@ -64,6 +64,7 @@ public class ScheduleController {
         scheVO.setScheEnd((String) sche.get("sche_end"));
         scheVO.setScheCount(((Long) sche.get("sche_count")).intValue());
         scheVO.setUno(Long.parseLong((String) sche.get("uno")));
+        scheVO.setScheImg((String) sche.get("sche_img"));
         log.info("pvo:{}", scheVO);
         log.info("contentID{}", contentId);
 
@@ -243,6 +244,25 @@ public class ScheduleController {
     public ScheduleRoleVO getUserRole(@PathVariable long uno, @PathVariable long sco) {
         ScheduleRoleVO result = srsv.checkScheduleRole(uno, sco);
         return result;
+    }
+
+    @GetMapping("/getUserSchedule/{uno}")
+    @ResponseBody
+    public List<ScheduleVO> getUserSchedule(@PathVariable long uno){
+        List<ScheduleVO> scheVO = ssv.getUserSchedule(uno);
+        return scheVO!=null ? scheVO : Collections.emptyList();
+    }
+
+    @PostMapping("/addPlaceInPlan")
+    @ResponseBody
+    public String addPlaceInPlan(@RequestBody ScheduleDetailVO scheduleDetailVO){
+        log.info("addPlaceInPlan {}", scheduleDetailVO);
+        ScheduleDetailVO sdVO = new ScheduleDetailVO();
+        sdVO.setSco(scheduleDetailVO.getSco());
+        sdVO.setScheContentId(scheduleDetailVO.getScheContentId());
+        sdVO.setScheTitle(scheduleDetailVO.getScheTitle());
+        int isOk = sdsv.addPlaceInPlan(sdVO);
+        return isOk>0?"1":"0";
     }
 
 }

@@ -40,4 +40,9 @@ public class ScheduleDetailServiceImpl implements ScheduleDetailService{
     public List<ScheduleDetailVO> getAllCourse(long sco) {
         return scheduleDetailMapper.getAllCourse(sco);
     }
+
+    @Override
+    public int addPlaceInPlan(ScheduleDetailVO sdVO) {
+        return scheduleDetailMapper.addPlaceInPlan(sdVO);
+    }
 }

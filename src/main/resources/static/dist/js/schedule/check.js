@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (result.scheRole === 1) {
             console.log("role 있음");
             const editAble = `<div class="editBtn btnText">편집</div>`;
-            document.querySelector('.mapContentBox').innerHTML+=editAble;        }
+            document.querySelector('.contentArea').insertAdjacentHTML('beforebegin',editAble);        }
     });
     getAllCourse(sco).then(result=>{
         console.log(result)

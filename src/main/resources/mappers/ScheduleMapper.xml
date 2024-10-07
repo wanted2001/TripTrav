@@ -4,24 +4,19 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.www.triptrav.repository.ScheduleMapper">
     <insert id="insertPlan" useGeneratedKeys="true" keyProperty="sco">
-        insert into schedule (sche_name, uno, sche_start, sche_end, sche_count)
-        values (#{scheName}, #{uno}, #{scheStart}, #{scheEnd}, #{scheCount})
+        insert into schedule (sche_name, uno, sche_start, sche_end, sche_count, sche_img)
+        values (#{scheName}, #{uno}, #{scheStart}, #{scheEnd}, #{scheCount}, #{scheImg})
     </insert>
 
     <select id="getSchedule" resultType="com.www.triptrav.domain.ScheduleDTO">
-        SELECT
+        select
         s.sche_name, s.sche_start, s.sche_end, s.sche_count,
         sd.sche_content_id, sd.sche_index, sd.sche_date
-        FROM
-        schedule s
-        JOIN
-        schedule_detail sd
-        ON
-        s.sco = sd.sco
-        Where
-        s.sco=${sco}
-        and
-        sd.sche_date = ${date}
+        from schedule s
+        join schedule_detail sd
+        on s.sco = sd.sco
+        Where s.sco=${sco}
+        and sd.sche_date = ${date}
     </select>
 
     <update id="updatePlanName">
@@ -48,5 +43,9 @@
 
     <select id="getScheduleVO" resultType="com.www.triptrav.domain.ScheduleVO">
         select * from schedule where sco=#{sco}
+    </select>
+
+    <select id="getUserSchedule" resultType="com.www.triptrav.domain.ScheduleVO">
+        select * from schedule where uno=${uno}
     </select>
 </mapper>

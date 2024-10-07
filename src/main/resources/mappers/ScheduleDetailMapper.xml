@@ -28,4 +28,5 @@
     <select id="getAllCourse" resultType="com.www.triptrav.domain.ScheduleDetailVO">
         select * from schedule_detail where sco=#{sco}
     </select>
+
 </mapper>

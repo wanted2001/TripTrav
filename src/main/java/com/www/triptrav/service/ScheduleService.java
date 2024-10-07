@@ -21,4 +21,6 @@ public interface ScheduleService {
     long getScheduleMaker(long sco);
 
     ScheduleVO getScheduleVO(long sco);
+
+    List<ScheduleVO> getUserSchedule(long uno);
 }
