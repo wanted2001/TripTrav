@@ -93,12 +93,22 @@ button{
     text-align: center;
 }
 
-.createPlanBtn, .create {
+.myPlanUl {
+    height: 394px;
+    overflow: auto;
+}
+
+.scheduleDuration {
+    width: 200px;
+    margin: 6px 0 0 110px;
+}
+
+.createPlanBtn, .create, .makePlan{
     position: absolute;
     font-family: 'LINESeedKR-Rg';
     border: 1px solid orange;
     border-radius: 5px;
-    transform: translate(-226px, 405px);
+    transform: translate(-226px, 15px);
     font-size: 15px;
     width: 90%;
     padding: 10px 0 5px;
@@ -108,7 +118,11 @@ button{
     top: 37px;
 }
 
-.createPlanBtn:hover, .create:hover {
+.makePlan{
+    transform: translate(-225px, 219px);
+}
+
+.createPlanBtn:hover, .create:hover ,.makePlan:hover{
     background: orange;
     color: white;
 }
@@ -124,7 +138,7 @@ button{
     font-size: 16px;
 }
 
-.currentPlaceInfo {
+.currentPlaceInfo, .myPlaceInfo {
     border: 1px solid #a4a4a4;
     width: 90%;
     margin: 19px auto;
@@ -134,13 +148,14 @@ button{
     font-size: 15px;
 }
 
-.currentPlaceInfo img {
+.currentPlaceInfo img, .myPlaceInfo img {
     width: 100px;
+    height: 66.69px;
     padding: 5px;
     border-radius: 9px;
 }
 
-.currentPlaceName {
+.currentPlaceName, .myPlaceName {
     width: 73%;
     margin-top: -69px;
     margin-left: 111px;
@@ -604,6 +619,56 @@ button{
     animation: spin 1s linear infinite;
 }
 
+.noPlanText{
+    position: absolute;
+    transform: translate(-50%, -114%);
+    top: 50%;
+    left: 50%;
+    font-size: 15px;
+    color: gray;
+}
+
+.noPlanText span{
+    display: block;
+    margin-top: 8px;
+}
+
+.calendarArea {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 17px;
+}
+
+.departArea img, .returnArea img{
+    vertical-align: middle;
+    width: 20px;
+    margin-top: -3px;
+}
+
+#departureDate, #returnDate {
+    font-family: 'LINESeedKR-Rg';
+    padding: 3px 0 0 4px;
+    margin-left: 3px;
+}
+
+.plusPlan {
+    color: black;
+    border: 1px solid #cbcbcb;
+    padding: 7px 8px 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    float: right;
+    margin: -8px 7.5px;
+    font-family: 'LINESeedKR-Rg';
+    border-radius: 3px;
+}
+
+.plusPlan:hover {
+    border: 2px solid black;
+    margin: -9px 6.5px;
+    box-shadow: 4px 3px 6px -2px #b9b9b9;
+}
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }

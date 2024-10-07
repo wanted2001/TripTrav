@@ -61,6 +61,7 @@ CREATE TABLE `schedule` (
 	`sche_end` datetime NOT NULL,
 	`sche_count` int NOT NULL,
 	`sche_memo` int NULL DEFAULT 0,
+	`sche_img` varchar(200) NULL,
 	`uno` bigint NOT NULL,
 	FOREIGN KEY (`uno`) REFERENCES `user`(`uno`)
 );

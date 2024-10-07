@@ -55,4 +55,9 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleMapper.getScheduleVO(sco);
     }
 
+    @Override
+    public List<ScheduleVO> getUserSchedule(long uno) {
+        return scheduleMapper.getUserSchedule(uno);
+    }
+
 }

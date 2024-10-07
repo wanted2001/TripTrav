@@ -15,4 +15,5 @@ public class ScheduleVO {
     private String scheEnd;
     private int scheCount; //여행소요일수
     private String scheMemo;
+    private String scheImg;
 }
