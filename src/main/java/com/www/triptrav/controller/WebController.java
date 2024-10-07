@@ -9,11 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Slf4j
 public class WebController {
 
-    @GetMapping("/react")
-    public String reactPage() {
-        return "redirect:/index.html";
-    }
-
     @GetMapping("/")
     public String index() {
         return "index";
