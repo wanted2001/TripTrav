@@ -29,4 +29,17 @@
         select * from schedule_detail where sco=#{sco}
     </select>
 
+    <select id="getMaxDate" resultType="int">
+        select max(sche_date) from schedule_detail where sco=#{sco}
+    </select>
+
+    <select id="getMaxIndex" resultType="int">
+        select max(sche_index) from schedule_detail
+        where sco=#{sco} and sche_date=#{date}
+    </select>
+
+    <insert id="addPlaceInPlan">
+        insert into schedule_detail
+        values(#{sco},#{scheContentId},#{scheTitle},#{scheIndex}+1,#{scheDate})
+    </insert>
 </mapper>

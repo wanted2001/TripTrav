@@ -17,4 +17,8 @@ public interface ScheduleDetailService {
     List<ScheduleDetailVO> getAllCourse(long sco);
 
     int addPlaceInPlan(ScheduleDetailVO sdVO);
+
+    int getMaxDate(long sco);
+
+    int getMaxIndex(long sco, int date);
 }

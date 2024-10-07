@@ -257,12 +257,19 @@ public class ScheduleController {
     @ResponseBody
     public String addPlaceInPlan(@RequestBody ScheduleDetailVO scheduleDetailVO){
         log.info("addPlaceInPlan {}", scheduleDetailVO);
-        ScheduleDetailVO sdVO = new ScheduleDetailVO();
-        sdVO.setSco(scheduleDetailVO.getSco());
-        sdVO.setScheContentId(scheduleDetailVO.getScheContentId());
-        sdVO.setScheTitle(scheduleDetailVO.getScheTitle());
-        int isOk = sdsv.addPlaceInPlan(sdVO);
-        return isOk>0?"1":"0";
+        int date = sdsv.getMaxDate(scheduleDetailVO.getSco());
+        int index = sdsv.getMaxIndex(scheduleDetailVO.getSco(), date);
+        if(date>0 && index>0){
+            ScheduleDetailVO sdVO = new ScheduleDetailVO();
+            sdVO.setSco(scheduleDetailVO.getSco());
+            sdVO.setScheContentId(scheduleDetailVO.getScheContentId());
+            sdVO.setScheTitle(scheduleDetailVO.getScheTitle());
+            sdVO.setScheDate(date);
+            sdVO.setScheIndex(index);
+            int isOk = sdsv.addPlaceInPlan(sdVO);
+            return "1";
+        }
+        return "0";
     }
 
 }

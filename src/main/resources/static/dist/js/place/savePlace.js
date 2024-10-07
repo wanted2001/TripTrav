@@ -37,7 +37,6 @@ function savePlace(event){
                     }
                 })
             } else {
-                console.log("일정이 없는 유저")
                 document.querySelector('.myPlanUl').innerHTML=`<div class="noPlanText">현재 예정된 일정이 없습니다.<span>새로운 일정을 생성해보세요!</span></div>`
             }
         })
@@ -52,7 +51,6 @@ function createPlan(){
     fetch(detailInfoUrl)
         .then(response=>response.json())
         .then(data=>{
-            console.log(data)
             const jsonData = data.response.body.items.item[0];
             document.querySelector('.myPlan').innerHTML='';
             const createPage = `<form id="tripForm" method="post">
@@ -112,7 +110,6 @@ function setupTripFormListener() {
     const tripForm = document.getElementById("tripForm");
 
     if (tripForm) {
-        console.log('tripForm');
         tripForm.addEventListener("submit", function(event) {
             event.preventDefault();
 
@@ -134,7 +131,6 @@ function setupTripFormListener() {
                 sche_img: placeFirstImg,
                 uno: unoNum
             };
-            console.log(requestBody);
 
             fetch(`/schedule/createPlan/${contentId}/${currentPlaceName}`, {
                 method: 'POST',
@@ -173,13 +169,13 @@ async function getUserSchedule(uno){
 }
 
 document.addEventListener('click',(e)=>{
-    console.log(e.target);
     if (e.target && e.target.classList.contains('plusPlan')) {
-        const myPlaceInfo = e.target.closest('.myPlaceInfo');
-        const sco = myPlaceInfo.getAttribute('data-sco');
-        const title = document.querySelector('.locationTitle').innerText;
-        console.log(sco, contentId, title);
-        addPlacePlan(sco, contentId, title);
+        if(confirm("해당 일정에 현재 장소를 추가하시겠습니까?")){
+            const myPlaceInfo = e.target.closest('.myPlaceInfo');
+            const sco = myPlaceInfo.getAttribute('data-sco');
+            const title = document.querySelector('.locationTitle').innerText;
+            addPlacePlan(sco, contentId, title);
+        }
     }
 })
 
@@ -197,6 +193,12 @@ function addPlacePlan(sco, scheContentId, scheTitle){
         body:JSON.stringify(newPlace)
     }).then(response => response.text())
         .then(data=>{
-            console.log(data)
+            if(data==="1"){
+                if(confirm('선택하신 일정에 추가되었습니다\n마이페이지로 이동하여 확인하시겠습니까?')){
+                    location.href=`/mypage?uno=${unoNum}`;
+                }
+            } else {
+                alert('일정 추가에 실패하였습니다.')
+            }
         })
 }
