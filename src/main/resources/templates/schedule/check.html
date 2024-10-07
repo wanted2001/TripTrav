@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -11,11 +12,11 @@
         const script = document.createElement('script');
         script.src = `https://apis.openapi.sk.com/tmap/vectorjs?version=1&appKey=${tMapAPIKEY}`;
         document.head.appendChild(script);
-
     </script>
 </head>
 <body onload="initTmap()">
     <th:block th:replace="~{header :: header}"></th:block>
+    <input class="inviteUser" th:value="${session.inviteeUser}" style="display: none">
     <div class="checkBackImg">
         <div class="checkTitle">
             <img src="/dist/image/send.svg">
@@ -148,5 +149,6 @@
         <div class="checkBottom"></div>
     </div>
     <script src="/dist/js/schedule/check.js"></script>
+    <script src="/dist/js/schedule/inviteUser.js"></script>
 </body>
 </html>

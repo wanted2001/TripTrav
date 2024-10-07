@@ -19,4 +19,10 @@ public interface ScheduleDetailMapper {
     void emptyPlan(@Param("sco") long sco, @Param("sche_date") int sche_date);
 
     List<ScheduleDetailVO> getAllCourse(long sco);
+
+    int addPlaceInPlan(ScheduleDetailVO sdVO);
+
+    int getMaxDate(long sco);
+
+    int getMaxIndex(@Param("sco") long sco, @Param("date") int date);
 }

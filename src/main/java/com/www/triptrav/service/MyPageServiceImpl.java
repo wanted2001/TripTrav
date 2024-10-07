@@ -1,9 +1,6 @@
 package com.www.triptrav.service;
 
-import com.www.triptrav.domain.ReviewDTO;
-import com.www.triptrav.domain.ReviewImageVO;
-import com.www.triptrav.domain.ReviewVO;
-import com.www.triptrav.domain.UserVO;
+import com.www.triptrav.domain.*;
 import com.www.triptrav.repository.MyPageMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +21,7 @@ public class MyPageServiceImpl implements MyPageService {
     }
 
     @Override
-    public List<UserVO> scheduleCall(long uno) {
+    public List<ScheduleVO> scheduleCall(long uno) {
         return myPageMapper.scheduleCall(uno);
     }
 
@@ -41,5 +38,10 @@ public class MyPageServiceImpl implements MyPageService {
     @Override
     public ReviewVO getPopReview(long rno) {
         return myPageMapper.getPopReview(rno);
+    }
+
+    @Override
+    public ScheduleDetailVO getScheduleDetail(long sco) {
+        return myPageMapper.getScheduleDetail(sco);
     }
 }

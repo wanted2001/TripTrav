@@ -102,7 +102,6 @@ public class ReviewController {
         rvo.setRno(rno);
 
         rsv.removeAllImagePath(rvo.getRno());
-        log.info("files >>> {}" , files);
         if (files != null && files.length > 0) {
             String uploadFolder = "C:/userImage";
             SimpleDateFormat sdf = new SimpleDateFormat("yy/MM/dd");

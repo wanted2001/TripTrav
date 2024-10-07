@@ -17,4 +17,10 @@ public interface ScheduleService {
     int getMemoYN(long sco);
 
     void updateMemoYN(long sco);
+
+    long getScheduleMaker(long sco);
+
+    ScheduleVO getScheduleVO(long sco);
+
+    List<ScheduleVO> getUserSchedule(long uno);
 }

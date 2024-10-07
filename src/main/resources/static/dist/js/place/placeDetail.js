@@ -73,7 +73,7 @@ fetch(detailInfoUrl)
             const additionalInfoData = result.response.body.items.item[0];
             document.querySelector('.priceInfo').innerHTML = `${additionalInfoData.infoname} : ${additionalInfoData.infotext}`
         })
-        document.querySelector('.homepageInfo').innerHTML = `홈페이지 : ${jsonData.homepage}`
+        document.querySelector('.homepageInfo').innerHTML = `홈페이지 :`+`${jsonData.homepage ? ` ${jsonData.homepage}` :"등록된 페이지가 없습니다. "}`
         document.querySelector('.details').innerHTML = `<p class="sectionTitle">소개</p><span>${jsonData.overview}</span>`;
         mapx = jsonData.mapx;
         mapy = jsonData.mapy;
@@ -884,6 +884,9 @@ function renderNearbySightsAndFood(sights, food) {
     foodContainer.innerHTML = '';
     attractionsContainer.innerHTML = '';
     food.forEach(item => {
+        const foodLink = document.createElement('a');
+        foodLink.href = `/place/${item.contentid}`;
+        foodLink.classList.add('food-link');
         const foodDiv = document.createElement('div');
         foodDiv.classList.add('locations');
         const img = document.createElement('img');
@@ -901,10 +904,14 @@ function renderNearbySightsAndFood(sights, food) {
         infoDiv.appendChild(titleP);
         infoDiv.appendChild(distP);
         foodDiv.appendChild(infoDiv);
-        foodContainer.appendChild(foodDiv);
+        foodLink.appendChild(foodDiv);
+        foodContainer.appendChild(foodLink);
     });
 
     sights.forEach(item => {
+        const sightsLink = document.createElement('a');
+        sightsLink.href = `/place/${item.contentid}`;
+        sightsLink.classList.add('sights-link');
         const sightDiv = document.createElement('div');
         sightDiv.classList.add('locations');
         const img = document.createElement('img');
@@ -922,7 +929,8 @@ function renderNearbySightsAndFood(sights, food) {
         infoDiv.appendChild(titleP);
         infoDiv.appendChild(distP);
         sightDiv.appendChild(infoDiv);
-        attractionsContainer.appendChild(sightDiv);
+        sightsLink.appendChild(sightDiv);
+        attractionsContainer.appendChild(sightsLink);
     });
 }
 
@@ -1052,3 +1060,87 @@ async function deleteLike(uno, likeCode){
         console.log(error);
     }
 }
+
+//취향분석용 타이머
+// let viewingTime = 0;
+// let timer;
+// function startTimer() {
+//     timer = setInterval(() => {
+//         viewingTime += 1; // 1초씩 증가
+//         console.log(`Viewing time: ${viewingTime} seconds`);
+//     }, 1000);
+// }
+// function stopTimer() {
+//     clearInterval(timer);
+// }
+// document.addEventListener("visibilitychange", () => {
+//     if (document.visibilityState === 'visible') {
+//         startTimer();
+//     } else {
+//         stopTimer();
+//     }
+// });
+// startTimer();
+
+/*
+
+메인 추천
+TourApi 상의 취향분석처리
+API 특정 태그들을 띄워준다
+ex) 자연 인문 문화
+누르면 API로 바로보내서 해당 관광지 여러개출력만(trips 페이지재활용)
+
+
+취향 추천 20퍼
+특정장소화면을 얼마나봤는지 체크해서 (30초이상)
+db에 contentId랑 name 저장 -> db보단 로컬스토리지로 처리
+
+점수 추천 80퍼
+리뷰남기는 점수체크, 장소 찜하기로 점수분석
+
+총 100퍼센트의 점수를 토대로
+AITourData json 파일 접근해서
+title기준으로 cat3코드 접근해서
+10개의 관광지 추천
+1순위 부터 3순위
+1순위 5개 2순위 3개 3순위 2개
+cat3돌려서 해당갯수만큼없으면 cat2로 상향접근 후 데이터출력
+
+
+추천받기 누르면 db에 성별 나이 한번 저장시키고 -> 페이지로딩시 이사람이 성별나이저장했는지체크한번하기
+로그인 초기에는 관광지페이지를 많이안볼테니 20점으로 점수낮추기
+db에 추천받은 데이터 나이랑 성별토대로 저장시키기 -> 추천페이지에서 저장된값기준 보여주기(미리데이터좀넣어놔야할듯)
+
+페이지는 그냥 메인추천그대로쓰기
+
+AI는 추천값 상위 5개
+gpt api로 보내서 분석 및 비슷한 장소 추천 -> 받아오면 해당 장소 tourAPI 키워드검색으로 찾아서 contentID리턴
+=> 이 장소에 등록된 리뷰 분석해서 해당장소 밑에 리뷰요약으로 달아주기(AI 처리한번더)
+
+화면로직
+1 메인에서 취향분석버튼 누르면
+2-1 로그인 체크 (버튼에 성별,나이 입력받은값 있는지 체크 있으면 2-3)
+2-2 성별, 나이 입력받아서 db에 저장시키기
+2-3 태그들 선택기능(최대 5개) 후 분석하기누르면 성별, 나이값으로 선택한 태그들을 카테고리코드로 변경 후 db에 리스트화시켜서 저장
+3-1 태그5개에 대한 유사 장소를 10개 출력 ex)내 취향 여행지 -> 바로 gpt Api로 유사장소 10개 값 보내서 비슷한 여행지 5개 받아서 3-3으로
+3-2 db에 저장되어있는 리스트 된 태그들 기준 10개 출력 ex) 10대 남성이 좋아하는 여행지
+3-3 AI에게 받은 여행지 tourAPI 키워드검색에서 검색 후 출력 ex) AI 기반 추천 여행지
+4 AI 기반 추천여행지의 리뷰데이터 db접근해서 받아온리스트를 gpt API 전송 후 리뷰분석
+5-1 AI 구역 내에서 추천이유(API response)을 최상단에 출력
+5-2 리뷰분석데이터는 각 각 장소마다 (API response) 받아서 출력
+6 유저의 사용시간이 길어지면 페이지머무는 시간을 기록해서 3-2 리스트 된 태그에 정보 업데이트 시키기
+
+예상문제점
+추천받은 장소를 눌러서 들어간 후 뒤로가기 시 페이지처리 (저장된 값이 아닌데) -> history api의 pushState() replaceState()확인
+
+에러처리해야할것
+1. 페이지타이머 페이지로딩다된후 돌아가기
+2. 이미지처리 firstImage가 없는데이터 -> 출력 후 이미지 없는 값이면 스크래핑으로 이미지가져오기
+->매번 스크래핑하면 차단당함 -> 한번한 이미지는 db에 경로저장시켜놓기
+로직처리 이미지불러오고 firstImage 없으면 id값으로 db에 저장된경로있는지확인 -> 없으면 스크래핑
+3. getImage 로직 이미지리턴이 5장이 안되는경우 css 처리
+4. 소개 데이터가 다른경우가 있음(아마음식점인경우그런거같음)
+
+해야할것
+1.
+*/

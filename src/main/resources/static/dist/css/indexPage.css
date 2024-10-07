@@ -1,0 +1,281 @@
+.mainWrap{
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+.mainBackImg img{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+}
+.mainBackImg img.active{
+    opacity: 1;
+}
+.mainText{
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-align: center;
+    font-size: 2em;
+    font-family: LINESeedKR-Bd;
+    z-index: 10;
+}
+.bold{
+    font-size: 48px;
+}
+.mainBtnDiv{
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 10;
+}
+.mainBtn{
+    background: white;
+    outline: none;
+    border: 1px solid gainsboro;
+    border-radius: 17px;
+    width: 200px;
+    height: 34px;
+}
+.mainBtn a{
+    font-size: 15px;
+    line-height: 15px;
+    vertical-align: middle;
+    color: black;
+    font-family: LINESeedKR-Rg;
+}
+.mainBtn a img{
+    vertical-align: middle;
+    line-height: 15px;
+    width: 15px;
+    margin-left: 6px;
+    margin-top: 1px;
+}
+.inputWrap {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-align: center;
+    font-size: 40px;
+    font-family: LINESeedKR-Bd;
+    z-index: 10;
+}
+
+.inputWrap input {
+    width: 380px;
+    height: 36px;
+    margin-top: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 15px;
+    padding-left: 10px;
+    line-height: 36px;
+    outline: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.inputWrap input:focus {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.inputWrap>span {
+    letter-spacing: 2px;
+    font-size: 34px;
+}
+
+.inputWrap>button>img {
+    position: absolute;
+    top: 56px;
+    right: 27px;
+    cursor: pointer;
+    width: 29px;
+    height: 27px;
+    display: inline-block;
+    transition: transform 0.5s ease;
+}
+.inputWrap>button>img:hover {
+    animation: triangleMove 2s linear infinite;
+}
+@keyframes triangleMove {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+    33% {
+        transform: translate(4px, -4px);
+    }
+    66% {
+        transform: translate(4px, 4px);
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+#suggestions {
+    width: 392px;
+    margin: 0 auto;
+    padding: 0;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    color: #333;
+    max-height: 200px;
+    overflow: hidden;
+    overflow-y: auto;
+    z-index: 100;
+    position: absolute;
+    top: 88px;
+    text-align: left;
+}
+
+#suggestions>a{
+    color: black;
+    text-decoration: none;
+}
+
+#suggestions li {
+    padding: 10px 10px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    color: black;
+    font-family: LINESeedKR-Rg;
+}
+
+#suggestions>li:first-child{
+    border-top: 1px solid #eee;
+}
+
+#suggestions li a{
+    color: black;
+}
+
+#suggestions li:last-child {
+    border-bottom: none;
+}
+
+#suggestions li:hover {
+    background-color: #f0f0f0;
+    transform: translateX(5px);
+}
+
+#suggestions li:focus {
+    background-color: #e0e0e0;
+    outline: none;
+}
+
+#suggestions::-webkit-scrollbar {
+    width: 8px;
+}
+
+#suggestions::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 10px;
+}
+
+#suggestions::-webkit-scrollbar-thumb:hover {
+    background-color: #bbb;
+}
+
+.tasteDiv {
+    font-family: LINESeedKR-Rg;
+    width: 1000px;
+    height: 500px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+}
+
+.preferences {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.tasteTitle{
+    color: white;
+    font-family: LINESeedKR-Bd;
+    font-size: 32px;
+    margin-bottom: 65px;
+    opacity: 1;
+}
+
+.grid-row {
+    display: grid;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.grid-row:nth-child(1), .grid-row:nth-child(3) {
+    grid-template-columns: repeat(8, 1fr);
+    width: 100%;
+}
+
+.grid-row:nth-child(2), .grid-row:nth-child(4) {
+    grid-template-columns: repeat(7, 1fr);
+    width: 87.5%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.taste-button {
+    padding: 10px;
+    border: 1px solid white;
+    border-radius: 30px;
+    color: white;
+    font-family: LINESeedKR-Rg;
+    font-size: 17px;
+    cursor: pointer;
+    text-align: center;
+    word-break: keep-all;
+    white-space: normal;
+    min-height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease;
+    background-color: rgba(221, 221, 221, 0.4);
+}
+
+.taste-button:hover {
+    background-color: #e4e3e3;
+}
+
+.analyze-button {
+    width: 165px;
+    height: 40px;
+    margin-top: 10px;
+    line-height: 40px;
+    border: 1px solid white;
+    border-radius: 20px;
+    background-color: white;
+    color: #323232;
+    font-size: 20px;
+    font-family: LINESeedKR-Bd;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.taste-button.active {
+    background-color: #f0f0f0;
+    color: #323232;
+    border: 1px solid #f0f0f0;
+}
