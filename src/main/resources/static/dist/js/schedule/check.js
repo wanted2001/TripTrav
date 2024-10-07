@@ -90,6 +90,13 @@ document.addEventListener('DOMContentLoaded', () => {
     initTmap();
     console.log(slideItems.length);
 
+    getUserRole(unoNum, sco).then(result => {
+        console.log(result);
+        if (result.scheRole === 1) {
+            console.log("role 있음");
+            const editAble = `<div class="editBtn btnText">편집</div>`;
+            document.querySelector('.mapContentBox').innerHTML+=editAble;        }
+    });
     getAllCourse(sco).then(result=>{
         console.log(result)
         result.forEach(key=>{
@@ -1063,6 +1070,18 @@ async function generateInviteUrl(sco, unoNum) {
     }
 
     return result; // 이 줄은 마지막에 두어야 함
+}
+
+//유저 권환 확인
+async function getUserRole(uno, sco){
+    try {
+        const url = "/schedule/getUserRole/"+uno+"/"+sco
+        const config = {method:'GET'};
+        const resp = await fetch(url,config);
+        return resp.json();
+    }catch (error) {
+        console.log(error);
+    }
 }
 
 //고민점

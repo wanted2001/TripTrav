@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
         getScheduleMaker(sco).then(result =>{
             if(result != unoNum){
                 addScheduleRole(unoNum, sco).then(result=>{
-
+                    console.log(result);
                 })
             }
         })
@@ -29,6 +29,7 @@ async function getScheduleMaker(sco){
         console.log(error);
     }
 }
+
 async function addScheduleRole(uno, sco){
     try {
         const url = "/schedule/addScheduleRole/"+uno+"/"+sco

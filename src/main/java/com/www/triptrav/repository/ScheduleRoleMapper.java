@@ -3,7 +3,7 @@ package com.www.triptrav.repository;
 import com.www.triptrav.domain.ScheduleRoleVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.security.core.parameters.P;
+import org.springframework.data.relational.core.sql.In;
 
 @Mapper
 public interface ScheduleRoleMapper {
