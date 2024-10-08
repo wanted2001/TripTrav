@@ -7,38 +7,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>title</title>
         <link rel="stylesheet" th:href="@{/dist/css/reset.css}">
+        <link rel="stylesheet" th:href="@{/dist/css/header.css}">
         <link rel="stylesheet" th:href="@{/dist/css/user/loginJoin.css}">
-        <style>
-            .header-nav {
-                background: #ffffff00;
-                position: absolute;
-                z-index: 100;
-                width: 1440px;
-                top: 30px;
-                left: 52%;
-                transform: translateX(-50%);
-                display: flex;
-                justify-content: space-between;
-            }
-
-            .middleUl {
-                font-family: LINESeedKR-Bd;
-                width: 500px;
-                display: flex;
-                justify-content: space-around;
-                font-size: 19px;
-            }
-
-            .rightUl {
-                font-family: LINESeedKR-Rg;
-                display: flex;
-            }
-
-            a {
-                color: white;
-                cursor: pointer;
-            }
-        </style>
     </head>
     <body>
     <nav class="header-nav" id="header">
@@ -113,52 +83,29 @@
             document.querySelector('.mainBtnDiv').style.display = 'none';
             document.querySelector('.inputWrap').style.display = '';
         }
-    </script>
-    <script sec:authorize="isAuthenticated()">
-        let unoNum = `[[${#authentication.getPrincipal().getUser().getUno()}]]`;
-        let userNickname = `[[${#authentication.getPrincipal().getUser().getNickname()}]]`;
-        var urlParams = new URLSearchParams(window.location.search);
-        const message = urlParams.get('message');
-        console.log(message);
-        console.log(userNickname);
-        if (message) {
-            alert("허용되지 않은 닉네임입니다.\n닉네임을 변경해주세요. ");
-            goToMyPage(unoNum);
-        } else if (userNickname.includes("_user") && message != null) {
-            alert("허용되지 않은 닉네임입니다.\n닉네임을 변경해주세요. ");
-            goToMyPage(unoNum);
-        }
 
-        function goToMyPage(unoNum) {
-            window.location.href = `/mypage?uno=${unoNum}`;
-        }
-    </script>
-    <script>
         function changeHeaderColor() {
             const header = document.getElementById('header');
             const currentURL = window.location.href;
+            const headerText = document.querySelectorAll('#header a'); // header 내의 <a> 요소 선택
 
-            // URL에 따라 배경색 변경
             if (currentURL.includes('/maps')) {
+                headerText.forEach(link => {
+                    link.style.color = 'black';
+                    link.style.setProperty('color', 'black', 'important');
+                });
                 header.style.position = 'absolute';
-                header.style.backgroundColor = 'orange';
-                header.style.width = ' 1440px';
+                header.style.width = '1440px';
                 header.style.margin = '0 auto';
             } else {
-                header.style.backgroundColor = ''; // 기본 배경색
+                headerText.forEach(link => {
+                    link.style.color = 'white';
+                    link.style.setProperty('color', 'white', 'important');
+                });
             }
         }
 
-        // 페이지 로드 시 실행
-        window.onload = changeHeaderColor;
-
-
-
-        function openLoginModal() {
-            // 모달 창을 다시 보여주는 로직 추가
-            const loginModal = document.querySelector('#myModal');
-            loginModal.style.display = 'block';
-        }
+        window.onload = changeHeaderColor; // 페이지 로드 시 색상 변경 함수 호출
 
         document.getElementById('loginBtn').addEventListener('click', function (e) {
             e.preventDefault();
@@ -177,7 +124,6 @@
                 document.getElementById('loginForm').submit();
             }
         });
-
     </script>
     </body>
 </th:block>
