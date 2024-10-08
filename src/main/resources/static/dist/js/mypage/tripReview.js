@@ -5,10 +5,12 @@ var tripFoodReviewList = document.querySelector(".tripFoodReviewList");
 getReviewList(unoNum)
     .then(data => {
         console.log(data);
-        if(data.length === 0){
-            tripPlaceReviewList.appendChild(noChild("review"));
-            tripFoodReviewList.appendChild(noChild("review"));
-        }
+        // if(data.length === 0){
+        //     tripPlaceReviewList.appendChild(noChild("review"));
+        //     tripFoodReviewList.appendChild(noChild("review"));
+        // }
+        let placeReviewNum = 0;
+        let foodReviewNum = 0;
         data.forEach(datas => {
             const review = datas.review;
             const imagePaths = datas.imagePaths;
@@ -49,20 +51,34 @@ getReviewList(unoNum)
             switch (review.reContentType) {
                 case 39:
                     tripFoodReviewList.appendChild(li);
+                    foodReviewNum++;
                     break;
                 case 12:
                     tripPlaceReviewList.appendChild(li);
+                    placeReviewNum++;
                     break;
             }
         });
-        requestAnimationFrame(() => {
-            if (!tripPlaceReviewList.hasChildNodes()) {
-                tripPlaceReviewList.appendChild(noChild("review"));
-            }
-            if (!tripFoodReviewList.hasChildNodes()) {
-                tripFoodReviewList.appendChild(noChild("review"));
-            }
-        });
+        // console.log("before check child node")
+        // console.log({tripFoodReviewList, tripPlaceReviewList, p: tripPlaceReviewList.childNodes, f: tripFoodReviewList.childNodes, pn: tripPlaceReviewList.hasChildNodes(), fn:tripFoodReviewList.hasChildNodes()})
+        
+        if (placeReviewNum === 0) {
+            // console.log("place no child")
+            tripPlaceReviewList.appendChild(noChild("review"));
+        }
+        if (foodReviewNum === 0) {
+            // console.log("food no child")
+            tripFoodReviewList.appendChild(noChild("review"));
+        }
+        // console.log("after check child node")
+        // requestAnimationFrame(() => {
+        //     if (!tripPlaceReviewList.hasChildNodes()) {
+        //         tripPlaceReviewList.appendChild(noChild("review"));
+        //     }
+        //     if (!tripFoodReviewList.hasChildNodes()) {
+        //         tripFoodReviewList.appendChild(noChild("review"));
+        //     }
+        // });
     })
     .catch(err => {
         console.log(err);

@@ -109,11 +109,15 @@ document.addEventListener('DOMContentLoaded', () => {
             addPersonBtn.style.display = 'none';
         }
     });
-    getAllCourse(sco).then(result => {
+    getAllCourse(sco).then(async result => {
         console.log(result)
-        result.forEach(key => {
-            getSlideImg(key.scheContentId);
-        })
+        await Promise.all(result.map(key => getSlideImg(key.scheContentId)))
+        // result.forEach(key => {
+        //     getSlideImg(key.scheContentId);
+        // })
+        slideItems = document.querySelectorAll('.slideItem');
+        updateInnerSlideWidth();
+        makeDot();
     })
     //일차별 일정출력
     if (sco) {
@@ -181,8 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     //드래그 슬라이드 부분
-    updateInnerSlideWidth();
-    makeDot();
+    
 
     slideWrap.addEventListener('mousedown', e => {
         pressed = true;
@@ -325,20 +328,19 @@ function getImage(key) {
     })
 }
 
-function getSlideImg(key) {
+async function getSlideImg(key) {
     const url = `https://apis.data.go.kr/B551011/KorService1/detailImage1?MobileOS=ETC&MobileApp=TripTrav&_type=json&subImageYN=Y&contentId=${key}&serviceKey=${tourAPIKEY}`;
     const innerSlide = document.querySelector('.innerSlide');
     let addedLocations = new Set();
 
-    getData(url).then(res => {
-        res.items.item.forEach(img => {
-            if (!addedLocations.has(img.contentid)) {
-                innerSlide.innerHTML += `<div class="slideItem" style="background-image: url('${img.originimgurl}'); background-size: cover; background-position: center; background-repeat: no-repeat;"></div>`;
+    const res = await getData(url)
+    res.items.item.forEach(img => {
+        if (!addedLocations.has(img.contentid)) {
+            innerSlide.innerHTML += `<div class="slideItem" style="background-image: url('${img.originimgurl}'); background-size: cover; background-position: center; background-repeat: no-repeat;"></div>`;
 
-                addedLocations.add(img.contentid);
-            }
-        });
-    })
+            addedLocations.add(img.contentid);
+        }
+    });
 }
 
 
@@ -443,6 +445,7 @@ async function generateInviteUrl() {
 //상단 슬라이드 길이 계산 함수
 function updateInnerSlideWidth() {
     //div 개수따라 totalWidth 값 설정되도록
+    slideItems = document.querySelectorAll('.slideItem');
     const totalWidth = slideItems.length * slideItemWidth;
     innerSlide.style.width = `${totalWidth}px`;
     document.querySelector('.innerLine').style.width = `${totalWidth - 215}px`;

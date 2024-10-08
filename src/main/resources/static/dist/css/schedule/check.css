@@ -554,17 +554,18 @@ button.depth2_searchBtn {
     border-bottom: 1px solid gainsboro;
     padding: 12px 16px 3px;
     position: relative;
-    transition: transform 0.4s ease;
 }
 .oneContent.moving-up {
     transform: translateY(-100%);
     position: relative;
     z-index: 1000;
+    transition: transform 0.4s ease;
 }
 .oneContent.moving-down {
     transform: translateY(100%);
     position: relative;
     z-index: 1000;
+    transition: transform 0.4s ease;
 }
 .oneContent.moved-up {
     transform: translateY(-100%);
