@@ -85,6 +85,10 @@ const editBtn = document.querySelector('.editBtn');
 const saveBtn = document.querySelector('.saveBtn');
 const disableEditBtn = document.querySelector('.disableEdit');
 
+//동행자권한편집
+const editRole = document.querySelector('.editRole');
+const editRoleSave = document.querySelector('.editRoleSave');
+
 document.addEventListener('DOMContentLoaded', () => {
     initTmap();
     console.log(slideItems.length);
@@ -93,6 +97,8 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(result);
         if (result.scheRole === 1) {
             editBtn.classList.remove('hidden');
+            editRole.style.display='flex';
+            editRoleSave.style.display='flex';
         } else {
             disableEditBtn.classList.remove('hidden');
             const addPlan = document.querySelector('.addPlan');
@@ -409,8 +415,9 @@ function checkPersonF() {
                     companionModal.style.display = 'none';
                 }
                 if (data.length > 0) {
-                    data.forEach(r => {
-                        const li = `<li class="companionLi">${r.scheNick}</li>`
+                    document.querySelector('.companionUl').innerHTML='';
+                    data.forEach((r,index) => {
+                        const li = `<li class="companionLi">${index+1}) ${r.scheNick}</li>`
                         document.querySelector('.companionUl').innerHTML += li;
                     })
                 }

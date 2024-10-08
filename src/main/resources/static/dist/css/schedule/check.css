@@ -46,6 +46,7 @@
 }
 .addPersonBtn {
     top: 213px;
+    z-index: 1000;
 }
 .memoModal, .companionModal {
     display: none;
@@ -120,7 +121,7 @@
     background: #fdfdfd;
     width: 20%;
     height: 24%;
-    top: 212px;
+    top: 255px;
     right: 326px;
     box-shadow: 4px 5px 8px 0px #9e9e9ecc;
     border-radius: 5px;
@@ -160,7 +161,7 @@
     border-left: 1px solid #b7b7b7;
     padding-left: 6px;
 }
-.saveMemo, .modifyMemo {
+.saveMemo, .modifyMemo, .editRoleSave, .editRole {
     color: black;
     border: none;
     font-size: 17px;
@@ -172,9 +173,28 @@
     background: gainsboro;
     padding: 6px 13px;
 }
-.modifyMemo{
+.modifyMemo, .editRole{
     right: 186px;
     background: #c5c5c5
+}
+.editRole {
+    transform: translate(553px, 72px);
+}
+
+.editRoleSave {
+    transform: translate(495px, 36px);
+}
+.companionUl {
+    width: 64%;
+    margin: 17px auto 0;
+    height: 307px;
+    overflow: auto;
+}
+.companionLi {
+    border-bottom: 1px solid gainsboro;
+    padding: 30px 0 9px 6px;
+    font-family: 'LINESeedKR-Th';
+    font-weight: bold;
 }
 
 #checkMap{
