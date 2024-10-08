@@ -19,4 +19,5 @@ public class ScheduleDTO {
     private long scheContentId;
     private int scheIndex; //여행순서
     private int scheDate; //여행일차(1일차...)
+    private String scheImg;
 }
