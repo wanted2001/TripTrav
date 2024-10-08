@@ -325,8 +325,12 @@ function noChild(trip) {
     const div = document.createElement("div");
     const p = document.createElement("p");
     div.style.width = "1440px";
-    div.style.height = "300px";
+    div.style.height = "150px";
+    div.style.display = "flex";
+    div.style.alignItems = "center";
+    div.style.justifyContent = "center";
     p.style.textAlign = "center";
+    p.style.fontSize ="22px";
     p.innerText = ''; // 초기화
     switch (trip) {
         case "review":
