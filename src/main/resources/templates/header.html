@@ -146,7 +146,15 @@
                 header.style.position = 'absolute';
                 header.style.width = '1440px';
                 header.style.margin = '0 auto';
-            } else {
+            } else if(currentURL.includes('/mypage')) {
+                headerText.forEach(link => {
+                    link.style.color = 'black';
+                    link.style.setProperty('color', 'black', 'important');
+                });
+                header.style.position = 'absolute';
+                header.style.width = '1440px';
+                header.style.margin = '0 auto';
+            }else {
                 headerText.forEach(link => {
                     link.style.color = 'white';
                     link.style.setProperty('color', 'white', 'important');
