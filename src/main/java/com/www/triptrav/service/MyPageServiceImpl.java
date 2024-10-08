@@ -22,7 +22,13 @@ public class MyPageServiceImpl implements MyPageService {
 
     @Override
     public List<ScheduleVO> scheduleCall(long uno) {
-        return myPageMapper.scheduleCall(uno);
+        List<ScheduleVO> scheList = myPageMapper.scheduleCall(uno);
+        List<String> comList = myPageMapper.getComList(uno);
+        for(String sco : comList){
+            ScheduleVO scheduleVO = myPageMapper.scheduleComCall(sco);
+            scheList.add(scheduleVO);
+        }
+        return scheList;
     }
 
     @Override
@@ -48,15 +54,10 @@ public class MyPageServiceImpl implements MyPageService {
     @Override
     public int updateCommonUser(UserVO userVO) {
         log.info("userVo22222 => {}", userVO.getPw());
-
         int isOk = 0;
-
-        // 비밀번호가 null이거나 빈 문자열일 경우
         if (userVO.getPw() == null || userVO.getPw().isEmpty()) {
-            // 비밀번호 없이 업데이트하는 로직
             isOk = myPageMapper.userComNPw(userVO);  // 비밀번호 없는 업데이트
         } else {
-            // 비밀번호가 있는 경우
             isOk = myPageMapper.userComYPw(userVO);  // 비밀번호 포함 업데이트
         }
 

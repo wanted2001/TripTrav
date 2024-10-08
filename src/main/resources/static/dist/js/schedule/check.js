@@ -1,14 +1,14 @@
 const UrlParams = new URLSearchParams(window.location.search);
 const sco = UrlParams.get('sco');
-window.addEventListener('click',(e)=>{
-    let date =  e.target.getAttribute('data-date');
-    if(sco && date){
-        getUserCourse(sco,date).then(result=>{
+window.addEventListener('click', (e) => {
+    let date = e.target.getAttribute('data-date');
+    if (sco && date) {
+        getUserCourse(sco, date).then(result => {
             console.log(result);
             let content = '';
-            document.querySelector('.contentArea').innerHTML='';
-            result.forEach(key=>{
-                content=`
+            document.querySelector('.contentArea').innerHTML = '';
+            result.forEach(key => {
+                content = `
                 <li class="oneContent" data-id="${key.scheContentId}">
                     <div class="deletePlan hidden" onclick="deletePlan(event)">&times;</div>
                     <div class="changePlan hidden">
@@ -39,24 +39,23 @@ window.addEventListener('click',(e)=>{
 })
 
 
-
 //day 선택
 const days = document.querySelectorAll('.day');
-days.forEach(day=>{
-    day.addEventListener('click',(e)=>{
+days.forEach(day => {
+    day.addEventListener('click', (e) => {
         console.log(e.target);
-        days.forEach(d=>{
-            if(d!==e.target){
+        days.forEach(d => {
+            if (d !== e.target) {
                 d.classList.remove('day_focus');
             }
         })
         e.target.classList.add('day_focus');
         const date = e.target.getAttribute('data-date');
 
-        getDatePlan(sco, date).then(r=>{
+        getDatePlan(sco, date).then(r => {
             console.log(r)
-            if(r.length===0){
-                document.querySelector('.contentArea').innerHTML=`<div class="noPlanText"><span>생성된 일정이 없습니다.</span> 하단의 버튼으로 나만의 여행 일정을 만들어보세요!</div>`
+            if (r.length === 0) {
+                document.querySelector('.contentArea').innerHTML = `<div class="noPlanText"><span>생성된 일정이 없습니다.</span> 하단의 버튼으로 나만의 여행 일정을 만들어보세요!</div>`
             }
         })
 
@@ -77,7 +76,6 @@ const slideItemWidth = 200;
 
 //메모모달
 const memoModal = document.querySelector('.memoModal');
-const closeModalBtn = document.querySelector('.memoCloseBtn');
 const addMemoBtn = document.querySelector('.addMemoBtn');
 const saveMemo = document.querySelector('.saveMemo');
 const memoWrap = document.querySelector('.memoWrap');
@@ -99,36 +97,31 @@ document.addEventListener('DOMContentLoaded', () => {
             disableEditBtn.classList.remove('hidden');
             const addPlan = document.querySelector('.addPlan');
             const addPersonBtn = document.querySelector('.addPersonBtn');
-            addPlan.onclick =null;
-            addPlan.addEventListener('click',(event)=>{
+            addPlan.onclick = null;
+            addPlan.addEventListener('click', (event) => {
                 event.stopImmediatePropagation();//기존 이벤트 발생X
                 alert('일정 편집 권한이 없습니다');
             })
             addPlan.addEventListener('mouseover', () => {
                 addPlan.style.cursor = 'default';
             });
-            addPersonBtn.innerText='동행자 확인';
-            addPersonBtn.onclick=null;
-            addPersonBtn.onclick=function (){
-                fetch(`/schedule/getCompanion/${sco}`,{
-                    method:'get'
-                }).then(response=>response.json())
-                    .then(data=>{
-                        console.log(data)
-                    })
-            }
+
+            addPersonBtn.style.display = 'none';
         }
     });
-    getAllCourse(sco).then(result=>{
+    getAllCourse(sco).then(async result => {
         console.log(result)
-        result.forEach(key=>{
-            getSlideImg(key.scheContentId);
-        })
+        await Promise.all(result.map(key => getSlideImg(key.scheContentId)))
+        // result.forEach(key => {
+        //     getSlideImg(key.scheContentId);
+        // })
+        slideItems = document.querySelectorAll('.slideItem');
+        updateInnerSlideWidth();
+        makeDot();
     })
     //일차별 일정출력
-    if(sco) {
+    if (sco) {
         getUserCourse(sco, 1).then(result => {
-            console.log(result);
             let content = '';
             result.forEach(key => {
                 content = `
@@ -173,28 +166,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     //메모여부확인
-    getMemo(sco).then(r=>{
-        console.log(r)
+    getMemo(sco).then(r => {
         const memoContents = document.querySelector('.memoContents');
-        saveMemo.removeEventListener('click',saveMemoF);
-        saveMemo.removeEventListener('click',closeModal);
-        if(r){
+        saveMemo.removeEventListener('click', saveMemoF);
+        if (r) {
             console.log("메모있음")
-            addMemoBtn.innerText='메모확인';
-            memoContents.innerHTML=`${r.scheMemoContent}`;
-            memoContents.readOnly=true;
-            saveMemo.innerText='확인';
-            saveMemo.addEventListener('click',()=>{memoModal.style.display='none'});
-            memoWrap.innerHTML+=`<button class="modifyMemo" onclick="modifyMemoContent()">수정</button>`
+            addMemoBtn.innerText = '메모확인';
+            memoContents.innerHTML = `${r.scheMemoContent}`;
+            memoContents.readOnly = true;
+            saveMemo.innerText = '확인';
+            saveMemo.addEventListener('click', () => {
+                memoModal.style.display = 'none'
+            });
+            memoWrap.innerHTML += `<button class="modifyMemo" onclick="modifyMemoContent()">수정</button>`
         } else {
-            saveMemo.addEventListener('click',saveMemoF);
-            console.log("메모없음")
+            saveMemo.addEventListener('click', saveMemoF);
         }
     });
 
     //드래그 슬라이드 부분
-    updateInnerSlideWidth();
-    makeDot();
+    
 
     slideWrap.addEventListener('mousedown', e => {
         pressed = true;
@@ -224,56 +215,57 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 //메모모달 열기/닫기
-function openModal(){
+function openModal() {
     memoModal.style.display = 'flex';
 }
-function closeModal(){
-    memoModal.style.display='none';
+
+function closeModal(modal) {
+    modal.style.display = 'none';
 }
 
 //메모수정
 let isEditing = false; //편집상태 저장
-function modifyMemoContent(){
+function modifyMemoContent() {
     const memoContent = document.querySelector('.memoContents');
-    if(!isEditing){
-        memoContent.readOnly=false;
+    if (!isEditing) {
+        memoContent.readOnly = false;
         memoContent.focus();
-        isEditing=true;
+        isEditing = true;
     } else {
         const memo = memoContent.value;
-        if(memo===''){
-            if(confirm("모든 메모를 지우시겠습니까?")){
-                fetch(`/schedule/memoDelete/${sco}`,{
-                    method:'delete'
+        if (memo === '') {
+            if (confirm("모든 메모를 지우시겠습니까?")) {
+                fetch(`/schedule/memoDelete/${sco}`, {
+                    method: 'delete'
                 })
-                    .then(response=>response.text())
-                    .then(data=>{
+                    .then(response => response.text())
+                    .then(data => {
                         console.log(data)
-                        if(data==="1"){
+                        if (data === "1") {
                             alert("메모가 삭제되었습니다.")
                             document.querySelector('.modifyMemo').remove();
-                            memoModal.style.display='none';
+                            memoModal.style.display = 'none';
                             location.reload();
                         }
                     })
             }
         } else {
-            fetch(`/schedule/memoModify/${sco}`,{
-                method:'put',
-                headers:{
-                    'content-type':'application/json'
+            fetch(`/schedule/memoModify/${sco}`, {
+                method: 'put',
+                headers: {
+                    'content-type': 'application/json'
                 },
-                body:JSON.stringify(memo)
+                body: JSON.stringify(memo)
             })
-                .then(response=>response.text())
-                .then(data=>{
+                .then(response => response.text())
+                .then(data => {
                     console.log(data)
-                    if(data==="1"){
+                    if (data === "1") {
                         alert("메모 수정이 완료되었습니다.")
-                        memoContent.readOnly=true;
-                        isEditing=false;
+                        memoContent.readOnly = true;
+                        isEditing = false;
                         location.reload();
-                        memoModal.style.display='flex';
+                        memoModal.style.display = 'flex';
                     } else {
                         alert("메모 수정에 오류가 발생했습니다.\n다시 시도해주세요.")
                     }
@@ -283,15 +275,15 @@ function modifyMemoContent(){
 }
 
 //메모저장부분
-function saveMemoF(){
+function saveMemoF() {
     const memo = document.querySelector('.memoContents').value;
     console.log(memo);
-    if(memo===''){
+    if (memo === '') {
         alert('먼저 메모를 작성해주세요.');
         document.querySelector('.memoContents').focus();
     } else {
-        if(confirm('메모를 저장하시겠습니까?')) {
-            fetch(`/schedule/memo/${sco}`,{
+        if (confirm('메모를 저장하시겠습니까?')) {
+            fetch(`/schedule/memo/${sco}`, {
                 method: 'post',
                 headers: {
                     'content-type': 'application/json'
@@ -299,12 +291,12 @@ function saveMemoF(){
                 body: JSON.stringify(memo)
             })
                 .then(response => response.text())
-                .then(data=>{
+                .then(data => {
                     console.log(data)
-                    if(data==="1"){
+                    if (data === "1") {
                         alert("메모가 저장되었습니다!")
                         location.reload();
-                        memoModal.style.display='flex';
+                        memoModal.style.display = 'flex';
                     } else {
                         alert("메모 저장 중 오류가 발생했습니다. \n다시 시도해주세요.");
                     }
@@ -314,19 +306,19 @@ function saveMemoF(){
 }
 
 //이미지로드
-function getImage(key){
+function getImage(key) {
     const url = `https://apis.data.go.kr/B551011/KorService1/detailImage1?MobileOS=ETC&MobileApp=TripTrav&_type=json&subImageYN=Y&contentId=${key}&serviceKey=${tourAPIKEY}`;
     let imgCount = 0;
     const imgLi = document.querySelector(`li[data-id="${key}"] .placeImg`);
 
-    getData(url).then(res=>{
+    getData(url).then(res => {
         // console.log(res);
-        if(res.totalCount<1){
+        if (res.totalCount < 1) {
             if (imgLi) {
                 imgLi.innerHTML += `<img src="/dist/image/noimage.jpg">`;
             }
-        } else{
-            res.items.item.forEach(img=>{
+        } else {
+            res.items.item.forEach(img => {
                 if (imgCount < 3 && imgLi) {
                     imgLi.innerHTML += `<img src="${img.originimgurl}">`;
                     imgCount++;
@@ -336,20 +328,19 @@ function getImage(key){
     })
 }
 
-function getSlideImg(key){
+async function getSlideImg(key) {
     const url = `https://apis.data.go.kr/B551011/KorService1/detailImage1?MobileOS=ETC&MobileApp=TripTrav&_type=json&subImageYN=Y&contentId=${key}&serviceKey=${tourAPIKEY}`;
     const innerSlide = document.querySelector('.innerSlide');
     let addedLocations = new Set();
 
-    getData(url).then(res=>{
-        res.items.item.forEach(img => {
-            if (!addedLocations.has(img.contentid)) {
-                innerSlide.innerHTML += `<div class="slideItem" style="background-image: url('${img.originimgurl}'); background-size: cover; background-position: center; background-repeat: no-repeat;"></div>`;
+    const res = await getData(url)
+    res.items.item.forEach(img => {
+        if (!addedLocations.has(img.contentid)) {
+            innerSlide.innerHTML += `<div class="slideItem" style="background-image: url('${img.originimgurl}'); background-size: cover; background-position: center; background-repeat: no-repeat;"></div>`;
 
-                addedLocations.add(img.contentid);
-            }
-        });
-    })
+            addedLocations.add(img.contentid);
+        }
+    });
 }
 
 
@@ -365,74 +356,99 @@ function initTmap() {
 }
 
 //주소삽입
-function getAddr(key){
+function getAddr(key) {
     const detailInfoUrl = `https://apis.data.go.kr/B551011/KorService1/detailCommon1?MobileOS=ETC&MobileApp=TripTrav&contentId=${key}&defaultYN=Y&firstImageYN=Y&areacodeYN=Y&catcodeYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&serviceKey=${tourAPIKEY}&_type=json`;
     const addrLi = document.querySelector(`li[data-id="${key}"] .placeAddr`);
     const titleLi = document.querySelector(`li[data-id="${key}"] .placeName`);
-    getData(detailInfoUrl).then(res=>{
+    getData(detailInfoUrl).then(res => {
         // console.log(res)
-        res.items.item.forEach(result=>{
-            addrLi.innerHTML=`${result.addr1}`;
-            titleLi.innerHTML=`${result.title}`
+        res.items.item.forEach(result => {
+            addrLi.innerHTML = `${result.addr1}`;
+            titleLi.innerHTML = `${result.title}`
         })
     })
 }
 
 //동행자 추가 모달
-const addPerson = document.querySelector('.addPersonBtn');
 const personModal = document.querySelector('.personModal');
 const pmCloseBtn = document.querySelector('.pmCloseBtn');
 
-function addPersonF(){
+function addPersonF() {
     const url = window.location.href;
-    document.querySelector('.pmShareValue').value=url;
-    personModal.style.display='flex';
+    document.querySelector('.pmShareValue').value = url;
+    personModal.style.display = 'flex';
     generateInviteUrl(sco, unoNum)
         .then(result => {
-            let clipboard = new ClipboardJS('.copyUrl',{
-                text: function() {
+            let clipboard = new ClipboardJS('.copyUrl', {
+                text: function () {
                     return result.inviteUrl;
                 }
             });
-            clipboard.on('success',function(e){
+            clipboard.on('success', function (e) {
                 alert('클립보드에 복사되었습니다.');
                 console.log(e)
             })
-            clipboard.on('error',function(e){
+            clipboard.on('error', function (e) {
                 console.log(e);
             })
             console.log(result);
         })
 }
 
-pmCloseBtn.addEventListener('click',()=>{
-    personModal.style.display='none';
+//동행자 확인 모달
+const companionModal = document.querySelector('.companionModal');
+
+//동행자 확인 함수
+function checkPersonF() {
+    fetch(`/schedule/getCompanion/${sco}`, {
+        method: 'get'
+    }).then(response => response.json())
+        .then(data => {
+            console.log(data)
+            if (data) {
+                companionModal.style.display = 'flex';
+                document.querySelector('.cmCloseBtn').onclick = () => {
+                    companionModal.style.display = 'none';
+                }
+                if (data.length > 0) {
+                    data.forEach(r => {
+                        const li = `<li class="companionLi">${r.scheNick}</li>`
+                        document.querySelector('.companionUl').innerHTML += li;
+                    })
+                }
+            }
+        })
+}
+
+pmCloseBtn.addEventListener('click', () => {
+    personModal.style.display = 'none';
 })
 
-async function generateInviteUrl(){
-    const response = await fetch("/invite",{
-        method:'get',
-        headers:{
-            'content-type':'application/json'
+async function generateInviteUrl() {
+    const response = await fetch("/invite", {
+        method: 'get',
+        headers: {
+            'content-type': 'application/json'
         },
-        body:JSON.stringify({sco:sco, uno:unoNum})
+        body: JSON.stringify({sco: sco, uno: unoNum})
     })
 
     const result = await response.json();
 
-    if(response.ok){
+    if (response.ok) {
         console.log("초대")
     } else {
-        console.log("초대 오류"+result.message);
+        console.log("초대 오류" + result.message);
     }
 }
 
 //상단 슬라이드 길이 계산 함수
 function updateInnerSlideWidth() {
     //div 개수따라 totalWidth 값 설정되도록
+    slideItems = document.querySelectorAll('.slideItem');
     const totalWidth = slideItems.length * slideItemWidth;
     innerSlide.style.width = `${totalWidth}px`;
-    document.querySelector('.innerLine').style.width=`${totalWidth - 215}px`;
+    document.querySelector('.innerLine').style.width = `${totalWidth - 215}px`;
 }
 
 //슬라이드 길이 체크(왼쪽, 오른쪽 더 넘어가지 않도록)
@@ -468,26 +484,30 @@ function checkSelectedItem() {
         if (distance < expandRange) {
             item.style.width = '195px';
             item.style.height = '195px';
-            item.style.marginTop='-35px';
-            item.style.background='gold';
+            item.style.marginTop = '-35px';
+            item.style.background = 'gold';
 
             const dot = item.querySelector('.dot');
-            if(dot){ dot.classList.add('selectDot'); }
+            if (dot) {
+                dot.classList.add('selectDot');
+            }
         } else {
             item.style.width = '160px';
             item.style.height = '160px';
-            item.style.marginTop='0px';
-            item.style.background='pink';
+            item.style.marginTop = '0px';
+            item.style.background = 'pink';
 
             const dot = item.querySelector('.dot');
-            if(dot){ dot.classList.remove('selectDot'); }
+            if (dot) {
+                dot.classList.remove('selectDot');
+            }
         }
     });
 }
 
 //슬라이드 div 하단 dot 생성
-function makeDot(){
-    slideItems.forEach(item=>{
+function makeDot() {
+    slideItems.forEach(item => {
         const dot = document.createElement('div');
         dot.classList.add('dot');
         item.appendChild(dot);
@@ -505,10 +525,10 @@ function toggleVisibility(element, isVisible) {
 }
 
 function toggleVisibilityForEach(element, isVisible) {
-    element.forEach(el =>{
+    element.forEach(el => {
         el.classList.toggle("hidden", !isVisible);
     })
-    element.forEach(el=>{
+    element.forEach(el => {
         el.classList.toggle("visible", isVisible);
     })
 }
@@ -521,15 +541,15 @@ openBtn.addEventListener('click', () => {
 });
 
 //여행추가하기 버튼 contentArea 높이에 맞춰 위치 변경
-function checkHeight(){
+function checkHeight() {
     const contentAreaHeight = document.querySelector('.contentArea');
     let height = contentAreaHeight.offsetHeight;
     console.log(height)
     const addPlan = document.querySelector('.addPlan');
 
-    if(height>980) {
-        addPlan.style.marginTop='12px';
-        addPlan.style.marginBottom='12px';
+    if (height > 980) {
+        addPlan.style.marginTop = '12px';
+        addPlan.style.marginBottom = '12px';
     } else {
         addPlan.style.marginTop = '610px';
         addPlan.style.marginBottom = '0px';
@@ -537,20 +557,21 @@ function checkHeight(){
 }
 
 closeBtn.addEventListener('click', () => {
-    if(!depth2.classList.contains('hidden')){
+    if (!depth2.classList.contains('hidden')) {
         depth2.classList.add('hidden');
-        closeBtn.style.left='520px'
+        closeBtn.style.left = '520px'
     } else {
-        if(btnText.innerText==='저장'){
-            if(confirm('현재 일정을 저장하시겠습니까?')){
+        if (btnText.innerText === '저장') {
+            if (confirm('현재 일정을 저장하시겠습니까?')) {
                 closeContent();
             }
-        } closeContent();
+        }
+        closeContent();
 
     }
 });
 
-function closeContent(){
+function closeContent() {
     toggleVisibility(openBtn, true);
     toggleVisibility(mapContentBox, false);
     toggleVisibility(closeBtn, false);
@@ -561,10 +582,10 @@ function closeContent(){
 
     const deleteBtn = document.querySelectorAll('.deletePlan');
     const changeBtn = document.querySelectorAll('.changePlan');
-    deleteBtn.forEach(btn=>{
+    deleteBtn.forEach(btn => {
         btn.classList.add('hidden');
     })
-    changeBtn.forEach(btn=>{
+    changeBtn.forEach(btn => {
         btn.classList.add('hidden');
     })
     btnText.innerText = '편집';
@@ -572,8 +593,8 @@ function closeContent(){
     btnText.classList.add('editBtn');
 
     const li = ul.querySelectorAll('li');
-    li.forEach(item=>{
-        item.classList.toggle('on',item.getAttribute('data-number')==='1');
+    li.forEach(item => {
+        item.classList.toggle('on', item.getAttribute('data-number') === '1');
     })
     const depth2_recomm = document.querySelectorAll('.depth2_recomm');
     const depth2_search = document.querySelectorAll('.depth2_search_input_area');
@@ -589,47 +610,47 @@ function closeContent(){
 const addPlan = document.querySelector('.addPlan');
 const depth2 = document.querySelector('.mapContentBox2Depth');
 
-function clickAddPlan(){
+function clickAddPlan() {
     depth2.classList.remove('hidden');
     depth2.classList.add('visible');
-    closeBtn.style.left='883px';
+    closeBtn.style.left = '883px';
 }
 
 const ul = document.querySelector('.depth2_ul');
-ul.addEventListener('click',(e)=>{
+ul.addEventListener('click', (e) => {
     const clickNumber = e.target.getAttribute('data-number');
     const li = ul.querySelectorAll('li');
 
-    if(!clickNumber) return;
+    if (!clickNumber) return;
 
-    li.forEach(item=>{
-        item.classList.toggle('on',item.getAttribute('data-number')===clickNumber);
+    li.forEach(item => {
+        item.classList.toggle('on', item.getAttribute('data-number') === clickNumber);
     })
 
     const elements = {
-        recommend:document.querySelectorAll('.depth2_recomm'),
-        search:document.querySelectorAll('.depth2_search'),
-        heart:document.querySelectorAll('.depth2_heart'),
-        searchInput:document.querySelector('.depth2_search_input_area'),
-        morePlaceBtn:document.querySelector('.morePlaceBtn')
+        recommend: document.querySelectorAll('.depth2_recomm'),
+        search: document.querySelectorAll('.depth2_search'),
+        heart: document.querySelectorAll('.depth2_heart'),
+        searchInput: document.querySelector('.depth2_search_input_area'),
+        morePlaceBtn: document.querySelector('.morePlaceBtn')
     }
 
-    const state= {
-        '1':{ recommend: false, search: true, heart: true, searchInput: true, morePlaceBtn: true },
-        '2':{ recommend: true, search: false, heart: true, searchInput: false, morePlaceBtn: false },
-        '3':{ recommend: true, search: true, heart: false, searchInput: true, morePlaceBtn: true }
+    const state = {
+        '1': {recommend: false, search: true, heart: true, searchInput: true, morePlaceBtn: true},
+        '2': {recommend: true, search: false, heart: true, searchInput: false, morePlaceBtn: false},
+        '3': {recommend: true, search: true, heart: false, searchInput: true, morePlaceBtn: true}
     }
 
     const currentState = state[clickNumber];
 
-    Object.keys(currentState).forEach(key=>{
+    Object.keys(currentState).forEach(key => {
         const element = elements[key];
-        if(NodeList.prototype.isPrototypeOf(element)){
-            element.forEach(item=>{
+        if (NodeList.prototype.isPrototypeOf(element)) {
+            element.forEach(item => {
                 item.classList.toggle('hidden', currentState[key]);
             })
         } else {
-            if(element){
+            if (element) {
                 element.classList.toggle('hidden', currentState[key]);
             }
         }
@@ -640,18 +661,18 @@ ul.addEventListener('click',(e)=>{
 const searchBtn = document.querySelector('.depth2_searchBtn');
 const searchInput = document.querySelector('.depth2_input');
 
-searchBtn.addEventListener('click',()=>{
+searchBtn.addEventListener('click', () => {
     search();
 })
 
-searchInput.addEventListener('keyup',(e)=>{
-    if(e.keyCode===13){
+searchInput.addEventListener('keyup', (e) => {
+    if (e.keyCode === 13) {
         search();
     }
 })
 
-function search(){
-    if(searchInput.value===''){
+function search() {
+    if (searchInput.value === '') {
         alert('검색어를 입력해주세요.')
     } else {
         let currentPage = 1;
@@ -661,15 +682,15 @@ function search(){
         let keyword = searchInput.value;
         let url = `https://apis.data.go.kr/B551011/KorService1/searchKeyword1?serviceKey=${tourAPIKEY}&MobileApp=TripTrav&MobileOS=ETC&pageNo=&numOfRows=100&listYN=Y&&arrange=A&contentTypeId=12&keyword=${keyword}&_type=json`;
 
-        function displayResult(result){
+        function displayResult(result) {
             totalCount = result.totalCount;
 
-            if(totalCount>=1){
-                const start = (currentPage-1)*itemsPage;
-                const end = Math.min(start+itemsPage, totalCount);
+            if (totalCount >= 1) {
+                const start = (currentPage - 1) * itemsPage;
+                const end = Math.min(start + itemsPage, totalCount);
                 const itemsDisplay = result.items.item.slice(start, end);
 
-                itemsDisplay.forEach(key=>{
+                itemsDisplay.forEach(key => {
                     resultDiv += `
                     <div class="depth2_search">
                         <div class="depth2_search_area">
@@ -681,9 +702,9 @@ function search(){
                     </div>`;
                 })
 
-                document.querySelector('.searchResultDiv').innerHTML=resultDiv;
+                document.querySelector('.searchResultDiv').innerHTML = resultDiv;
 
-                if(totalCount > currentPage * itemsPage){
+                if (totalCount > currentPage * itemsPage) {
                     const more = `<div class="morePlaceBtn">더보기<img src="/dist/image/chevron-down.svg"></div>`;
                     document.querySelector('.searchResultDiv').innerHTML += more;
 
@@ -700,72 +721,73 @@ function search(){
                     });
                 });
                 paddingSetting();
-            } else if(totalCount<1){
+            } else if (totalCount < 1) {
                 const noResult = `<div class="noResult"><img src="/dist/image/alert-circle.svg">검색결과가 없습니다</div>`
-                document.querySelector('.searchResultDiv').innerHTML=noResult;
+                document.querySelector('.searchResultDiv').innerHTML = noResult;
             }
         }
 
-        function loadMore(){
+        function loadMore() {
             currentPage++;
-            searchKeyword(url).then(result=>{
+            searchKeyword(url).then(result => {
                 displayResult(result);
             })
         }
 
-        function paddingSetting(){
+        function paddingSetting() {
             const name = document.querySelectorAll('.depth2_search_name');
-            name.forEach(nameKey=>{
-                if (nameKey.innerText.length>=19){
-                    nameKey.style.paddingTop='0';
+            name.forEach(nameKey => {
+                if (nameKey.innerText.length >= 19) {
+                    nameKey.style.paddingTop = '0';
                 }
             })
         }
 
-        searchKeyword(url).then(result=>{
+        searchKeyword(url).then(result => {
             console.log(result);
             displayResult(result);
         })
     }
 }
 
-async function searchKeyword(url){
-    try{
+async function searchKeyword(url) {
+    try {
         const response = await fetch(url);
         const data = await response.json();
         const items = data.response.body;
         return items;
-    } catch(err){
+    } catch (err) {
         console.log(err);
     }
 }
 
 //일정삽입하기
 const btnText = document.querySelector('.btnText');
-function newPlan(event){
-    if(btnText.innerText==='편집'){
-         if(confirm('일정을 편집하시겠습니까?')){
-             if(document.querySelector('.noPlanText')){
-                 document.querySelector('.contentArea').innerHTML='';
-             }
-             const deleteBtn = document.querySelectorAll('.deletePlan');
-             const changeBtn = document.querySelectorAll('.changePlan');
-             deleteBtn.forEach(btn=>{
-                 btn.classList.remove('hidden');
-             })
-             changeBtn.forEach(btn=>{
-                 btn.classList.remove('hidden');
-             })
-             btnText.innerText = '저장';
-             btnText.classList.remove('editBtn');
-             btnText.classList.add('saveBtn');
 
-             newPlanF(event);
-             countTriangle();
-         }
+function newPlan(event) {
+    if (btnText.innerText === '편집') {
+        if (confirm('일정을 편집하시겠습니까?')) {
+            if (document.querySelector('.noPlanText')) {
+                document.querySelector('.contentArea').innerHTML = '';
+            }
+            const deleteBtn = document.querySelectorAll('.deletePlan');
+            const changeBtn = document.querySelectorAll('.changePlan');
+            deleteBtn.forEach(btn => {
+                btn.classList.remove('hidden');
+            })
+            changeBtn.forEach(btn => {
+                btn.classList.remove('hidden');
+            })
+            btnText.innerText = '저장';
+            btnText.classList.remove('editBtn');
+            btnText.classList.add('saveBtn');
+
+            newPlanF(event);
+            countTriangle();
+        }
     } else {
-        if(document.querySelector('.noPlanText')){
-            document.querySelector('.contentArea').innerHTML='';
+        if (document.querySelector('.noPlanText')) {
+            document.querySelector('.contentArea').innerHTML = '';
         }
         editPlan(event);
         newPlanF(event);
@@ -773,7 +795,7 @@ function newPlan(event){
     }
 }
 
-function newPlanF(event){
+function newPlanF(event) {
     const searchDiv = event.target.closest('.depth2_search');
     const contentId = searchDiv.querySelector('.depth2_search_name').getAttribute('data-id');
     const placeName = searchDiv.querySelector('.depth2_search_name').innerText
@@ -800,13 +822,13 @@ function newPlanF(event){
                             </div>
                         </li>`;
     document.querySelector('.contentArea').insertAdjacentHTML('beforeend', newLi);
-    document.querySelector('.btnText').innerText='저장';
+    document.querySelector('.btnText').innerText = '저장';
 
     getImage(contentId);
 }
 
 //버튼으로 일정순서 변경
-function editPlan(event){
+function editPlan(event) {
     const target = event.target;
     const deleteBtn = document.querySelectorAll('.deletePlan');
     const changeBtn = document.querySelectorAll('.changePlan');
@@ -814,11 +836,11 @@ function editPlan(event){
     const titleInput = document.querySelector('.titleInput');
     const editPlanTitle = document.querySelector('.editPlanTitle');
 
-    if(target.classList.contains('editBtn')){
-        deleteBtn.forEach(btn=>{
+    if (target.classList.contains('editBtn')) {
+        deleteBtn.forEach(btn => {
             btn.classList.remove('hidden');
         })
-        changeBtn.forEach(btn=>{
+        changeBtn.forEach(btn => {
             btn.classList.remove('hidden');
         })
         target.innerText = '저장';
@@ -827,10 +849,10 @@ function editPlan(event){
         editPlanTitle.classList.remove('hidden');
     } else if (target.classList.contains('saveBtn')) {
         // 저장 버튼을 클릭했을 때
-        if(confirm("일정을 저장하시겠습니까?")){
-            if(titleInput && titleInput.value===''){
+        if (confirm("일정을 저장하시겠습니까?")) {
+            if (titleInput && titleInput.value === '') {
                 alert('일정의 제목을 작성해주세요.')
-            } else if(titleInput){
+            } else if (titleInput) {
                 deleteBtn.forEach(btn => {
                     btn.classList.add('hidden');
                 });
@@ -868,7 +890,7 @@ function editPlan(event){
     }
 }
 
-function setPlanData(sco){
+function setPlanData(sco) {
     const allLi = document.querySelectorAll('li.oneContent');
     const planArray = [];
     let arrayKey = true;
@@ -908,7 +930,7 @@ function setPlanData(sco){
         console.log(arrayKey)
     });
     const sche_date = document.querySelector('.day_focus').getAttribute('data-date');
-    if (!arrayKey && planArray.length>0) {
+    if (!arrayKey && planArray.length > 0) {
         fetch(`/schedule/modifyPlan/${sco}/${sche_date}`, {
             method: 'put',
             headers: {
@@ -933,16 +955,15 @@ function setPlanData(sco){
 }
 
 //일정변경 버튼
-function countTriangle(){
+function countTriangle() {
     const triangleButtons = document.querySelectorAll('.triangle');
     const downTriangleButtons = document.querySelectorAll('.downTriangle');
 
     //버튼 이벤트 오류생김(triangle 버튼 못찾음)
     console.log(triangleButtons.length);
-    console.log(downTriangleButtons.length);
 
-    triangleButtons.forEach(function(button) {
-        button.addEventListener('click', function() {
+    triangleButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
             let currentLi = button.closest('.oneContent');
             let prevLi = currentLi.previousElementSibling;
 
@@ -962,8 +983,8 @@ function countTriangle(){
         });
     });
 
-    downTriangleButtons.forEach(function(button) {
-        button.addEventListener('click', function() {
+    downTriangleButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
             let currentLi = button.closest('.oneContent');
             let nextLi = currentLi.nextElementSibling;
 
@@ -972,7 +993,7 @@ function countTriangle(){
                 currentLi.classList.add('moving-down');
                 nextLi.classList.add('moving-up');
 
-             requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
                     setTimeout(() => {
                         currentLi.parentNode.insertBefore(nextLi, currentLi);
                         currentLi.classList.remove('moving-down');
@@ -984,91 +1005,91 @@ function countTriangle(){
     });
 }
 
-function deletePlan(event){
-    if(confirm("해당 일정을 삭제하시겠습니까?")){
-        if(event.target.classList.contains('deletePlan')){
-            const li=event.target.closest('li');
-            if(li){
+function deletePlan(event) {
+    if (confirm("해당 일정을 삭제하시겠습니까?")) {
+        if (event.target.classList.contains('deletePlan')) {
+            const li = event.target.closest('li');
+            if (li) {
                 li.remove();
             }
         }
     }
 }
 
-function editTitle(){
+function editTitle() {
     const titleInput = document.createElement('input');
     const titleText = document.querySelector('.contentTitle');
     const editPlanTitle = document.querySelector('.editPlanTitle');
     const nameZone = document.querySelector('.nameZone');
     titleInput.classList.add('titleInput');
-    titleInput.value=titleText.innerText;
-    titleInput.placeholder='일정의 제목을 작성해주세요.';
+    titleInput.value = titleText.innerText;
+    titleInput.placeholder = '일정의 제목을 작성해주세요.';
     editPlanTitle.classList.add('hidden');
-    nameZone.innerText='';
+    nameZone.innerText = '';
     titleText.appendChild(titleInput);
 }
 
-window.addEventListener('load', ()=>{
+window.addEventListener('load', () => {
     countTriangle();
 });
 
-async function getData(url){
-    try{
+async function getData(url) {
+    try {
         const response = await fetch(url);
         const data = await response.json();
         const items = data.response.body;
         return items;
-    } catch(err){
+    } catch (err) {
         console.log(err);
     }
 }
 
-async function getUserCourse(sco, date){
-    try{
-        const url="/schedule/course/"+sco+"/"+date;
+async function getUserCourse(sco, date) {
+    try {
+        const url = "/schedule/course/" + sco + "/" + date;
         const config = {
-            method:'post'
+            method: 'post'
         }
-        const response = await fetch(url,config);
-        const result = await response.json();
-        return result;
-    } catch (err){
-        console.log(err);
-    }
-}
-
-async function getDatePlan(sco, date){
-    try{
-        const url = "/schedule/plan/"+sco+"/"+date;
-        const config={method:'post'}
-        const response = await fetch(url,config);
-        const result = await response.json();
-        return result;
-    } catch (err){
-        console.log(err);
-    }
-}
-
-async function getMemo(sco){
-    try{
-        const url = "/schedule/getMemo/"+sco;
-        const config = {method:'post'}
         const response = await fetch(url, config);
         const result = await response.json();
         return result;
-    } catch(err){
+    } catch (err) {
         console.log(err);
     }
 }
 
-async function getAllCourse(sco){
-    try{
-        const url = "/schedule/allCourse/"+sco;
-        const config = {method:'post'}
+async function getDatePlan(sco, date) {
+    try {
+        const url = "/schedule/plan/" + sco + "/" + date;
+        const config = {method: 'post'}
         const response = await fetch(url, config);
         const result = await response.json();
         return result;
-    } catch(err){
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function getMemo(sco) {
+    try {
+        const url = "/schedule/getMemo/" + sco;
+        const config = {method: 'post'}
+        const response = await fetch(url, config);
+        const result = await response.json();
+        return result;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function getAllCourse(sco) {
+    try {
+        const url = "/schedule/allCourse/" + sco;
+        const config = {method: 'post'}
+        const response = await fetch(url, config);
+        const result = await response.json();
+        return result;
+    } catch (err) {
         console.log(err);
     }
 }
@@ -1080,7 +1101,7 @@ async function generateInviteUrl(sco, unoNum) {
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ sco: sco, uno: unoNum })
+        body: JSON.stringify({sco: sco, uno: unoNum})
     });
 
     // 서버로부터 초대 URL을 받아옴
@@ -1097,16 +1118,17 @@ async function generateInviteUrl(sco, unoNum) {
 }
 
 //유저 권환 확인
-async function getUserRole(uno, sco){
+async function getUserRole(uno, sco) {
     try {
-        const url = "/schedule/getUserRole/"+uno+"/"+sco
-        const config = {method:'GET'};
-        const resp = await fetch(url,config);
+        const url = "/schedule/getUserRole/" + uno + "/" + sco
+        const config = {method: 'GET'};
+        const resp = await fetch(url, config);
         return resp.json();
-    }catch (error) {
+    } catch (error) {
         console.log(error);
     }
 }
+
 
 //고민점
 //투어 id 가져가서 각 id별 좌표값, 대표이미지, 서브이미지 가져오기(subname수만큼)

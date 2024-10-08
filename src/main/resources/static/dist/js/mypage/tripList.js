@@ -5,7 +5,11 @@ var prev = document.querySelector(".prevMyTrip");
 var nextList = document.querySelector(".nextTripList");
 var prevList = document.querySelector(".prevTripList");
 
+
+
 scheduleCall(unoNum).then(data => {
+    let prevNum = 0;
+    let nextNum = 0;
     console.log(data)
     if (data.length === 0) {
         nextList.appendChild(noChild("list"));
@@ -31,23 +35,22 @@ scheduleCall(unoNum).then(data => {
 
             if (compareDate(`${data[i].scheEnd}`)) {
                 prevList.appendChild(li);
+                prevNum++;
+
             } else {
                 nextList.appendChild(li);
+                nextNum++;
             }
         }
-
-        // DOM 업데이트가 끝난 후에 검사하기
-        setTimeout(() => {
-            if (!prevList.hasChildNodes()) {
-                prevList.appendChild(noChild("trip"));
-            }
-            if (!nextList.hasChildNodes()) {
-                nextList.appendChild(noChild("trip"));
-            }
-        }, 1);  // 0ms의 딜레이를 사용하여 DOM 업데이트 후 실행
+        if(prevNum === 0){
+            prevList.appendChild(noChild("list"));
+        }
+        if(nextNum === 0){
+            nextList.appendChild(noChild("list"));
+        }
     }
 }).catch(err => {
-    console.log(err); // 에러 로그 출력
+    console.log(err);
 });
 
 

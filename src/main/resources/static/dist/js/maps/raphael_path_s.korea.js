@@ -1,7 +1,16 @@
 window.onload = function () {
 	var R;
 	var aus = {};
+	var ausText = {};
 	var current = null;
+	const toText = {
+		gygg:"경기도",
+		incheon:"인천광역시",
+		gangwon:"강원도",
+		chungbuk:"충청북도",
+		chungnam:"충청남도",
+		daejeon:"대전광역시",
+	}
 
 	function createMap() {
 		var container = document.getElementById('south');
@@ -18,8 +27,8 @@ window.onload = function () {
 		R.setSize(width, height);
 
 		// viewBox 설정
-		R.setViewBox(0, 0, 800, 1200, true);
-		R.canvas.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+		R.setViewBox(0, 0, 320, 400, true);
+		// R.canvas.setAttribute('preserveAspectRatio', 'xMidYMid meet');
 
 		var attr = {
 			fill: "#fff",
@@ -28,6 +37,10 @@ window.onload = function () {
 			"stroke-linejoin": "round"
 		};
 
+		var textAttr ={
+			fill: "#0000000",
+			"font-size": "12px"
+		}
 
 		// 경기도 : 좌상단 부터 시작
 		aus.gygg = R.path("M69,74 76,76 78,74 78,68 81,67 83,64 94,67 98,62 102,60 111,58 114,68 119,68 122,72 128,74 130,79 140,88 140,90 134,94 137,100 135,107 154,116 148,118 150,124 147,129 146,139 144,145 139,146 134,152 127,153 125,159 120,162 109,158 107,161 94,160 98,157 97,153 92,156 93,146 87,147 85,141 91,143 95,137 91,136 89,133 92,131 97,131 97,123 108,125 112,120 120,113 120,112, 117,110 112,107 112,105 111,104 113,102, 109,98 102,104 89,102 86,96 82,99 71,92 73,87 69,85 71,82 69,79 69,74z").attr(attr);
@@ -73,25 +86,69 @@ window.onload = function () {
 
 		aus.jeju = R.path("M96,377 105,367 120,368 126,365 134,365 142,370 136,380 127,384 114,386 104,384 100,385 94,377 z").attr(attr);
 
+		// ausText.seoul = R.text(80, 75, "서울특별시").attr(textAttr);
+		// ausText.gygg = R.text(80, 75, "경기도").attr(textAttr);
+		// ausText.incheon = R.text(80, 75, "인천광역시").attr(textAttr);
+		// ausText.gangwon = R.text(80, 75, "서울특별시").attr(textAttr);
+		// ausText.chungbuk = R.text(80, 75, "서울특별시").attr(textAttr);
+		// ausText.chungnam = R.text(80, 75, "서울특별시").attr(textAttr);
+		// ausText.daejeon = R.text(80, 75, "서울특별시").attr(textAttr);
+		// ausText.sejong = R.text(80, 75, "서울특별시").attr(textAttr);
+		// ausText.jeonbuk = R.text(80, 75, "서울특별시").attr(textAttr);
+		// ausText.jeonnam = R.text(80, 75, "서울특별시").attr(textAttr);
+		// ausText.gwangju = R.text(80, 75, "서울특별시").attr(textAttr);
+		// ausText.gyeongbuk = R.text(80, 75, "서울특별시").attr(textAttr);
+		// ausText.gyeongnam = R.text(80, 75, "서울특별시").attr(textAttr);
+		// ausText.daegu = R.text(80, 75, "서울특별시").attr(textAttr);
+		// ausText.busan = R.text(80, 75, "서울특별시").attr(textAttr);
+		// ausText.ulsan = R.text(80, 75, "서울특별시").attr(textAttr);
+		// ausText.jeju = R.text(80, 75, "서울특별시").attr(textAttr);
+		// ausText.gyeongnam = R.text(80, 75, "서울특별시").attr(textAttr);
 
+		// document.querySelector("#south > svg").innerHTML += `
+		// <text x="80" y="75" fill="#000000" font-size="12px" id="seoul">서울특별시</text>
+		// <text x="80" y="45" fill="#000000" font-size="12px" id="gygg">경기도</text>
+		// <text x="60" y="75" fill="#000000" font-size="12px" id="incheon">인천광역시</text>
+		// <text x="150" y="45" fill="#000000" font-size="12px" id="gangwon">강원도</text>
+		// <text x="120" y="145" fill="#000000" font-size="12px" id="chungbuk">충청북도</text>
+		// <text x="60" y="165" fill="#000000" font-size="12px" id="chungnam">충청남도</text>
+		// <text x="80" y="165" fill="#000000" font-size="12px" id="daejeon">대전광역시</text>
+		// <text x="70" y="145" fill="#000000" font-size="12px" id="sejong">세종특별자치시</text>
+		// <text x="60" y="205" fill="#000000" font-size="12px" id="jeonbuk">전라북도</text>
+		// <text x="60" y="260" fill="#000000" font-size="12px" id="jeonnam">전라남도</text>
+		// <text x="60" y="260" fill="#000000" font-size="12px" id="gwangju">광주광역시</text>
+		// <text x="150" y="165" fill="#000000" font-size="12px" id="gyeongbuk">경상북도</text>
+		// <text x="130" y="240" fill="#000000" font-size="12px" id="gyeongnam">경상남도</text>
+		// <text x="170" y="210" fill="#000000" font-size="12px" id="daegu">대구광역시</text>
+		// <text x="190" y="250" fill="#000000" font-size="12px" id="busan">부산광역시</text>
+		// <text x="200" y="225" fill="#000000" font-size="12px" id="ulsan">울산광역시</text>
+		// <text x="80" y="340" fill="#000000" font-size="12px" id="jeju">제주도</text>
+		// `
+		R.safari();
+		R.renderfix();
+		console.log({R, south: document.querySelector("#south")})
 		// 이벤트 핸들링 코드 다시 설정
 		for (var state in aus) {
 			aus[state].color = Raphael.getColor();
 			(function (st, state) {
+				console.log({aus, st, state})
 				st[0].style.cursor = "pointer";
 				st[0].onmouseover = function () {
 					if (current && aus[current]) {
 						aus[current].animate({ fill: "#fff", stroke: "#666" }, 500);
-						document.getElementById(current).style.display = "";
+						// ausText[current].animate({fill: "#00000000"}, 10);
 					}
 					st.animate({ fill: st.color, stroke: "#ccc" }, 500);
-					R.safari();
-					document.getElementById(state).style.display = "block";
+					
 					current = state;
+					document.querySelector("#regionName").innerHTML = toText[current]
+					// ausText[current].attr({fill: "#000000ff"});
+					R.safari();
 				};
 
 				st[0].onmouseout = function () {
 					st.animate({ fill: "#fff", stroke: "#666" }, 500);
+					// ausText[current].attr({fill: "#00000000"});
 					R.safari();
 				};
 
@@ -110,9 +167,33 @@ window.onload = function () {
 
 	// 처음 지도 생성
 	createMap();
+	// console.log(document.querySelector("#south > svg"));
+	// document.querySelector("#south > svg").innerHTML += `
+	// 	<text x="80" y="75" fill="#000000" font-size="12px" id="seoul">서울특별시</text>
+	// 	<text x="80" y="45" fill="#000000" font-size="12px" id="gygg">경기도</text>
+	// 	<text x="60" y="75" fill="#000000" font-size="12px" id="incheon">인천광역시</text>
+	// 	<text x="150" y="45" fill="#000000" font-size="12px" id="gangwon">강원도</text>
+	// 	<text x="120" y="145" fill="#000000" font-size="12px" id="chungbuk">충청북도</text>
+	// 	<text x="60" y="165" fill="#000000" font-size="12px" id="chungnam">충청남도</text>
+	// 	<text x="80" y="165" fill="#000000" font-size="12px" id="daejeon">대전광역시</text>
+	// 	<text x="70" y="145" fill="#000000" font-size="12px" id="sejong">세종특별자치시</text>
+	// 	<text x="60" y="205" fill="#000000" font-size="12px" id="jeonbuk">전라북도</text>
+	// 	<text x="60" y="260" fill="#000000" font-size="12px" id="jeonnam">전라남도</text>
+	// 	<text x="60" y="260" fill="#000000" font-size="12px" id="gwangju">광주광역시</text>
+	// 	<text x="150" y="165" fill="#000000" font-size="12px" id="gyeongbuk">경상북도</text>
+	// 	<text x="130" y="240" fill="#000000" font-size="12px" id="gyeongnam">경상남도</text>
+	// 	<text x="170" y="210" fill="#000000" font-size="12px" id="daegu">대구광역시</text>
+	// 	<text x="190" y="250" fill="#000000" font-size="12px" id="busan">부산광역시</text>
+	// 	<text x="200" y="225" fill="#000000" font-size="12px" id="ulsan">울산광역시</text>
+	// 	<text x="80" y="340" fill="#000000" font-size="12px" id="jeju">제주도</text>
+	// `
+	
 
 	// 창 크기 변경 시 지도 다시 생성
 	window.onresize = function () {
 		createMap();
+		// console.log(document.querySelector("#south > svg"));
+		
+		
 	};
 };

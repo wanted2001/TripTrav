@@ -2,13 +2,18 @@ console.log("review in");
 var tripPlaceReviewList = document.querySelector(".tripPlaceReviewList");
 var tripFoodReviewList = document.querySelector(".tripFoodReviewList");
 
+
 getReviewList(unoNum)
     .then(data => {
+        let tripPlaceNum =0;
+        let tripFoodNum = 0;
         console.log(data);
-        if(data.length === 0){
-            tripPlaceReviewList.appendChild(noChild("review"));
-            tripFoodReviewList.appendChild(noChild("review"));
-        }
+        // if(data.length === 0){
+        //     tripPlaceReviewList.appendChild(noChild("review"));
+        //     tripFoodReviewList.appendChild(noChild("review"));
+        // }
+        let placeReviewNum = 0;
+        let foodReviewNum = 0;
         data.forEach(datas => {
             const review = datas.review;
             const imagePaths = datas.imagePaths;
@@ -25,7 +30,7 @@ getReviewList(unoNum)
                 <div class="tripReviewImgDiv"></div>
                 <div class="tripReviewInfo">
                     <ul class="tripReviewUl">
-                        <li><h3 class="reviewPlaceName">${review.reContentId}</h3></li>
+                        <li><h3 class="reviewPlaceName">${review.reContentName}</h3></li>
                         <li><p class="reviewRating">${convertRatingToStars(`${review.reRate}`)}</p></li>
                         <li><p class="reviewRegDate">${changeDate(`${review.reDate}`)}</p></li>
                         <li><p class="reviewContent">${review.reContent}</p></li>
@@ -33,8 +38,8 @@ getReviewList(unoNum)
                 </div>
                 <div class="tripSetting">
                     <ul>
-                        <li><button type="button" onclick="showPopup(${review.rno})">수정</button></li>
-                        <li><button type="button" onclick="deleteReview(${review.rno})">삭제</button></li>
+                        <li><button type="button" onclick="showPopup(${review.rno})"><img src="/dist/image/edit-2.svg"></button></li>
+                        <li><button type="button" onclick="deleteReview(${review.rno})"><img src="/dist/image/trash-2.svg"></button></li>
                     </ul>
                 </div>`;
             const imageDiv = div.querySelector(".tripReviewImgDiv");
@@ -47,27 +52,25 @@ getReviewList(unoNum)
             });
             li.appendChild(div);
             switch (review.reContentType) {
-                case 39:
-                    tripFoodReviewList.appendChild(li);
-                    break;
                 case 12:
+                    tripFoodReviewList.appendChild(li);
+                    tripFoodNum++;
+                    break;
+                case 39:
                     tripPlaceReviewList.appendChild(li);
+                    tripPlaceNum++;
                     break;
             }
-        });
-
-        // 타임아웃을 사용하여 리스트 비어있는지 검사
-        setTimeout(() => {
-            if (!tripPlaceReviewList.hasChildNodes()) {
-                tripPlaceReviewList.appendChild(noChild("review"));
-            }
-            if (!tripFoodReviewList.hasChildNodes()) {
+            if(tripFoodNum === 0){
                 tripFoodReviewList.appendChild(noChild("review"));
             }
-        }, 1);  // DOM 업데이트 후에 실행되도록 0ms 딜레이 적용
+            if(tripPlaceNum === 0){
+                tripPlaceReviewList.appendChild(noChild("review"));
+            }
+        });
     })
     .catch(err => {
-        console.log(err); // 에러 로그 출력
+        console.log(err);
     });
 
 //리뷰 삭제

@@ -140,7 +140,7 @@ public class ScheduleController {
         log.info("memo YN : {}", memo);
         if (memo == 1) {
             ScheduleMemoVO sdmVO = smsv.getMemo(sco);
-            return sdmVO;
+            return sdmVO!=null? sdmVO : null;
         } else {
             return null;
         }
