@@ -85,10 +85,6 @@ const editBtn = document.querySelector('.editBtn');
 const saveBtn = document.querySelector('.saveBtn');
 const disableEditBtn = document.querySelector('.disableEdit');
 
-//동행자권한편집
-const editRole = document.querySelector('.editRole');
-const editRoleSave = document.querySelector('.editRoleSave');
-
 document.addEventListener('DOMContentLoaded', () => {
     initTmap();
     console.log(slideItems.length);
@@ -97,32 +93,31 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(result);
         if (result.scheRole === 1) {
             editBtn.classList.remove('hidden');
-            editRole.style.display = 'flex';
-            editRoleSave.style.display = 'flex';
         } else {
             disableEditBtn.classList.remove('hidden');
             const addPlan = document.querySelector('.addPlan');
             const addPersonBtn = document.querySelector('.addPersonBtn');
-
             addPlan.onclick = null;
             addPlan.addEventListener('click', (event) => {
-                event.stopImmediatePropagation(); // 기존 이벤트 발생 X
+                event.stopImmediatePropagation();//기존 이벤트 발생X
                 alert('일정 편집 권한이 없습니다');
-            });
-
+            })
             addPlan.addEventListener('mouseover', () => {
                 addPlan.style.cursor = 'default';
             });
 
             addPersonBtn.style.display = 'none';
         }
-    })
-
-    getAllCourse(sco).then(result => {
+    });
+    getAllCourse(sco).then(async result => {
         console.log(result)
-        result.forEach(key => {
-            getSlideImg(key.scheContentId);
-        })
+        await Promise.all(result.map(key => getSlideImg(key.scheContentId)))
+        // result.forEach(key => {
+        //     getSlideImg(key.scheContentId);
+        // })
+        slideItems = document.querySelectorAll('.slideItem');
+        updateInnerSlideWidth();
+        makeDot();
     })
     //일차별 일정출력
     if (sco) {
@@ -190,8 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     //드래그 슬라이드 부분
-    updateInnerSlideWidth();
-    makeDot();
+    
 
     slideWrap.addEventListener('mousedown', e => {
         pressed = true;
@@ -334,20 +328,19 @@ function getImage(key) {
     })
 }
 
-function getSlideImg(key) {
+async function getSlideImg(key) {
     const url = `https://apis.data.go.kr/B551011/KorService1/detailImage1?MobileOS=ETC&MobileApp=TripTrav&_type=json&subImageYN=Y&contentId=${key}&serviceKey=${tourAPIKEY}`;
     const innerSlide = document.querySelector('.innerSlide');
     let addedLocations = new Set();
 
-    getData(url).then(res => {
-        res.items.item.forEach(img => {
-            if (!addedLocations.has(img.contentid)) {
-                innerSlide.innerHTML += `<div class="slideItem" style="background-image: url('${img.originimgurl}'); background-size: cover; background-position: center; background-repeat: no-repeat;"></div>`;
+    const res = await getData(url)
+    res.items.item.forEach(img => {
+        if (!addedLocations.has(img.contentid)) {
+            innerSlide.innerHTML += `<div class="slideItem" style="background-image: url('${img.originimgurl}'); background-size: cover; background-position: center; background-repeat: no-repeat;"></div>`;
 
-                addedLocations.add(img.contentid);
-            }
-        });
-    })
+            addedLocations.add(img.contentid);
+        }
+    });
 }
 
 
@@ -380,7 +373,6 @@ function getAddr(key) {
 const personModal = document.querySelector('.personModal');
 const pmCloseBtn = document.querySelector('.pmCloseBtn');
 
-//url 복사
 function addPersonF() {
     const url = window.location.href;
     document.querySelector('.pmShareValue').value = url;
@@ -408,54 +400,24 @@ const companionModal = document.querySelector('.companionModal');
 
 //동행자 확인 함수
 function checkPersonF() {
-    getCompanion(sco).then(result=>{
-        console.log(result)
-        if (result) {
-            companionModal.style.display = 'flex';
-            document.querySelector('.cmCloseBtn').onclick = () => {
-                companionModal.style.display = 'none';
+    fetch(`/schedule/getCompanion/${sco}`, {
+        method: 'get'
+    }).then(response => response.json())
+        .then(data => {
+            console.log(data)
+            if (data) {
+                companionModal.style.display = 'flex';
+                document.querySelector('.cmCloseBtn').onclick = () => {
+                    companionModal.style.display = 'none';
+                }
+                if (data.length > 0) {
+                    data.forEach(r => {
+                        const li = `<li class="companionLi">${r.scheNick}</li>`
+                        document.querySelector('.companionUl').innerHTML += li;
+                    })
+                }
             }
-            if (result.length > 0) {
-                document.querySelector('.companionUl').innerHTML='';
-                result.forEach((r,index) => {
-                    const li = `<li class="companionLi">${index+1}) ${r.scheNick}</li>`
-                    document.querySelector('.companionUl').innerHTML += li;
-                })
-            }
-        }
-    })
-}
-
-//동행자 권한 편집
-function editRoleUser() {
-    getCompanion(sco).then(companionList => {
-        document.querySelector('.companionUl').innerHTML = '';
-
-        companionList.forEach((res, index) => {
-            getUserRole(res.uno, sco).then(r => {
-                const companionUl = document.querySelector('.companionUl');
-
-                const isCurrentUser = (r.uno === unoNum) ? ' (나)' : '';
-                const isCheckedEditor = (r.scheRole === 1) ? 'checked' : '';
-                const isCheckedCompanion = (r.scheRole !== 1) ? 'checked' : '';
-
-                const li = document.createElement('li');
-                li.className = 'companionLi';
-
-                li.innerHTML = `
-                    ${index + 1}) ${res.scheNick}${isCurrentUser}
-                    <label>
-                        <input type="radio" name="role_${res.uno}" value="1" ${isCheckedEditor}> 편집자
-                    </label>
-                    <label>
-                        <input type="radio" name="role_${res.uno}" value="0" ${isCheckedCompanion}> 동행자
-                    </label>
-                `;
-
-                companionUl.appendChild(li);
-            });
-        });
-    });
+        })
 }
 
 pmCloseBtn.addEventListener('click', () => {
@@ -483,6 +445,7 @@ async function generateInviteUrl() {
 //상단 슬라이드 길이 계산 함수
 function updateInnerSlideWidth() {
     //div 개수따라 totalWidth 값 설정되도록
+    slideItems = document.querySelectorAll('.slideItem');
     const totalWidth = slideItems.length * slideItemWidth;
     innerSlide.style.width = `${totalWidth}px`;
     document.querySelector('.innerLine').style.width = `${totalWidth - 215}px`;
@@ -1141,15 +1104,17 @@ async function generateInviteUrl(sco, unoNum) {
         body: JSON.stringify({sco: sco, uno: unoNum})
     });
 
+    // 서버로부터 초대 URL을 받아옴
     const result = await response.json();
 
     if (response.ok) {
+        // 초대 URL을 페이지에 표시
         console.log(result.inviteUrl);
     } else {
         console.log(result.message)
     }
 
-    return result;
+    return result; // 이 줄은 마지막에 두어야 함
 }
 
 //유저 권환 확인
@@ -1164,13 +1129,9 @@ async function getUserRole(uno, sco) {
     }
 }
 
-async function getCompanion(sco){
-    try{
-        const url = "/schedule/getCompanion/"+sco;
-        const config = {method:'get'}
-        const response = await fetch(url, config);
-        return response.json();
-    } catch (err){
-        console.log(err)
-    }
-}
+
+//고민점
+//투어 id 가져가서 각 id별 좌표값, 대표이미지, 서브이미지 가져오기(subname수만큼)
+//일정 편집 안들어갔는데 2depth 열어서 일정추가하면 일정을 편집하시겠습니까? confirm 띄우고 ok하면 일정편집으로 들어가기
+//2depth 닫으면 class on 추천 여행지로 돌아가게 만들기
+//일정편집 중에 닫기 버튼누르면 편집을 그만히시겠습니까? 띄우고 ok하면 해당 순서 배열로 저장, 버튼 저장으로 돌려서 닫기

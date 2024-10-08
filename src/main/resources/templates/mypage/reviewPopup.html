@@ -154,6 +154,7 @@
     const saveBtn = document.getElementById("saveBtn");
     var stars = document.getElementById("stars");
     var validFiles = [];
+    const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
     initializeReview();
 
@@ -208,6 +209,15 @@
         image.classList.add("tripReviewImg");
         image.src = src;
         return image;
+    }
+
+    // 이미지 URL을 File 객체로 변환하는 함수
+    async function getFileFromImgSrc(imgSrc) {
+        const response = await fetch(imgSrc);
+        const blob = await response.blob();
+        const fileName = 'image.jpg';
+        const file = new File([blob], fileName, { type: blob.type });
+        return file;
     }
 
     // 삭제 버튼 생성
