@@ -24,4 +24,8 @@ public interface MyPageMapper {
     int userComYPw(UserVO userVO);
 
     int userSocialUpdate(String userName);
+
+    List<String> getComList(long uno);
+
+    ScheduleVO scheduleComCall(String sco);
 }

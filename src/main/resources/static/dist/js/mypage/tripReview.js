@@ -33,8 +33,8 @@ getReviewList(unoNum)
                 </div>
                 <div class="tripSetting">
                     <ul>
-                        <li><button type="button" onclick="showPopup(${review.rno})">수정</button></li>
-                        <li><button type="button" onclick="deleteReview(${review.rno})">삭제</button></li>
+                        <li><button type="button" onclick="showPopup(${review.rno})"><img src="/dist/image/edit-2.svg"></button></li>
+                        <li><button type="button" onclick="deleteReview(${review.rno})"><img src="/dist/image/trash-2.svg"></button></li>
                     </ul>
                 </div>`;
             const imageDiv = div.querySelector(".tripReviewImgDiv");
@@ -55,19 +55,17 @@ getReviewList(unoNum)
                     break;
             }
         });
-
-        // 타임아웃을 사용하여 리스트 비어있는지 검사
-        setTimeout(() => {
+        requestAnimationFrame(() => {
             if (!tripPlaceReviewList.hasChildNodes()) {
                 tripPlaceReviewList.appendChild(noChild("review"));
             }
             if (!tripFoodReviewList.hasChildNodes()) {
                 tripFoodReviewList.appendChild(noChild("review"));
             }
-        }, 1);  // DOM 업데이트 후에 실행되도록 0ms 딜레이 적용
+        });
     })
     .catch(err => {
-        console.log(err); // 에러 로그 출력
+        console.log(err);
     });
 
 //리뷰 삭제
