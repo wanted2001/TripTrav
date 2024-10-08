@@ -20,7 +20,7 @@ scheduleCall(unoNum).then(data => {
             const div = document.createElement("div");
             div.classList.add("tripCard");
             div.innerHTML = `
-                <div class="tripImgDiv"><img src="/dist/image/poky.png" alt="프로필 사진" class="tripImg"></div>
+                <div class="tripImgDiv"><img src="${data[i].scheImg ? `${data[i].scheImg}` : "/dist/image/poky.png" }" alt="프로필 사진" class="tripImg"></div>
                 <div class="tripinfo">
                     <ul>
                         <li class="myTripTitle"><a href="/schedule/check?sco=${data[i].sco}"><h3>${data[i].scheName}</h3></a></li>
