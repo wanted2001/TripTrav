@@ -65,9 +65,9 @@ public class MyPageServiceImpl implements MyPageService {
     }
 
     @Override
-    public int updateSocialUserName(String userName) {
+    public int updateSocialUserName(UserVO userVO) {
         int isOk = 0;
-        isOk = myPageMapper.userSocialUpdate(userName);
+        isOk = myPageMapper.userSocialUpdate(userVO);
         return isOk;
     }
 }

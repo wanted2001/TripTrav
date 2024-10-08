@@ -55,6 +55,7 @@ public class MyPageController {
             scheDTO.setScheStart(svo.getScheStart());
             scheDTO.setScheEnd(svo.getScheEnd());
             scheDTO.setScheTitle(sdvo.getScheTitle());
+            scheDTO.setScheImg(svo.getScheImg());
             scheduleDTOList.add(scheDTO);
         }
         log.info("scheduleCall scheduleDTOList = {}", scheduleDTOList);
@@ -140,9 +141,10 @@ public class MyPageController {
             log.info("userVO11111111 = {}",userVO);
            return msv.updateCommonUser(userVO);
         }else{
+            userVO.setUno(uno);
             userVO.setNickname(nickname);
             log.info("userVO = {}",userVO);
-          return msv.updateSocialUserName(userVO.getNickname());
+          return msv.updateSocialUserName(userVO);
         }
 
     }

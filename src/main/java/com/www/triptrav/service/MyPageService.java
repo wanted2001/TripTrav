@@ -2,6 +2,7 @@ package com.www.triptrav.service;
 
 
 import com.www.triptrav.domain.*;
+import org.apache.catalina.User;
 
 import java.util.List;
 
@@ -20,5 +21,5 @@ public interface MyPageService {
 
     int updateCommonUser(UserVO userVO);
 
-    int updateSocialUserName(String userName);
+    int updateSocialUserName(UserVO userVO);
 }

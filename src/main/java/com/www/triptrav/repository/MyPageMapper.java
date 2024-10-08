@@ -23,7 +23,7 @@ public interface MyPageMapper {
 
     int userComYPw(UserVO userVO);
 
-    int userSocialUpdate(String userName);
+    int userSocialUpdate(UserVO userVO);
 
     List<String> getComList(long uno);
 
