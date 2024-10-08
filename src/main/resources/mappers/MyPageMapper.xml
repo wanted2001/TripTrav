@@ -28,6 +28,18 @@
         select * from schedule_detail where sco=#{sco}
     </select>
 
+    <update id="userComNPw">
+        update user set nickname=#{nickname}, profile=#{profile} where uno=#{uno}
+    </update>
+
+    <update id="userComYPw">
+        update user set nickname=#{nickname}, pw=#{pw},profile=#{profile} where uno=#{uno}
+    </update>
+
+    <update id="userSocialUpdate">
+        update user set nickname=#{nickname} where uno = #{uno}
+    </update>
+
 
 
 </mapper>

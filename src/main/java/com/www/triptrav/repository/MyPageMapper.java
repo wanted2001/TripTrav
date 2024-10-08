@@ -18,4 +18,10 @@ public interface MyPageMapper {
     ReviewVO getPopReview(long rno);
 
     ScheduleDetailVO getScheduleDetail(long sco);
+
+    int userComNPw(UserVO userVO);
+
+    int userComYPw(UserVO userVO);
+
+    int userSocialUpdate(String userName);
 }

@@ -17,4 +17,8 @@ public interface MyPageService {
     ReviewVO getPopReview(long rno);
 
     ScheduleDetailVO getScheduleDetail(long sco);
+
+    int updateCommonUser(UserVO userVO);
+
+    int updateSocialUserName(String userName);
 }
