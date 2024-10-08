@@ -8,10 +8,12 @@ getReviewList(unoNum)
         let tripPlaceNum =0;
         let tripFoodNum = 0;
         console.log(data);
-        if(data.length === 0){
-            tripPlaceReviewList.appendChild(noChild("review"));
-            tripFoodReviewList.appendChild(noChild("review"));
-        }
+        // if(data.length === 0){
+        //     tripPlaceReviewList.appendChild(noChild("review"));
+        //     tripFoodReviewList.appendChild(noChild("review"));
+        // }
+        let placeReviewNum = 0;
+        let foodReviewNum = 0;
         data.forEach(datas => {
             const review = datas.review;
             const imagePaths = datas.imagePaths;

@@ -135,20 +135,43 @@
         function changeHeaderColor() {
             const header = document.getElementById('header');
             const currentURL = window.location.href;
+            console.log({currentURL})
+            const headerText = document.querySelectorAll('#header a'); // header 내의 <a> 요소 선택
 
-            // URL에 따라 배경색 변경
             if (currentURL.includes('/maps')) {
+                headerText.forEach(link => {
+                    link.style.color = 'black';
+                    link.style.setProperty('color', 'black', 'important');
+                });
                 header.style.position = 'absolute';
-                header.style.backgroundColor = 'orange';
-                header.style.width = ' 1440px';
+                header.style.width = '1440px';
                 header.style.margin = '0 auto';
             } else {
-                header.style.backgroundColor = ''; // 기본 배경색
+                headerText.forEach(link => {
+                    link.style.color = 'white';
+                    link.style.setProperty('color', 'white', 'important');
+                });
             }
         }
 
+        // function changeHeaderColor() {
+        //     const header = document.getElementById('header');
+        //     const currentURL = window.location.href;
+
+        //     // URL에 따라 배경색 변경
+        //     if (currentURL.includes('/maps')) {
+        //         header.style.position = 'absolute';
+        //         header.style.backgroundColor = 'orange';
+        //         header.style.width = ' 1440px';
+        //         header.style.margin = '0 auto';
+        //     } else {
+        //         header.style.backgroundColor = ''; // 기본 배경색
+        //     }
+        // }
+
         // 페이지 로드 시 실행
-        window.onload = changeHeaderColor;
+        window.addEventListener('load', changeHeaderColor)
+        // window.onload = changeHeaderColor;
 
 
 
