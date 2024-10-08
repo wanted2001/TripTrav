@@ -9,7 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ScheduleCompanion {
+public class ScheduleCompanionVO {
     private long sco;
     private long uno;
+    private String scheNick;
 }

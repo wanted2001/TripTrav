@@ -38,4 +38,7 @@
     <select id="getPath">
         select profile from user where uno = #{uno}
     </select>
+    <select id="getUserNick" resultType="String">
+        select nickname from user where uno=#{uno}
+    </select>
 </mapper>

@@ -65,5 +65,10 @@ public class UserServiceImpl implements UserService {
         return userMapper.getPath(uno);
     }
 
+    @Override
+    public String getUserNick(long uno) {
+        return userMapper.getUserNick(uno);
+    }
+
 }
 
