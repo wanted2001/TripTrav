@@ -85,6 +85,7 @@ const memoWrap = document.querySelector('.memoWrap');
 //일정편집
 const editBtn = document.querySelector('.editBtn');
 const saveBtn = document.querySelector('.saveBtn');
+const disableEditBtn = document.querySelector('.disableEdit');
 
 document.addEventListener('DOMContentLoaded', () => {
     initTmap();
@@ -93,7 +94,29 @@ document.addEventListener('DOMContentLoaded', () => {
     getUserRole(unoNum, sco).then(result => {
         console.log(result);
         if (result.scheRole === 1) {
-            console.log("role 있음");
+            editBtn.classList.remove('hidden');
+        } else {
+            disableEditBtn.classList.remove('hidden');
+            const addPlan = document.querySelector('.addPlan');
+            const addPersonBtn = document.querySelector('.addPersonBtn');
+            addPlan.onclick =null;
+            addPlan.addEventListener('click',(event)=>{
+                event.stopImmediatePropagation();//기존 이벤트 발생X
+                alert('일정 편집 권한이 없습니다');
+            })
+            addPlan.addEventListener('mouseover', () => {
+                addPlan.style.cursor = 'default';
+            });
+            addPersonBtn.innerText='동행자 확인';
+            addPersonBtn.onclick=null;
+            addPersonBtn.onclick=function (){
+                fetch(`/schedule/getCompanion/${sco}`,{
+                    method:'get'
+                }).then(response=>response.json())
+                    .then(data=>{
+                        console.log(data)
+                    })
+            }
         }
     });
     getAllCourse(sco).then(result=>{
@@ -360,7 +383,7 @@ const addPerson = document.querySelector('.addPersonBtn');
 const personModal = document.querySelector('.personModal');
 const pmCloseBtn = document.querySelector('.pmCloseBtn');
 
-addPerson.addEventListener('click',()=>{
+function addPersonF(){
     const url = window.location.href;
     document.querySelector('.pmShareValue').value=url;
     personModal.style.display='flex';
@@ -380,7 +403,7 @@ addPerson.addEventListener('click',()=>{
             })
             console.log(result);
         })
-})
+}
 
 pmCloseBtn.addEventListener('click',()=>{
     personModal.style.display='none';
@@ -565,11 +588,12 @@ function closeContent(){
 //일정추가 2depth
 const addPlan = document.querySelector('.addPlan');
 const depth2 = document.querySelector('.mapContentBox2Depth');
-addPlan.addEventListener('click',()=>{
+
+function clickAddPlan(){
     depth2.classList.remove('hidden');
     depth2.classList.add('visible');
     closeBtn.style.left='883px';
-})
+}
 
 const ul = document.querySelector('.depth2_ul');
 ul.addEventListener('click',(e)=>{
@@ -908,6 +932,7 @@ function setPlanData(sco){
     }
 }
 
+//일정변경 버튼
 function countTriangle(){
     const triangleButtons = document.querySelectorAll('.triangle');
     const downTriangleButtons = document.querySelectorAll('.downTriangle');

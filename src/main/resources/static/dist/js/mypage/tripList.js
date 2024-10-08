@@ -6,6 +6,7 @@ var nextList = document.querySelector(".nextTripList");
 var prevList = document.querySelector(".prevTripList");
 
 scheduleCall(unoNum).then(data => {
+    console.log(data)
     if (data.length === 0) {
         nextList.appendChild(noChild("list"));
         prevList.appendChild(noChild("list"));
