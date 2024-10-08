@@ -44,4 +44,29 @@ public class MyPageServiceImpl implements MyPageService {
     public ScheduleDetailVO getScheduleDetail(long sco) {
         return myPageMapper.getScheduleDetail(sco);
     }
+
+    @Override
+    public int updateCommonUser(UserVO userVO) {
+        log.info("userVo22222 => {}", userVO.getPw());
+
+        int isOk = 0;
+
+        // 비밀번호가 null이거나 빈 문자열일 경우
+        if (userVO.getPw() == null || userVO.getPw().isEmpty()) {
+            // 비밀번호 없이 업데이트하는 로직
+            isOk = myPageMapper.userComNPw(userVO);  // 비밀번호 없는 업데이트
+        } else {
+            // 비밀번호가 있는 경우
+            isOk = myPageMapper.userComYPw(userVO);  // 비밀번호 포함 업데이트
+        }
+
+        return isOk;
+    }
+
+    @Override
+    public int updateSocialUserName(String userName) {
+        int isOk = 0;
+        isOk = myPageMapper.userSocialUpdate(userName);
+        return isOk;
+    }
 }

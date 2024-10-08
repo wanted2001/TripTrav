@@ -4,11 +4,11 @@ var tripFoodReviewList = document.querySelector(".tripFoodReviewList");
 
 getReviewList(unoNum)
     .then(data => {
-        console.log(data.length);
-        if(data.length === 0){
-            document.querySelector(".resultMyPage").innerHTML =`<p>리뷰가 없습니다.</p>`;
-        }
         console.log(data);
+        if(data.length === 0){
+            tripPlaceReviewList.appendChild(noChild("review"));
+            tripFoodReviewList.appendChild(noChild("review"));
+        }
         data.forEach(datas => {
             const review = datas.review;
             const imagePaths = datas.imagePaths;
@@ -54,17 +54,43 @@ getReviewList(unoNum)
                     tripPlaceReviewList.appendChild(li);
                     break;
             }
-            if(!tripPlaceReviewList.hasChildNodes()){
+        });
+
+        // 타임아웃을 사용하여 리스트 비어있는지 검사
+        setTimeout(() => {
+            if (!tripPlaceReviewList.hasChildNodes()) {
                 tripPlaceReviewList.appendChild(noChild("review"));
             }
-            if(!!tripFoodReviewList.hasChildNodes()){
+            if (!tripFoodReviewList.hasChildNodes()) {
                 tripFoodReviewList.appendChild(noChild("review"));
             }
-        });
+        }, 1);  // DOM 업데이트 후에 실행되도록 0ms 딜레이 적용
     })
     .catch(err => {
         console.log(err); // 에러 로그 출력
     });
+
+//리뷰 삭제
+async function deleteReview(rno) {
+    try {
+        const url = `/review/reviewDelete/${rno}`;
+        const config = {
+            method: 'DELETE'
+        };
+        const resp = await fetch(url, config);
+        if (resp.ok) {
+            alert("리뷰가 삭제되었습니다.");
+            window.location.reload();
+        } else {
+            alert("리뷰 삭제에 실패했습니다.");
+        }
+    } catch (error) {
+        console.log(error);
+        alert("오류가 발생했습니다.");
+    }
+}
+
+
 
 
 function showPopup(rno) {
