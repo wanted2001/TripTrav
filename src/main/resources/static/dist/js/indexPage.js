@@ -60,7 +60,11 @@ function fetchSuggestions() {
             } else {
                 data.forEach(item => {
                     const li = document.createElement('li');
-                    li.innerHTML = item;
+                    const highlightedItem = item.replace(
+                        new RegExp(query, 'gi'),
+                        match => `<strong style="color: #F3A701; font-weight: bold;">${match}</strong>`
+                    );
+                    li.innerHTML = highlightedItem;
                     suggestions.appendChild(li);
                 });
             }
