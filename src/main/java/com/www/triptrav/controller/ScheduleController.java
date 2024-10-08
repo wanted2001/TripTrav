@@ -31,7 +31,8 @@ public class ScheduleController {
     private final ScheduleRoleService srsv;
     private final ScheduleMemoService smsv;
     private final ScheduleCompanionService scsv;
-    private final InviteService inviteService;
+    private final UserService usrv;
+
     @Value("${invite.secret-key}")
     private String secretKey;
 
@@ -221,9 +222,9 @@ public class ScheduleController {
         log.info("inviteUser : {}", user);
         if (user == null) {
             int isIn = srsv.addScheduleRole(uno, sco);
-
             if (isIn > 0) {
-                int isOk = scsv.inviteUserAddPlan(uno, sco);
+                String nick = usrv.getUserNick(uno);
+                int isOk = scsv.inviteUserAddPlan(uno, sco, nick);
                 log.info("isOk : {}", isOk);
                 if (isOk > 0) {
                     ScheduleVO scheVO = ssv.getScheduleVO(sco);
@@ -270,6 +271,13 @@ public class ScheduleController {
             return "1";
         }
         return "0";
+    }
+
+    @GetMapping("/getCompanion/{sco}")
+    @ResponseBody
+    public List<ScheduleCompanionVO> getCompanion(@PathVariable long sco){
+        List<ScheduleCompanionVO> scVOList = scsv.getCompanionList(sco);
+        return scVOList!=null ? scVOList : Collections.emptyList();
     }
 
 }

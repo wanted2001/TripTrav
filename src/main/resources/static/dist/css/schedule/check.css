@@ -481,7 +481,7 @@ button.depth2_searchBtn {
     background: orange;
     color: white;
 }
-.editBtn, .saveBtn{
+.editBtn, .saveBtn, .disableEdit{
     width: 50px;
     height: 30px;
     border: 1px solid orange;
@@ -491,6 +491,9 @@ button.depth2_searchBtn {
     font-family: 'LINESeedKR-Rg';
     margin-left: 300px;
     font-size: 14px;
+}
+.disableEdit{
+    border: 1px solid rgba(255, 255, 255, 0);
 }
 .titleInput {
     border: none;

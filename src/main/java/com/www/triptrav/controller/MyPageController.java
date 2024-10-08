@@ -57,6 +57,7 @@ public class MyPageController {
             scheDTO.setScheTitle(sdvo.getScheTitle());
             scheduleDTOList.add(scheDTO);
         }
+        log.info("scheduleCall scheduleDTOList = {}", scheduleDTOList);
         return scheduleDTOList;
     }
 
