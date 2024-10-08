@@ -109,8 +109,10 @@ document.getElementById("updateProfile").addEventListener("click", () => {
             console.log(result);
             if (result === '1') {
                 alert("회원정보 수정 완료");
+                location.reload();
             } else {
                 alert("회원정보 수정 실패");
+                location.reload();
             }
         }).catch(err => {
             console.log(err);

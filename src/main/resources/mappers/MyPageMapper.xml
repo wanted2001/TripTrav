@@ -28,6 +28,14 @@
         select * from schedule_detail where sco=#{sco}
     </select>
 
+    <select id="getComList" resultType="String">
+        select sco from schedule_companion where uno=#{uno}
+    </select>
+
+    <select id="scheduleComCall" resultType="com.www.triptrav.domain.ScheduleVO">
+        select * from schedule where sco=#{sco}
+    </select>
+
     <update id="userComNPw">
         update user set nickname=#{nickname}, profile=#{profile} where uno=#{uno}
     </update>
