@@ -70,9 +70,15 @@ fetch(detailInfoUrl)
             document.querySelector('.timeInfo').innerHTML = `이용시간 : ${introData.usetime}`
         })
         getAdditionalInfo(contentTypeId).then(result => {
-            const additionalInfoData = result.response.body.items.item[0];
-            document.querySelector('.priceInfo').innerHTML = `${additionalInfoData.infoname} : ${additionalInfoData.infotext}`
-        })
+            const items = result?.response?.body?.items?.item;
+            if (items && items.length > 0) {
+                const additionalInfoData = items[0];
+                document.querySelector('.priceInfo').innerHTML = `${additionalInfoData.infoname} : ${additionalInfoData.infotext}`;
+            } else {
+                document.querySelector('.priceInfo').innerHTML = `입장료 : 무료`;
+            }
+        });
+
         document.querySelector('.homepageInfo').innerHTML = `홈페이지 :`+`${jsonData.homepage ? ` ${jsonData.homepage}` :"등록된 페이지가 없습니다. "}`
         document.querySelector('.details').innerHTML = `<p class="sectionTitle">소개</p><span>${jsonData.overview}</span>`;
         mapx = jsonData.mapx;
@@ -372,8 +378,7 @@ async function getReviewList() {
             method: 'GET'
         };
         const resp = await fetch(url, config);
-        let result = await resp.json();
-        console.log(result);
+        const result = await resp.json();
         return result;
     } catch (error) {
         console.log(error);
@@ -966,8 +971,6 @@ checkLogin();
 function checkLogin(){
     if(typeof userNickname !== 'undefined' && userNickname !== null){
         document.querySelector('.reviewArea').placeholder = '타인에게 불쾌감을 줄 수 있는 리뷰는 삭제될 수 있습니다. ';
-    }else{
-        console.log("로그인")
     }
 }
 if(typeof userNickname !== 'undefined' && userNickname !== null){
