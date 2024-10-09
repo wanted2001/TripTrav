@@ -97,6 +97,7 @@ function loadTaste(){
 const buttons = document.querySelectorAll('.taste-button');
 let selectedButtons = [];
 
+// 버튼 클릭 시 처리
 buttons.forEach(button => {
     button.addEventListener('click', function() {
         const buttonText = this.innerText;
@@ -111,16 +112,34 @@ buttons.forEach(button => {
         else {
             alert('최대 5개까지 선택할 수 있습니다.');
         }
-
         console.log(selectedButtons);
     });
+});
+
+// 분석하기 버튼 클릭 시
+document.querySelector('.analyze-button').addEventListener('click', function() {
+    fetch('/taste/addTaste', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(selectedButtons)
+    })
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            console.log('카테고리 코드:', data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 });
 
 //성별, 나이 업데이트
 document.getElementById('additionalInfoFormButton').addEventListener('click', function() {
     const ageInput = document.getElementById('age');
     const ageValue = parseInt(ageInput.value, 10);
-
     if (ageValue < 1 || ageValue > 99) {
         alert("나이는 1에서 99 사이여야 합니다.");
         return;
@@ -174,4 +193,5 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
 
