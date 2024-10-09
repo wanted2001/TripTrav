@@ -5,7 +5,9 @@ CREATE TABLE `user` (
 	`nickname` varchar(64) NOT NULL,
 	`profile` varchar(500) NULL,
 	`provider` varchar(255) NULL,
-	`provider_id` varchar(255) NULL
+	`provider_id` varchar(255) NULL,
+	`gender` tinyint NULL,
+	`age` int NULL
 );
 
 CREATE TABLE `auth` (

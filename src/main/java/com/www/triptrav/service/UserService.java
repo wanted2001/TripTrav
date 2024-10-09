@@ -16,4 +16,8 @@ public interface UserService{
     String getPath(String uno);
 
     String getUserNick(long uno);
+
+    int addAdditionalInfo(UserVO uvo);
+
+    boolean checkAdditionalInfo(long unoNum);
 }
