@@ -332,12 +332,15 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
     color: white;
     box-shadow: 0 2px 7px 1px #dfdfdf
 }
-.depth2_recomm, .depth2_heart,.depth2_search {
-    height: 90px;
+.depth2_recomm, .depth2_search {
+    height: 100px;
     padding-top: 23px;
 }
-.depth2_recomm:hover, .depth2_search:hover,
-.depth2_heart:hover{
+.heart_area {
+    height: 100px;
+    padding-top: 25px;
+}
+.depth2_recomm:hover, .depth2_search:hover, .heart_area:hover{
     background: #ededed99;
 }
 .recomm_img, .depth2_search_img, .heart_img {
@@ -359,7 +362,7 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
     padding: 10px 0 0 94px;
     font-size: 15px;
 }
-.recomm_addBtn,.depth2_search_addBtn,.heart_addBtn {
+.recomm_addBtn,.depth2_search_addBtn {
     float: right;
     border: 1px solid #3f3f3f;
     padding: 9px 9px 6px;
@@ -369,9 +372,15 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
     color: #3f3f3f;
     cursor: pointer;
 }
-.recomm_addBtn:hover,.depth2_search_addBtn:hover,
-.heart_addBtn:hover{
+.recomm_addBtn:hover,.depth2_search_addBtn:hover{
     background: #80808029;
+}
+.addPlanBtn, .heart_addBtn{
+    width: 27px;
+    height: 27px;
+    float: right;
+    margin-right: 23px;
+    margin-top: -37px;
 }
 .depth2_search_input_area {
     background: #e8e8e8;
@@ -395,6 +404,27 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
     position: absolute;
     top: 89px;
     left: 305px;
+}
+.noResultLike {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -85%);
+    font-family: 'LINESeedKR-Rg';
+    color: #464646;
+    width: 264px;
+    text-align: center;
+}
+.noResultLike img{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -281%);
+    opacity: 0.5;
+}
+.line2 {
+    display: block;
+    margin-top: 8px;
 }
 button.depth2_searchBtn {
     border: none;
@@ -444,25 +474,25 @@ button.depth2_searchBtn {
     transform: translate(-50%, -192%);
     opacity: 0.5;
 }
-.addPlanBtn {
-    float: right;
-    border: 1px solid gray;
-    border-radius: 2px;
-    position: relative;
-    width: 20px;
-    height: 20px;
-    margin-top: -60px;
-    margin-right: 5px;
-    cursor: pointer;
-}
-.addPlanBtn:hover{
-    background: #5e5e5e40;
-    border: 1px solid #f5deb300;
-    padding: 1px;
-}
-.addPlanBtn img {
-    width: 20px;
-}
+/*.addPlanBtn {*/
+/*    float: right;*/
+/*    border: 1px solid gray;*/
+/*    border-radius: 2px;*/
+/*    position: relative;*/
+/*    width: 20px;*/
+/*    height: 20px;*/
+/*    margin-top: -60px;*/
+/*    margin-right: 5px;*/
+/*    cursor: pointer;*/
+/*}*/
+/*.addPlanBtn:hover{*/
+/*    background: #5e5e5e40;*/
+/*    border: 1px solid #f5deb300;*/
+/*    padding: 1px;*/
+/*}*/
+/*.addPlanBtn img {*/
+/*    width: 20px;*/
+/*}*/
 .addPlan {
     /* border: 1px solid orange; */
     height: 38px;
@@ -586,14 +616,6 @@ button.depth2_searchBtn {
     position: relative;
     z-index: 1000;
     transition: transform 0.4s ease;
-}
-.oneContent.moved-up {
-    transform: translateY(-100%);
-    /*transition: transform 0.4s ease;*/
-}
-.oneContent.moved-down {
-    transform: translateY(100%);
-    /*transition: transform 0.4s ease*/
 }
 .changePlan {
     position: absolute;

@@ -86,7 +86,7 @@ const saveBtn = document.querySelector('.saveBtn');
 const disableEditBtn = document.querySelector('.disableEdit');
 
 document.addEventListener('DOMContentLoaded', () => {
-    initTmap();
+    // initTmap();
     console.log(slideItems.length);
 
     getUserRole(unoNum, sco).then(result => {
@@ -105,8 +105,16 @@ document.addEventListener('DOMContentLoaded', () => {
             addPlan.addEventListener('mouseover', () => {
                 addPlan.style.cursor = 'default';
             });
-
-            addPersonBtn.style.display = 'none';
+            addPersonBtn.innerText='동행자 확인';
+            addPersonBtn.onclick=null;
+            addPersonBtn.onclick=function (){
+                fetch(`/schedule/getCompanion/${sco}`,{
+                    method:'get'
+                }).then(response=>response.json())
+                    .then(data=>{
+                        console.log(data)
+                    })
+            }
         }
     });
     getAllCourse(sco).then(async result => {
@@ -485,7 +493,6 @@ function checkSelectedItem() {
             item.style.width = '195px';
             item.style.height = '195px';
             item.style.marginTop = '-35px';
-            item.style.background = 'gold';
 
             const dot = item.querySelector('.dot');
             if (dot) {
@@ -495,7 +502,6 @@ function checkSelectedItem() {
             item.style.width = '160px';
             item.style.height = '160px';
             item.style.marginTop = '0px';
-            item.style.background = 'pink';
 
             const dot = item.querySelector('.dot');
             if (dot) {
@@ -632,13 +638,14 @@ ul.addEventListener('click', (e) => {
         search: document.querySelectorAll('.depth2_search'),
         heart: document.querySelectorAll('.depth2_heart'),
         searchInput: document.querySelector('.depth2_search_input_area'),
-        morePlaceBtn: document.querySelector('.morePlaceBtn')
+        morePlaceBtn: document.querySelector('.morePlaceBtn'),
+        searchResultDiv: document.querySelector('.searchResultDiv')
     }
 
     const state = {
-        '1': {recommend: false, search: true, heart: true, searchInput: true, morePlaceBtn: true},
-        '2': {recommend: true, search: false, heart: true, searchInput: false, morePlaceBtn: false},
-        '3': {recommend: true, search: true, heart: false, searchInput: true, morePlaceBtn: true}
+        '1': {recommend: false, search: true, heart: true, searchInput: true, morePlaceBtn: true, searchResultDiv: true},
+        '2': {recommend: true, search: false, heart: true, searchInput: false, morePlaceBtn: false, searchResultDiv: false},
+        '3': {recommend: true, search: true, heart: false, searchInput: true, morePlaceBtn: true, searchResultDiv: true}
     }
 
     const currentState = state[clickNumber];
@@ -698,9 +705,12 @@ function search() {
                             <div class="depth2_search_name" data-id="${key.contentid}">${key.title}</div>
                             <div class="depth2_search_addr">${key.addr1}</div>
                         </div>
-                        <div class="addPlanBtn" onclick="newPlan(event)"><img src="/dist/image/plus.svg"></div>
                     </div>`;
                 })
+
+                //호버했을때 변환없음!
+
+
 
                 document.querySelector('.searchResultDiv').innerHTML = resultDiv;
 
@@ -708,7 +718,6 @@ function search() {
                     const more = `<div class="morePlaceBtn">더보기<img src="/dist/image/chevron-down.svg"></div>`;
                     document.querySelector('.searchResultDiv').innerHTML += more;
 
-                    // Attach event listener programmatically
                     document.querySelector('.morePlaceBtn').addEventListener('click', loadMore);
                     paddingSetting();
                 }
@@ -718,11 +727,14 @@ function search() {
                     imageDivs.forEach(img => {
                         const imageUrl = img.getAttribute('data-image');
                         img.style.backgroundImage = `url(${imageUrl})`;
+                        img.style.backgroundSize = 'cover';
+                        img.style.backgroundPosition = 'center';
+                        img.style.backgroundRepeat = 'no-repeat';
                     });
                 });
                 paddingSetting();
             } else if (totalCount < 1) {
-                const noResult = `<div class="noResult"><img src="/dist/image/alert-circle.svg">검색결과가 없습니다</div>`
+                const noResult = `<div class="noResult visible"><img src="/dist/image/alert-circle.svg">검색결과가 없습니다</div>`
                 document.querySelector('.searchResultDiv').innerHTML = noResult;
             }
         }
@@ -796,10 +808,16 @@ function newPlan(event) {
 }
 
 function newPlanF(event) {
-    const searchDiv = event.target.closest('.depth2_search');
-    const contentId = searchDiv.querySelector('.depth2_search_name').getAttribute('data-id');
-    const placeName = searchDiv.querySelector('.depth2_search_name').innerText
-    const placeAddress = searchDiv.querySelector('.depth2_search_addr').innerText;
+    const searchDiv = event.target.closest('.depth2_search, .heart_area');
+    const contentId = searchDiv.querySelector('.depth2_search_name, .heart_name').getAttribute('data-id');
+    const placeName = searchDiv.querySelector('.depth2_search_name, .heart_name').innerText
+    const placeAddress = searchDiv.querySelector('.depth2_search_addr, .heart_addr').innerText;
+
+    const existingLi = document.querySelector(`.contentArea li[data-id="${contentId}"]`);
+    if(existingLi) {
+        alert('이미 추가된 장소입니다.')
+        return
+    }
 
     const newLi = `<li class="oneContent" data-id="${contentId}">
                             <div class="deletePlan" onclick="deletePlan(event)">&times;</div>
@@ -1094,6 +1112,56 @@ async function getAllCourse(sco) {
     }
 }
 
+function getHeartData(){
+    fetch('/dist/json/planData.json')
+        .then(response=>response.json())
+        .then(storedData=>{
+            fetch("/schedule/getLikeList/"+unoNum,{
+                method:'get',
+            }).then(response=>response.json())
+                .then(data=>{
+                    console.log(data)
+                    const depth2_heart = document.querySelector('.depth2_heart');
+                    depth2_heart.innerHTML='';
+                    if(data.length>0){
+                        data.forEach(likeItem=>{
+                            const matchedItem = storedData.find(stored => stored.contentid === likeItem.likeCode.toString())
+
+                            if(matchedItem) {
+                                const imgUrl = matchedItem.firstimage ?  matchedItem.firstimage : '/dist/image/noImage.jpg';
+
+                                depth2_heart.innerHTML+=`
+                                    <div class="heart_area">
+                                        <div class="heart_img" style="background-image: url('${imgUrl}'); background-position: center; background-repeat: no-repeat; background-size: cover"></div>
+                                        <div class="heart_name" data-id="${matchedItem.contentid}">${matchedItem.title}</div>
+                                        <div class="heart_addr">${matchedItem.addr1}</div>
+                                        <div class="heart_addBtn" onclick="newPlanF(event)" style="background-image: url('/dist/image/plus-circle.svg'); background-size: cover; background-repeat: no-repeat; background-position: center"></div>
+                                    </div>`
+
+                                const heart_addBtn = document.querySelectorAll('.heart_addBtn');
+                                heart_addBtn.forEach(btn=>{
+                                    btn.addEventListener('mouseover', () => {
+                                        btn.style.backgroundImage = "url('/dist/image/plus-circle-back.svg')";
+                                        btn.style.cursor='pointer';
+                                    });
+                                    btn.addEventListener('mouseout', () => {
+                                        btn.style.backgroundImage = "url('/dist/image/plus-circle.svg')";
+                                    });
+                                })
+                            }
+                        });
+                    } else {
+                        depth2_heart.innerHTML = `
+                                                <div class="noResultLike">
+                                                    <img src="/dist/image/alert-circle.svg">
+                                                    찜한 여행지가 없습니다! <span class="line2">나의 취향의 맞는 여행지를 찜 해보세요!</span>
+                                                </div>`;
+                    }
+                })
+
+        })
+}
+
 
 async function generateInviteUrl(sco, unoNum) {
     const response = await fetch("/schedule/generateInviteUrl", {
@@ -1104,17 +1172,15 @@ async function generateInviteUrl(sco, unoNum) {
         body: JSON.stringify({sco: sco, uno: unoNum})
     });
 
-    // 서버로부터 초대 URL을 받아옴
     const result = await response.json();
 
     if (response.ok) {
-        // 초대 URL을 페이지에 표시
         console.log(result.inviteUrl);
     } else {
         console.log(result.message)
     }
 
-    return result; // 이 줄은 마지막에 두어야 함
+    return result;
 }
 
 //유저 권환 확인

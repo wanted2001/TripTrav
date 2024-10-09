@@ -32,6 +32,7 @@ public class ScheduleController {
     private final ScheduleMemoService smsv;
     private final ScheduleCompanionService scsv;
     private final UserService usrv;
+    private final LikeService lsv;
 
     @Value("${invite.secret-key}")
     private String secretKey;
@@ -278,6 +279,13 @@ public class ScheduleController {
     public List<ScheduleCompanionVO> getCompanion(@PathVariable long sco){
         List<ScheduleCompanionVO> scVOList = scsv.getCompanionList(sco);
         return scVOList!=null ? scVOList : Collections.emptyList();
+    }
+
+    @GetMapping("/getLikeList/{unoNum}")
+    @ResponseBody
+    public List<LikeVO> getLikeList(@PathVariable long unoNum){
+        List<LikeVO> like = lsv.getLikeList(unoNum);
+        return like!=null ? like : Collections.emptyList();
     }
 
 }
