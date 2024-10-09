@@ -22,7 +22,13 @@ public class MyPageServiceImpl implements MyPageService {
 
     @Override
     public List<ScheduleVO> scheduleCall(long uno) {
-        return myPageMapper.scheduleCall(uno);
+        List<ScheduleVO> scheList = myPageMapper.scheduleCall(uno);
+        List<String> comList = myPageMapper.getComList(uno);
+        for(String sco : comList){
+            ScheduleVO scheduleVO = myPageMapper.scheduleComCall(sco);
+            scheList.add(scheduleVO);
+        }
+        return scheList;
     }
 
     @Override
@@ -43,5 +49,33 @@ public class MyPageServiceImpl implements MyPageService {
     @Override
     public ScheduleDetailVO getScheduleDetail(long sco) {
         return myPageMapper.getScheduleDetail(sco);
+    }
+
+    @Override
+    public int updateCommonUser(UserVO userVO) {
+        log.info("userVo22222 => {}", userVO.getPw());
+        int isOk = 0;
+        if (userVO.getPw() == null || userVO.getPw().isEmpty()) {
+            isOk = myPageMapper.userComNPw(userVO);  // 비밀번호 없는 업데이트
+        } else {
+            isOk = myPageMapper.userComYPw(userVO);  // 비밀번호 포함 업데이트
+        }
+
+        return isOk;
+    }
+
+    @Override
+    public int updateSocialUserName(UserVO userVO) {
+        int isOk = 0;
+        isOk = myPageMapper.userSocialUpdate(userVO);
+        return isOk;
+    }
+
+    @Override
+    public int scheduleDelete(long sco) {
+        int isOk = 0;
+        isOk = myPageMapper.scheduleDelete(sco);
+        log.info("isOk = {}", isOk);
+        return isOk;
     }
 }

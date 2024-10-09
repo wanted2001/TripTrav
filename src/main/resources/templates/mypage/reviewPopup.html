@@ -153,8 +153,8 @@
     const imagePreview = document.getElementById("imagePreview");
     const saveBtn = document.getElementById("saveBtn");
     var stars = document.getElementById("stars");
-    const MAX_FILE_SIZE = 10 * 1024 * 1024;
     var validFiles = [];
+    const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
     initializeReview();
 
@@ -211,6 +211,15 @@
         return image;
     }
 
+    // 이미지 URL을 File 객체로 변환하는 함수
+    async function getFileFromImgSrc(imgSrc) {
+        const response = await fetch(imgSrc);
+        const blob = await response.blob();
+        const fileName = 'image.jpg';
+        const file = new File([blob], fileName, { type: blob.type });
+        return file;
+    }
+
     // 삭제 버튼 생성
     function createDeleteButton(imgDiv) {
         const deleteButton = document.createElement("button");
@@ -234,14 +243,6 @@
         return deleteButton;
     }
 
-    // 이미지 URL을 File 객체로 변환하는 함수
-    async function getFileFromImgSrc(imgSrc) {
-        const response = await fetch(imgSrc);
-        const blob = await response.blob();
-        const fileName = 'image.jpg';
-        const file = new File([blob], fileName, { type: blob.type });
-        return file;
-    }
 
     function updateCharCount() {
         charCount.textContent = `${reviewText.value.length} / 200`;

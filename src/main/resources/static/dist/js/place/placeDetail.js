@@ -70,9 +70,15 @@ fetch(detailInfoUrl)
             document.querySelector('.timeInfo').innerHTML = `이용시간 : ${introData.usetime}`
         })
         getAdditionalInfo(contentTypeId).then(result => {
-            const additionalInfoData = result.response.body.items.item[0];
-            document.querySelector('.priceInfo').innerHTML = `${additionalInfoData.infoname} : ${additionalInfoData.infotext}`
-        })
+            const items = result?.response?.body?.items?.item;
+            if (items && items.length > 0) {
+                const additionalInfoData = items[0];
+                document.querySelector('.priceInfo').innerHTML = `${additionalInfoData.infoname} : ${additionalInfoData.infotext}`;
+            } else {
+                document.querySelector('.priceInfo').innerHTML = `입장료 : 무료`;
+            }
+        });
+
         document.querySelector('.homepageInfo').innerHTML = `홈페이지 :`+`${jsonData.homepage ? ` ${jsonData.homepage}` :"등록된 페이지가 없습니다. "}`
         document.querySelector('.details').innerHTML = `<p class="sectionTitle">소개</p><span>${jsonData.overview}</span>`;
         mapx = jsonData.mapx;
@@ -163,7 +169,7 @@ document.querySelector('.next').addEventListener('click', () => {
 //인트로정보 조회 함수
 async function getIntroInfo(contentTypeId) {
     try {
-        const url = `https://apis.data.go.kr/B551011/KorService1/detailIntro1?MobileOS=ETC&MobileApp=TripTrav&_type=json&contentId=126676&contentTypeId=${contentTypeId}&serviceKey=${tourAPIKEY}`;
+        const url = `https://apis.data.go.kr/B551011/KorService1/detailIntro1?MobileOS=ETC&MobileApp=TripTrav&_type=json&contentId=${contentId}&contentTypeId=${contentTypeId}&serviceKey=${tourAPIKEY}`;
         const response = await fetch(url);
         const result = await response.json()
         return result;
@@ -175,7 +181,7 @@ async function getIntroInfo(contentTypeId) {
 //추가정보 조회 함수
 async function getAdditionalInfo(contentTypeId) {
     try{
-        const url = `https://apis.data.go.kr/B551011/KorService1/detailInfo1?MobileOS=ETC&MobileApp=TripTrav&_type=json&contentId=126676&contentTypeId=${contentTypeId}&serviceKey=${tourAPIKEY}`
+        const url = `https://apis.data.go.kr/B551011/KorService1/detailInfo1?MobileOS=ETC&MobileApp=TripTrav&_type=json&contentId=${contentId}&contentTypeId=${contentTypeId}&serviceKey=${tourAPIKEY}`
         const response = await fetch(url);
         const result = await response.json()
         return result;
@@ -372,8 +378,7 @@ async function getReviewList() {
             method: 'GET'
         };
         const resp = await fetch(url, config);
-        let result = await resp.json();
-        console.log(result);
+        const result = await resp.json();
         return result;
     } catch (error) {
         console.log(error);
@@ -966,8 +971,6 @@ checkLogin();
 function checkLogin(){
     if(typeof userNickname !== 'undefined' && userNickname !== null){
         document.querySelector('.reviewArea').placeholder = '타인에게 불쾌감을 줄 수 있는 리뷰는 삭제될 수 있습니다. ';
-    }else{
-        console.log("로그인")
     }
 }
 if(typeof userNickname !== 'undefined' && userNickname !== null){
@@ -1143,4 +1146,9 @@ gpt api로 보내서 분석 및 비슷한 장소 추천 -> 받아오면 해당 �
 
 해야할것
 1.
+
+분석하기 눌러서 분석결과페이지 가면 태그들을 아코디언으로 숨겨서 선택된애는 active 처리
+그리고 다시 선택하면 다시분석하기 버튼 보여서 그페이지에서 새로 처리하는 방식
+-> 장르코드로 보여주거나, ai 추천시에는 문제가안됨 하지만 성별,나이 관심관광지출력시 데이터의 정확도가떨어짐
+사용자입장에선 페이지자체를 이동하지않고 재분석받는게 편함
 */

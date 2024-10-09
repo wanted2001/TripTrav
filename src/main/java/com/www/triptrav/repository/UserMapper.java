@@ -35,4 +35,10 @@ public interface UserMapper {
     int findUserPw(String email);
 
     String getPath(String uno);
+
+    String getUserNick(long uno);
+
+    int addAdditionalInfo(UserVO uvo);
+
+    boolean checkAdditionalInfo(long unoNum);
 }

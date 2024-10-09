@@ -25,7 +25,16 @@ public class SearchController {
     public List<String> autoComplete(@RequestParam("query") String query) {
         return tourDataService.getTourDataList().stream()
                 .filter(data -> data.getTitle().toLowerCase().contains(query.toLowerCase()))
-                .map(data -> "<a href='/place/" + data.getContentId() + "'>" + data.getTitle() + "</a>")
+                .map(data -> {
+                    String baseUrl = "";
+                    if (data.getContentTypeId() == 12 || data.getContentTypeId() == 14) {
+                        baseUrl = "/place/";
+                    } else if (data.getContentTypeId() == 39) {
+                        baseUrl = "/food/";
+                    }
+                    return "<a href='" + baseUrl + data.getContentId() + "'>" + data.getTitle() + "</a>";
+                })
                 .collect(Collectors.toList());
     }
+
 }

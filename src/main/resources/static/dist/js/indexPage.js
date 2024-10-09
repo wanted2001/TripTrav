@@ -60,7 +60,11 @@ function fetchSuggestions() {
             } else {
                 data.forEach(item => {
                     const li = document.createElement('li');
-                    li.innerHTML = item;
+                    const highlightedItem = item.replace(
+                        new RegExp(query, 'gi'),
+                        match => `<strong style="color: #F3A701; font-weight: bold;">${match}</strong>`
+                    );
+                    li.innerHTML = highlightedItem;
                     suggestions.appendChild(li);
                 });
             }
@@ -71,14 +75,29 @@ function fetchSuggestions() {
 }
 
 function loadTaste(){
-    document.querySelector('.tasteDiv').style.display = '';
-    document.querySelector('.mainText').style.display = 'none';
-    document.querySelector('.mainBtnDiv').style.display = 'none';
+    if (typeof userNickname !== 'undefined' && userNickname !== null) {
+        const checkAdditionalInfo = document.querySelector('.additionalInfoCheck');
+        if(checkAdditionalInfo.innerText == "true"){
+            document.querySelector('.tasteDiv').style.display = '';
+            document.querySelector('.mainText').style.display = 'none';
+            document.querySelector('.mainBtnDiv').style.display = 'none';
+        }else{
+            document.querySelector('.additionalInfo').style.display = ''
+            document.querySelector('.mainText').style.display = 'none';
+            document.querySelector('.mainBtnDiv').style.display = 'none';
+        }
+
+    }else{
+        if(confirm("로그인 한 사용자만 이용가능 한 서비스입니다. \n로그인 페이지로 이동하시겠습니까?")){
+            document.getElementById('myModal').style.display = 'flex';
+        }
+    }
 }
 
 const buttons = document.querySelectorAll('.taste-button');
 let selectedButtons = [];
 
+// 버튼 클릭 시 처리
 buttons.forEach(button => {
     button.addEventListener('click', function() {
         const buttonText = this.innerText;
@@ -93,7 +112,86 @@ buttons.forEach(button => {
         else {
             alert('최대 5개까지 선택할 수 있습니다.');
         }
-
         console.log(selectedButtons);
     });
 });
+
+// 분석하기 버튼 클릭 시
+document.querySelector('.analyze-button').addEventListener('click', function() {
+    fetch('/taste/addTaste', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(selectedButtons)
+    })
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            console.log('카테고리 코드:', data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+});
+
+//성별, 나이 업데이트
+document.getElementById('additionalInfoFormButton').addEventListener('click', function() {
+    const ageInput = document.getElementById('age');
+    const ageValue = parseInt(ageInput.value, 10);
+    if (ageValue < 1 || ageValue > 99) {
+        alert("나이는 1에서 99 사이여야 합니다.");
+        return;
+    }
+    document.getElementById('unoForm').value = unoNum;
+    const formData = new FormData(document.querySelector('.additionalInfoForm'));
+    fetch('/user/additionalInfo', {
+        method: 'POST',
+        body: formData
+    })
+        .then(response => response.text())
+        .then(result => {
+            if (result == "success") {
+                document.querySelector('.additionalInfo').style.display = 'none'
+                document.querySelector('.mainText').style.display = 'none';
+                document.querySelector('.mainBtnDiv').style.display = 'none';
+                document.querySelector('.tasteDiv').style.display = '';
+            } else {
+                alert("서비스 에러입니다. 관리자에게 연락해주세요. ")
+            }
+        })
+        .catch(error => {
+            console.error(error);
+        });
+});
+
+
+//성별나이값 있는지체크
+async function checkAdditionalInfoInfo(){
+    try{
+        const url = "/user/checkAdditionalInfo/"+unoNum
+        const option ={
+            method: 'GET'
+        }
+        const response = await fetch(url, option)
+        return response.text()
+    }catch (e) {
+        console.log(e)
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof userNickname !== 'undefined' && userNickname !== null) {
+        checkAdditionalInfoInfo().then(result => {
+            const additionalInfoCheck = document.querySelector('.additionalInfoCheck');
+            if (result === "true") {
+                additionalInfoCheck.textContent = "true";
+            } else {
+                additionalInfoCheck.textContent = "false";
+            }
+        });
+    }
+});
+
+

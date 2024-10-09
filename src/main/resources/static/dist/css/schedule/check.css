@@ -24,7 +24,7 @@
     font-family: 'LINESeedKR-Rg';
     margin-top: 21px;
 }
-.addMemoBtn,.addPersonBtn {
+.addMemoBtn,.addPersonBtn, .checkPersonBtn {
     position: absolute;
     right: 325px;
     top: 129px;
@@ -37,14 +37,17 @@
     font-family: 'LINESeedKR-Rg';
     font-size: 14px;
 }
-.addMemoBtn:hover,.addPersonBtn:hover {
+.addMemoBtn:hover,.addPersonBtn:hover,.checkPersonBtn:hover {
     cursor: pointer;
     background: #ffffff2e;
 }
-.addPersonBtn {
+.checkPersonBtn {
     top: 171px;
 }
-.memoModal {
+.addPersonBtn {
+    top: 213px;
+}
+.memoModal, .companionModal {
     display: none;
     position: fixed;
     background-color: rgba(0, 0, 0, 0.34);
@@ -88,6 +91,28 @@
 .memoContents::-webkit-scrollbar{
     display: none;
 }
+.companionModalWrap {
+    background: white;
+    width: 500px;
+    height: 500px;
+    position: absolute;
+    z-index: 1000;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 6px;
+}
+.companionModalWrap span{
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    font-family: 'LINESeedKR-Rg';
+}
+.cmCloseBtn {
+    position: absolute;
+    font-size: large;
+    transform: translate(475px, -27px);
+}
 .personModal {
     display: none;
     position: absolute;
@@ -100,7 +125,7 @@
     box-shadow: 4px 5px 8px 0px #9e9e9ecc;
     border-radius: 5px;
 }
-.personModalWrap {
+.personModalWrap{
     width: 100%;
 }
 .personModalWrap span {
@@ -162,7 +187,7 @@
     border-radius: 8px;
     box-shadow: 0 0 20px -5px #666666;
 }
-button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo{
+button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
     cursor: pointer;
 }
 .slideWrap{
@@ -481,7 +506,7 @@ button.depth2_searchBtn {
     background: orange;
     color: white;
 }
-.editBtn, .saveBtn{
+.editBtn, .saveBtn, .disableEdit{
     width: 50px;
     height: 30px;
     border: 1px solid orange;
@@ -491,6 +516,9 @@ button.depth2_searchBtn {
     font-family: 'LINESeedKR-Rg';
     margin-left: 300px;
     font-size: 14px;
+}
+.disableEdit{
+    border: 1px solid rgba(255, 255, 255, 0);
 }
 .titleInput {
     border: none;
@@ -526,17 +554,18 @@ button.depth2_searchBtn {
     border-bottom: 1px solid gainsboro;
     padding: 12px 16px 3px;
     position: relative;
-    transition: transform 0.4s ease;
 }
 .oneContent.moving-up {
     transform: translateY(-100%);
     position: relative;
     z-index: 1000;
+    transition: transform 0.4s ease;
 }
 .oneContent.moving-down {
     transform: translateY(100%);
     position: relative;
     z-index: 1000;
+    transition: transform 0.4s ease;
 }
 .oneContent.moved-up {
     transform: translateY(-100%);

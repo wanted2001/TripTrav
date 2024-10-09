@@ -38,4 +38,18 @@
     <select id="getPath">
         select profile from user where uno = #{uno}
     </select>
+    <select id="getUserNick" resultType="String">
+        select nickname from user where uno=#{uno}
+    </select>
+    <update id="addAdditionalInfo">
+        update user set gender = #{gender}, age = #{age} where uno = #{uno}
+    </update>
+    <select id="checkAdditionalInfo" resultType="boolean" parameterType="long">
+        SELECT CASE
+        WHEN (gender IS NOT NULL AND age IS NOT NULL) THEN TRUE
+        ELSE FALSE
+        END
+        FROM user
+        WHERE uno = #{uno}
+    </select>
 </mapper>

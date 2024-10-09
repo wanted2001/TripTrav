@@ -4,29 +4,38 @@ const bottom = document.getElementById("resultMyPage");
 const modal = document.querySelector(".updateModal");
 // const accordionBtn = document.querySelector(".accordionBtn");
 // const liList = document.querySelector(".myPageList > li");
+const preview = document.querySelector(".profileUpdateImg");
 
 const js = "/dist/js/mypage";
 const tripList = "/tripList";
 const tripReview = "/tripReview";
 const wishPlace = "/wishPlace";
 const wishTrip = "/wishTrip";
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const pwRegExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
+let provider = "";
 
 pageCall(tripReview);
 pageHover("tripReview");
 
 isSocialUser(unoNum).then(data => {
     console.log(data.provider === null);
+    console.log(data);
+    provider = `${data.provider}`;
+    const profile = document.querySelectorAll(".profileUpdateImg, .profileImg");
+    profile.forEach(img => {
+        img.src = `${data.profile ? `/profile/${data.profile}` : '/dist/image/noimage.jpg'}`
+    });
     if (data.provider !== null) {
         console.log('들어옴');
         document.getElementById("pw").disabled = true;
+        document.querySelector(".imgBtn").disabled = true;
     }
-
 })
 
 document.querySelectorAll('.myPageList > li').forEach(button => {
     button.addEventListener('click', (e) => {
         const id = e.target.id;
-        console.log(id);
         bottom.innerHTML = "";
         pageHover(id);
         switch (id) {
@@ -46,6 +55,112 @@ document.querySelectorAll('.myPageList > li').forEach(button => {
     })
 })
 
+document.querySelector(".profileUpdateInput").addEventListener("change", (e) => {
+    var img = e.target.files;
+    console.log(img);
+    Array.from(img).forEach(profile => {
+        if (img.size > MAX_FILE_SIZE) {
+            alert("파일의 최대 크기는 10MB 입니다.");
+            img.value = '';
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            preview.src = e.target.result;
+        };
+        reader.readAsDataURL(profile);
+    });
+})
+
+/*
+    소설유저에 대한 처리
+    소설유저일때 수정 눌렀을떄 버튼 옵션을 다르게 주기?
+    유효성 검사 하기
+    이미지 경로처리 방식
+*/
+document.getElementById("updateProfile").addEventListener("click", () => {
+    const formData = new FormData();
+    formData.append("uno", unoNum);
+    formData.append("nickname", document.getElementById("nickName").value);
+    formData.append("pw", document.getElementById("pw").value);
+    formData.append("provider", provider);
+    const fileInput = document.getElementById("profileUpdateImg");
+
+    // 비동기 함수에 다른 사용법을 알게됨
+    const addImageToFormData = async () => {
+        if (!preview.src.includes("/dist/image/noimage.jpg")) {
+            console.log("들어옴" + preview.src);
+            try {
+                const result = await getFileFromImgSrc(preview.src);
+                console.log(result);
+                formData.append("profile", result);
+            } catch (error) {
+                console.log("이미지 파일 가져오기 오류:", error);
+            }
+        }
+        if (fileInput.files.length > 0) {
+            console.log("들어옴 22");
+            formData.append("profile", fileInput.files);
+        }
+    };
+
+    addImageToFormData().then(() => {
+        console.log([...formData]); // FormData 확인
+        updateUser(formData).then(result => {
+            console.log(result);
+            if (result === '1') {
+                alert("회원정보 수정 완료");
+                location.reload();
+            } else {
+                alert("회원정보 수정 실패");
+                location.reload();
+            }
+        }).catch(err => {
+            console.log(err);
+        });
+    });
+});
+
+document.getElementById("pw").addEventListener("keyup",()=>{
+    var pwVal = document.getElementById("pw").value;
+    const updateBtn = document.getElementById("updateProfile")
+    console.log(pwVal);
+    console.log(disabledBtn(pwVal));
+   if(disabledBtn(pwVal)){
+       updateBtn.disabled = false;
+       updateBtn.style.color = "white";
+   }else{
+       updateBtn.disabled = true;
+       updateBtn.style.color = "red";
+   }
+});
+
+function disabledBtn(value){
+    if(pwRegExp.test(value) || value.length === 0){
+        return true;
+    }else{
+        return false;
+    }
+
+}
+
+
+
+async function updateUser(userInfo) {
+    try {
+        const url = "/mypage/updateUser";
+        const config = {
+            method: "POST",
+            body: userInfo
+        };
+        const response = await fetch(url, config);
+        return await response.text();
+    } catch (e) {
+
+    }
+
+}
+
 // !important 키워드에 대한 사용법을 알게됨
 //페이지 호버
 function pageHover(id) {
@@ -63,7 +178,6 @@ function pageHover(id) {
 // 페이지 호출
 function pageCall(page) {
     const mypage = "/mypage" + page;
-    console.log(mypage);
     fetch(mypage)
         .then(response => {
             if (!response.ok) {
@@ -94,7 +208,6 @@ function loadScript(page) {
 // src를 keep 할것인지 추후 결정 예정...
 //js 삭제
 function removeAllScript(src) {
-    console.log(src);
     const toKeep = ['/dist/js/header.js', '/dist/js/loginJoin.js', js + '/mypageDetail.js'];
     const scripts = document.getElementsByTagName('script');
     for (let i = 0; i < scripts.length; i++) {
@@ -212,6 +325,15 @@ async function isSocialUser(uno) {
     }
 }
 
+// 이미지 URL을 File 객체로 변환하는 함수
+async function getFileFromImgSrc(imgSrc) {
+    const response = await fetch(imgSrc);
+    const blob = await response.blob();
+    const fileName = 'image.jpg';
+    const file = new File([blob], fileName, { type: blob.type });
+    return file;
+}
+
 function changeDate(text) {
     const datePattern = /\d{4}-\d{2}-\d{2}/;  // 날짜 패턴 (YYYY-MM-DD)
     const match = text.match(datePattern);
@@ -228,8 +350,12 @@ function noChild(trip) {
     const div = document.createElement("div");
     const p = document.createElement("p");
     div.style.width = "1440px";
-    div.style.height = "600px";
+    div.style.height = "150px";
+    div.style.display = "flex";
+    div.style.alignItems = "center";
+    div.style.justifyContent = "center";
     p.style.textAlign = "center";
+    p.style.fontSize ="22px";
     p.innerText = ''; // 초기화
     switch (trip) {
         case "review":

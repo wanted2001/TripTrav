@@ -2,6 +2,7 @@ package com.www.triptrav.service;
 
 
 import com.www.triptrav.domain.*;
+import org.apache.catalina.User;
 
 import java.util.List;
 
@@ -17,4 +18,10 @@ public interface MyPageService {
     ReviewVO getPopReview(long rno);
 
     ScheduleDetailVO getScheduleDetail(long sco);
+
+    int updateCommonUser(UserVO userVO);
+
+    int updateSocialUserName(UserVO userVO);
+
+    int scheduleDelete(long sco);
 }

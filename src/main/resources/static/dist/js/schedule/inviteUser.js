@@ -11,9 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }else{
         getScheduleMaker(sco).then(result =>{
             if(result != unoNum){
-                addScheduleRole(unoNum, sco).then(result=>{
-                    console.log(result);
-                })
+                addScheduleRole(unoNum, sco).then(result=>{})
             }
         })
     }

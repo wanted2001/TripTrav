@@ -27,12 +27,13 @@
         <div class="addMemoBtn" onclick="openModal()">메모추가 +</div>
         <div class="memoModal">
             <div class="memoWrap">
-                <button class="memoCloseBtn" onclick="closeModal()">&times;</button>
+                <button class="memoCloseBtn">&times;</button>
                 <textarea placeholder="메모를 작성하세요..." class="memoContents"></textarea>
                 <button class="saveMemo">저장</button>
             </div>
         </div>
-        <div class="addPersonBtn">동행자추가 +</div>
+        <div class="checkPersonBtn" onclick="checkPersonF()">동행자 확인</div>
+        <div class="addPersonBtn" onclick="addPersonF()">동행자추가 +</div>
         <div class="personModal">
             <div class="personModalWrap">
                 <span>동행자 추가</span>
@@ -41,6 +42,15 @@
                 <button class="copyUrl" data-clipboard-target=".pmShareValue">
                     <img src="/dist/image/paperclip.svg">
                 </button>
+            </div>
+        </div>
+        <div class="companionModal">
+            <div class="companionModalWrap">
+                <span>동행자 확인</span>
+                <button class="cmCloseBtn">&times;</button>
+                <ul class="companionUl"></ul>
+                <button class="editRole hidden">편집</button>
+                <button class="editSaveBtn hidden">저장</button>
             </div>
         </div>
         <div class="slideWrap">
@@ -65,9 +75,10 @@
                     <div class="day day2" data-date="2"></div>
                     <div class="day day3" data-date="3"></div>
                 </div>
-                <div class="editBtn btnText">편집</div>
+                <div class="editBtn btnText hidden">편집</div>
+                <div class="disableEdit hidden"></div>
                 <ul class="contentArea"></ul>
-                <div class="addPlan">여행지 추가 + </div>
+                <div class="addPlan" onclick="clickAddPlan()">여행지 추가 + </div>
             </div>
             <div class="mapContentBox2Depth hidden">
                 <ul class="depth2_ul">
