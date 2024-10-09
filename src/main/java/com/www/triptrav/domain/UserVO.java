@@ -17,6 +17,7 @@ public class UserVO {
     private String profile;
     private String provider;
     private String providerId;
+    private Integer gender;
+    private int age;
     private List<AuthVO> authList;
-
 }

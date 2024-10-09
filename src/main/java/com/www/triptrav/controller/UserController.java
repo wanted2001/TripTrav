@@ -78,4 +78,19 @@ public class UserController {
     public String getProfile(@PathVariable("unoValue")String uno) {
         return usv.getPath(uno);
     }
+
+    @PostMapping("/additionalInfo")
+    @ResponseBody
+    public String addAdditionalInfo(@ModelAttribute UserVO uvo){
+        int isUpdate = usv.addAdditionalInfo(uvo);
+        if(isUpdate > 0){
+            return "success";
+        }
+        return "fail";
+    }
+    @GetMapping("/checkAdditionalInfo/{unoNum}")
+    @ResponseBody
+    public Boolean checkAdditionalInfo(@PathVariable long unoNum){
+        return usv.checkAdditionalInfo(unoNum);
+    }
 }
