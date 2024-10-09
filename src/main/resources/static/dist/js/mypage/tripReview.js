@@ -12,8 +12,6 @@ getReviewList(unoNum)
             tripPlaceReviewList.appendChild(noChild("review"));
             tripFoodReviewList.appendChild(noChild("review"));
         }
-        let placeReviewNum = 0;
-        let foodReviewNum = 0;
         data.forEach(datas => {
             const review = datas.review;
             const imagePaths = datas.imagePaths;
@@ -22,11 +20,11 @@ getReviewList(unoNum)
             } else {
                 // console.log(imagePaths);
             }
-
             const li = document.createElement("li");
             const div = document.createElement("div");
             div.classList.add("tripCard");
             div.innerHTML = `
+                <div class="reviewPlaceMain"><img src="${datas.firstImage}" class="reviewMain"></div>
                 <div class="tripReviewImgDiv"></div>
                 <div class="tripReviewInfo">
                     <ul class="tripReviewUl">
@@ -61,13 +59,14 @@ getReviewList(unoNum)
                     tripPlaceNum++;
                     break;
             }
+        });
             if(tripFoodNum === 0){
                 tripFoodReviewList.appendChild(noChild("review"));
             }
             if(tripPlaceNum === 0){
                 tripPlaceReviewList.appendChild(noChild("review"));
             }
-        });
+
     })
     .catch(err => {
         console.log(err);

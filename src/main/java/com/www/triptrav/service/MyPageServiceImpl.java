@@ -70,4 +70,12 @@ public class MyPageServiceImpl implements MyPageService {
         isOk = myPageMapper.userSocialUpdate(userVO);
         return isOk;
     }
+
+    @Override
+    public int scheduleDelete(long sco) {
+        int isOk = 0;
+        isOk = myPageMapper.scheduleDelete(sco);
+        log.info("isOk = {}", isOk);
+        return isOk;
+    }
 }

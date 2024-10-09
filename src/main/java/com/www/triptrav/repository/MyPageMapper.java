@@ -28,4 +28,6 @@ public interface MyPageMapper {
     List<String> getComList(long uno);
 
     ScheduleVO scheduleComCall(String sco);
+
+    int scheduleDelete(long sco);
 }

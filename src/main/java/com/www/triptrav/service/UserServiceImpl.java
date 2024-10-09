@@ -70,5 +70,15 @@ public class UserServiceImpl implements UserService {
         return userMapper.getUserNick(uno);
     }
 
+    @Override
+    public int addAdditionalInfo(UserVO uvo) {
+        return userMapper.addAdditionalInfo(uvo);
+    }
+
+    @Override
+    public boolean checkAdditionalInfo(long unoNum) {
+        return userMapper.checkAdditionalInfo(unoNum);
+    }
+
 }
 

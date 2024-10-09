@@ -5,7 +5,9 @@ CREATE TABLE `user` (
 	`nickname` varchar(64) NOT NULL,
 	`profile` varchar(500) NULL,
 	`provider` varchar(255) NULL,
-	`provider_id` varchar(255) NULL
+	`provider_id` varchar(255) NULL,
+	`gender` tinyint NULL,
+	`age` int NULL
 );
 
 CREATE TABLE `auth` (
@@ -70,7 +72,7 @@ CREATE TABLE `schedule_role` (
 	`sche_role` int NOT NULL DEFAULT 0,
 	`sco` bigint NOT NULL,
 	`uno` bigint NOT NULL,
-	FOREIGN KEY (`sco`) REFERENCES `schedule`(`sco`),
+	FOREIGN KEY (`sco`) REFERENCES `schedule`(`sco`) ON DELETE CASCADE,
 	FOREIGN KEY (`uno`) REFERENCES `user`(`uno`)
 );
 
@@ -80,14 +82,14 @@ CREATE TABLE `schedule_detail` (
 	`sche_title` text NOT NULL,
 	`sche_index` int NOT NULL,
 	`sche_date` int NOT NULL,
-	FOREIGN KEY (`sco`) REFERENCES `schedule`(`sco`)
+	FOREIGN KEY (`sco`) REFERENCES `schedule`(`sco`) ON DELETE CASCADE
 );
 
 CREATE TABLE `schedule_memo` (
     `sco` bigint NOT NULL,
     `sche_memo_writer` varchar(64) NULL,
     `sche_memo_content` text NULL,
-    FOREIGN KEY (`sco`) REFERENCES `schedule`(`sco`)
+    FOREIGN KEY (`sco`) REFERENCES `schedule`(`sco`) ON DELETE CASCADE
 );
 
 CREATE TABLE `schedule_companion` (
@@ -105,3 +107,50 @@ CREATE TABLE `like` (
 	`like_name` text NOT NULL,
 	FOREIGN KEY (`uno`) REFERENCES `user`(`uno`)
 );
+
+CREATE TABLE `category` (
+    `category_id` int AUTO_INCREMENT PRIMARY KEY,
+    `category_code` VARCHAR(255) NOT NULL,
+    `category_name` VARCHAR(255) NOT NULL,
+    UNIQUE (`category_code`, `category_name`)
+);
+
+CREATE TABLE `taste` (
+    `tno` bigint AUTO_INCREMENT PRIMARY KEY,
+    `uno` bigint NOT NULL,
+    `category_id` int NOT NULL,
+    FOREIGN KEY (`uno`) REFERENCES `user`(`uno`),
+    FOREIGN KEY (`category_id`) REFERENCES `category`(`category_id`)
+);
+
+
+insert into category(`category_code`, `category_name`) values("A01010100", "국립공원");
+insert into category(`category_code`, `category_name`) values("A01010400", "산");
+insert into category(`category_code`, `category_name`) values("A01010500", "자연생태관광지");
+insert into category(`category_code`, `category_name`) values("A01010700", "수목원");
+insert into category(`category_code`, `category_name`) values("A01010800", "폭포");
+insert into category(`category_code`, `category_name`) values("A01010900", "계곡");
+insert into category(`category_code`, `category_name`) values("A01011100", "해안절경");
+insert into category(`category_code`, `category_name`) values("A01011200", "해수욕장");
+insert into category(`category_code`, `category_name`) values("A01011300", "섬");
+insert into category(`category_code`, `category_name`) values("A01011900", "동굴");
+insert into category(`category_code`, `category_name`) values("A02010800", "사찰");
+insert into category(`category_code`, `category_name`) values("A0201", "역사관광지");
+insert into category(`category_code`, `category_name`) values("A0202", "휴양관광지");
+insert into category(`category_code`, `category_name`) values("A0203", "체험관광지");
+insert into category(`category_code`, `category_name`) values("A02050400", "동상");
+insert into category(`category_code`, `category_name`) values("A0206", "문화시설");
+insert into category(`category_code`, `category_name`) values("A0207", "축제");
+insert into category(`category_code`, `category_name`) values("A0208", "공연/행사");
+insert into category(`category_code`, `category_name`) values("A01020100", "희귀동.식물");
+insert into category(`category_code`, `category_name`) values("A02010600", "민속마을");
+insert into category(`category_code`, `category_name`) values("A02010100", "고궁");
+insert into category(`category_code`, `category_name`) values("A02020200", "관광단지");
+insert into category(`category_code`, `category_name`) values("A02020600", "테마공원");
+insert into category(`category_code`, `category_name`) values("A02030200", "전통체험");
+insert into category(`category_code`, `category_name`) values("A02030300", "산사체험");
+insert into category(`category_code`, `category_name`) values("A02030400", "이색체험");
+insert into category(`category_code`, `category_name`) values("A02030600", "이색거리");
+insert into category(`category_code`, `category_name`) values("A0205", "건축/조형물");
+insert into category(`category_code`, `category_name`) values("A02060100", "박물관");
+insert into category(`category_code`, `category_name`) values("A02070100", "문화관광축제");

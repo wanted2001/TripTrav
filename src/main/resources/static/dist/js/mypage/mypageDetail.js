@@ -12,6 +12,7 @@ const tripReview = "/tripReview";
 const wishPlace = "/wishPlace";
 const wishTrip = "/wishTrip";
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const pwRegExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
 let provider = "";
 
 pageCall(tripReview);
@@ -119,6 +120,30 @@ document.getElementById("updateProfile").addEventListener("click", () => {
         });
     });
 });
+
+document.getElementById("pw").addEventListener("keyup",()=>{
+    var pwVal = document.getElementById("pw").value;
+    const updateBtn = document.getElementById("updateProfile")
+    console.log(pwVal);
+    console.log(disabledBtn(pwVal));
+   if(disabledBtn(pwVal)){
+       updateBtn.disabled = false;
+       updateBtn.style.color = "white";
+   }else{
+       updateBtn.disabled = true;
+       updateBtn.style.color = "red";
+   }
+});
+
+function disabledBtn(value){
+    if(pwRegExp.test(value) || value.length === 0){
+        return true;
+    }else{
+        return false;
+    }
+
+}
+
 
 
 async function updateUser(userInfo) {

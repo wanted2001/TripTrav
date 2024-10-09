@@ -25,7 +25,7 @@
     </select>
 
     <select id="getScheduleDetail" resultType="com.www.triptrav.domain.ScheduleDetailVO">
-        select * from schedule_detail where sco=#{sco}
+        select * from schedule_detail where sco=#{sco} and sche_index = 1 and sche_date = 1
     </select>
 
     <select id="getComList" resultType="String">
@@ -48,6 +48,9 @@
         update user set nickname=#{nickname} where uno = #{uno}
     </update>
 
-
+    <delete id="scheduleDelete">
+        DELETE FROM schedule
+        WHERE schedule.sco = #{sco};
+    </delete>
 
 </mapper>
