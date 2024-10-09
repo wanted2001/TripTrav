@@ -2,6 +2,8 @@ package com.www.triptrav.controller;
 
 import com.www.triptrav.domain.*;
 import com.www.triptrav.service.MyPageService;
+import com.www.triptrav.service.PathService;
+import com.www.triptrav.service.TourDataService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +28,7 @@ public class MyPageController {
 
     private final MyPageService msv;
     private final PasswordEncoder passwordEncoder;
+    private final PathService psv;
 
     @GetMapping
     public String mypage(@RequestParam long uno) {
@@ -69,7 +72,17 @@ public class MyPageController {
         List<ReviewDTO> reviewDTOList = new ArrayList<>();
         for (ReviewVO review : reList) {
             ReviewDTO reviewDTO = new ReviewDTO();
-            reviewDTO.setReview(review); // 리뷰 정보 설정
+            List<PathVO>mainImg = psv.loadPathList();
+            for(PathVO pathVO : mainImg) {
+                if(review.getReContentId() == pathVO.getContentId()){
+                    if(pathVO.getFirstImage().isEmpty()){
+                        // 또 다른 js에서 돌려서 가져오기
+                    }else {
+                        reviewDTO.setFirstImage(pathVO.getFirstImage());
+                    }
+                }
+            }
+            reviewDTO.setReview(review);
             List<ReviewImageVO> reImageList = msv.getReviewDTOList(review.getRno());
             List<String> imagePaths = new ArrayList<>();
             for (ReviewImageVO image : reImageList) {
@@ -97,7 +110,7 @@ public class MyPageController {
         }
         reviewDTOList.setImagePaths(imagePaths);
         log.info("reviewList >> {}", reList);
-        log.info("reviewDTOList = {}", reviewDTOList);
+        log.info("reviewDTOListPopup = {}", reviewDTOList);
         model.addAttribute("review", reviewDTOList);
         log.info("model = {}", model);
         return "mypage/reviewPopup";
@@ -147,6 +160,14 @@ public class MyPageController {
           return msv.updateSocialUserName(userVO);
         }
 
+    }
+
+    @DeleteMapping("schedule")
+    public int scheduleDelete(@RequestParam long sco) {
+        log.info("scheduleDelete sco = {}", sco);
+        int isDel = msv.scheduleDelete(sco);
+        log.info("isDel = {}", isDel);
+        return isDel;
     }
 
     @GetMapping("/tripList")
