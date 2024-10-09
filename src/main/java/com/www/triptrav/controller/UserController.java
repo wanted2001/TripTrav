@@ -1,5 +1,6 @@
 package com.www.triptrav.controller;
 
+import com.www.triptrav.domain.LikeVO;
 import com.www.triptrav.domain.UserVO;
 import com.www.triptrav.service.MailService;
 import com.www.triptrav.service.UserService;
@@ -93,4 +94,5 @@ public class UserController {
     public Boolean checkAdditionalInfo(@PathVariable long unoNum){
         return usv.checkAdditionalInfo(unoNum);
     }
+
 }

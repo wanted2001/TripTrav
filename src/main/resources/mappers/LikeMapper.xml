@@ -12,4 +12,7 @@
     <delete id="deleteLike">
         delete from `like` where uno = #{uno} and like_code = #{likeCode}
     </delete>
+    <select id="getLikeList" resultType="com.www.triptrav.domain.LikeVO">
+        select * from `like` where uno=#{uno}
+    </select>
 </mapper>
