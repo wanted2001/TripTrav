@@ -22,4 +22,6 @@ public interface MyPageService {
     int updateCommonUser(UserVO userVO);
 
     int updateSocialUserName(UserVO userVO);
+
+    int scheduleDelete(long sco);
 }
