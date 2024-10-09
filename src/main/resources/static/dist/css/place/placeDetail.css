@@ -231,7 +231,7 @@ button{
 
 .infoSection {
     width: 1400px;
-    height: 350px;
+    height: auto;
     text-align: left;
     position: relative;
     line-height: 50px;
@@ -502,6 +502,9 @@ button{
     margin-left: 10px;
 }
 
+#staticMap{
+    margin-bottom: 20px;
+}
 .title {
     width: 100%;
 }
