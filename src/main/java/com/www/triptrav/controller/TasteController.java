@@ -2,14 +2,13 @@ package com.www.triptrav.controller;
 
 import com.www.triptrav.service.CategoryService;
 import com.www.triptrav.service.TasteService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -23,13 +22,21 @@ public class TasteController {
     private final CategoryService csv;
     private final TasteService tsv;
 
+    @GetMapping("/")
+    public String tasteIndex(HttpSession session, Model model) {
+        List<Integer> cnoList = (List<Integer>) session.getAttribute("cnoList");
+        model.addAttribute("cnoList", cnoList);
+        return "taste/taste";
+    }
+
     @PostMapping("/addTaste")
     @ResponseBody
     @Transactional
-    public String getCategoryCodes(@RequestBody Map<String, Object> requestData) {
+    public String getCategoryCodes(@RequestBody Map<String, Object> requestData, HttpSession session) {
         List<String> categoryNames = (List<String>) requestData.get("categoryNames");
         String uno = (String) requestData.get("uno");
         List<Integer> cnoList = csv.getCategoryCodes(categoryNames);
+        session.setAttribute("cnoList", cnoList);
         int isData = tsv.checkData(uno);
         if (isData > 0) {
             int isUpdate = tsv.updateData(cnoList, uno);
