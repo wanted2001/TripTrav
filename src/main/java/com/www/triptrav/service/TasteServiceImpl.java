@@ -2,6 +2,7 @@ package com.www.triptrav.service;
 
 import com.www.triptrav.repository.TasteMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TasteServiceImpl implements TasteService {
     private final TasteMapper tasteMapper;
 

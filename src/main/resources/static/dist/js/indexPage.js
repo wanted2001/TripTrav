@@ -111,7 +111,6 @@ buttons.forEach(button => {
         else {
             alert('최대 5개까지 선택할 수 있습니다.');
         }
-        console.log(selectedButtons);
     });
 });
 
@@ -131,6 +130,8 @@ document.querySelector('.analyze-button').addEventListener('click', function() {
         .then(result =>{
             if(result == "fail"){
                 alert("분석에러")
+            }else{
+                window.location.href = "/taste/";
             }
         })
         .catch(error => {

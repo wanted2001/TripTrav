@@ -38,6 +38,15 @@
                 color: white;
                 cursor: pointer;
             }
+            button:focus {
+                outline: none;
+            }
+            input:focus{
+                outline: none;
+            }
+            textarea:focus{
+                outline: none;
+            }
         </style>
     </head>
     <body>
@@ -147,6 +156,14 @@
                 header.style.width = '1440px';
                 header.style.margin = '0 auto';
             } else if(currentURL.includes('/mypage')) {
+                headerText.forEach(link => {
+                    link.style.color = 'black';
+                    link.style.setProperty('color', 'black', 'important');
+                });
+                header.style.position = 'absolute';
+                header.style.width = '1440px';
+                header.style.margin = '0 auto';
+            }else if(currentURL.includes('/taste')) {
                 headerText.forEach(link => {
                     link.style.color = 'black';
                     link.style.setProperty('color', 'black', 'important');
