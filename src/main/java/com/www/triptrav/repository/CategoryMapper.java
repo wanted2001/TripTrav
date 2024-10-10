@@ -7,5 +7,5 @@ import java.util.List;
 
 @Mapper
 public interface CategoryMapper {
-    List<CategoryVO> findCategoriesByNames(List<String> categoryNames);
+    List<Integer> findCategoriesByNames(List<String> categoryNames);
 }

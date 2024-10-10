@@ -109,18 +109,17 @@ CREATE TABLE `like` (
 );
 
 CREATE TABLE `category` (
-    `category_id` int AUTO_INCREMENT PRIMARY KEY,
+    `cno` int AUTO_INCREMENT PRIMARY KEY,
     `category_code` VARCHAR(255) NOT NULL,
     `category_name` VARCHAR(255) NOT NULL,
     UNIQUE (`category_code`, `category_name`)
 );
 
 CREATE TABLE `taste` (
-    `tno` bigint AUTO_INCREMENT PRIMARY KEY,
     `uno` bigint NOT NULL,
-    `category_id` int NOT NULL,
+    `cno` int NOT NULL,
     FOREIGN KEY (`uno`) REFERENCES `user`(`uno`),
-    FOREIGN KEY (`category_id`) REFERENCES `category`(`category_id`)
+    FOREIGN KEY (`cno`) REFERENCES `category`(`cno`)
 );
 
 
