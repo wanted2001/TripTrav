@@ -16,12 +16,8 @@ public class CategoryServiceImpl implements CategoryService{
     private final CategoryMapper categoryMapper;
 
     @Override
-    public Map<String, String> getCategoryCodes(List<String> categoryNames) {
-        List<CategoryVO> categories = categoryMapper.findCategoriesByNames(categoryNames);
-        Map<String, String> categoryMap = new HashMap<>();
-        for (CategoryVO category : categories) {
-            categoryMap.put(category.getCategoryName(), category.getCategoryCode());
-        }
-        return categoryMap;
+    public List<Integer> getCategoryCodes(List<String> categoryNames) {
+        List<Integer> cnoList = categoryMapper.findCategoriesByNames(categoryNames);
+        return cnoList;
     }
 }

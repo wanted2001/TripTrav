@@ -1,9 +1,11 @@
 package com.www.triptrav.controller;
 
 import com.www.triptrav.service.CategoryService;
+import com.www.triptrav.service.TasteService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,10 +21,27 @@ import java.util.Map;
 public class TasteController {
 
     private final CategoryService csv;
+    private final TasteService tsv;
 
     @PostMapping("/addTaste")
     @ResponseBody
-    public Map<String, String> getCategoryCodes(@RequestBody List<String> categoryNames) {
-        return csv.getCategoryCodes(categoryNames);
+    @Transactional
+    public String getCategoryCodes(@RequestBody Map<String, Object> requestData) {
+        List<String> categoryNames = (List<String>) requestData.get("categoryNames");
+        String uno = (String) requestData.get("uno");
+        List<Integer> cnoList = csv.getCategoryCodes(categoryNames);
+        int isData = tsv.checkData(uno);
+        if (isData > 0) {
+            int isUpdate = tsv.updateData(cnoList, uno);
+            if (isUpdate > 0) {
+                return "updateSuccess";
+            }
+        } else {
+            int isIn = tsv.insertData(cnoList, uno);
+            if (isIn > 0) {
+                return "insertSuccess";
+            }
+        }
+        return "fail";
     }
 }
