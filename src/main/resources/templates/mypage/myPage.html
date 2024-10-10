@@ -41,8 +41,8 @@
                 </div>
             </div>
             <div class="userInfoDiv">
-                <h2 th:text="${#authentication.getPrincipal().getUser().getNickname() != null ? #authentication.getPrincipal().getUser().getNickname() : ''}"></h2>
-                <h2 th:text="${#authentication.getPrincipal().getUser().getEmail() != null ? #authentication.getPrincipal().getUser().getEmail() : ''}"></h2>
+                <h2 th:text="${#authentication.getPrincipal().getUser().getNickname() != null ? #authentication.getPrincipal().getUser().getNickname() : ''}" class ="userName"></h2>
+                <h2 th:text="${#authentication.getPrincipal().getUser().getEmail() != null ? #authentication.getPrincipal().getUser().getEmail() : ''}" class="userId"></h2>
             </div>
         </div>
     </div>

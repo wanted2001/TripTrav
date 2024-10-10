@@ -78,4 +78,9 @@ public class MyPageServiceImpl implements MyPageService {
         log.info("isOk = {}", isOk);
         return isOk;
     }
+
+    @Override
+    public List<LikeVO> getLikePlace(long uno) {
+        return myPageMapper.getLikePlace(uno);
+    }
 }

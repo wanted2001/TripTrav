@@ -49,8 +49,12 @@
     </update>
 
     <delete id="scheduleDelete">
-        DELETE FROM schedule
-        WHERE schedule.sco = #{sco};
+        delete from schedule
+        where schedule.sco = #{sco};
     </delete>
+
+    <select id="getLikePlace" resultType="com.www.triptrav.domain.LikeVO">
+        select * from `like` where uno=#{uno}
+    </select>
 
 </mapper>

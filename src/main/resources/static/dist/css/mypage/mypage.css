@@ -180,6 +180,7 @@
     justify-content: space-around;
     width: 500px;
     height: 130px;
+    padding-left: 15px;
 
 }
 
@@ -201,14 +202,14 @@
 }
 
 /*아코디언*/
-:is(.nextTripList, .prevTripList, .tripPlaceReviewList, .tripFoodReviewList,.wishTripDiv ,.wishPlaceDiv){
+:is(.nextTripList, .prevTripList, .tripPlaceReviewList, .tripFoodReviewList,.wishTripDiv){
     max-height: 500px;
     overflow: scroll;
     overflow-x:  hidden;
     transition: max-height 0.3s ease-out;
 }
 
-:is(.nextTripList, .prevTripList, .tripPlaceReviewList, .tripFoodReviewList ,.wishTripDiv ,.wishPlaceDiv).show {
+:is(.nextTripList, .prevTripList, .tripPlaceReviewList, .tripFoodReviewList ,.wishTripDiv).show {
     max-height: 890px;
     display: block;
 }

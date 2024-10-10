@@ -12,7 +12,7 @@
     width: 250px;
     height: 80px;
     top: 15px;
-    left: 220px;
+    left: 350px;
 }
 
 .tripReviewImg{
@@ -57,8 +57,18 @@
 }
 
 .reviewMain {
-    width: 150px;
-    height: 150px;
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+}
+
+.reviewPlaceMain{
+    width: 120px;
+    height: 160px;
+}
+
+.tripReviewUl>li>a{
+    color: black;
 }
 
 

@@ -29,7 +29,7 @@ public class PathService {
         if (pathList == null) {
             pathList = new ArrayList<>();
             try {
-                Resource resource = resourceLoader.getResource("classpath:static/dist/json/AITourData.json");
+                Resource resource = resourceLoader.getResource("classpath:static/dist/json/planData.json");
                 ObjectMapper objectMapper = new ObjectMapper();
 
                 JsonNode rootNode = objectMapper.readTree(resource.getInputStream());
@@ -37,7 +37,8 @@ public class PathService {
                 for (JsonNode item : rootNode) {
                     PathVO data = new PathVO(
                             item.path("contentid").asLong(),
-                            item.path("firstimage").asText()
+                            item.path("firstimage").asText(),
+                            item.path("contenttypeid").asLong()
                     );
                     pathList.add(data);
                 }

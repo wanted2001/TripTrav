@@ -30,4 +30,6 @@ public interface MyPageMapper {
     ScheduleVO scheduleComCall(String sco);
 
     int scheduleDelete(long sco);
+
+    List<LikeVO> getLikePlace(long uno);
 }

@@ -22,6 +22,9 @@ isSocialUser(unoNum).then(data => {
     console.log(data.provider === null);
     console.log(data);
     provider = `${data.provider}`;
+    var email = `${data.email.replace(/\(.*?\)/, "")}`;
+    document.querySelector(".userName").innerText = `${data.nickname}`;
+    document.querySelector(".userId").innerText = email;
     const profile = document.querySelectorAll(".profileUpdateImg, .profileImg");
     profile.forEach(img => {
         img.src = `${data.profile ? `/profile/${data.profile}` : '/dist/image/noimage.jpg'}`
@@ -376,4 +379,13 @@ function noChild(trip) {
     }
     div.appendChild(p);
     return div;
+}
+
+function locationfind(type){
+    if (type === "12" || type === "14") {
+        return "/place/";
+    }
+    if (type === "39") {
+        return "/food/";
+    }
 }
