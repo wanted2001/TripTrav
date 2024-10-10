@@ -4,5 +4,5 @@ import java.util.List;
 import java.util.Map;
 
 public interface CategoryService {
-    Map<String, String> getCategoryCodes(List<String> categoryNames);
+    List<Integer> getCategoryCodes(List<String> categoryNames);
 }
