@@ -70,9 +70,9 @@ public class MyPageController {
     public List<ReviewDTO> getReviewList(@RequestParam long uno) {
         List<ReviewVO> reList = msv.getReviewList(uno);
         List<ReviewDTO> reviewDTOList = new ArrayList<>();
+        List<PathVO>mainImg = psv.loadPathList();
         for (ReviewVO review : reList) {
             ReviewDTO reviewDTO = new ReviewDTO();
-            List<PathVO>mainImg = psv.loadPathList();
             for(PathVO pathVO : mainImg) {
                 if(review.getReContentId() == pathVO.getContentId()){
                     if(pathVO.getFirstImage().isEmpty()){
@@ -168,6 +168,28 @@ public class MyPageController {
         int isDel = msv.scheduleDelete(sco);
         log.info("isDel = {}", isDel);
         return isDel;
+    }
+
+    @ResponseBody
+    @GetMapping("likeCall")
+    public List<LikeDTO> likeCall(@RequestParam long uno) {
+        log.info("likeCall uno = {}", uno);
+        List<LikeVO> like = msv.getLikePlace(uno);
+        List<LikeDTO> likeDTOList = new ArrayList<>();
+        List<PathVO> pathVOList = psv.loadPathList();
+        for(LikeVO likeVO : like) {
+            LikeDTO likeDTO = new LikeDTO();
+            likeDTO.setLike(likeVO);
+            for(PathVO pathVO : pathVOList) {
+                if(likeVO.getLikeCode() == pathVO.getContentId()){
+                    likeDTO.setFirstImage(pathVO.getFirstImage());
+                    likeDTO.setContentTypeId(pathVO.getContentTypeId());
+                }
+            }
+            likeDTOList.add(likeDTO);
+            log.info("likeDTOList = {}", likeDTOList);
+        }
+        return likeDTOList;
     }
 
     @GetMapping("/tripList")

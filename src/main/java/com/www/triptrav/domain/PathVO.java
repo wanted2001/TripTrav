@@ -11,4 +11,5 @@ import lombok.extern.slf4j.Slf4j;
 public class PathVO {
     private long contentId;
     private String firstImage;
+    private long contentTypeId;
 }

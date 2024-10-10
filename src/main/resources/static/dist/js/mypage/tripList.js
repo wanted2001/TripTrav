@@ -29,7 +29,7 @@ scheduleCall(unoNum).then(data => {
                     </ul>
                 </div>
                 <div class="tripSetting">
-                    <button type="button" id="tripListBtn" onclick="deleteHandler(${data[i].sco})">X</button>
+                    <button type="button" id="tripListBtn" onclick="deleteHandler(${data[i].sco})"><img src="/dist/image/trash-2.svg"></button>
                 </div>`;
             li.appendChild(div);
 

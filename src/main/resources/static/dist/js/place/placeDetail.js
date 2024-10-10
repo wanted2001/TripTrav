@@ -890,7 +890,7 @@ function renderNearbySightsAndFood(sights, food) {
     attractionsContainer.innerHTML = '';
     food.forEach(item => {
         const foodLink = document.createElement('a');
-        foodLink.href = `/place/${item.contentid}`;
+        foodLink.href = `/food/${item.contentid}`;
         foodLink.classList.add('food-link');
         const foodDiv = document.createElement('div');
         foodDiv.classList.add('locations');
