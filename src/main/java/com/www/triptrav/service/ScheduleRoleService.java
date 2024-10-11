@@ -8,4 +8,8 @@ public interface ScheduleRoleService {
     int addScheduleRole(long uno, long sco);
 
     ScheduleRoleVO checkScheduleRole(long uno, long sco);
+
+    int updateRole(long uno, long sco, int roleValue);
+
+    int deleteRole(long sco, long uno);
 }

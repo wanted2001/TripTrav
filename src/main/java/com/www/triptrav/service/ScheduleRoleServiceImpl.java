@@ -27,4 +27,14 @@ public class ScheduleRoleServiceImpl implements ScheduleRoleService{
     public ScheduleRoleVO checkScheduleRole(long uno, long sco) {
         return scheduleRoleMapper.checkScheduleRole(uno, sco);
     }
+
+    @Override
+    public int updateRole(long uno, long sco, int roleValue) {
+        return scheduleRoleMapper.updateRole(uno,sco,roleValue);
+    }
+
+    @Override
+    public int deleteRole(long sco, long uno) {
+        return scheduleRoleMapper.deleteRole(sco, uno);
+    }
 }

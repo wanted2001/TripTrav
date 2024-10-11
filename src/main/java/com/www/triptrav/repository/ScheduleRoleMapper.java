@@ -12,4 +12,8 @@ public interface ScheduleRoleMapper {
     int addScheduleRole(@Param("uno") long uno, @Param("sco") long sco);
 
     ScheduleRoleVO checkScheduleRole(@Param("uno") long uno, @Param("sco") long sco);
+
+    int updateRole(@Param("uno") long uno, @Param("sco") long sco, @Param("roleValue") int roleValue);
+
+    int deleteRole(@Param("sco") long sco, @Param("uno") long uno);
 }

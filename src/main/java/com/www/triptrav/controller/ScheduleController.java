@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/schedule/*")
@@ -245,6 +246,7 @@ public class ScheduleController {
     @ResponseBody
     public ScheduleRoleVO getUserRole(@PathVariable long uno, @PathVariable long sco) {
         ScheduleRoleVO result = srsv.checkScheduleRole(uno, sco);
+        log.info("userRoleResult : {}", result);
         return result;
     }
 
@@ -286,6 +288,27 @@ public class ScheduleController {
     public List<LikeVO> getLikeList(@PathVariable long unoNum){
         List<LikeVO> like = lsv.getLikeList(unoNum);
         return like!=null ? like : Collections.emptyList();
+    }
+
+    @PostMapping("/updateRole/{uno}/{sco}")
+    @ResponseBody
+    public String updateRole(@PathVariable long uno, @PathVariable long sco, @RequestBody Map<String, Object> role) {
+        int roleValue = (int) role.get("role");
+        log.info("roleValue {}", roleValue);
+        int isOk = srsv.updateRole(uno,sco,roleValue);
+        return isOk>0?"1":"0";
+    }
+
+    @DeleteMapping("/deleteCompanion/{sco}/{uno}")
+    @ResponseBody
+    public String deleteCompanion(@PathVariable long sco, @PathVariable long uno) {
+        int isOk = srsv.deleteRole(sco, uno);
+        log.info("delete isOk : {}", isOk);
+        if(isOk>0) {
+            int isOk2 = scsv.deleteCompanion(sco, uno);
+            return isOk2>0?"1":"0";
+        }
+        return "-1";
     }
 
 }
