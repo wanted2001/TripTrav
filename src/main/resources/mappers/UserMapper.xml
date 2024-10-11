@@ -52,4 +52,7 @@
         FROM user
         WHERE uno = #{uno}
     </select>
+    <select id="getUvo" resultType="com.www.triptrav.domain.UserVO">
+        select * from user where uno = #{uno}
+    </select>
 </mapper>

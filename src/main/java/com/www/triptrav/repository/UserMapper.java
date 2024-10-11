@@ -41,4 +41,6 @@ public interface UserMapper {
     int addAdditionalInfo(UserVO uvo);
 
     boolean checkAdditionalInfo(long unoNum);
+
+    UserVO getUvo(long unoNum);
 }
