@@ -1000,7 +1000,9 @@ document.querySelector('.placeHeart').addEventListener('click',()=>{
             addLike(unoNum, contentId, contentName).then(result => {
                 if(result == "success"){
                     document.querySelector('.placeHeart').src = "/dist/image/heart-on.svg"
-                    alert("등록 완료");
+                    if(confirm("등록완료 마이페이지에서 확인하시겠습니까?")){
+                        location.href=`/mypage?uno=${unoNum}&location=wishPlace`;
+                    }
                     placeLikeResult = true;
                 }
             })
