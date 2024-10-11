@@ -12,7 +12,7 @@ public class JsonSimplifierService {
 
     public static void main(String[] args) {
         String inputFilePath = "src/main/resources/static/dist/json/tourData.json";
-        String outputFilePath = "src/main/resources/static/dist/json/planData.json";
+        String outputFilePath = "src/main/resources/static/dist/json/courseData.json";
         simplifyJson(inputFilePath, outputFilePath);
     }
 
@@ -27,14 +27,19 @@ public class JsonSimplifierService {
                 if (itemsNode.isArray()) {
                     for (JsonNode itemNode : itemsNode) {
                         String contenttypeid = itemNode.path("contenttypeid").asText();
-                        if ("12".equals(contenttypeid) || "14".equals(contenttypeid) || "39".equals(contenttypeid)) {
+                        if ("25".equals(contenttypeid)) {
                             ObjectNode simplifiedItem = objectMapper.createObjectNode();
                             simplifiedItem.put("addr1", itemNode.path("addr1").asText());
                             simplifiedItem.put("addr2", itemNode.path("addr2").asText());
                             simplifiedItem.put("contentid", itemNode.path("contentid").asText());
                             simplifiedItem.put("contenttypeid", contenttypeid);
                             simplifiedItem.put("firstimage", itemNode.path("firstimage").asText());
+                            simplifiedItem.put("cat1", itemNode.path("cat1").asText());
+                            simplifiedItem.put("cat2", itemNode.path("cat2").asText());
+                            simplifiedItem.put("cat3", itemNode.path("cat3").asText());
                             simplifiedItem.put("title", itemNode.path("title").asText());
+                            simplifiedItem.put("mapx", itemNode.path("mapx").asText());
+                            simplifiedItem.put("mapy", itemNode.path("mapy").asText());
                             simplifiedItems.add(simplifiedItem);
                         }
                     }
