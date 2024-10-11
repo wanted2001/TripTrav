@@ -1088,6 +1088,53 @@ function setPlanData(sco) {
 
 //일정변경 버튼
 function countTriangle() {
+    const triangleButtons = document.querySelectorAll('.triangle');
+    const downTriangleButtons = document.querySelectorAll('.downTriangle');
+
+    triangleButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            let currentLi = button.closest('.oneContent');
+            let prevLi = currentLi.previousElementSibling;
+
+            // 이전 li가 있을 때만 동작
+            if (prevLi) {
+                currentLi.classList.add('moving-up');
+                prevLi.classList.add('moving-down');
+
+                requestAnimationFrame(() => {
+                    setTimeout(() => {
+                        currentLi.parentNode.insertBefore(currentLi, prevLi);
+                        currentLi.classList.remove('moving-up');
+                        prevLi.classList.remove('moving-down');
+                        updateTriangleVisibility();
+                    }, 400); // CSS transition 시간과 맞춰줌
+                });
+            }
+        });
+    });
+
+    downTriangleButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            let currentLi = button.closest('.oneContent');
+            let nextLi = currentLi.nextElementSibling;
+
+            // 다음 li가 있을 때만 동작
+            if (nextLi) {
+                currentLi.classList.add('moving-down');
+                nextLi.classList.add('moving-up');
+
+                requestAnimationFrame(() => {
+                    setTimeout(() => {
+                        currentLi.parentNode.insertBefore(nextLi, currentLi);
+                        currentLi.classList.remove('moving-down');
+                        nextLi.classList.remove('moving-up');
+                        updateTriangleVisibility();
+                    }, 400); // CSS transition 시간과 맞춰줌
+                });
+            }
+        });
+    });
+
     function updateTriangleVisibility() {
         const allItems = document.querySelectorAll('.oneContent');
 
@@ -1109,50 +1156,9 @@ function countTriangle() {
         });
     }
 
-    document.querySelectorAll('.triangle').forEach(function (button) {
-        button.addEventListener('click', function () {
-            let currentLi = button.closest('.oneContent');
-            let prevLi = currentLi.previousElementSibling;
-
-            if (prevLi) {
-                currentLi.classList.add('moving-up');
-                prevLi.classList.add('moving-down');
-
-                requestAnimationFrame(() => {
-                    setTimeout(() => {
-                        currentLi.parentNode.insertBefore(currentLi, prevLi);
-                        currentLi.classList.remove('moving-up');
-                        prevLi.classList.remove('moving-down');
-                        updateTriangleVisibility();
-                    }, 400);
-                });
-            }
-        });
-    });
-
-    document.querySelectorAll('.downTriangle').forEach(function (button) {
-        button.addEventListener('click', function () {
-            let currentLi = button.closest('.oneContent');
-            let nextLi = currentLi.nextElementSibling;
-
-            if (nextLi) {
-                currentLi.classList.add('moving-down');
-                nextLi.classList.add('moving-up');
-
-                requestAnimationFrame(() => {
-                    setTimeout(() => {
-                        currentLi.parentNode.insertBefore(nextLi, currentLi);
-                        currentLi.classList.remove('moving-down');
-                        nextLi.classList.remove('moving-up');
-                        updateTriangleVisibility();
-                    }, 400);
-                });
-            }
-        });
-    });
-
     updateTriangleVisibility();
 }
+
 
 //일정삭제
 function deletePlan(event) {
@@ -1353,3 +1359,4 @@ async function getCompanion(sco){
 //이미지 없는 장소 forEach 못돌아서 오류남(getSlideImg 함수)
 //일정 수정 후 저장 alert 두번뜸
 //맨위 index는 ^버튼 삭제, 맨아래 index는 v버튼 삭제
+//날짜지난일정은 메모, 동행자, 편집버튼 전부 삭제
