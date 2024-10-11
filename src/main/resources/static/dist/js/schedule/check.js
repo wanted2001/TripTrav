@@ -1022,7 +1022,6 @@ function editPlan(event) {
                 editPlanTitle.classList.add('hidden');
                 setPlanData(sco);
                 // location.reload();
-                alert('일정이 저장되었습니다!');
             }
         }
     }
@@ -1032,13 +1031,11 @@ function setPlanData(sco) {
     const allLi = document.querySelectorAll('li.oneContent');
     const planArray = [];
     let arrayKey = true;
-
     allLi.forEach((plan, index) => {
         const sche_content_id = plan.getAttribute('data-id');
         const sche_name = document.querySelector('.nameZone').innerText;
         const sche_date = document.querySelector('.day_focus').getAttribute('data-date');
         const sche_title = plan.querySelector('.placeName').innerText;
-
         const planData = {
             sche_content_id: sche_content_id,
             sche_name: sche_name,
@@ -1047,7 +1044,6 @@ function setPlanData(sco) {
             sche_title: sche_title,
             sco: sco
         };
-
         if (planArray.length > 0) {
             const lastPlan = planArray[planArray.length - 1];
             if (
@@ -1061,9 +1057,7 @@ function setPlanData(sco) {
                 arrayKey = false;
             }
         }
-
         planArray.push(planData);
-
         console.log(planArray);
         console.log(arrayKey)
     });
@@ -1081,7 +1075,7 @@ function setPlanData(sco) {
                 console.log(data);
                 if (data == "1") {
                     alert('일정이 저장되었습니다!');
-                    // location.reload();
+                    location.reload();
                 } else {
                     alert('일정 저장 중 오류가 발생하였습니다. \n다시 시도해주세요.');
                 }
@@ -1112,6 +1106,7 @@ function countTriangle() {
                         currentLi.parentNode.insertBefore(currentLi, prevLi);
                         currentLi.classList.remove('moving-up');
                         prevLi.classList.remove('moving-down');
+                        updateTriangleVisibility();
                     }, 400); // CSS transition 시간과 맞춰줌
                 });
             }
@@ -1133,13 +1128,39 @@ function countTriangle() {
                         currentLi.parentNode.insertBefore(nextLi, currentLi);
                         currentLi.classList.remove('moving-down');
                         nextLi.classList.remove('moving-up');
+                        updateTriangleVisibility();
                     }, 400); // CSS transition 시간과 맞춰줌
                 });
             }
         });
     });
+
+    function updateTriangleVisibility() {
+        const allItems = document.querySelectorAll('.oneContent');
+
+        allItems.forEach((item, index) => {
+            const triangleButton = item.querySelector('.triangle');
+            const downTriangleButton = item.querySelector('.downTriangle');
+
+            if (index === 0) {
+                triangleButton.style.display = 'none';
+            } else {
+                triangleButton.style.display = 'block';
+            }
+
+            if (index === allItems.length - 1) {
+                downTriangleButton.style.display = 'none';
+            } else {
+                downTriangleButton.style.display = 'block';
+            }
+        });
+    }
+
+    updateTriangleVisibility();
 }
 
+
+//일정삭제
 function deletePlan(event) {
     if (confirm("해당 일정을 삭제하시겠습니까?")) {
         if (event.target.classList.contains('deletePlan')) {
@@ -1336,3 +1357,6 @@ async function getCompanion(sco){
 //장소카테고리 넣어야함!
 //dot 하단 길이 조절 필요
 //이미지 없는 장소 forEach 못돌아서 오류남(getSlideImg 함수)
+//일정 수정 후 저장 alert 두번뜸
+//맨위 index는 ^버튼 삭제, 맨아래 index는 v버튼 삭제
+//날짜지난일정은 메모, 동행자, 편집버튼 전부 삭제
