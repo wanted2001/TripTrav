@@ -81,9 +81,10 @@ const saveMemo = document.querySelector('.saveMemo');
 const memoWrap = document.querySelector('.memoWrap');
 
 //일정편집
-const editBtn = document.querySelector('.editBtn');
-const saveBtn = document.querySelector('.saveBtn');
+const editRole = document.querySelector('.editRole');
+const editRoleSave = document.querySelector('.editRoleSave');
 const disableEditBtn = document.querySelector('.disableEdit');
+const editBtn = document.querySelector('.editBtn');
 
 document.addEventListener('DOMContentLoaded', () => {
     // initTmap();
@@ -92,7 +93,9 @@ document.addEventListener('DOMContentLoaded', () => {
     getUserRole(unoNum, sco).then(result => {
         console.log(result);
         if (result.scheRole === 1) {
-            editBtn.classList.remove('hidden');
+            editRole.classList.remove('hidden');
+            editRoleSave.classList.remove('hidden')
+            editBtn.classList.remove('hidden'); //일정편집버튼
         } else {
             disableEditBtn.classList.remove('hidden');
             const addPlan = document.querySelector('.addPlan');
@@ -105,24 +108,11 @@ document.addEventListener('DOMContentLoaded', () => {
             addPlan.addEventListener('mouseover', () => {
                 addPlan.style.cursor = 'default';
             });
-            addPersonBtn.innerText='동행자 확인';
-            addPersonBtn.onclick=null;
-            addPersonBtn.onclick=function (){
-                fetch(`/schedule/getCompanion/${sco}`,{
-                    method:'get'
-                }).then(response=>response.json())
-                    .then(data=>{
-                        console.log(data)
-                    })
-            }
+            addPersonBtn.classList.add('hidden');
         }
     });
     getAllCourse(sco).then(async result => {
-        console.log(result)
         await Promise.all(result.map(key => getSlideImg(key.scheContentId)))
-        // result.forEach(key => {
-        //     getSlideImg(key.scheContentId);
-        // })
         slideItems = document.querySelectorAll('.slideItem');
         updateInnerSlideWidth();
         makeDot();
@@ -174,27 +164,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     //메모여부확인
-    getMemo(sco).then(r => {
-        const memoContents = document.querySelector('.memoContents');
-        saveMemo.removeEventListener('click', saveMemoF);
-        if (r) {
-            console.log("메모있음")
-            addMemoBtn.innerText = '메모확인';
-            memoContents.innerHTML = `${r.scheMemoContent}`;
-            memoContents.readOnly = true;
-            saveMemo.innerText = '확인';
-            saveMemo.addEventListener('click', () => {
-                memoModal.style.display = 'none'
-            });
-            memoWrap.innerHTML += `<button class="modifyMemo" onclick="modifyMemoContent()">수정</button>`
-        } else {
-            saveMemo.addEventListener('click', saveMemoF);
-        }
-    });
+    // getMemo(sco).then(r => {
+    //     const memoContents = document.querySelector('.memoContents');
+    //     saveMemo.removeEventListener('click', saveMemoF);
+    //     if (r) {
+    //         console.log("메모있음")
+    //         addMemoBtn.innerText = '메모확인';
+    //         memoContents.innerHTML = `${r.scheMemoContent}`;
+    //         memoContents.readOnly = true;
+    //         saveMemo.innerText = '확인';
+    //         saveMemo.addEventListener('click', () => {
+    //             memoModal.style.display = 'none'
+    //         });
+    //         memoWrap.innerHTML += `<button class="modifyMemo" onclick="modifyMemoContent()">수정</button>`
+    //     } else {
+    //         saveMemo.addEventListener('click', saveMemoF);
+    //     }
+    // });
 
     //드래그 슬라이드 부분
-    
-
     slideWrap.addEventListener('mousedown', e => {
         pressed = true;
         startPoint = e.offsetX - innerSlide.offsetLeft;
@@ -222,11 +210,123 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
+function editRoleUser() {
+    getCompanion(sco).then(companionList => {
+        companionList.sort((a, b) => a.uno - b.uno);
+
+        const rolePromises = companionList.map((res, index) => {
+            return getUserRole(res.uno, sco).then(r => ({
+                res,
+                r,
+                index
+            }));
+        });
+
+        Promise.all(rolePromises).then(results => {
+            const companionUl = document.querySelector('.companionUl');
+            companionUl.innerHTML = '';
+
+            results.forEach(({ res, r, index }) => {
+                const isCurrentUser = (res.uno === unoNum) ? ' (나)' : '';
+
+                const isCheckedEditor = (r.scheRole === 1) ? 'checked' : '';
+                const isCheckedCompanion = (r.scheRole !== 1) ? 'checked' : '';
+
+                const li = document.createElement('li');
+                li.className = 'companionLi';
+                const unoData = res.uno;
+
+                li.setAttribute('data-uno', unoData);
+
+                li.innerHTML = `
+                    ${index + 1}) ${res.scheNick}${isCurrentUser}
+                    <label>
+                        <input type="radio" name="role_${res.uno}" value="1" ${isCheckedEditor}> 편집자
+                    </label>
+                    <label>
+                        <input type="radio" name="role_${res.uno}" value="0" ${isCheckedCompanion}> 동행자
+                    </label>
+                `;
+
+                const deleteBtn = document.createElement('img');
+                deleteBtn.src = '/dist/image/minus-circle.svg';
+                deleteBtn.className = 'deleteCompanionBtn';
+
+                deleteBtn.addEventListener('click', () => {
+                    deleteCompanion(sco, unoData, res.scheNick);
+                });
+
+                li.appendChild(deleteBtn);
+                companionUl.appendChild(li);
+            });
+        });
+    });
+}
+
+
+function deleteCompanion(sco, uno, nick) {
+    if (confirm(`${nick}님을 동행인에서 삭제하시겠습니까?`)) {
+        fetch(`/schedule/deleteCompanion/${sco}/${uno}`, {
+            method: 'DELETE'
+        }).then(response => response.json())
+            .then(data => {
+                if (data === 1) {
+                    alert(`${nick}님이 동행인에서 삭제되었습니다.`);
+                    location.reload();
+                } else {
+                    alert('동행인 삭제 중 오류가 발생하였습니다. \n다시 시도해주세요.');
+                }
+            })
+    }
+}
+
+
+document.querySelector('.editRoleSave').addEventListener('click', () => {
+    const companionList = document.querySelectorAll('.companionLi');
+    const updates = [];
+
+    companionList.forEach(li => {
+        const radioEditor = li.querySelector(`input[type="radio"][value="1"]`);
+        const radioCompanion = li.querySelector(`input[type="radio"][value="0"]`);
+        let roleValue;
+
+        // 선택된 역할 확인
+        if (radioEditor && radioEditor.checked) {
+            roleValue = 1;
+        } else if (radioCompanion && radioCompanion.checked) {
+            roleValue = 0;
+        } else {
+            return;
+        }
+
+        const uno = li.getAttribute('data-uno');
+        updates.push({uno, roleValue});
+    });
+
+    if(updates.length>0 && confirm("수정된 권한을 저장하시겠습니까?")){
+        updates.forEach(({uno, roleValue})=>{
+            updateRole(uno, sco, roleValue);
+        })
+    }
+});
+
+function updateRole(uno, sco, roleValue){
+    fetch(`/schedule/updateRole/${uno}/${sco}`,{
+        method:'POST',
+        headers:{
+            'content-type':'application/json'
+        },
+        body:JSON.stringify({role:roleValue})
+    }).then(response=>response.json())
+        .then(data=>{
+            console.log(data);
+        })
+}
+
 //메모모달 열기/닫기
 function openModal() {
     memoModal.style.display = 'flex';
 }
-
 function closeModal(modal) {
     modal.style.display = 'none';
 }
@@ -342,6 +442,7 @@ async function getSlideImg(key) {
     let addedLocations = new Set();
 
     const res = await getData(url)
+    console.log(res);
     res.items.item.forEach(img => {
         if (!addedLocations.has(img.contentid)) {
             innerSlide.innerHTML += `<div class="slideItem" style="background-image: url('${img.originimgurl}'); background-size: cover; background-position: center; background-repeat: no-repeat;"></div>`;
@@ -417,8 +518,10 @@ function checkPersonF() {
                 companionModal.style.display = 'flex';
                 document.querySelector('.cmCloseBtn').onclick = () => {
                     companionModal.style.display = 'none';
+                    document.querySelector('.companionUl').innerHTML='';
                 }
                 if (data.length > 0) {
+                    data.sort((a, b) => a.uno - b.uno);
                     data.forEach(r => {
                         const li = `<li class="companionLi">${r.scheNick}</li>`
                         document.querySelector('.companionUl').innerHTML += li;
@@ -692,6 +795,7 @@ function search() {
         function displayResult(result) {
             totalCount = result.totalCount;
 
+            console.log(totalCount)
             if (totalCount >= 1) {
                 const start = (currentPage - 1) * itemsPage;
                 const end = Math.min(start + itemsPage, totalCount);
@@ -700,10 +804,11 @@ function search() {
                 itemsDisplay.forEach(key => {
                     resultDiv += `
                     <div class="depth2_search">
-                        <div class="depth2_search_area">
+                        <div class="depth2_search_area" >
                             <div class="depth2_search_img" data-image="${key.firstimage}"></div>
                             <div class="depth2_search_name" data-id="${key.contentid}">${key.title}</div>
                             <div class="depth2_search_addr">${key.addr1}</div>
+                            <div class="addPlanBtn" onclick="newPlan(event)" style="background-image: url('/dist/image/plus-circle.svg'); background-size: cover; background-repeat: no-repeat; background-position: center"></div>
                         </div>
                     </div>`;
                 })
@@ -731,6 +836,7 @@ function search() {
                         img.style.backgroundPosition = 'center';
                         img.style.backgroundRepeat = 'no-repeat';
                     });
+                    addButtonListeners();
                 });
                 paddingSetting();
             } else if (totalCount < 1) {
@@ -760,6 +866,20 @@ function search() {
             displayResult(result);
         })
     }
+}
+
+function addButtonListeners() {
+    const addPlanBtn = document.querySelectorAll('.addPlanBtn');
+    addPlanBtn.forEach(btn => {
+        console.log(btn);
+        btn.addEventListener('mouseover', () => {
+            btn.style.backgroundImage = "url('/dist/image/plus-circle-back.svg')";
+            btn.style.cursor = 'pointer';
+        });
+        btn.addEventListener('mouseout', () => {
+            btn.style.backgroundImage = "url('/dist/image/plus-circle.svg')";
+        });
+    });
 }
 
 async function searchKeyword(url) {
@@ -886,7 +1006,7 @@ function editPlan(event) {
                 titleInput.remove();
                 editPlanTitle.classList.add('hidden');
                 setPlanData(sco);
-                location.reload();
+                // location.reload();
                 alert('일정이 저장되었습니다!');
             } else {
                 deleteBtn.forEach(btn => {
@@ -901,7 +1021,7 @@ function editPlan(event) {
                 target.innerText = '편집';
                 editPlanTitle.classList.add('hidden');
                 setPlanData(sco);
-                location.reload();
+                // location.reload();
                 alert('일정이 저장되었습니다!');
             }
         }
@@ -961,7 +1081,7 @@ function setPlanData(sco) {
                 console.log(data);
                 if (data == "1") {
                     alert('일정이 저장되었습니다!');
-                    location.reload();
+                    // location.reload();
                 } else {
                     alert('일정 저장 중 오류가 발생하였습니다. \n다시 시도해주세요.');
                 }
@@ -976,9 +1096,6 @@ function setPlanData(sco) {
 function countTriangle() {
     const triangleButtons = document.querySelectorAll('.triangle');
     const downTriangleButtons = document.querySelectorAll('.downTriangle');
-
-    //버튼 이벤트 오류생김(triangle 버튼 못찾음)
-    console.log(triangleButtons.length);
 
     triangleButtons.forEach(function (button) {
         button.addEventListener('click', function () {
@@ -1088,17 +1205,17 @@ async function getDatePlan(sco, date) {
     }
 }
 
-async function getMemo(sco) {
-    try {
-        const url = "/schedule/getMemo/" + sco;
-        const config = {method: 'post'}
-        const response = await fetch(url, config);
-        const result = await response.json();
-        return result;
-    } catch (err) {
-        console.log(err);
-    }
-}
+// async function getMemo(sco) {
+//     try {
+//         const url = "/schedule/getMemo/" + sco;
+//         const config = {method: 'post'}
+//         const response = await fetch(url, config);
+//         const result = await response.json();
+//         return result;
+//     } catch (err) {
+//         console.log(err);
+//     }
+// }
 
 async function getAllCourse(sco) {
     try {
@@ -1195,9 +1312,27 @@ async function getUserRole(uno, sco) {
     }
 }
 
+async function getCompanion(sco){
+    try{
+        const url = "/schedule/getCompanion/"+sco;
+        const config = {method:'get'};
+        const resp = await fetch(url, config);
+        return resp.json();
+    } catch (err){
+        console.log(err)
+    }
+}
 
-//고민점
-//투어 id 가져가서 각 id별 좌표값, 대표이미지, 서브이미지 가져오기(subname수만큼)
-//일정 편집 안들어갔는데 2depth 열어서 일정추가하면 일정을 편집하시겠습니까? confirm 띄우고 ok하면 일정편집으로 들어가기
-//2depth 닫으면 class on 추천 여행지로 돌아가게 만들기
-//일정편집 중에 닫기 버튼누르면 편집을 그만히시겠습니까? 띄우고 ok하면 해당 순서 배열로 저장, 버튼 저장으로 돌려서 닫기
+
+//할일
+//일정생성하거나 편집할때 1개면 안들어감
+//동행자 편집(hidden 없애는 함수부터)**
+//동행자 삭제**
+//동행자 확인할때 값 누적됨**
+//일정편집없는 유저 동행자확인 버튼 2개뜸(아래가 빈버튼)**
+//마지막 장소 기반으로 추천 여행지 출력, 검색 기본값 출력
+//일정전체적인 지역코드 저장 => 검색시 그 지역코드 기반으로 출력
+//스케줄좍좍부분에 뭐넣을지
+//장소카테고리 넣어야함!
+//dot 하단 길이 조절 필요
+//이미지 없는 장소 forEach 못돌아서 오류남(getSlideImg 함수)

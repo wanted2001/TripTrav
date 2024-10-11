@@ -8,4 +8,6 @@ public interface ScheduleCompanionService {
     int inviteUserAddPlan(long uno, long sco, String nick);
 
     List<ScheduleCompanionVO> getCompanionList(long sco);
+
+    int deleteCompanion(long sco, long uno);
 }
