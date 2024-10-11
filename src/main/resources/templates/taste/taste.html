@@ -49,7 +49,7 @@
                 </div>
                 <div class="grid-row">
                     <button class="taste-button" th:classappend="${cnoList.contains(24)} ? 'active'" th:text="'전통체험'" th:data-cno="${24}"></button>
-                    <button class="taste-button" th:classappend="${cnoList.contains(25)} ? 'active'" th:text="'산사체험'" th:data-cno="${25}"></button>
+                    <button class="taste-button" th:classappend="${cnoList.contains(25)} ? 'active'" th:text="'전시회'" th:data-cno="${25}"></button>
                     <button class="taste-button" th:classappend="${cnoList.contains(26)} ? 'active'" th:text="'이색체험'" th:data-cno="${26}"></button>
                     <button class="taste-button" th:classappend="${cnoList.contains(27)} ? 'active'" th:text="'이색거리'" th:data-cno="${27}"></button>
                     <button class="taste-button" th:classappend="${cnoList.contains(28)} ? 'active'" th:text="'건축/조형물'" th:data-cno="${28}"></button>
@@ -59,13 +59,24 @@
             </div>
         </div>
     </div>
-    <section class="listSection tasteCodeList">분석결과 관광지</section>
-    <section class="listSection tasteUserList"></section>
-    <section class="listSection tasteAIList">AI 추천 관광지</section>
+    <section class="listSection tasteCodeList">분석결과 관광지
+        <div class="displayTasteCodeList">
+
+        </div>
+    </section>
+    <section class="listSection tasteUserList">
+        <div class="displayTasteUserList">
+
+        </div>
+    </section>
+    <section class="listSection tasteAIList">AI 추천 관광지
+        <div class="displayTasteAIList">
+
+        </div>
+    </section>
 </main>
 <script th:inline="javascript">
     const cnoList = /*[[${cnoList}]]*/ [];
-    console.log(cnoList);
 </script>
 <script src="/dist/js/taste/taste.js"></script>
 </body>

@@ -13,7 +13,8 @@ main {
     font-family: LINESeedKR-Bd;
     font-size: 50px;
 }
-.tasteBtnDiv{
+
+.tasteBtnDiv {
     font-family: LINESeedKR-Rg;
 }
 
@@ -31,7 +32,8 @@ main {
     margin-left: 10px;
     margin-bottom: 20px;
 }
-.reTaste{
+
+.reTaste {
     background-color: #eee;
     border: none;
     border-radius: 10px;
@@ -53,8 +55,8 @@ main {
 .tasteDiv {
     font-family: LINESeedKR-Rg;
     width: 1000px;
+    height: auto;
     transition: max-height 0.4s ease-in-out;
-    overflow: hidden;
     background-color: #faecd3;
     border: none;
     border-radius: 10px;
@@ -107,9 +109,79 @@ main {
     background-color: #ffaf61;
 }
 
-.listSection{
+.listSection {
     color: black;
     font-family: LINESeedKR-Bd;
     font-size: 35px;
     margin-bottom: 20px;
+}
+
+.displayTasteCodeList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 20px;
+}
+
+.displayTasteCodeList a {
+    text-decoration: none;
+}
+
+.oneTasteCode {
+    flex: 1 0 calc(20% - 16px);
+    box-sizing: border-box;
+    border-radius: 8px;
+    overflow: hidden;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.oneTasteCode img {
+    width: 225px;
+    height: 150px;
+    object-fit: cover;
+    border-bottom: 1px solid #ddd;
+}
+
+.oneTasteCode span {
+    display: block;
+    padding: 10px 20px;
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 220px;
+}
+
+.oneTasteCode span:hover::after {
+    content: attr(title);
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 4px;
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    z-index: 10;
+    font-size: 12px;
+    line-height: 1.4;
+    pointer-events: none;
+}
+
+.oneTasteCode span:hover::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.75) transparent transparent transparent;
+    z-index: 9;
+    pointer-events: none;
 }

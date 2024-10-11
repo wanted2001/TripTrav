@@ -147,7 +147,7 @@ insert into category(`category_code`, `category_name`) values("A02010100", "고�
 insert into category(`category_code`, `category_name`) values("A02020200", "관광단지");
 insert into category(`category_code`, `category_name`) values("A02020600", "테마공원");
 insert into category(`category_code`, `category_name`) values("A02030200", "전통체험");
-insert into category(`category_code`, `category_name`) values("A02030300", "산사체험");
+insert into category(`category_code`, `category_name`) values("A02080500", "전시회");
 insert into category(`category_code`, `category_name`) values("A02030400", "이색체험");
 insert into category(`category_code`, `category_name`) values("A02030600", "이색거리");
 insert into category(`category_code`, `category_name`) values("A0205", "건축/조형물");
