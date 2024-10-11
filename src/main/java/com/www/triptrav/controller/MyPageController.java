@@ -162,6 +162,7 @@ public class MyPageController {
 
     }
 
+    @ResponseBody
     @DeleteMapping("schedule")
     public int scheduleDelete(@RequestParam long sco) {
         log.info("scheduleDelete sco = {}", sco);

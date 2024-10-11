@@ -1,5 +1,8 @@
-var params = new URLSearchParams(window.url);
-console.log(params);
+var urlParams = new URLSearchParams(window.location.search);
+var locationValue = urlParams.get('location');
+console.log(locationValue);
+
+
 const bottom = document.getElementById("resultMyPage");
 const modal = document.querySelector(".updateModal");
 // const accordionBtn = document.querySelector(".accordionBtn");
