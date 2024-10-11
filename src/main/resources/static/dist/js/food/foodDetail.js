@@ -132,14 +132,14 @@ fetch(foodCommonUrl)
 
         getIntroInfo(contentTypeId).then(result=>{
             const introData = result.response.body.items.item[0];
-            document.querySelector('.telInfo').innerHTML = `전화번호 : ${introData.infocenterfood}`
-             document.querySelector('.restInfo').innerHTML = `쉬는날 : ${introData.restdatefood}`
-             document.querySelector('.timeInfo').innerHTML = `이용시간 : ${introData.opentimefood}`
+            document.querySelector('.telInfo').innerHTML = `전화번호 : ${introData.infocenterfood ? `${introData.infocenterfood}`: `없음`}`
+             document.querySelector('.restInfo').innerHTML = `쉬는날 : ${introData.restdatefood ? `${introData.restdatefood}`: `없음`}`
+             document.querySelector('.timeInfo').innerHTML = `이용시간 : ${introData.opentimefood ? `${introData.opentimefood}`: `없음`}`
 
         })
         getAdditionalInfo(contentTypeId).then(result => {
             const additionalInfoData = result.response.body.items.item[0];
-            document.querySelector('.priceInfo').innerHTML = `${additionalInfoData.infoname} : ${additionalInfoData.infotext}`
+            document.querySelector('.priceInfo').innerHTML = `주요상품 : ${additionalInfoData.firstmenu ? `${additionalInfoData.firstmenu}` : `${additionalInfoData.treatmenu}`}`
         })
         document.querySelector('.homepageInfo').innerHTML = `홈페이지 :`+`${jsonData.homepage ? ` ${jsonData.homepage}` :"등록된 페이지가 없습니다. "}`
         document.querySelector('.details').innerHTML = `<p class="sectionTitle">소개</p><span>${jsonData.overview}</span>`;
@@ -243,7 +243,7 @@ async function getIntroInfo(contentTypeId) {
 //추가정보 조회 함수
 async function getAdditionalInfo(contentTypeId) {
     try{
-        const url = `https://apis.data.go.kr/B551011/KorService1/detailInfo1?MobileOS=ETC&MobileApp=TripTrav&_type=json&contentId=${contentId}&contentTypeId=${contentTypeId}&serviceKey=${tourAPIKEY}`
+        const url = `https://apis.data.go.kr/B551011/KorService1/detailIntro1?MobileOS=ETC&MobileApp=TripTrav&_type=json&contentId=${contentId}&contentTypeId=${contentTypeId}&serviceKey=${tourAPIKEY}`
         const response = await fetch(url);
         const result = await response.json()
         return result;
@@ -1065,7 +1065,9 @@ document.querySelector('.placeHeart').addEventListener('click',()=>{
             addLike(unoNum, contentId, contentName).then(result => {
                 if(result == "success"){
                     document.querySelector('.placeHeart').src = "/dist/image/heart-on.svg"
-                    alert("등록 완료");
+                    if(confirm("등록완료 마이페이지에서 확인하시겠습니까?")){
+                        location.href=`/mypage?uno=${unoNum}&location=wishPlace`;
+                    }
                     placeLikeResult = true;
                 }
             })
