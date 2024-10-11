@@ -22,4 +22,6 @@ public interface UserService{
     boolean checkAdditionalInfo(long unoNum);
 
     UserVO getUvo(long unoNum);
+
+    void insertTestUsersIfEmpty();
 }

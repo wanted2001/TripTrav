@@ -14,6 +14,9 @@ let selectedButtons = [...cnoList];
 document.querySelector('.tasteTitle').innerText = `${userNickname}님의 취향분석 결과`;
 getAdditionalInfo().then(result =>{
     document.querySelector('.tasteUserList').innerText = `${getAgeGroup(result.age)} ${result.gender == 0? "남성": "여성"}에게 인기있는 관광지`;
+    trendData(result.age, result.gender).then(trend =>{
+        console.log(trend);
+    })
 })
 
 // 초기 상태에 맞게 active 클래스 설정
@@ -211,3 +214,17 @@ function shuffleArray(array) {
     }
     return array;
 }
+
+async function trendData(age, gender){
+    try{
+        const url = "/taste/getTrend/"+age+"/"+gender;
+        const option = {
+            method : "GET"
+        }
+        const resp = await fetch(url, option);
+        return resp.json();
+    }catch(error){
+        console.log(error);
+    }
+}
+

@@ -13,4 +13,27 @@
     <delete id="deleteTasteDataByUno">
         DELETE FROM taste WHERE uno = #{uno}
     </delete>
+    <insert id="insertTaste">
+        INSERT INTO taste (uno, cno)
+        VALUES (#{uno}, #{cno})
+    </insert>
+    <select id="getPreferencesByAgeAndGender" resultType="java.util.HashMap">
+        SELECT t.cno AS categoryId, COUNT(*) AS preferenceCount
+        FROM user u
+        JOIN taste t ON u.uno = t.uno
+        WHERE u.age BETWEEN
+        CASE
+        WHEN #{age} % 10 = 0 THEN #{age} - 9
+        ELSE (#{age} - (#{age} % 10))
+        END
+        AND
+        CASE
+        WHEN #{age} % 10 = 0 THEN #{age}
+        ELSE (#{age} - (#{age} % 10) + 9)
+        END
+        AND u.gender = #{gender}
+        GROUP BY t.cno
+    </select>
+
+
 </mapper>
