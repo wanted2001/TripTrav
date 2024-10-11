@@ -154,71 +154,67 @@ const contentTypeIdMap = {
     38: "쇼핑",
 };
 
-const API_BASE_URL = 'http://apis.data.go.kr/B551011/KorService1/areaBasedList1';
+
 let selectedContentTypeId = null;
 let currentPage = 1;
-let isLoading = false;
 const perPage = 12;
+let isLoading = false;
+const API_BASE_URL = 'http://apis.data.go.kr/B551011/KorService1/areaBasedList1';
 
-function fetchTourInfo(regionCode, contentTypeId = null) {
+async function fetchTourInfo(regionCode, contentTypeId = null) {
     const areaCode = regionData[regionCode];
 
-    if (areaCode) {
+    if (areaCode && !isLoading) {
         const contentTypeQuery = contentTypeId ? `&contentTypeId=${contentTypeId}` : '';
         const apiUrl = `${API_BASE_URL}?numOfRows=${perPage}&pageNo=${currentPage}&MobileOS=ETC&MobileApp=AppTest&ServiceKey=${tourAPIKEY}&listYN=Y&arrange=A${contentTypeQuery}&areaCode=${areaCode}&sigunguCode=&cat1=&cat2=&cat3=&_type=json`;
 
-        isLoading = true; // 데이터 요청 중
-        fetch(apiUrl)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                const tourInfoList = document.getElementById('tourInfoList');
-                const infoText = document.getElementById('infoText');
-                infoText.innerHTML = '';
+        isLoading = true; // 데이터 요청 중임을 표시
+        try {
+            const response = await fetch(apiUrl);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
 
-                if (data?.response?.body?.items?.item) {
-                    const items = data.response.body.items.item;
+            const data = await response.json();
+            const tourInfoList = document.getElementById('tourInfoList');
+            const infoText = document.getElementById('infoText');
+            infoText.innerHTML = '';
 
-                    if (items.length > 0) {
-                        items.forEach(item => {
-                            const li = document.createElement('li');
-                            const title = item.title || '제목 없음';
-                            const addr1 = item.addr1 || '주소 없음';
-                            const contentId = item.contenttypeid;
-                            const contentType = contentTypeIdMap[contentId] || '알 수 없는 유형';
-                            const firstImage = item.firstimage || '';
-                            const noImageSrc = '/dist/image/noimage.jpg';
+            if (data?.response?.body?.items?.item) {
+                const items = data.response.body.items.item;
+                if (items.length > 0) {
+                    items.forEach(item => {
+                        const li = document.createElement('li');
+                        const title = item.title || '제목 없음';
+                        const addr1 = item.addr1 || '주소 없음';
+                        const contentType = contentTypeIdMap[item.contenttypeid] || '알 수 없는 유형';
+                        const firstImage = item.firstimage || '';
+                        const noImageSrc = '/dist/image/noimage.jpg';
 
-                            li.innerHTML = `
-                                <span class="infoTitle">${title}</span>
-                                <span class="infoType">${contentType}</span><br>
-                                <span class="infoAddr">${addr1}</span><br>
-                                <img src="${firstImage}" alt="No image available" onerror="this.onerror=null; this.src='${noImageSrc}'" />
-                                <hr>
-                            `;
-                            tourInfoList.appendChild(li);
-                        });
-                        currentPage++; // 다음 페이지로 증가
-                    } else {
-                        displayNoTourInfo(tourInfoList); // 관광 정보 없음
-                    }
+                        li.innerHTML = `
+                            <span class="infoTitle">${title}</span>
+                            <span class="infoType">${contentType}</span><br>
+                            <span class="infoAddr">${addr1}</span><br>
+                            <img src="${firstImage}" alt="No image available" onerror="this.onerror=null; this.src='${noImageSrc}'" />
+                            <hr>
+                        `;
+                        tourInfoList.appendChild(li);
+                    });
+                    currentPage++; // 다음 페이지로 증가
                 } else {
-                    displayNoTourInfo(tourInfoList); // 관광 정보 없음
+                    displayNoTourInfo(tourInfoList);
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                displayNoTourInfo(document.getElementById('tourInfoList'));
-            })
-            .finally(() => {
-                isLoading = false; // 데이터 로딩 완료
-            });
+            } else {
+                displayNoTourInfo(tourInfoList);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            displayNoTourInfo(document.getElementById('tourInfoList'));
+        } finally {
+            isLoading = false; // 데이터 로딩 완료 표시
+        }
     } else {
-        console.error('Invalid region code');
+        console.error('Invalid region code or already loading');
     }
 }
 
@@ -228,25 +224,22 @@ function displayNoTourInfo(container) {
     container.appendChild(li);
 }
 
-// 무한 스크롤 구현
-document.addEventListener('DOMContentLoaded', () => {
-    const tourInfoList = document.getElementById('tourInfoList');
+// 스크롤 이벤트 핸들러
+function onScroll() {
+    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
 
-    // 스크롤 이벤트 리스너
-    window.addEventListener('scroll', () => {
-        console.log("스크롤 중");
-        const nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 200;
-        console.log(`nearBottom: ${nearBottom}`);
-
-        // 스크롤 위치와 로딩 상태 확인
-        if (nearBottom && !isLoading && tourInfoList.children.length > 0) {
-            const regionCode = window.location.hash.replace('#', '');
-            if (regionCode) {
-                console.log("ul 바닥에 닿음");
-                fetchTourInfo(regionCode, selectedContentTypeId); // 추가 데이터 요청
-            }
+    // 스크롤이 거의 바닥에 닿았을 때 추가 데이터 로드
+    if (scrollTop + clientHeight >= scrollHeight - 5 && !isLoading) {
+        const regionCode = window.location.hash.replace('#', '');
+        if (regionCode) {
+            fetchTourInfo(regionCode, selectedContentTypeId); // 추가 데이터 요청
         }
-    });
+    }
+}
+
+// 스크롤 이벤트 리스너 추가
+document.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('scroll', onScroll);
 
     // URL 해시 변경 시 데이터 로드
     window.addEventListener('hashchange', () => {
@@ -255,15 +248,12 @@ document.addEventListener('DOMContentLoaded', () => {
             currentPage = 1; // 페이지 리셋
             tourInfoList.innerHTML = ''; // 리스트 비우기
             fetchTourInfo(regionCode, selectedContentTypeId);
-        } else {
-            console.error('URL에 hash 정보 없음');
         }
     });
 
     // 셀렉트 박스 값 변경 시
     document.getElementById('options').addEventListener('change', (event) => {
-        const selectedOption = event.target.value;
-        selectedContentTypeId = selectedOption === 'all' ? null : selectedOption;
+        selectedContentTypeId = event.target.value === 'all' ? null : event.target.value;
         const regionCode = window.location.hash.replace('#', '');
         if (regionCode) {
             currentPage = 1; // 페이지 리셋
@@ -272,6 +262,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+
 
 // // 초기 데이터 로드
 // const initialRegionCode = window.location.hash.replace('#', '');

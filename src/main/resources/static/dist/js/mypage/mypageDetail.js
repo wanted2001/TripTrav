@@ -1,8 +1,6 @@
 var urlParams = new URLSearchParams(window.location.search);
 var locationValue = urlParams.get('location');
 console.log(locationValue);
-
-
 const bottom = document.getElementById("resultMyPage");
 const modal = document.querySelector(".updateModal");
 // const accordionBtn = document.querySelector(".accordionBtn");
@@ -17,9 +15,8 @@ const wishTrip = "/wishTrip";
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 const pwRegExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
 let provider = "";
-
-pageCall(tripReview);
-pageHover("tripReview");
+pageCall(`${locationValue != null ? `/${locationValue}`: tripList}`);
+pageHover(`${locationValue != null ? `${locationValue}`: `tripList`}`);
 
 isSocialUser(unoNum).then(data => {
     console.log(data.provider === null);

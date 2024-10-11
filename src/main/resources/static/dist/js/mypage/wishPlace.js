@@ -14,6 +14,7 @@ likeCall(unoNum).then(data => {
             place.appendChild(noChild("place"));
         }
         let type = `${likeList.contentTypeId}`;
+        let likeNum =[`${likeList.like.uno}`,`${likeList.like.likeCode}`];
         const li = document.createElement("li");
         const div = document.createElement("div");
         div.classList.add("tripCardSection");
@@ -25,7 +26,7 @@ likeCall(unoNum).then(data => {
                 </ul>
             </div>
             <div class="tripSetting">
-                <button type="button"><img src="/dist/image/trash-2.svg"></button>
+                <button type="button" onclick="${delHandler(`${likeNum}`)}"><img src="/dist/image/trash-2.svg"></button>
             </div>`;
         li.appendChild(div);
 
@@ -77,6 +78,14 @@ Array.from(buttons).forEach(button => {
 });
 
 
+async function delHandler(likeNum){
+    const result = await deleteLike(likeNum);
+    if(result === "1"){
+        alert("찜 삭제");
+    }else{
+        alert("찜 삭제 실패")
+    }
+}
 
 
 
@@ -87,4 +96,17 @@ async function likeCall(unoNum) {
     };
     const res = await fetch(url, config);
     return await res.json();
+}
+
+async function deleteLike(likeNum){
+    const url = "/mypage/likeDel";
+    const config = {
+        method : "DELETE",
+        headers :{
+            "content-Type" : "application/json",
+        },
+        body: json.stringify(likeNum)
+    }
+    const res = await fetch(url,config);
+    return await res.text();
 }
