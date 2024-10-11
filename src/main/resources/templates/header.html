@@ -15,7 +15,7 @@
                 z-index: 100;
                 width: 1440px;
                 top: 30px;
-                left: 52%;
+                left: 50%;
                 transform: translateX(-50%);
                 display: flex;
                 justify-content: space-between;
@@ -27,11 +27,15 @@
                 display: flex;
                 justify-content: space-around;
                 font-size: 19px;
+                line-height: 83px;
+                position: absolute;
+                left: 34%;
             }
 
             .rightUl {
                 font-family: LINESeedKR-Rg;
                 display: flex;
+                line-height: 83px;
             }
 
             a {
@@ -47,13 +51,24 @@
             textarea:focus{
                 outline: none;
             }
+            .leftBox{
+                line-height: 83px;
+                position: relative;
+            }
+            .leftBox img{
+                width: 180px;
+                height: 66px;
+                position: absolute;
+                top: 9px;
+                filter: invert();
+            }
         </style>
     </head>
     <body>
     <nav class="header-nav" id="header">
         <div class="leftBox">
             <a th:href="@{/}">
-                <img src="/" class="logoImg">
+                <img src="/dist/image/TripTravLogo.png" class="logoImg" id="logo">
             </a>
         </div>
         <div class="middleBox">
@@ -143,6 +158,7 @@
     <script>
         function changeHeaderColor() {
             const header = document.getElementById('header');
+            const logo = document.getElementById('logo');
             const currentURL = window.location.href;
             console.log({currentURL})
             const headerText = document.querySelectorAll('#header a'); // header 내의 <a> 요소 선택
@@ -151,6 +167,7 @@
                 headerText.forEach(link => {
                     link.style.color = 'black';
                     link.style.setProperty('color', 'black', 'important');
+                    logo.style.filter = 'unset';
                 });
                 header.style.position = 'absolute';
                 header.style.width = '1440px';
@@ -159,6 +176,7 @@
                 headerText.forEach(link => {
                     link.style.color = 'black';
                     link.style.setProperty('color', 'black', 'important');
+                    logo.style.filter = 'unset';
                 });
                 header.style.position = 'absolute';
                 header.style.width = '1440px';
@@ -167,6 +185,7 @@
                 headerText.forEach(link => {
                     link.style.color = 'black';
                     link.style.setProperty('color', 'black', 'important');
+                    logo.style.filter = 'unset';
                 });
                 header.style.position = 'absolute';
                 header.style.width = '1440px';

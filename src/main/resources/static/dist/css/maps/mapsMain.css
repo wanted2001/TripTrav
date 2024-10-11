@@ -87,7 +87,6 @@ body {
 
 .infoHere{
     position: relative;
-    overflow: hidden;
     -webkit-overflow-scrolling: unset;
 }
 .infoBox{
@@ -98,7 +97,7 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    margin: 50px auto;
+    margin: 30px auto;
 
 }
 
@@ -158,7 +157,6 @@ body {
     overflow: auto;
     width: 500px;
     height: 750px;
-    padding: 60px;
     scroll-behavior: smooth;
 }
 
