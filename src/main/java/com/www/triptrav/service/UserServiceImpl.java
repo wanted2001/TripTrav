@@ -80,5 +80,10 @@ public class UserServiceImpl implements UserService {
         return userMapper.checkAdditionalInfo(unoNum);
     }
 
+    @Override
+    public UserVO getUvo(long unoNum) {
+        return userMapper.getUvo(unoNum);
+    }
+
 }
 
