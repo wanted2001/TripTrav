@@ -12,6 +12,7 @@
 .wishPlaceDiv, .wishFoodList, .wishPlaceList {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     width: 1200px;
     height: 700px;
 }
@@ -23,8 +24,8 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: 220px;
-        height: 240px;
+        width: 240px;
+        height: 250px;
     }
 
 }
@@ -33,15 +34,15 @@
 .wishFoodList:has(.tripCardSection),
 .wishPlaceList:has(.tripCardSection) {
     .tripCardSection {
-        width: 200px;
-        height: 220px;
+        width: 220px;
+        height: 250px;
         position: relative;
         border: 1px solid black;
     }
     .tripSetting{
         position: absolute;
-        left: 155px;
-        top : 15px;
+        left: 180px;
+        top: 210px;
         z-index : 1;
     }
     .tripSetting>ul>li{
@@ -69,12 +70,12 @@
     }
 
     .tripImgDiv{
-        width: 200px;
+        width: 220px;
         height: 180px;
     }
 
     .tripImg{
-        width: 200px;
+        width: 220px;
         height: 180px;
         border: none;
     }
