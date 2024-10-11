@@ -21,4 +21,9 @@ public class ScheduleCompanionServiceImpl implements ScheduleCompanionService{
     public List<ScheduleCompanionVO> getCompanionList(long sco) {
         return scheduleCompanionMapper.getCompanionList(sco);
     }
+
+    @Override
+    public int deleteCompanion(long sco, long uno) {
+        return scheduleCompanionMapper.deleteCompanion(sco,uno);
+    }
 }
