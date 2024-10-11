@@ -95,4 +95,9 @@ public class UserController {
         return usv.checkAdditionalInfo(unoNum);
     }
 
+    @GetMapping("/getAdditionalInfo/{unoNum}")
+    @ResponseBody
+    public UserVO getAdditionalInfo(@PathVariable long unoNum){
+        return usv.getUvo(unoNum);
+    }
 }
