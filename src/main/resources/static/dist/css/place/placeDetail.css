@@ -752,32 +752,32 @@ form label{
 
 input[type="radio"] {
     appearance: none; /* 기본 스타일 제거 */
-    width: 20px;
-    height: 20px;
+    width: 17px;
+    height: 17px;
     border: 2px solid #ccc;
     border-radius: 50%;
     outline: none;
     cursor: pointer;
     position: relative;
-    transform: translateY(1px);
+    transform: translateY(4px);
 }
 
 input[type="radio"]:checked {
-    border-color: black;
+    border: 2px solid orange;
     background-color: white;
 }
 
 input[type="radio"]::before {
     content: '';
     display: block;
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     background: white;
     border-radius: 50%;
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-46%, -46%);
 }
 
 input[type="radio"]:checked::before {
@@ -791,6 +791,8 @@ input[type="radio"]:checked::before {
     width: 80%;
     font-family: 'LINESEEDKR-Th';
     font-weight: bold;
+    border: 1px solid #ccc;
+    border-radius: 3px;
 }
 
 .reportBtn {
