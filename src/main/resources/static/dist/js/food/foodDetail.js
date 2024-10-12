@@ -117,6 +117,7 @@ fetch(foodCommonUrl)
         // 추가 이미지를 가져오고 슬라이더에 반영
         getImage(imgUrl).then(result => {
             imageUrls.push(...result);
+            console.log(result);
             updateImages();
         });
         //장소 평점가져오기
