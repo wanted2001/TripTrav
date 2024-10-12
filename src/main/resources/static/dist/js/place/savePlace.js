@@ -131,7 +131,6 @@ function createPlan() {
                 const startDate = new Date(departureDate);
                 const endDate = new Date(returnDate);
                 const totalDays = (endDate - startDate) / (1000 * 60 * 60 * 24);
-
                 const requestBody = {
                     sche_name: planName,
                     sche_start: departureDate,
