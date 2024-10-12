@@ -8,11 +8,13 @@ likeCall(unoNum).then(data => {
     let foodNum = 0;
     let placeNum = 0;
     console.log(data);
-
+    if (data.length === 0) {
+        console.log(" 들어옴 !!!");
+        place.appendChild(noChild("wishPlace"));
+    }
     data.forEach(likeList => {
-        if (likeList.length === 0) {
-            place.appendChild(noChild("place"));
-        }
+        console.log(likeList.length);
+
         let type = `${likeList.contentTypeId}`;
         let likeNum =[`${likeList.like.uno}`,`${likeList.like.likeCode}`];
         const li = document.createElement("li");
@@ -29,7 +31,6 @@ likeCall(unoNum).then(data => {
                 <button type="button" onclick="${delHandler(`${likeNum}`)}"><img src="/dist/image/trash-2.svg"></button>
             </div>`;
         li.appendChild(div);
-
         if (type === "12" || type === "14") {
             console.log(li);
             const placeLi = li.cloneNode(true);
@@ -86,6 +87,12 @@ async function delHandler(likeNum){
         alert("찜 삭제 실패")
     }
 }
+
+// function hoverOption(target){
+//     Object.assign(target.style,{
+//         backgroundColor: '#f0f0f0',
+//     })
+// }
 
 
 

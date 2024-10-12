@@ -1,10 +1,7 @@
 var urlParams = new URLSearchParams(window.location.search);
 var locationValue = urlParams.get('location');
-console.log(locationValue);
 const bottom = document.getElementById("resultMyPage");
 const modal = document.querySelector(".updateModal");
-// const accordionBtn = document.querySelector(".accordionBtn");
-// const liList = document.querySelector(".myPageList > li");
 const preview = document.querySelector(".profileUpdateImg");
 
 const js = "/dist/js/mypage";
@@ -15,12 +12,12 @@ const wishTrip = "/wishTrip";
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 const pwRegExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
 let provider = "";
+
 pageCall(`${locationValue != null ? `/${locationValue}`: tripList}`);
+
 pageHover(`${locationValue != null ? `${locationValue}`: `tripList`}`);
 
 isSocialUser(unoNum).then(data => {
-    console.log(data.provider === null);
-    console.log(data);
     provider = `${data.provider}`;
     var email = `${data.email.replace(/\(.*?\)/, "")}`;
     document.querySelector(".userName").innerText = `${data.nickname}`;
@@ -30,7 +27,6 @@ isSocialUser(unoNum).then(data => {
         img.src = `${data.profile ? `/profile/${data.profile}` : '/dist/image/noimage.jpg'}`
     });
     if (data.provider !== null) {
-        console.log('들어옴');
         document.getElementById("pw").disabled = true;
         document.querySelector(".imgBtn").disabled = true;
     }
@@ -60,7 +56,6 @@ document.querySelectorAll('.myPageList > li').forEach(button => {
 
 document.querySelector(".profileUpdateInput").addEventListener("change", (e) => {
     var img = e.target.files;
-    console.log(img);
     Array.from(img).forEach(profile => {
         if (img.size > MAX_FILE_SIZE) {
             alert("파일의 최대 크기는 10MB 입니다.");
@@ -92,25 +87,20 @@ document.getElementById("updateProfile").addEventListener("click", () => {
     // 비동기 함수에 다른 사용법을 알게됨
     const addImageToFormData = async () => {
         if (!preview.src.includes("/dist/image/noimage.jpg")) {
-            console.log("들어옴" + preview.src);
             try {
                 const result = await getFileFromImgSrc(preview.src);
-                console.log(result);
                 formData.append("profile", result);
             } catch (error) {
                 console.log("이미지 파일 가져오기 오류:", error);
             }
         }
         if (fileInput.files.length > 0) {
-            console.log("들어옴 22");
             formData.append("profile", fileInput.files);
         }
     };
 
     addImageToFormData().then(() => {
-        console.log([...formData]); // FormData 확인
         updateUser(formData).then(result => {
-            console.log(result);
             if (result === '1') {
                 alert("회원정보 수정 완료");
                 location.reload();
@@ -127,8 +117,6 @@ document.getElementById("updateProfile").addEventListener("click", () => {
 document.getElementById("pw").addEventListener("keyup",()=>{
     var pwVal = document.getElementById("pw").value;
     const updateBtn = document.getElementById("updateProfile")
-    console.log(pwVal);
-    console.log(disabledBtn(pwVal));
    if(disabledBtn(pwVal)){
        updateBtn.disabled = false;
        updateBtn.style.color = "white";
@@ -340,7 +328,7 @@ async function getFileFromImgSrc(imgSrc) {
 function changeDate(text) {
     const datePattern = /\d{4}-\d{2}-\d{2}/;  // 날짜 패턴 (YYYY-MM-DD)
     const match = text.match(datePattern);
-    return match ? match[0] : null;  // 매칭된 결과가 있으면 반환, 없으면 null 반환
+    return match ? match[0].replaceAll("-", ".") : null; // 매칭된 결과가 있으면 반환, 없으면 null 반환
 }
 
 function compareDate(text) {

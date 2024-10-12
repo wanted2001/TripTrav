@@ -33,71 +33,6 @@ const overlay = document.getElementById('overlay');
 spinner.style.display = 'block';
 overlay.style.display = 'block';
 
-//기본정보 가져오기
-// fetch(foodCommonUrl)
-//     .then(response => response.json())
-//     .then(data => {
-//         const jsonData = data.response.body.items.item[0];
-//         const locationDiv = document.querySelector('.location');
-//         let city = splitAddr(jsonData.addr1)[0];
-//         let district = splitAddr(jsonData.addr1)[1];
-//         let title = jsonData.title;
-//         locationDiv.innerHTML = `<span>${city} > </span><span>${district} > </span><span>${title}</span>`;
-//
-//         const mainImgUrl = jsonData.firstimage;
-//         imageUrls.push(mainImgUrl);
-//
-//         // 추가 이미지를 가져오고 슬라이더에 반영
-//         getImage(imgUrl).then(result => {
-//             imageUrls.push(...result);
-//             updateImages();
-//         });
-//
-//         contentTypeId = jsonData.contenttypeid;
-//         document.querySelector('.title').innerText = jsonData.title
-//         document.querySelector('.locationInfo').innerHTML = `주소 : ${jsonData.addr1}`;
-//
-//         getIntroInfo(contentTypeId).then(result=>{
-//             const introData = result.response.body.items.item[0];
-//             document.querySelector('.telInfo').innerHTML = `전화번호 : ${introData.infocenterfood}`
-//             document.querySelector('.restInfo').innerHTML = `쉬는날 : ${introData.restdatefood}`
-//             document.querySelector('.timeInfo').innerHTML = `이용시간 : ${introData.opentimefood}`
-//         })
-//         getAdditionalInfo(contentTypeId).then(result => {
-//             const additionalInfoData = result.response.body.items.item[0];
-//             document.querySelector('.priceInfo').innerHTML = `${additionalInfoData.infoname} : ${additionalInfoData.infotext}`
-//         })
-//         document.querySelector('.homepageInfo').innerHTML = `홈페이지 : ${jsonData.homepage}`
-//         document.querySelector('.details').innerHTML = `<p>소개</p><span>${jsonData.overview}</span>`;
-//         mapx = jsonData.mapx;
-//         mapy = jsonData.mapy;
-//
-//         let marker = {
-//             position: new kakao.maps.LatLng(mapy, mapx),
-//             text: '눌러서 경로를 검색해보세요!'
-//         };
-//         let staticMapContainer  = document.getElementById('staticMap'),
-//             staticMapOption = {
-//                 center: new kakao.maps.LatLng(mapy, mapx),
-//                 level: 4,
-//                 marker: marker
-//             };
-//         let staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
-//         document.getElementById('staticMap').addEventListener('click', () => {
-//             const anchorTag = document.querySelector('#staticMap a');
-//             if (anchorTag) {
-//                 anchorTag.href = `https://map.kakao.com/link/to/${title},${mapy},${mapx}`;
-//             }
-//         });
-//
-//         //주변지역 처리
-//         processNearbySightsAndFood(mapx, mapy).then(result => {
-//             renderNearbySightsAndFood(result.sights, result.food);
-//         }).catch(error => {
-//             console.log(error)
-//         });
-//     });
-
 // 기본정보 가져오기
 fetch(foodCommonUrl)
     .then(response => response.json())
@@ -117,6 +52,7 @@ fetch(foodCommonUrl)
         // 추가 이미지를 가져오고 슬라이더에 반영
         getImage(imgUrl).then(result => {
             imageUrls.push(...result);
+            console.log(result);
             updateImages();
         });
         //장소 평점가져오기

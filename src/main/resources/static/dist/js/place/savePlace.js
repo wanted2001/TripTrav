@@ -131,7 +131,6 @@ function createPlan() {
                 const startDate = new Date(departureDate);
                 const endDate = new Date(returnDate);
                 const totalDays = (endDate - startDate) / (1000 * 60 * 60 * 24);
-
                 const requestBody = {
                     sche_name: planName,
                     sche_start: departureDate,
@@ -153,7 +152,7 @@ function createPlan() {
                         console.log(data)
                         if (data==="1") {
                             if(confirm('일정이 성공적으로 저장되었습니다! \n마이페이지로 이동하여 확인하시겠습니까?')){
-                                location.href=`/mypage?uno=${unoNum}&location=triplist`;
+                                location.href=`/mypage?uno=${unoNum}&location=tripList`;
                             } else{
                                 closeModal();
                             }

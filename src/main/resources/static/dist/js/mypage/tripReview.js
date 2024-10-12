@@ -7,7 +7,6 @@ getReviewList(unoNum)
     .then(data => {
         let tripPlaceNum =0;
         let tripFoodNum = 0;
-        console.log(data);
         if(data.length === 0){
             tripPlaceReviewList.appendChild(noChild("review"));
             tripFoodReviewList.appendChild(noChild("review"));
@@ -16,7 +15,6 @@ getReviewList(unoNum)
             const review = datas.review;
             const imagePaths = datas.imagePaths;
             if (!imagePaths || imagePaths.length === 0) {
-                console.log("이미지 경로가 없습니다.");
             } else {
                 // console.log(imagePaths);
             }
