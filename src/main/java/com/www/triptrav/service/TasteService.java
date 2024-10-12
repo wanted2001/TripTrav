@@ -10,4 +10,5 @@ public interface TasteService {
 
     int insertData(List<Integer> cnoList, String uno);
 
+    List<Map<String, Object>> getTrend(int age, int gender);
 }
