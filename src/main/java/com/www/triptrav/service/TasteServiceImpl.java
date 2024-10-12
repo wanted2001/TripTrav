@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -38,4 +39,10 @@ public class TasteServiceImpl implements TasteService {
         }
         return rowsInserted;
     }
+
+    @Override
+    public List<Map<String, Object>> getTrend(int age, int gender) {
+        return tasteMapper.getTrend(age, gender);
+    }
+
 }

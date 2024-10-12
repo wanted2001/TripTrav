@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,5 +51,11 @@ public class TasteController {
             }
         }
         return "fail";
+    }
+
+    @GetMapping("/getTrend/{age}/{gender}")
+    @ResponseBody
+    public List<Map<String, Object>> getTrend(@PathVariable("age")int age, @PathVariable("gender")int gender) {
+        return tsv.getTrend(age, gender);
     }
 }

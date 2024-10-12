@@ -13,4 +13,19 @@
     <delete id="deleteTasteDataByUno">
         DELETE FROM taste WHERE uno = #{uno}
     </delete>
+    <insert id="insertTaste">
+        INSERT INTO taste (uno, cno)
+        VALUES (#{uno}, #{cno})
+    </insert>
+    <select id="getTrend" resultType="map">
+        SELECT t.cno, COUNT(t.cno) AS frequency
+        FROM user u
+        JOIN taste t ON u.uno = t.uno
+        WHERE FLOOR(u.age / 10) * 10 = FLOOR(#{age} / 10) * 10
+        AND u.gender = #{gender}
+        GROUP BY t.cno
+        ORDER BY frequency DESC
+    </select>
+
+
 </mapper>

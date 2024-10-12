@@ -47,21 +47,24 @@ public class MyPageController {
     @ResponseBody
     @GetMapping("/scheduleCall")
     public List<ScheduleDTO> scheduleCall(@RequestParam long uno) {
-        log.info("scheduleCall uno = {}", uno);
         List<ScheduleVO> scheList = msv.scheduleCall(uno);
         List<ScheduleDTO> scheduleDTOList = new ArrayList<>();
         for (ScheduleVO svo : scheList) {
             ScheduleDTO scheDTO = new ScheduleDTO();
             ScheduleDetailVO sdvo = msv.getScheduleDetail(svo.getSco());
+            ScheduleRoleVO srvo = new ScheduleRoleVO(
+                    svo.getSco(),
+                    uno);
+            int roleNum = msv.getRole(srvo);
             scheDTO.setSco(svo.getSco());
             scheDTO.setScheName(svo.getScheName());
             scheDTO.setScheStart(svo.getScheStart());
             scheDTO.setScheEnd(svo.getScheEnd());
             scheDTO.setScheTitle(sdvo.getScheTitle());
             scheDTO.setScheImg(svo.getScheImg());
+            scheDTO.setScheRole(roleNum);
             scheduleDTOList.add(scheDTO);
         }
-        log.info("scheduleCall scheduleDTOList = {}", scheduleDTOList);
         return scheduleDTOList;
     }
 
@@ -91,15 +94,12 @@ public class MyPageController {
             reviewDTO.setImagePaths(imagePaths);
             reviewDTOList.add(reviewDTO);
         }
-        log.info("reviewList = {}", reList);
-        log.info("reviewDTOList = {}", reviewDTOList);
         return reviewDTOList;
     }
 
 
     @GetMapping("/reviewPopup")
     public String reviewPopup(@RequestParam long rno, Model model) {
-        log.info("reviewPopup rno = {}", rno);
         ReviewVO reList = msv.getPopReview(rno);
         ReviewDTO reviewDTOList = new ReviewDTO();
         reviewDTOList.setReview(reList); // 리뷰 정보 설정
@@ -109,10 +109,7 @@ public class MyPageController {
             imagePaths.add(image.getImagePath());
         }
         reviewDTOList.setImagePaths(imagePaths);
-        log.info("reviewList >> {}", reList);
-        log.info("reviewDTOListPopup = {}", reviewDTOList);
         model.addAttribute("review", reviewDTOList);
-        log.info("model = {}", model);
         return "mypage/reviewPopup";
     }
 
@@ -128,7 +125,6 @@ public class MyPageController {
         userVO.setUno(uno);
         if(provider.equals("null")) {
             if(!pw.isEmpty()) {
-                log.info("pw = {}", pw.length());
             userVO.setPw(passwordEncoder.encode(pw));
             }
             userVO.setNickname(nickname);
@@ -140,7 +136,6 @@ public class MyPageController {
                 if (!uploadPath.exists()) {
                     uploadPath.mkdirs();
                 }
-                log.info("이미지 처리: {}", profile.getOriginalFilename());
                 String uuid = UUID.randomUUID().toString();
                 String originalFilename = profile.getOriginalFilename();
                 String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
@@ -149,14 +144,11 @@ public class MyPageController {
                 profile.transferTo(savePath.toFile());
                 String path = savePath.toString().replace("\\","/");
                 userVO.setProfile(path.replace("C:/image/", ""));
-                log.info(path.replace("C:/image/", ""));
             }
-            log.info("userVO11111111 = {}",userVO);
            return msv.updateCommonUser(userVO);
         }else{
             userVO.setUno(uno);
             userVO.setNickname(nickname);
-            log.info("userVO = {}",userVO);
           return msv.updateSocialUserName(userVO);
         }
 
@@ -165,16 +157,13 @@ public class MyPageController {
     @ResponseBody
     @DeleteMapping("schedule")
     public int scheduleDelete(@RequestParam long sco) {
-        log.info("scheduleDelete sco = {}", sco);
         int isDel = msv.scheduleDelete(sco);
-        log.info("isDel = {}", isDel);
         return isDel;
     }
 
     @ResponseBody
     @GetMapping("likeCall")
     public List<LikeDTO> likeCall(@RequestParam long uno) {
-        log.info("likeCall uno = {}", uno);
         List<LikeVO> like = msv.getLikePlace(uno);
         List<LikeDTO> likeDTOList = new ArrayList<>();
         List<PathVO> pathVOList = psv.loadPathList();
@@ -188,7 +177,6 @@ public class MyPageController {
                 }
             }
             likeDTOList.add(likeDTO);
-            log.info("likeDTOList = {}", likeDTOList);
         }
         return likeDTOList;
     }
