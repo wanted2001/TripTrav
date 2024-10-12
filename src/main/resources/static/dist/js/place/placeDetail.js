@@ -42,7 +42,7 @@ fetch(detailInfoUrl)
         let title = jsonData.title;
 
         contentName = jsonData.title;
-        locationDiv.innerHTML = `<span>${city}> </span><span>${district}> </span><span>${title}</span>`;
+        locationDiv.innerHTML = `<span>${city} > </span><span>${district} > </span><span>${title}</span>`;
 
         const mainImgUrl = jsonData.firstimage;
         imageUrls.push(mainImgUrl);
@@ -543,6 +543,64 @@ async function displayReviews(result) {
     }
 }
 
+//신고 모달
+document.addEventListener('click',(e)=>{
+    console.log(e.target)
+    if(e.target&&e.target.className==='reportImg'){
+        const modal = `
+                        <div class="reportModal">
+                            <div class="reportModalWrap">
+                                <button class="reportCloseBtn" onclick="closeReportModal()">&times;</button>
+                                <span>신고</span>
+                                <span>어떤 문제인가요?</span>
+                                <span>TripTrav에서 모든 내용에 대해 확인하므로 완벽히 들어맞지 않아도 괜찮습니다.</span>
+                                <span>허위 신고시에는 서비스 이용이 제한될 수 있습니다.</span>
+                                <form>
+                                    <label for="reportValue">
+                                        <input type="radio" name="reportValue" value="성적인 콘텐츠"> 성적인 콘텐츠
+                                    </label>
+                                    <label for="reportValue">
+                                        <input type="radio" name="reportValue" value="폭력적 또는 혐오스러운 콘텐츠"> 폭력적 또는 혐오스러운 콘텐츠
+                                    </label>
+                                    <label for="reportValue">
+                                        <input type="radio" name="reportValue" value="증오 또는 악의적인 콘텐츠"> 증오 또는 악의적인 콘텐츠
+                                    </label>
+                                    <label for="reportValue">
+                                        <input type="radio" name="reportValue" value="괴롭힘 또는 폭력"> 괴롭힘 또는 폭력
+                                    </label>
+                                    <label for="reportValue">
+                                        <input type="radio" name="reportValue" value="유해하거나 위험한 행위"> 유해하거나 위험한 행위
+                                    </label>
+                                    <label for="reportValue">
+                                        <input type="radio" name="reportValue" value="잘못된 정보"> 잘못된 정보
+                                    </label>
+                                    <label for="reportValue">
+                                        <input type="radio" name="reportValue" value="아동 학대"> 아동 학대
+                                    </label>
+                                    <label for="reportValue">
+                                        <input type="radio" name="reportValue" value="테러 조장"> 테러 조장
+                                    </label>
+                                    <label for="reportValue">
+                                        <input type="radio" name="reportValue" value="스팸 또는 혼동을 야기하는 콘텐츠"> 스팸 또는 혼동을 야기하는 콘텐츠
+                                    </label>
+                                    <label for="reportValue">
+                                        <input type="radio" name="reportValue"> 기타
+                                        <input type="text" class="etcText" placeholder="기타 사유를 입력해주세요.">
+                                    </label>
+                                    <button class="reportBtn" type="submit">신고하기</button>
+                                </form>
+                            </div>
+                        </div>`
+        document.querySelector('.report').innerHTML=modal;
+        document.querySelector('.report').style.display='flex'
+    }
+})
+
+function closeReportModal(){
+    console.log("닫힘버튼");
+    document.querySelector('.report').style.display='none'
+}
+
 //좋아요 누름처리
 document.addEventListener('click', function(event) {
     if (event.target && event.target.id === 'thumbsUp') {
@@ -586,6 +644,7 @@ document.addEventListener('click', (event) => {
             event.preventDefault();
             if(confirm("로그인 한 사용자만 이용가능 한 서비스입니다. \n로그인 페이지로 이동하시겠습니까?")){
                 document.getElementById('myModal').style.display = 'flex';
+                document.querySelector('.report').style.display='none';
             }
         }
     }
