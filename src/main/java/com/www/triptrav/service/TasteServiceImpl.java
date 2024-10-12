@@ -40,4 +40,9 @@ public class TasteServiceImpl implements TasteService {
         return rowsInserted;
     }
 
+    @Override
+    public List<Map<String, Object>> getTrend(int age, int gender) {
+        return tasteMapper.getTrend(age, gender);
+    }
+
 }

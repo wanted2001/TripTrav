@@ -55,9 +55,7 @@ public class TasteController {
 
     @GetMapping("/getTrend/{age}/{gender}")
     @ResponseBody
-    public String getTrend(@PathVariable("age")int age, @PathVariable("gender")int gender) {
-        log.info("getTrend age:{},gender:{}", age, gender);
-
-        return "1";
+    public List<Map<String, Object>> getTrend(@PathVariable("age")int age, @PathVariable("gender")int gender) {
+        return tsv.getTrend(age, gender);
     }
 }

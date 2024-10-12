@@ -40,6 +40,9 @@ button{
     font-size: 35px;
     z-index: 1;
 }
+textarea{
+    font-family: LINESeedKR-Rg;
+}
 
 .placeHeart{
     position: absolute;

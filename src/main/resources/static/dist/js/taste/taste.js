@@ -1,23 +1,17 @@
 const accordionButton = document.querySelector('.accordion');
+const buttons = document.querySelectorAll('.taste-button');
+const reTasteBtn = document.querySelector('.reTaste');
+let selectedButtons = [...cnoList];
 
+//초기페이지
+document.querySelector('.tasteTitle').innerText = `${userNickname}님의 취향분석 결과`;
+
+//아코디언처리
 accordionButton.addEventListener('click', () => {
     accordionButton.classList.toggle('active');
     const tasteDiv = accordionButton.parentElement.nextElementSibling;
     tasteDiv.style.display = tasteDiv.style.display === 'block' ? 'none' : 'block';
 });
-
-const buttons = document.querySelectorAll('.taste-button');
-const reTasteBtn = document.querySelector('.reTaste');
-let selectedButtons = [...cnoList];
-
-//화면출력
-document.querySelector('.tasteTitle').innerText = `${userNickname}님의 취향분석 결과`;
-getAdditionalInfo().then(result =>{
-    document.querySelector('.tasteUserList').innerText = `${getAgeGroup(result.age)} ${result.gender == 0? "남성": "여성"}에게 인기있는 관광지`;
-    trendData(result.age, result.gender).then(trend =>{
-        console.log(trend);
-    })
-})
 
 // 초기 상태에 맞게 active 클래스 설정
 buttons.forEach(button => {
@@ -201,6 +195,52 @@ Promise.all([
                 }
             }
         }
+        //트렌드출력
+        getAdditionalInfo().then(result => {
+            const tasteUserList = document.querySelector('.tasteUserList');
+            const trendText = `${getAgeGroup(result.age)} ${result.gender == 0 ? "남성" : "여성"}에게 인기있는 관광지`;
+            const trendTitle = document.createElement('div');
+            trendTitle.innerText = trendText;
+            tasteUserList.insertBefore(trendTitle, tasteUserList.firstChild);
+            trendData(result.age, result.gender).then(trend => {
+                const displayTasteUserList = document.querySelector('.displayTasteUserList');
+                displayTasteUserList.innerHTML = '';
+                const itemsToDisplay = [4, 3, 2, 1];
+                let displayCount = 0;
+                for (let i = 0; i < itemsToDisplay.length && i < trend.length; i++) {
+                    let trendCno = trend[i].cno;
+                    let categoryCount = itemsToDisplay[i];
+                    const matchedCategory = category.find(c => c.cno == trendCno);
+                    if (matchedCategory) {
+                        let filteredContent = data.filter(d =>
+                            (d.cat2 == matchedCategory.categoryCode || d.cat3 == matchedCategory.categoryCode)
+                            && d.firstimage
+                        ).sort(() => Math.random() - 0.5);
+                        for (let displayData of filteredContent.slice(0, categoryCount)) {
+                            const titleText = displayData.title;
+                            if (displayData.contenttypeid == "15") {
+                                displayTasteUserList.innerHTML +=
+                                    `<a href="https://www.google.com/search?q=${encodeURIComponent(displayData.title)}" target="_blank">
+                                <div class="oneTasteCode">
+                                    <img src="${displayData.firstimage}" alt="no image">
+                                    <span title="${titleText}">${titleText}</span>
+                                </div>
+                            </a>`;
+                            } else {
+                                displayTasteUserList.innerHTML +=
+                                    `<a href="/place/${displayData.contentid}">
+                                <div class="oneTasteCode">
+                                    <img src="${displayData.firstimage}" alt="no image">
+                                    <span title="${titleText}">${titleText}</span>
+                                </div>
+                            </a>`;
+                            }
+                        }
+                        displayCount++;
+                    }
+                }
+            });
+        });
     })
     .catch(error => {
         console.error('데이터 로딩 에러:', error);
@@ -215,6 +255,7 @@ function shuffleArray(array) {
     return array;
 }
 
+//성별,나이로 cno리스트 받아오기
 async function trendData(age, gender){
     try{
         const url = "/taste/getTrend/"+age+"/"+gender;

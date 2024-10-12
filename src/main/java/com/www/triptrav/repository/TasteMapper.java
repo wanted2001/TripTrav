@@ -15,4 +15,5 @@ public interface TasteMapper {
 
     void insertTaste(long uno, int cno);
 
+    List<Map<String, Object>> getTrend(int age, int gender);
 }
