@@ -25,7 +25,9 @@ public interface MyPageService {
 
     int scheduleDelete(long sco);
 
-    List<LikeVO> getLikePlace(long uno);
+    List<LikeVO> getLikePlace(LikeVO lvo);
 
     int getRole(ScheduleRoleVO roleVO);
+
+    int delLike(LikeVO likeVO);
 }

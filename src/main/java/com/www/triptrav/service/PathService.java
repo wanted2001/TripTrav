@@ -23,6 +23,7 @@ public class PathService {
     public PathService(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
         imagePath();
+        coursePath();
     }
 
     private void imagePath() {
@@ -48,8 +49,36 @@ public class PathService {
         }
     }
 
+    private void coursePath() {
+        if (serveList == null) {
+            serveList = new ArrayList<>();
+            try {
+                Resource resource = resourceLoader.getResource("classpath:static/dist/json/courseData.json");
+                ObjectMapper objectMapper = new ObjectMapper();
+
+                JsonNode rootNode = objectMapper.readTree(resource.getInputStream());
+
+                for (JsonNode item : rootNode) {
+                    PathVO data = new PathVO(
+                            item.path("contentid").asLong(),
+                            item.path("firstimage").asText(),
+                            item.path("contenttypeid").asLong(),
+                            item.path("title").asText()
+                    );
+                    serveList.add(data);
+                }
+            } catch (IOException e) {
+                log.error("데이터 로딩 에러", e);
+            }
+        }
+    }
+
 
     public List<PathVO> loadPathList() {
         return pathList;
+    }
+
+    public List<PathVO> loadServeList() {
+        return serveList;
     }
 }

@@ -1,4 +1,7 @@
 var urlParams = new URLSearchParams(window.location.search);
+// message=notAllowedNickName
+var messageVlaue = urlParams.get("message");
+console.log(messageVlaue);
 var locationValue = urlParams.get('location');
 const bottom = document.getElementById("resultMyPage");
 const modal = document.querySelector(".updateModal");
