@@ -121,16 +121,16 @@ public class ScheduleController {
         return scheDVO;
     }
 
-    @PostMapping("/memo/{sco}")
+    @PostMapping("/memo/{sco}/{userNickname}")
     @ResponseBody
     @Transactional
-    public String saveMemo(@PathVariable("sco") long sco, @RequestBody String memo) {
+    public String saveMemo(@PathVariable("sco") long sco, @PathVariable("userNickname") String nick, @RequestBody String memo) {
         int isOk = ssv.insertMemo(1, sco);
         int memoResult = 0;
         memo = memo.substring(1, memo.length() - 1);
         log.info("memo :{}", memo);
         if (isOk > 0) {
-            memoResult = smsv.insertMemoContent(memo, sco);
+            memoResult = smsv.insertMemoContent(memo, sco, nick);
         }
         return memoResult > 0 ? "1" : "0";
     }
