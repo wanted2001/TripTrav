@@ -164,7 +164,10 @@ public class MyPageController {
     @ResponseBody
     @GetMapping("likeCall")
     public List<LikeDTO> likeCall(@RequestParam long uno) {
-        List<LikeVO> like = msv.getLikePlace(uno);
+        LikeVO lvo = new LikeVO();
+        lvo.setUno(uno);
+        lvo.setTypeId(0);
+        List<LikeVO> like = msv.getLikePlace(lvo);
         List<LikeDTO> likeDTOList = new ArrayList<>();
         List<PathVO> pathVOList = psv.loadPathList();
         for(LikeVO likeVO : like) {
@@ -180,6 +183,41 @@ public class MyPageController {
         }
         return likeDTOList;
     }
+
+    @ResponseBody
+    @GetMapping("tripCall")
+    public List<LikeDTO> tripCall(@RequestParam long uno) {
+        LikeVO lvo = new LikeVO();
+        lvo.setUno(uno);
+        lvo.setTypeId(1);
+        log.info("lvo >> {}",lvo);
+        List<LikeVO> tripList = msv.getLikePlace(lvo);
+        List<LikeDTO> likeDTOList = new ArrayList<>();
+        List<PathVO> pathVOList = psv.loadServeList();
+        for(LikeVO likeVO : tripList) {
+            LikeDTO likeDTO = new LikeDTO();
+            likeDTO.setLike(likeVO);
+            for(PathVO pathVO : pathVOList) {
+                if(likeVO.getLikeCode() == pathVO.getContentId()){
+                    likeDTO.setFirstImage(pathVO.getFirstImage());
+                    likeDTO.setContentTypeId(pathVO.getContentTypeId());
+                    likeDTO.setTitle(pathVO.getTitle());
+                }
+            }
+            likeDTOList.add(likeDTO);
+        }
+        log.info("DTOList >> {}", likeDTOList);
+        return likeDTOList;
+    }
+
+
+    @ResponseBody
+    @DeleteMapping("likeDel")
+    public int likeDel(@RequestBody LikeVO likeVO) {
+        log.info("lvo >>> {}",likeVO);
+        return msv.delLike(likeVO);
+    }
+
 
     @GetMapping("/tripList")
     public void tripList() {

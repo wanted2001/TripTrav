@@ -54,11 +54,15 @@
     </delete>
 
     <select id="getLikePlace" resultType="com.www.triptrav.domain.LikeVO">
-        select * from `like` where uno=#{uno}
+        select * from `like` where uno=#{uno} and type_id = #{typeId};
     </select>
 
     <select id="getRole">
         select sche_role from schedule_role where uno=#{uno} and sco=#{sco}
     </select>
+
+    <delete id="delLike">
+        delete from `like` where uno =#{uno} and like_code=#{likeCode} and type_id = #{typeId}
+    </delete>
 
 </mapper>

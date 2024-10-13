@@ -26,6 +26,7 @@ public class PlaceController {
     @PostMapping("/like")
     @ResponseBody
     public String addLike(@RequestBody LikeVO likeVO) {
+        likeVO.setTypeId(0);
         int isIn = lsv.addLike(likeVO);
         if(isIn > 0){
             return "success";

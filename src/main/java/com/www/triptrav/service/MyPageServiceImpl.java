@@ -78,12 +78,17 @@ public class MyPageServiceImpl implements MyPageService {
     }
 
     @Override
-    public List<LikeVO> getLikePlace(long uno) {
-        return myPageMapper.getLikePlace(uno);
+    public List<LikeVO> getLikePlace(LikeVO lvo) {
+        return myPageMapper.getLikePlace(lvo);
     }
 
     @Override
     public int getRole(ScheduleRoleVO srvo) {
         return myPageMapper.getRole(srvo);
+    }
+
+    @Override
+    public int delLike(LikeVO likeVO) {
+        return myPageMapper.delLike(likeVO);
     }
 }
