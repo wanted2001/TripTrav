@@ -479,9 +479,16 @@ async function displayReviews(result) {
         reviewInfoDiv.className = "review-info";
         const starHTML = convertRatingToStars(review.reRate);
 
-        // 신고 여부 확인 후 내용 설정
         const isReported = await reportList(review.rno);
-        if (isReported === "true") {
+        const reportCount = await getReportCount(review.rno);
+
+        // 블라인드 처리 조건
+        if (reportCount === "many") {
+            reviewWrapper.classList.add("blind-wrapper");
+            reviewInfoDiv.classList.add("blind-div");
+            reviewInfoDiv.innerHTML = `
+                <span class="reported">신고 누적으로 블라인드 처리된 게시물입니다.</span>`;
+        } else if (isReported === "true") {
             reviewWrapper.classList.add("blind-wrapper");
             reviewInfoDiv.classList.add("blind-div");
             reviewInfoDiv.innerHTML = `
@@ -496,9 +503,7 @@ async function displayReviews(result) {
                     <span class="reUseful">${review.reUseful}</span>
                     <img id="thumbsUp" src="${reviewDTO.isLiked ? '/dist/image/thumbs-click.svg' : '/dist/image/thumbs-up.svg'}" data-rno="${review.rno}" data-isLiked="${reviewDTO.isLiked}">
                 </button>
-                <button class="reportButton" data-rno="${review.rno}">
-                    <img src="/dist/image/alert-triangle.svg" class="reportImg">
-                </button>`;
+            `;
 
             // 사용자 리뷰 수정/삭제 버튼 추가
             if (typeof userNickname !== 'undefined' && userNickname !== null && review.nickname === userNickname) {
@@ -523,13 +528,21 @@ async function displayReviews(result) {
                     }
                 });
                 reviewInfoDiv.appendChild(deleteButton);
+            } else {
+                // 사용자가 작성한 리뷰가 아닌 경우에만 신고 버튼 추가
+                const reportButton = document.createElement("button");
+                reportButton.className = "reportButton";
+                reportButton.setAttribute("data-rno", review.rno);
+                reportButton.innerHTML = `<img src="/dist/image/alert-triangle.svg" class="reportImg">`;
+                reviewInfoDiv.appendChild(reportButton);
             }
         }
 
         const reviewDetailDiv = document.createElement("div");
         reviewDetailDiv.className = "review-detail";
 
-        if (isReported === "false") {
+        // 신고 상태에 따라 리뷰 내용을 숨김 처리
+        if (reportCount !== "many" && isReported !== "true") {
             reviewDetailDiv.innerHTML = `<p class="reviewContent">${review.reContent}</p>`;
             if (imagePaths && imagePaths.length > 0) {
                 const imageDiv = document.createElement("div");
@@ -551,6 +564,9 @@ async function displayReviews(result) {
         reviewContainer.appendChild(reviewWrapper);
     }
 }
+
+
+
 
 
 //신고처리
@@ -666,6 +682,19 @@ async function reportList(rno) {
         }
     } catch (error) {
         console.log(error);
+    }
+}
+//3번 이상 신고게시물 처리
+async function getReportCount(rno){
+    try{
+        const url = "/review/getReportCount/" + rno;
+        const option = {
+            method: 'GET',
+        };
+        const resp = await fetch(url, option);
+        return resp.text();
+    }catch (error) {
+        console.log(error)
     }
 }
 
@@ -1221,7 +1250,7 @@ async function deleteLike(uno, likeCode){
 
 /*
 
-메인 추천
+메인 추천 -> 처리함
 TourApi 상의 취향분석처리
 API 특정 태그들을 띄워준다
 ex) 자연 인문 문화
@@ -1279,7 +1308,5 @@ gpt api로 보내서 분석 및 비슷한 장소 추천 -> 받아오면 해당 �
 4. 소개 데이터가 다른경우가 있음(아마음식점인경우그런거같음)
 
 해야할것
-1. 리뷰 수정, 삭제 포인터달기
 2. 수정시 이미지처리
-3. 본인꺼는 신고버튼 삭제
 */
