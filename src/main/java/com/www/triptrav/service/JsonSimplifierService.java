@@ -27,7 +27,7 @@ public class JsonSimplifierService {
                 if (itemsNode.isArray()) {
                     for (JsonNode itemNode : itemsNode) {
                         String contenttypeid = itemNode.path("contenttypeid").asText();
-                        if ("12".equals(contenttypeid)||"14".equals(contenttypeid)||"15".equals(contenttypeid)) {
+                        if ("12".equals(contenttypeid)||"14".equals(contenttypeid)||"15".equals(contenttypeid)|| "39".equals(contenttypeid)) {
                             ObjectNode simplifiedItem = objectMapper.createObjectNode();
                             simplifiedItem.put("contentid", itemNode.path("contentid").asText());
                             simplifiedItem.put("contenttypeid", contenttypeid);
