@@ -163,25 +163,7 @@
             console.log({currentURL})
             const headerText = document.querySelectorAll('#header a'); // header 내의 <a> 요소 선택
 
-            if (currentURL.includes('/maps')) {
-                headerText.forEach(link => {
-                    link.style.color = 'black';
-                    link.style.setProperty('color', 'black', 'important');
-                    logo.style.filter = 'unset';
-                });
-                header.style.position = 'absolute';
-                header.style.width = '1440px';
-                header.style.margin = '0 auto';
-            } else if(currentURL.includes('/mypage')) {
-                headerText.forEach(link => {
-                    link.style.color = 'black';
-                    link.style.setProperty('color', 'black', 'important');
-                    logo.style.filter = 'unset';
-                });
-                header.style.position = 'absolute';
-                header.style.width = '1440px';
-                header.style.margin = '0 auto';
-            }else if(currentURL.includes('/taste')) {
+            if (currentURL.includes('/maps') || currentURL.includes('/mypage') || currentURL.includes('/taste') || currentURL.includes('/place')||currentURL.includes('/food')) {
                 headerText.forEach(link => {
                     link.style.color = 'black';
                     link.style.setProperty('color', 'black', 'important');
