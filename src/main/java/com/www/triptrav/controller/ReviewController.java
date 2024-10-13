@@ -1,10 +1,13 @@
 package com.www.triptrav.controller;
 
 import com.www.triptrav.domain.ReviewDTO;
+import com.www.triptrav.domain.ReviewReportVO;
 import com.www.triptrav.domain.ReviewVO;
 import com.www.triptrav.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -200,5 +203,24 @@ public class ReviewController {
     @ResponseBody
     public int getLikeCount(@PathVariable("rno")String rno){
         return rsv.getLikeCount(rno);
+    }
+
+    @PostMapping("/review/report")
+    @ResponseBody
+    public ResponseEntity<?> reportReview(@RequestBody ReviewReportVO reviewReportVO) {
+        int isIn = rsv.saveReport(reviewReportVO);
+        if(isIn > 0){
+            return ResponseEntity.ok("신고완료");
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("에러");
+    }
+    @GetMapping("/getReportList/{rno}/{unoNum}")
+    @ResponseBody
+    public String getReportList(@PathVariable("rno")long rno, @PathVariable("unoNum")long uno){
+        int isChecked = rsv.checkReport(rno, uno);
+        if(isChecked > 0){
+            return "true";
+        }
+        return "false";
     }
 }

@@ -1,5 +1,6 @@
 package com.www.triptrav.repository;
 
+import com.www.triptrav.domain.ReviewReportVO;
 import com.www.triptrav.domain.ReviewVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -37,5 +38,9 @@ public interface ReviewMapper {
     void removeAllImagePath(long rno);
 
     int getPlaceScore(String contentId);
+
+    int saveReport(ReviewReportVO reviewReportVO);
+
+    int checkReport(long rno, long uno);
 }
 
