@@ -192,11 +192,17 @@ async function fetchTourInfo(regionCode, contentTypeId = null) {
                         const noImageSrc = '/dist/image/noimage.jpg';
 
                         li.innerHTML = `
-                            <span class="infoTitle">${title}</span>
-                            <span class="infoType">${contentType}</span><br>
-                            <span class="infoAddr">${addr1}</span><br>
-                            <img src="${firstImage}" alt="No image available" onerror="this.onerror=null; this.src='${noImageSrc}'" />
-                            <hr>
+                            <div class="infoOutBox">
+                                <div class="infoLeft">
+                                    <span class="infoTitle">${title}</span>
+                                    <span class="infoType">${contentType}</span><br>
+                                    <span class="infoAddr">${addr1}</span><br>
+                                </div>
+                                <div class="infoRight">
+                                    <img src="${firstImage}" alt="No image available" onerror="this.onerror=null; this.src='${noImageSrc}'" />
+                                </div>
+                   
+                            </div>
                         `;
                         tourInfoList.appendChild(li);
                     });

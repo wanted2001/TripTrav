@@ -177,16 +177,16 @@ body {
 }
 
 #tourInfoList li{
-    width: 100%;
-    height: 220px;
-    border-radius: 5px;
+    width: 94%;
+    height: 150px;
+    padding: 10px;
 }
 
 #tourInfoList li:hover{
     cursor: pointer;
 }
 #tourInfoList img{
-    border-radius: 100px;
+    border-radius: 10px;
     width: 135px;
     height: 135px;
 }
@@ -195,4 +195,22 @@ body {
     font-family: LINESeedKR-Bd;
     font-size: 22px;
     color: black;
+}
+
+.infoOutBox{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    border-bottom: 1px solid gray;
+}
+.infoLeft{
+    width: 50%;
+    height: 100%;
+
+}
+.infoRight{
+    /* background-color: yellow; */
+    height: 100%;
+
 }
