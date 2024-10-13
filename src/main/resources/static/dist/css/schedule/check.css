@@ -46,7 +46,7 @@
 }
 .addPersonBtn {
     top: 213px;
-    z-index: 1000;
+    z-index: 100;
 }
 .memoModal, .companionModal {
     display: none;
@@ -180,9 +180,23 @@
 .editRole {
     transform: translate(553px, 72px);
 }
-
 .editRoleSave {
     transform: translate(436px, 71px);
+}
+.sadFace {
+    width: 45px;
+    margin: 145px auto 0;
+    display: block;
+    opacity: 0.6;
+}
+.noPeopleText {
+    margin: 25px auto;
+    font-family: 'LINESeedKR-Rg';
+    text-align: center;
+    color: gray;
+}
+.urlText {
+    font-size: 16px;
 }
 .companionUl {
     width: 64%;
@@ -336,14 +350,10 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
     height: 100px;
     padding-top: 23px;
 }
-.heart_area {
-    height: 100px;
-    padding-top: 25px;
-}
-.depth2_recomm:hover, .depth2_search:hover, .heart_area:hover{
+.depth2_recomm:hover, .depth2_search:hover{
     background: #ededed99;
 }
-.recomm_img, .depth2_search_img, .heart_img {
+.recomm_img, .depth2_search_img {
     float: left;
     width: 70px;
     height: 70px;
@@ -351,12 +361,12 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
     border-radius: 100px;
     margin-left: 15px;
 }
-.recomm_name, .depth2_search_name, .heart_name {
+.recomm_name, .depth2_search_name{
     font-family: 'LINESeedKR-Rg';
     width: 60%;
     padding: 13px 0 0 94px;
 }
-.recomm_addr, .depth2_search_addr, .heart_addr {
+.recomm_addr, .depth2_search_addr {
     font-family: 'LINESeedKR-Th';
     width: 63%;
     padding: 10px 0 0 94px;
@@ -375,7 +385,7 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
 .recomm_addBtn:hover,.depth2_search_addBtn:hover{
     background: #80808029;
 }
-.addPlanBtn, .heart_addBtn{
+.addPlanBtn{
     width: 27px;
     height: 27px;
     float: right;
@@ -474,6 +484,65 @@ button.depth2_searchBtn {
     transform: translate(-50%, -192%);
     opacity: 0.5;
 }
+
+.heart_area {
+    display: flex;
+    align-items: flex-start;
+    height: 100px;
+    padding-top: 25px;
+    position: relative;
+}
+
+.heart_img {
+    width: 70px;
+    height: 70px;
+    background: #e4e4e4;
+    border-radius: 100px;
+    margin-left: 15px;
+}
+
+.heart_name_cate {
+    width: 216px;
+    margin-left: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.heart_name {
+    font-family: 'LINESeedKR-Rg';
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.heart_cate {
+    font-family: 'LINESeedKR-Th';
+    font-size: 13px;
+    font-weight: bold;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.heart_addr {
+    font-family: 'LINESeedKR-Th';
+    font-size: 15px;
+    margin-top: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.heart_addBtn {
+    width: 27px;
+    height: 27px;
+    position: absolute;
+    right: 15px;
+    bottom: 10px;
+}
+
 /*.addPlanBtn {*/
 /*    float: right;*/
 /*    border: 1px solid gray;*/

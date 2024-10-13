@@ -13,8 +13,8 @@ public class ScheduleMemoServiceImpl implements ScheduleMemoService {
     private final ScheduleMemoMapper scheduleMemoMapper;
 
     @Override
-    public int insertMemoContent(String memo, long sco) {
-        return scheduleMemoMapper.insertMemoContent(memo, sco);
+    public int insertMemoContent(String memo, long sco, String nick) {
+        return scheduleMemoMapper.insertMemoContent(memo, sco, nick);
     }
 
     @Override
