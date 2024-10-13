@@ -735,6 +735,7 @@ textarea{
     display: block;
     font-size: 12px;
     transform: translate(32px, 36px);
+    margin-bottom: 40px;
 }
 
 .reportModalWrap label:nth-child(1){
@@ -747,7 +748,7 @@ form label{
 }
 
 input[type="radio"] {
-    appearance: none; /* 기본 스타일 제거 */
+    appearance: none;
     width: 17px;
     height: 17px;
     border: 2px solid #ccc;
@@ -809,4 +810,14 @@ input[type="radio"]:checked::before {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+.blind-div{
+    width: 880px;
+    height: 119px;
+    line-height: 119px;
+    text-align: center;
+}
+.blind-wrapper{
+    background-color: #e9e9e9;
+    opacity: 0.8;
 }

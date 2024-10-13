@@ -470,31 +470,38 @@ async function displayReviews(result) {
     for (const reviewDTO of result) {
         const review = reviewDTO.review;
         const imagePaths = reviewDTO.imagePaths;
-        let profileImgPath;
-        profileImgPath = await getUserProfile(review.uno);
+        let profileImgPath = await getUserProfile(review.uno);
+
         const reviewWrapper = document.createElement("div");
         reviewWrapper.className = "review-wrapper";
 
         const reviewInfoDiv = document.createElement("div");
         reviewInfoDiv.className = "review-info";
-
         const starHTML = convertRatingToStars(review.reRate);
-        reviewInfoDiv.innerHTML = `
-             <img class="profileImage" alt="noPic" src="${profileImgPath ? `/profile/${profileImgPath}` : '/dist/image/noimage.jpg'}">
-            <span class="nickName">${review.nickname}</span><br>
-            <span class="review-rating">${starHTML}</span>
-            <span class="regDate">${review.reDate}</span>
-            <button class="helpButton">
-                <span class="reUseful">${review.reUseful}</span>
-                <img id="thumbsUp" src="${reviewDTO.isLiked ? '/dist/image/thumbs-click.svg' : '/dist/image/thumbs-up.svg'}" data-rno="${review.rno}" data-isLiked="${reviewDTO.isLiked}">
-            </button>
-            <button class="reportButton">
-                <img src="/dist/image/alert-triangle.svg" class="reportImg">
-            </button>`;
 
-        // 사용자 리뷰 수정/삭제 버튼 처리 코드
-        if (typeof userNickname !== 'undefined' && userNickname !== null) {
-            if (review.nickname === userNickname) {
+        // 신고 여부 확인 후 내용 설정
+        const isReported = await reportList(review.rno);
+        if (isReported === "true") {
+            reviewWrapper.classList.add("blind-wrapper");
+            reviewInfoDiv.classList.add("blind-div");
+            reviewInfoDiv.innerHTML = `
+                <span class="reported">신고로 인해 블라인드된 리뷰입니다.</span>`;
+        } else {
+            reviewInfoDiv.innerHTML = `
+                <img class="profileImage" alt="noPic" src="${profileImgPath ? `/profile/${profileImgPath}` : '/dist/image/noimage.jpg'}">
+                <span class="nickName">${review.nickname}</span><br>
+                <span class="review-rating">${starHTML}</span>
+                <span class="regDate">${review.reDate}</span>
+                <button class="helpButton">
+                    <span class="reUseful">${review.reUseful}</span>
+                    <img id="thumbsUp" src="${reviewDTO.isLiked ? '/dist/image/thumbs-click.svg' : '/dist/image/thumbs-up.svg'}" data-rno="${review.rno}" data-isLiked="${reviewDTO.isLiked}">
+                </button>
+                <button class="reportButton" data-rno="${review.rno}">
+                    <img src="/dist/image/alert-triangle.svg" class="reportImg">
+                </button>`;
+
+            // 사용자 리뷰 수정/삭제 버튼 추가
+            if (typeof userNickname !== 'undefined' && userNickname !== null && review.nickname === userNickname) {
                 const modifyButton = document.createElement("img");
                 modifyButton.src = "/dist/image/edit-2.svg";
                 modifyButton.classList.add('modifyImg');
@@ -521,20 +528,22 @@ async function displayReviews(result) {
 
         const reviewDetailDiv = document.createElement("div");
         reviewDetailDiv.className = "review-detail";
-        reviewDetailDiv.innerHTML = `<p class="reviewContent">${review.reContent}</p>`;
 
-        if (imagePaths && imagePaths.length > 0) {
-            const imageDiv = document.createElement("div");
-            imageDiv.className = "review-images";
-            imagePaths.forEach(imagePath => {
-                const relativePath = imagePath.replace("C:\\userImage\\", "");
-                const img = document.createElement("img");
-                img.src = `/reviewImages/${relativePath}`;
-                img.alt = "리뷰 이미지";
-                img.classList.add('review-img');
-                imageDiv.appendChild(img);
-            });
-            reviewDetailDiv.appendChild(imageDiv);
+        if (isReported === "false") {
+            reviewDetailDiv.innerHTML = `<p class="reviewContent">${review.reContent}</p>`;
+            if (imagePaths && imagePaths.length > 0) {
+                const imageDiv = document.createElement("div");
+                imageDiv.className = "review-images";
+                imagePaths.forEach(imagePath => {
+                    const relativePath = imagePath.replace("C:\\userImage\\", "");
+                    const img = document.createElement("img");
+                    img.src = `/reviewImages/${relativePath}`;
+                    img.alt = "리뷰 이미지";
+                    img.classList.add('review-img');
+                    imageDiv.appendChild(img);
+                });
+                reviewDetailDiv.appendChild(imageDiv);
+            }
         }
 
         reviewWrapper.appendChild(reviewInfoDiv);
@@ -543,63 +552,125 @@ async function displayReviews(result) {
     }
 }
 
-//신고 모달
-document.addEventListener('click',(e)=>{
-    console.log(e.target)
-    if(e.target&&e.target.className==='reportImg'){
-        const modal = `
-                        <div class="reportModal">
-                            <div class="reportModalWrap">
-                                <button class="reportCloseBtn" onclick="closeReportModal()">&times;</button>
-                                <span>신고</span>
-                                <span>어떤 문제인가요?</span>
-                                <span>TripTrav에서 모든 내용에 대해 확인하므로 완벽히 들어맞지 않아도 괜찮습니다.</span>
-                                <span>허위 신고시에는 서비스 이용이 제한될 수 있습니다.</span>
-                                <form>
-                                    <label for="reportValue">
-                                        <input type="radio" name="reportValue" value="성적인 콘텐츠"> 성적인 콘텐츠
-                                    </label>
-                                    <label for="reportValue">
-                                        <input type="radio" name="reportValue" value="폭력적 또는 혐오스러운 콘텐츠"> 폭력적 또는 혐오스러운 콘텐츠
-                                    </label>
-                                    <label for="reportValue">
-                                        <input type="radio" name="reportValue" value="증오 또는 악의적인 콘텐츠"> 증오 또는 악의적인 콘텐츠
-                                    </label>
-                                    <label for="reportValue">
-                                        <input type="radio" name="reportValue" value="괴롭힘 또는 폭력"> 괴롭힘 또는 폭력
-                                    </label>
-                                    <label for="reportValue">
-                                        <input type="radio" name="reportValue" value="유해하거나 위험한 행위"> 유해하거나 위험한 행위
-                                    </label>
-                                    <label for="reportValue">
-                                        <input type="radio" name="reportValue" value="잘못된 정보"> 잘못된 정보
-                                    </label>
-                                    <label for="reportValue">
-                                        <input type="radio" name="reportValue" value="아동 학대"> 아동 학대
-                                    </label>
-                                    <label for="reportValue">
-                                        <input type="radio" name="reportValue" value="테러 조장"> 테러 조장
-                                    </label>
-                                    <label for="reportValue">
-                                        <input type="radio" name="reportValue" value="스팸 또는 혼동을 야기하는 콘텐츠"> 스팸 또는 혼동을 야기하는 콘텐츠
-                                    </label>
-                                    <label for="reportValue">
-                                        <input type="radio" name="reportValue"> 기타
-                                        <input type="text" class="etcText" placeholder="기타 사유를 입력해주세요.">
-                                    </label>
-                                    <button class="reportBtn" type="submit">신고하기</button>
-                                </form>
-                            </div>
-                        </div>`
-        document.querySelector('.report').innerHTML=modal;
-        document.querySelector('.report').style.display='flex'
-    }
-})
 
-function closeReportModal(){
-    console.log("닫힘버튼");
-    document.querySelector('.report').style.display='none'
+//신고처리
+document.addEventListener('click', (e) => {
+    if (e.target && e.target.className === 'reportImg') {
+        const rno = e.target.closest('.reportButton').dataset.rno;
+        const modal = `
+            <div class="reportModal">
+                <div class="reportModalWrap">
+                    <button class="reportCloseBtn" onclick="closeReportModal()">&times;</button>
+                    <span>신고</span>
+                    <span>어떤 문제인가요?</span>
+                    <span>TripTrav에서 모든 내용에 대해 확인하므로 완벽히 들어맞지 않아도 괜찮습니다.</span>
+                    <span>허위 신고시에는 서비스 이용이 제한될 수 있습니다.</span>
+                    <form id="reportForm">
+                        <input type="hidden" name="rno" value="${rno}">
+                        <label>
+                            <input type="radio" name="reportValue" value="성적인 콘텐츠"> 성적인 콘텐츠
+                        </label>
+                        <label>
+                            <input type="radio" name="reportValue" value="폭력적 또는 혐오스러운 콘텐츠"> 폭력적 또는 혐오스러운 콘텐츠
+                        </label>
+                        <label>
+                            <input type="radio" name="reportValue" value="증오 또는 악의적인 콘텐츠"> 증오 또는 악의적인 콘텐츠
+                        </label>
+                        <label>
+                            <input type="radio" name="reportValue" value="괴롭힘 또는 폭력"> 괴롭힘 또는 폭력
+                        </label>
+                        <label>
+                            <input type="radio" name="reportValue" value="유해하거나 위험한 행위"> 유해하거나 위험한 행위
+                        </label>
+                        <label>
+                            <input type="radio" name="reportValue" value="잘못된 정보"> 잘못된 정보
+                        </label>
+                        <label>
+                            <input type="radio" name="reportValue" value="아동 학대"> 아동 학대
+                        </label>
+                        <label>
+                            <input type="radio" name="reportValue" value="테러 조장"> 테러 조장
+                        </label>
+                        <label>
+                            <input type="radio" name="reportValue" value="스팸 또는 혼동을 야기하는 콘텐츠"> 스팸 또는 혼동을 야기하는 콘텐츠
+                        </label>
+                        <label>
+                            <input type="radio" name="reportValue" value="기타"> 기타
+                            <input type="text" class="etcText" name="etcReason" placeholder="기타 사유를 입력해주세요.">
+                        </label>
+                        <button class="reportBtn" type="submit">신고하기</button>
+                    </form>
+                </div>
+            </div>`;
+        document.querySelector('.report').innerHTML = modal;
+        document.querySelector('.report').style.display = 'flex';
+
+        const reportForm = document.getElementById('reportForm');
+        reportForm.addEventListener('submit', async function (event) {
+            event.preventDefault();
+            await submitReportForm();
+        });
+    }
+});
+
+function closeReportModal() {
+    document.querySelector('.report').style.display = 'none';
 }
+
+async function submitReportForm() {
+    const form = document.getElementById('reportForm');
+    const formData = new FormData(form);
+    const selectedReason = formData.get('reportValue');
+    const etcReason = formData.get('etcReason');
+    const report_reason = selectedReason === '기타' ? etcReason : selectedReason;
+
+    const reportData = {
+        rno: formData.get('rno'),
+        uno: unoNum,
+        reportReason: report_reason
+    };
+
+    try {
+        const response = await fetch('/review/report', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(reportData),
+        });
+
+        if (response.ok) {
+            alert('신고가 접수되었습니다.');
+            closeReportModal();
+            window.location.reload();
+        } else {
+            alert('신고 처리 중 문제가 발생했습니다.');
+        }
+    } catch (error) {
+        console.log(error)
+        alert('신고 처리 중 문제가 발생했습니다.');
+    }
+}
+//신고한 게시글은 로그인유저에게안보이기
+async function reportList(rno) {
+    try {
+        if (typeof unoNum !== 'undefined' && unoNum !== null) {
+            const url = "/review/getReportList/" + rno + "/" + unoNum;
+            const option = {
+                method: 'GET',
+            };
+            const resp = await fetch(url, option);
+            return resp.text();
+        } else {
+            return "false";
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+//신고횟수 3회이상이면 블라인드처리
 
 //좋아요 누름처리
 document.addEventListener('click', function(event) {
@@ -891,7 +962,6 @@ async function getPlaceScore(){
     }
 }
 
-
 //주변 관광지 조회 함수
 async function getNearBySights(mapx, mapy, radius) {
     try {
@@ -1125,6 +1195,9 @@ async function deleteLike(uno, likeCode){
     }
 }
 
+//신고처리
+
+
 //취향분석용 타이머
 // let viewingTime = 0;
 // let timer;
@@ -1206,10 +1279,7 @@ gpt api로 보내서 분석 및 비슷한 장소 추천 -> 받아오면 해당 �
 4. 소개 데이터가 다른경우가 있음(아마음식점인경우그런거같음)
 
 해야할것
-1.
-
-분석하기 눌러서 분석결과페이지 가면 태그들을 아코디언으로 숨겨서 선택된애는 active 처리
-그리고 다시 선택하면 다시분석하기 버튼 보여서 그페이지에서 새로 처리하는 방식
--> 장르코드로 보여주거나, ai 추천시에는 문제가안됨 하지만 성별,나이 관심관광지출력시 데이터의 정확도가떨어짐
-사용자입장에선 페이지자체를 이동하지않고 재분석받는게 편함
+1. 리뷰 수정, 삭제 포인터달기
+2. 수정시 이미지처리
+3. 본인꺼는 신고버튼 삭제
 */
