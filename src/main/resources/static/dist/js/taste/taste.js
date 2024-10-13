@@ -6,11 +6,17 @@ let selectedButtons = [...cnoList];
 //초기페이지
 document.querySelector('.tasteTitle').innerText = `${userNickname}님의 취향분석 결과`;
 
+const selectedTaste = document.querySelector('.selectedTaste');
+selectedTaste.innerHTML = ``;
+for(let tags of selectedButtons){
+    selectedTaste.innerHTML += `<span class="tags">#${changeCno(tags)}</span>`
+}
 //아코디언처리
 accordionButton.addEventListener('click', () => {
     accordionButton.classList.toggle('active');
     const tasteDiv = accordionButton.parentElement.nextElementSibling;
     tasteDiv.style.display = tasteDiv.style.display === 'block' ? 'none' : 'block';
+    selectedTaste.style.display = selectedTaste.style.display == 'none' ? 'block' : 'none';
 });
 
 // 초기 상태에 맞게 active 클래스 설정
@@ -89,7 +95,6 @@ function changeCno(cno) {
     }
     return null;
 }
-
 
 //나이대 변환 함수
 function getAgeGroup(age) {
@@ -202,11 +207,25 @@ Promise.all([
             const trendTitle = document.createElement('div');
             trendTitle.innerText = trendText;
             tasteUserList.insertBefore(trendTitle, tasteUserList.firstChild);
+            const tasteTags = document.createElement('div');
+            tasteTags.classList.add('tasteTags');
+            tasteUserList.insertBefore(tasteTags, trendTitle.nextSibling);
+
             trendData(result.age, result.gender).then(trend => {
                 const displayTasteUserList = document.querySelector('.displayTasteUserList');
                 displayTasteUserList.innerHTML = '';
+
                 const itemsToDisplay = [4, 3, 2, 1];
                 let displayCount = 0;
+                tasteTags.innerHTML = '';
+                for(let i=0; i<4; i++) {
+                    const trendCno = trend[i].cno;
+                    const tagText = changeCno(trendCno);
+                    const tagSpan = document.createElement('span');
+                    tagSpan.classList.add('trendTags');
+                    tagSpan.innerText = `#${tagText}`;
+                    tasteTags.appendChild(tagSpan);
+                }
                 for (let i = 0; i < itemsToDisplay.length && i < trend.length; i++) {
                     let trendCno = trend[i].cno;
                     let categoryCount = itemsToDisplay[i];
@@ -216,24 +235,25 @@ Promise.all([
                             (d.cat2 == matchedCategory.categoryCode || d.cat3 == matchedCategory.categoryCode)
                             && d.firstimage
                         ).sort(() => Math.random() - 0.5);
+
                         for (let displayData of filteredContent.slice(0, categoryCount)) {
                             const titleText = displayData.title;
                             if (displayData.contenttypeid == "15") {
                                 displayTasteUserList.innerHTML +=
                                     `<a href="https://www.google.com/search?q=${encodeURIComponent(displayData.title)}" target="_blank">
-                                <div class="oneTasteCode">
-                                    <img src="${displayData.firstimage}" alt="no image">
-                                    <span title="${titleText}">${titleText}</span>
-                                </div>
-                            </a>`;
+                            <div class="oneTasteCode">
+                                <img src="${displayData.firstimage}" alt="no image">
+                                <span title="${titleText}">${titleText}</span>
+                            </div>
+                        </a>`;
                             } else {
                                 displayTasteUserList.innerHTML +=
                                     `<a href="/place/${displayData.contentid}">
-                                <div class="oneTasteCode">
-                                    <img src="${displayData.firstimage}" alt="no image">
-                                    <span title="${titleText}">${titleText}</span>
-                                </div>
-                            </a>`;
+                            <div class="oneTasteCode">
+                                <img src="${displayData.firstimage}" alt="no image">
+                                <span title="${titleText}">${titleText}</span>
+                            </div>
+                        </a>`;
                             }
                         }
                         displayCount++;

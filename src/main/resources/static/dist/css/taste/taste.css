@@ -30,7 +30,7 @@ main {
     font-size: 18px;
     margin-top: 20px;
     margin-left: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .reTaste {
@@ -254,3 +254,35 @@ main {
     z-index: 9;
     pointer-events: none;
 }
+.selectedTaste{
+    margin-bottom: 30px;
+    margin-left: 12px;
+}
+.tasteTags{
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+.tags{
+    width: auto;
+    height: 20px;
+    border: none;
+    border-radius: 20px;
+    padding: 10px;
+    background-color: #f3f3f3;
+    margin-right: 15px;
+    font-family: LINESeedKR-Rg;
+    color: gray;
+}
+.trendTags{
+    width: auto;
+    height: 20px;
+    border: none;
+    border-radius: 20px;
+    padding: 10px;
+    background-color: #f3f3f3;
+    margin-right: 15px;
+    font-family: LINESeedKR-Rg;
+    color: gray;
+    font-size: 16px;
+}
+
