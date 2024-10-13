@@ -13,4 +13,5 @@ public class LikeDTO {
     private LikeVO like;
     private String firstImage;
     private long contentTypeId;
+    private String title;
 }

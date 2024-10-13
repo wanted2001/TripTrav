@@ -31,7 +31,9 @@ public interface MyPageMapper {
 
     int scheduleDelete(long sco);
 
-    List<LikeVO> getLikePlace(long uno);
+    List<LikeVO> getLikePlace(LikeVO lvo);
 
     int getRole(ScheduleRoleVO srvo);
+
+    int delLike(LikeVO likeVO);
 }

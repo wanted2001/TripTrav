@@ -12,4 +12,11 @@ public class PathVO {
     private long contentId;
     private String firstImage;
     private long contentTypeId;
+    private String title;
+
+    public PathVO(long contentid, String firstimage, long contenttypeid) {
+        this.contentId = contentid;
+        this.firstImage = firstimage;
+        this.contentTypeId = contenttypeid;
+    }
 }
