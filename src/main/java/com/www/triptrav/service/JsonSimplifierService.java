@@ -12,7 +12,7 @@ public class JsonSimplifierService {
 
     public static void main(String[] args) {
         String inputFilePath = "src/main/resources/static/dist/json/tourData.json";
-        String outputFilePath = "src/main/resources/static/dist/json/AITourData.json";
+        String outputFilePath = "src/main/resources/static/dist/json/planData.json";
         simplifyJson(inputFilePath, outputFilePath);
     }
 
@@ -35,6 +35,9 @@ public class JsonSimplifierService {
                             simplifiedItem.put("cat1", itemNode.path("cat1").asText());
                             simplifiedItem.put("cat2", itemNode.path("cat2").asText());
                             simplifiedItem.put("cat3", itemNode.path("cat3").asText());
+                            simplifiedItem.put("areacode", itemNode.path("areacode").asText());
+                            simplifiedItem.put("addr1", itemNode.path("addr1").asText());
+                            simplifiedItem.put("addr2", itemNode.path("addr2").asText());
                             simplifiedItem.put("title", itemNode.path("title").asText());
                             simplifiedItems.add(simplifiedItem);
                         }
