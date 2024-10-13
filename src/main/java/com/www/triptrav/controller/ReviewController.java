@@ -207,9 +207,11 @@ public class ReviewController {
 
     @PostMapping("/review/report")
     @ResponseBody
+    @Transactional
     public ResponseEntity<?> reportReview(@RequestBody ReviewReportVO reviewReportVO) {
         int isIn = rsv.saveReport(reviewReportVO);
         if(isIn > 0){
+            rsv.updateReportCount(reviewReportVO.getRno());
             return ResponseEntity.ok("신고완료");
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("에러");
@@ -222,5 +224,14 @@ public class ReviewController {
             return "true";
         }
         return "false";
+    }
+    @GetMapping("/getReportCount/{rno}")
+    @ResponseBody
+    public String getReportCount(@PathVariable("rno")long rno){
+        int count = rsv.getReportCount(rno);
+        if(count >= 3){
+            return "many";
+        }
+        return "ok";
     }
 }

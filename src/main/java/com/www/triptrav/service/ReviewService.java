@@ -39,5 +39,9 @@ public interface ReviewService {
     int saveReport(ReviewReportVO reviewReportVO);
 
     int checkReport(long rno, long uno);
+
+    void updateReportCount(long rno);
+
+    int getReportCount(long rno);
 }
 

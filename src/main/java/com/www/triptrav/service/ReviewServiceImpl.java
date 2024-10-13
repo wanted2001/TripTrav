@@ -102,4 +102,14 @@ public class ReviewServiceImpl implements ReviewService{
         return reviewMapper.checkReport(rno, uno);
     }
 
+    @Override
+    public void updateReportCount(long rno) {
+        reviewMapper.updateReportCount(rno);
+    }
+
+    @Override
+    public int getReportCount(long rno) {
+        return reviewMapper.getReportCount(rno);
+    }
+
 }
