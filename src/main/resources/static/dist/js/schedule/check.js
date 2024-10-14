@@ -7,7 +7,6 @@ window.addEventListener('click', (e) => {
     let date = e.target.getAttribute('data-date');
     if (sco && date) {
         getUserCourse(sco, date).then(result => {
-            console.log(result);
             let content = '';
             document.querySelector('.contentArea').innerHTML = '';
             result.forEach(key => {
@@ -46,7 +45,6 @@ window.addEventListener('click', (e) => {
 const days = document.querySelectorAll('.day');
 days.forEach(day => {
     day.addEventListener('click', (e) => {
-        console.log(e.target);
         days.forEach(d => {
             if (d !== e.target) {
                 d.classList.remove('day_focus');
@@ -56,9 +54,10 @@ days.forEach(day => {
         const date = e.target.getAttribute('data-date');
 
         getDatePlan(sco, date).then(r => {
-            console.log(r)
             if (r.length === 0) {
-                document.querySelector('.contentArea').innerHTML = `<div class="noPlanText"><span>생성된 일정이 없습니다.</span> 하단의 버튼으로 나만의 여행 일정을 만들어보세요!</div>`
+                document.querySelector('.noPlanText').classList.remove('hidden');
+            } else {
+                document.querySelector('.noPlanText').classList.add('hidden');
             }
         })
 
@@ -91,6 +90,22 @@ const editBtn = document.querySelector('.editBtn');
 document.addEventListener('DOMContentLoaded', () => {
     // initTmap();
 
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    getSchedule(sco).then(result=>{
+        const startDateStr = result.scheStart.substring(0,10);
+        const startDate = new Date(startDateStr);
+        startDate.setHours(0,0,0,0)
+        if(startDate<today){
+            console.log("일정이 지남!")
+            document.querySelector('.editBtn').classList.add('hidden');
+            document.querySelector('.disableEdit').classList.remove('hidden');
+
+        } else {
+            console.log("안지남!")
+        }
+    })
+
     getUserRole(unoNum, sco).then(result => {
         if (result.scheRole === 1) {
             editRole.classList.remove('hidden');
@@ -116,10 +131,22 @@ document.addEventListener('DOMContentLoaded', () => {
         slideItems = document.querySelectorAll('.slideItem');
         updateInnerSlideWidth();
         makeDot();
+        const checkScheElement = document.querySelector('.checkSche');
+
+        let scheduleText = '';
+        result.forEach((title, index) => {
+            scheduleText += title.scheTitle;
+            if (index !== result.length - 1) {
+                scheduleText += ' • ';
+            }
+        });
+
+        checkScheElement.textContent=scheduleText;
     })
     //일차별 일정출력
     if (sco) {
         getUserCourse(sco, 1).then(result => {
+            console.log(result)
             let content = '';
             result.forEach(key => {
                 content = `
@@ -879,11 +906,13 @@ function recommendData() {
                 recommDiv.innerHTML += `
                     <div class="recomm_img" style="background-image: url('${key.firstimage}'); background-position: center; background-repeat: no-repeat; background-size: cover"></div>
                     <div class="recomm_name_cate" data-id="${key.contentid}" onclick="locationPage(${key.contentid})">
-                        <span class="recomm_name">${key.title}</span>
-                        <span class="recomm_cate"></span>
+                        <div class="name_cate2">
+                            <span class="recomm_name">${key.title}</span>
+                            <span class="recomm_cate"></span>
+                        </div>
                         <span class="recomm_addr">${key.addr1}</span>
                     </div>
-                    <div class="recomm_addBtn" onclick="newPlanF(event)" style="background-image: url('/dist/image/plus-circle.svg'); background-size: cover; background-repeat: no-repeat; background-position: center"></div>`;
+                    <div class="recomm_addBtn" onclick="newPlan(event)" style="background-image: url('/dist/image/plus-circle.svg'); background-size: cover; background-repeat: no-repeat; background-position: center"></div>`;
 
                 document.querySelector('.depth2_recomm').appendChild(recommDiv);
 
@@ -908,9 +937,7 @@ function recommendData() {
                     .then(response => response.json())
                     .then(cate => {
                         const category = cate.find(c => c.categoryCode === key.cat3);
-                        if (category) {
-                            recommCate.innerHTML = key.cat1 === "A02" ? "인문 (문화,예술,역사) > " + category.categoryName : category.categoryName;
-                        }
+                        recommCate.innerHTML = key.cat1 === "A02" ? "인문 (문화,예술,역사) > " + category.categoryName : category.categoryName;
                     });
             } else {
                 const categoryName = getCategoryName(key.cat1);
@@ -992,6 +1019,7 @@ function baseSearch() {
                 if (area) {
                     const areaCode = area.areacode;
                     const url = `https://apis.data.go.kr/B551011/KorService1/areaBasedList1?MobileOS=ETC&MobileApp=TripTrav&_type=json&arrange=O&areaCode=${areaCode}&numOfRows=10&contentTypeId=12&serviceKey=${tourAPIKEY}`;
+                    // document.querySelector('.depth2_search_input_area').innerHTML=``;
 
                     getData(url).then(result => {
                         result.items.item.forEach(async (key) => {
@@ -1000,11 +1028,13 @@ function baseSearch() {
                             base.innerHTML = `
                                 <div class="search_img" style="background-image: url('${key.firstimage}'); background-position: center; background-repeat: no-repeat; background-size: cover"></div>
                                 <div class="search_name_cate" data-id="${key.contentid}" onclick="locationPage(${key.contentid})">
-                                    <span class="search_name">${key.title}</span>
-                                    <span class="search_cate"></span>
+                                    <div class="name_cate2">
+                                        <span class="search_name">${key.title}</span>
+                                        <span class="search_cate"></span>
+                                    </div>
                                     <span class="search_addr">${key.addr1}</span>
                                 </div>
-                                <div class="search_addBtn" onclick="newPlanF(event)" style="background-image: url('/dist/image/plus-circle.svg'); background-size: cover; background-repeat: no-repeat; background-position: center"></div>`;
+                                <div class="search_addBtn" onclick="newPlan(event)" style="background-image: url('/dist/image/plus-circle.svg'); background-size: cover; background-repeat: no-repeat; background-position: center"></div>`;
                             document.querySelector('.depth2_search_input_area').appendChild(base);
 
                             const searchCate = base.querySelector('.search_cate');
@@ -1057,6 +1087,7 @@ async function getCategoryName(key) {
 function search() {
     if (searchInput.value === '') {
         alert('검색어를 입력해주세요.');
+        baseSearch();
     } else {
         // 초기화
         document.querySelectorAll('.depth2_search_base').forEach(base => {
@@ -1083,11 +1114,13 @@ function search() {
                     searchDiv.innerHTML = `
                         <div class="search_result_img" style="background-image: url('${key.firstimage}'); background-position: center; background-repeat: no-repeat; background-size: cover"></div>
                         <div class="search_result_name_cate" data-id="${key.contentid}" onclick="locationPage(${key.contentid})">
-                            <span class="search_result_name">${key.title}</span>
-                            <span class="search_result_cate"></span>
+                            <div class="name_cate2">
+                                <span class="search_result_name">${key.title}</span>
+                                <span class="search_result_cate"></span>
+                            </div>
                             <span class="search_result_addr">${key.addr1}</span>
                         </div>
-                        <div class="search_result_addBtn" onclick="newPlanF(event)" style="background-image: url('/dist/image/plus-circle.svg'); background-size: cover; background-repeat: no-repeat; background-position: center"></div>`;
+                        <div class="search_result_addBtn" onclick="newPlan(event)" style="background-image: url('/dist/image/plus-circle.svg'); background-size: cover; background-repeat: no-repeat; background-position: center"></div>`;
 
                     document.querySelector('.searchResultDiv').appendChild(searchDiv);
 
@@ -1184,8 +1217,8 @@ const btnText = document.querySelector('.btnText');
 function newPlan(event) {
     if (btnText.innerText === '편집') {
         if (confirm('일정을 편집하시겠습니까?')) {
-            if (document.querySelector('.noPlanText')) {
-                document.querySelector('.contentArea').innerHTML = '';
+            if (!document.querySelector('.noPlanText').classList.contains('.hidden')) {
+                document.querySelector('.noPlanText').classList.add('hidden');
             }
             const deleteBtn = document.querySelectorAll('.deletePlan');
             const changeBtn = document.querySelectorAll('.changePlan');
@@ -1203,8 +1236,8 @@ function newPlan(event) {
             countTriangle();
         }
     } else {
-        if (document.querySelector('.noPlanText')) {
-            document.querySelector('.contentArea').innerHTML = '';
+        if (!document.querySelector('.noPlanText').classList.contains('.hidden')) {
+            document.querySelector('.noPlanText').classList.add('hidden');
         }
         editPlan(event);
         newPlanF(event);
@@ -1213,11 +1246,11 @@ function newPlan(event) {
 }
 
 function newPlanF(event) {
-    const searchDiv = event.target.closest('.depth2_search, .heart_area, .recomm_area, .depth2_search_base');
-    const contentId = searchDiv.querySelector('.depth2_search_name, .heart_name_cate, .recomm_name_cate, .search_name_cate').getAttribute('data-id');
-    const placeName = searchDiv.querySelector('.depth2_search_name, .heart_name, .recomm_name, .search_name').innerText
-    const placeAddress = searchDiv.querySelector('.depth2_search_addr, .heart_addr, .recomm_addr, .search_addr').innerText;
-    const placeCate = searchDiv.querySelector('.heart_cate, .recomm_cate, .search_cate').innerText;
+    const searchDiv = event.target.closest('.depth2_search_area, .heart_area, .recomm_area, .depth2_search_base');
+    const contentId = searchDiv.querySelector('.search_result_name_cate, .heart_name_cate, .recomm_name_cate, .search_name_cate').getAttribute('data-id');
+    const placeName = searchDiv.querySelector('.search_result_name, .heart_name, .recomm_name, .search_name').innerText
+    const placeAddress = searchDiv.querySelector('.search_result_addr, .heart_addr, .recomm_addr, .search_addr').innerText;
+    const placeCate = searchDiv.querySelector('.search_result_cate, .heart_cate, .recomm_cate, .search_cate').innerText;
 
     const existingLi = document.querySelector(`.contentArea li[data-id="${contentId}"]`);
     if(existingLi) {
@@ -1448,11 +1481,18 @@ function countTriangle() {
 
 //일정삭제
 function deletePlan(event) {
-    if (confirm("해당 일정을 삭제하시겠습니까?")) {
+    const liItems = document.querySelectorAll('.contentArea .oneContent');
+    if(liItems.length===1){
+        alert("일정은 최소 한 개 이상 있어야 합니다.");
+        return;
+    }
+
+    if (confirm("해당 일정을 삭제 하시겠습니까?")) {
         if (event.target.classList.contains('deletePlan')) {
             const li = event.target.closest('li');
             if (li) {
                 li.remove();
+                countTriangle();
             }
         }
     }
@@ -1559,11 +1599,13 @@ function getHeartData(){
                                 heartArea.innerHTML+=`
                                         <div class="heart_img" style="background-image: url('${imgUrl}'); background-position: center; background-repeat: no-repeat; background-size: cover"></div>
                                         <div class="heart_name_cate" data-id="${matchedItem.contentid}" onclick="locationPage(${matchedItem.contentid})">
-                                            <span class="heart_name">${matchedItem.title}</span>
-                                            <span class="heart_cate"></span>
+                                            <div class="name_cate2">
+                                                <span class="heart_name">${matchedItem.title}</span>
+                                                <span class="heart_cate"></span>
+                                            </div>
                                             <span class="heart_addr">${matchedItem.addr1}</span>
                                         </div>
-                                        <div class="heart_addBtn" onclick="newPlanF(event)" style="background-image: url('/dist/image/plus-circle.svg'); background-size: cover; background-repeat: no-repeat; background-position: center"></div>`
+                                        <div class="heart_addBtn" onclick="newPlan(event)" style="background-image: url('/dist/image/plus-circle.svg'); background-size: cover; background-repeat: no-repeat; background-position: center"></div>`
                                 depth2_heart.appendChild(heartArea);
 
                                 const heartCate = heartArea.querySelector('.heart_cate');
@@ -1650,9 +1692,21 @@ async function getUserRole(uno, sco) {
     }
 }
 
+//동행자 확인
 async function getCompanion(sco){
     try{
         const url = "/schedule/getCompanion/"+sco;
+        const config = {method:'get'};
+        const resp = await fetch(url, config);
+        return resp.json();
+    } catch (err){
+        console.log(err)
+    }
+}
+
+async function getSchedule(sco){
+    try{
+        const url = "/schedule/getSchedule/"+sco;
         const config = {method:'get'};
         const resp = await fetch(url, config);
         return resp.json();

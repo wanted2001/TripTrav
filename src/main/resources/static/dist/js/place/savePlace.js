@@ -17,29 +17,7 @@ function savePlace(event){
                             </div>
                         </div>`
         savePlaceModal.innerHTML=modal;
-        getUserSchedule(unoNum).then(result=>{
-            if(result.length>0){
-                result.forEach(r=>{
-                    const today = new Date();
-                    today.setHours(0,0,0,0);
-                    const scheStart = new Date(r.scheStart.substring(0,10))
-
-                    //현재날짜 기준으로 예정된 일정만 출력
-                    if(scheStart>=today){
-                        const div = `<div class="myPlaceInfo" data-sco="${r.sco}">
-                                                <img src="${r.scheImg}" class="placeFirstImg">
-                                                <div class="myPlaceName">${r.scheName}</div>
-                                                <div class="scheduleDuration">${r.scheStart.substring(0,10).replaceAll('-','.')} 
-                                                    ~ ${r.scheEnd.substring(0,10).replaceAll('-','.')}</div>
-                                                <button class="plusPlan">여행지 +</button>
-                                             </div>`;
-                        document.querySelector('.myPlanUl').innerHTML+=div;
-                    }
-                })
-            } else {
-                document.querySelector('.myPlanUl').innerHTML=`<div class="noPlanText">현재 예정된 일정이 없습니다.<span>새로운 일정을 생성해보세요!</span></div>`
-            }
-        })
+        displaySchedule();
     }
 }
 
@@ -54,6 +32,12 @@ function createPlan() {
             const jsonData = data.response.body.items.item[0];
             document.querySelector('.myPlan').innerHTML = '';
             const createPage = `<form id="tripForm" method="post">
+                                            <div class="myPlan">
+                                                <span>내 여행일정</span>
+                                            </div>
+                                            <div class="backBtn" onclick="backModal()">
+                                                <img src="/dist/image/chevron-leftB.svg">
+                                            </div>
                                             <div class="createPlan">
                                              <input class="createPlanName" placeholder="일정의 제목을 작성해주세요.">
                                              <div class="calendarArea">
@@ -178,6 +162,56 @@ async function getUserSchedule(uno){
     }
 }
 
+function displaySchedule(){
+    getUserSchedule(unoNum).then(result=>{
+        console.log(result.length);
+        if(result.length>0){
+            result.forEach(r=>{
+                const today = new Date();
+                today.setHours(0,0,0,0);
+                const scheStart = new Date(r.scheStart.substring(0,10))
+
+                //현재날짜 기준으로 예정된 일정만 출력
+                if(scheStart>=today){
+                    document.querySelector('.myPlanUl').innerHTML='';
+                    const div = `<div class="myPlaceInfo" data-sco="${r.sco}">
+                                                <img src="${r.scheImg}" class="placeFirstImg">
+                                                <div class="myPlaceName">${r.scheName}</div>
+                                                <div class="scheduleDuration">${r.scheStart.substring(0,10).replaceAll('-','.')} 
+                                                    ~ ${r.scheEnd.substring(0,10).replaceAll('-','.')}</div>
+                                                <button class="plusPlan">여행지 +</button>
+                                             </div>`;
+                    document.querySelector('.myPlanUl').innerHTML+=div;
+                } else {
+                    console.log("일정없음")
+                    document.querySelector('.savePlaceModal').innerHTML=`<div class="spModalWrap">
+                            <div class="spModalCloseBtn" onclick="closeModal()">&times;</div>
+                            <div class="myPlan">
+                                <span>내 여행일정</span>
+                                <ul class="myPlanUl">
+                                    <div class="noPlanText">현재 예정된 일정이 없습니다.<span>새로운 일정을 생성해보세요!</span></div>
+                                </ul>
+                                <button class="createPlanBtn" onclick="createPlan()">새로운 일정 생성하기</button>
+                            </div>
+                        </div>`
+                }
+            })
+        } else {
+            console.log("일정없음")
+            document.querySelector('.savePlaceModal').innerHTML=`<div class="spModalWrap">
+                            <div class="spModalCloseBtn" onclick="closeModal()">&times;</div>
+                            <div class="myPlan">
+                                <span>내 여행일정</span>
+                                <ul class="myPlanUl">
+                                    <div class="noPlanText">현재 예정된 일정이 없습니다.<span>새로운 일정을 생성해보세요!</span></div>
+                                </ul>
+                                <button class="createPlanBtn" onclick="createPlan()">새로운 일정 생성하기</button>
+                            </div>
+                        </div>`
+        }
+    })
+}
+
 document.addEventListener('click',(e)=>{
     if (e.target && e.target.classList.contains('plusPlan')) {
         if(confirm("해당 일정에 현재 장소를 추가하시겠습니까?")){
@@ -188,6 +222,10 @@ document.addEventListener('click',(e)=>{
         }
     }
 })
+
+function backModal(){
+    displaySchedule();
+}
 
 function addPlacePlan(sco, scheContentId, scheTitle){
     const newPlace = {

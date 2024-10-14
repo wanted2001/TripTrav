@@ -85,6 +85,17 @@ textarea{
     cursor: pointer;
 }
 
+.backBtn {
+    width: 20px;
+    position: absolute;
+    top: 6px;
+    left: 2px;
+    cursor: pointer;
+}
+.backBtn img{
+    width: 20px;
+}
+
 .myPlan {
     margin-top: 21px;
     font-family: 'LINESeedKR-Rg';
@@ -118,7 +129,7 @@ textarea{
 }
 
 .makePlan{
-    transform: translate(-225px, 219px);
+    transform: translate(-225px, 205px);
 }
 
 .createPlanBtn:hover, .create:hover ,.makePlan:hover{
