@@ -105,6 +105,7 @@ CREATE TABLE `like` (
 	`uno` bigint NOT NULL,
 	`like_code` bigint NOT NULL,
 	`like_name` text NOT NULL,
+	`type_id` int NOT NULL,
 	FOREIGN KEY (`uno`) REFERENCES `user`(`uno`)
 );
 
