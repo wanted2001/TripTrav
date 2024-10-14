@@ -4,7 +4,8 @@ var trip = document.querySelector(".wishTripDiv");
 
 tripCall(unoNum).then(data => {
     if (data.length === 0) {
-        place.appendChild(noChild("wishTrip"));
+        trip.appendChild(noChild("wishTrip"));
+        return;
     }
     console.log(data);
     data.forEach(likeList => {
@@ -58,7 +59,6 @@ var buttons = document.getElementsByTagName("button");
 //         }
 //     });
 // });
-
 
 async function delHandler(likeNum){
     const info ={

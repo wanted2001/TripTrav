@@ -1,6 +1,6 @@
 var urlParams = new URLSearchParams(window.location.search);
 // message=notAllowedNickName
-var messageVlaue = urlParams.get("message");
+var messageVlaue = urlParams.get("modal");
 console.log(messageVlaue);
 var locationValue = urlParams.get('location');
 const bottom = document.getElementById("resultMyPage");
@@ -17,8 +17,10 @@ const pwRegExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$
 let provider = "";
 
 pageCall(`${locationValue != null ? `/${locationValue}`: tripList}`);
-
 pageHover(`${locationValue != null ? `${locationValue}`: `tripList`}`);
+if(messageVlaue){
+    openUpdateModal();
+}
 
 isSocialUser(unoNum).then(data => {
     provider = `${data.provider}`;
@@ -106,7 +108,8 @@ document.getElementById("updateProfile").addEventListener("click", () => {
         updateUser(formData).then(result => {
             if (result === '1') {
                 alert("회원정보 수정 완료");
-                location.reload();
+                closeUpdateModal();
+                location.href = `/mypage?uno=${unoNum}`;
             } else {
                 alert("회원정보 수정 실패");
                 location.reload();

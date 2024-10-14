@@ -10,6 +10,7 @@ getReviewList(unoNum)
         if(data.length === 0){
             tripPlaceReviewList.appendChild(noChild("review"));
             tripFoodReviewList.appendChild(noChild("review"));
+            return;
         }
         data.forEach(datas => {
             const review = datas.review;
