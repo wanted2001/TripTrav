@@ -128,7 +128,6 @@
             if (url === "http://localhost:8099/") {
                 changeSearch();
             } else {
-                console.log("다른 페이지");
                 window.location.href = "http://localhost:8099/?search=true";
             }
         });
@@ -136,6 +135,7 @@
         function changeSearch() {
             document.querySelector('.mainText').style.display = 'none';
             document.querySelector('.mainBtnDiv').style.display = 'none';
+            document.querySelector('.tasteDiv').style.display = 'none';
             document.querySelector('.inputWrap').style.display = '';
         }
     </script>
@@ -161,8 +161,7 @@
             const header = document.getElementById('header');
             const logo = document.getElementById('logo');
             const currentURL = window.location.href;
-            console.log({currentURL})
-            const headerText = document.querySelectorAll('#header a'); // header 내의 <a> 요소 선택
+            const headerText = document.querySelectorAll('#header a');
 
             if (currentURL.includes('/maps') || currentURL.includes('/mypage') || currentURL.includes('/taste') || currentURL.includes('/place')||currentURL.includes('/food')) {
                 headerText.forEach(link => {
