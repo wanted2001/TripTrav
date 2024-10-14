@@ -23,7 +23,7 @@ main {
     border: none;
     border-radius: 10px;
     text-align: center;
-    width: 100px;
+    width: 110px;
     height: 40px;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -31,8 +31,12 @@ main {
     margin-top: 20px;
     margin-left: 10px;
     margin-bottom: 25px;
+    font-family: LINESeedKR-Rg;
+    line-height: 40px;
 }
-
+.openButton{
+    transform: translate(4px, 6px);
+}
 .reTaste {
     background-color: #eee;
     border: none;
@@ -256,7 +260,6 @@ main {
 }
 .selectedTaste{
     margin-bottom: 30px;
-    margin-left: 12px;
 }
 .tasteTags{
     margin-top: 10px;

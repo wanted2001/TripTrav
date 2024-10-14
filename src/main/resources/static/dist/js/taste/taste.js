@@ -288,4 +288,13 @@ async function trendData(age, gender){
         console.log(error);
     }
 }
-
+let open = false;
+document.querySelector('.accordion').addEventListener('click', ()=>{
+    if(open == true){
+        document.querySelector('.openButton').src = "/dist/image/chevron-down.svg";
+        open = false;
+    }else{
+        document.querySelector('.openButton').src = "/dist/image/chevron-up.svg";
+        open = true;
+    }
+})
