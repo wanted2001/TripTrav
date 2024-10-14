@@ -120,6 +120,7 @@
         </div>
     </div>
     <script src="/dist/js/loginJoin.js"></script>
+    <script src="/dist/js/header.js"></script>
     <script>
         let url = window.location.href;
 
@@ -179,21 +180,6 @@
                 });
             }
         }
-
-        // function changeHeaderColor() {
-        //     const header = document.getElementById('header');
-        //     const currentURL = window.location.href;
-
-        //     // URL에 따라 배경색 변경
-        //     if (currentURL.includes('/maps')) {
-        //         header.style.position = 'absolute';
-        //         header.style.backgroundColor = 'orange';
-        //         header.style.width = ' 1440px';
-        //         header.style.margin = '0 auto';
-        //     } else {
-        //         header.style.backgroundColor = ''; // 기본 배경색
-        //     }
-        // }
 
         // 페이지 로드 시 실행
         window.addEventListener('load', changeHeaderColor)
