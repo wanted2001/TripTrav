@@ -17,7 +17,7 @@ window.addEventListener('click', (e) => {
                     </div>
                     <div class="name_cate">
                         <span class="placeName"></span>
-                        <span class="placeCate">장소카테고리</span>
+                        <span class="placeCate"></span>
                     </div>
                     <div class="placeAddr"></div>
                     <div class="rate_count">
@@ -67,7 +67,6 @@ days.forEach(day => {
 let slideWrap = document.querySelector('.slideWrap');
 let innerSlide = document.querySelector('.innerSlide');
 let slideItems = document.querySelectorAll('.slideItem');
-console.log(slideItems.length);
 
 let pressed = false;
 let startPoint;
@@ -88,7 +87,6 @@ const editBtn = document.querySelector('.editBtn');
 
 document.addEventListener('DOMContentLoaded', () => {
     // initTmap();
-    console.log(slideItems.length);
 
     getUserRole(unoNum, sco).then(result => {
         console.log(result);
@@ -131,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <div class="name_cate">
                         <span class="placeName"></span>
-                        <span class="placeCate">장소카테고리</span>
+                        <span class="placeCate"></span>
                     </div>
                     <div class="placeAddr"></div>
                     <div class="rate_count">
@@ -164,23 +162,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     //메모여부확인
-    // getMemo(sco).then(r => {
-    //     const memoContents = document.querySelector('.memoContents');
-    //     saveMemo.removeEventListener('click', saveMemoF);
-    //     if (r) {
-    //         console.log("메모있음")
-    //         addMemoBtn.innerText = '메모확인';
-    //         memoContents.innerHTML = `${r.scheMemoContent}`;
-    //         memoContents.readOnly = true;
-    //         saveMemo.innerText = '확인';
-    //         saveMemo.addEventListener('click', () => {
-    //             memoModal.style.display = 'none'
-    //         });
-    //         memoWrap.innerHTML += `<button class="modifyMemo" onclick="modifyMemoContent()">수정</button>`
-    //     } else {
-    //         saveMemo.addEventListener('click', saveMemoF);
-    //     }
-    // });
+    getMemo(sco).then(r => {
+        const memoContents = document.querySelector('.memoContents');
+        saveMemo.removeEventListener('click', saveMemoF);
+        if (r) {
+            addMemoBtn.innerText = '메모확인';
+            memoContents.innerHTML = `${r.scheMemoContent}`;
+            memoContents.readOnly = true;
+            saveMemo.innerText = '확인';
+            saveMemo.addEventListener('click', () => {
+                memoModal.style.display = 'none'
+            });
+            memoWrap.innerHTML += `<button class="modifyMemo" onclick="modifyMemoContent()">수정</button>`
+        } else {
+            saveMemo.addEventListener('click', saveMemoF);
+        }
+    });
 
     //드래그 슬라이드 부분
     slideWrap.addEventListener('mousedown', e => {
@@ -327,8 +324,8 @@ function updateRole(uno, sco, roleValue){
 function openModal() {
     memoModal.style.display = 'flex';
 }
-function closeModal(modal) {
-    modal.style.display = 'none';
+function closeModal() {
+    memoModal.style.display = 'none';
 }
 
 //메모수정
@@ -353,7 +350,7 @@ function modifyMemoContent() {
                             alert("메모가 삭제되었습니다.")
                             document.querySelector('.modifyMemo').remove();
                             memoModal.style.display = 'none';
-                            location.reload();
+                            // location.reload();
                         }
                     })
             }
@@ -372,7 +369,7 @@ function modifyMemoContent() {
                         alert("메모 수정이 완료되었습니다.")
                         memoContent.readOnly = true;
                         isEditing = false;
-                        location.reload();
+                        // location.reload();
                         memoModal.style.display = 'flex';
                     } else {
                         alert("메모 수정에 오류가 발생했습니다.\n다시 시도해주세요.")
@@ -391,7 +388,7 @@ function saveMemoF() {
         document.querySelector('.memoContents').focus();
     } else {
         if (confirm('메모를 저장하시겠습니까?')) {
-            fetch(`/schedule/memo/${sco}`, {
+            fetch(`/schedule/memo/${sco}/${userNickname}`, {
                 method: 'post',
                 headers: {
                     'content-type': 'application/json'
@@ -403,7 +400,7 @@ function saveMemoF() {
                     console.log(data)
                     if (data === "1") {
                         alert("메모가 저장되었습니다!")
-                        location.reload();
+                        // location.reload();
                         memoModal.style.display = 'flex';
                     } else {
                         alert("메모 저장 중 오류가 발생했습니다. \n다시 시도해주세요.");
@@ -442,7 +439,7 @@ async function getSlideImg(key) {
     let addedLocations = new Set();
 
     const res = await getData(url)
-    console.log(res);
+    // console.log(res);
     res.items.item.forEach(img => {
         if (!addedLocations.has(img.contentid)) {
             innerSlide.innerHTML += `<div class="slideItem" style="background-image: url('${img.originimgurl}'); background-size: cover; background-position: center; background-repeat: no-repeat;"></div>`;
@@ -466,16 +463,55 @@ function initTmap() {
 
 //주소삽입
 function getAddr(key) {
-    const detailInfoUrl = `https://apis.data.go.kr/B551011/KorService1/detailCommon1?MobileOS=ETC&MobileApp=TripTrav&contentId=${key}&defaultYN=Y&firstImageYN=Y&areacodeYN=Y&catcodeYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&serviceKey=${tourAPIKEY}&_type=json`;
     const addrLi = document.querySelector(`li[data-id="${key}"] .placeAddr`);
     const titleLi = document.querySelector(`li[data-id="${key}"] .placeName`);
-    getData(detailInfoUrl).then(res => {
-        // console.log(res)
-        res.items.item.forEach(result => {
-            addrLi.innerHTML = `${result.addr1}`;
-            titleLi.innerHTML = `${result.title}`
+    const cateLi = document.querySelector(`li[data-id="${key}"] .placeCate`)
+
+    fetch('/dist/json/planData.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch JSON file");
+            }
+            return response.json();
         })
-    })
+        .then(jsonData => {
+            const result = jsonData.find(item => item.contentid == key);
+
+            if (result) {
+                addrLi.innerHTML = result.addr1;
+                titleLi.innerHTML = result.title;
+                if(result.cat1=="A02" || result.cat1=="AO1"){
+                    fetch('/dist/json/planCategory.json')
+                        .then(response=> response.json())
+                        .then(cate =>{
+                            const category = cate.find(item=>item.categoryCode == result.cat3)
+                            if(category){
+                                if(result.cat1=="A02"){
+                                    cateLi.innerHTML="인문 (문화,예술,역사) > ";
+                                }
+                                cateLi.innerHTML+=category.categoryName;
+                            }
+                        })
+                } else {
+                    if (result.cat1 == "A03") {
+                        cateLi.innerHTML = "레포츠";
+                    } else if (result.cat1 == "A04") {
+                        cateLi.innerHTML = "쇼핑";
+                    } else if (result.cat1 == "A05") {
+                        cateLi.innerHTML = "음식";
+                    } else if (result.cat1 == "B02") {
+                        cateLi.innerHTML = "숙박";
+                    } else {
+                        cateLi.innerHTML = "기타";
+                    }
+                }
+            } else {
+                console.log(`Content with id ${key} not found`);
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching the JSON file:", error);
+        });
 }
 
 //동행자 추가 모달
@@ -516,16 +552,17 @@ function checkPersonF() {
             console.log(data)
             if (data) {
                 companionModal.style.display = 'flex';
-                document.querySelector('.cmCloseBtn').onclick = () => {
-                    companionModal.style.display = 'none';
-                    document.querySelector('.companionUl').innerHTML='';
-                }
                 if (data.length > 0) {
                     data.sort((a, b) => a.uno - b.uno);
                     data.forEach(r => {
                         const li = `<li class="companionLi">${r.scheNick}</li>`
                         document.querySelector('.companionUl').innerHTML += li;
                     })
+                } else {
+                    document.querySelector('.editRole').classList.add('hidden');
+                    document.querySelector('.editRoleSave').classList.add('hidden');
+                    document.querySelector('.companionUl').innerHTML+=`<img src="/dist/image/face-sad-sweat.svg" class="sadFace">
+                            <div class="noPeopleText">여행을 함께하는 동행자가 없습니다. <span class="urlText">URL을 이용해 동행자를 초대해보세요!</span></div>`
                 }
             }
         })
@@ -534,6 +571,11 @@ function checkPersonF() {
 pmCloseBtn.addEventListener('click', () => {
     personModal.style.display = 'none';
 })
+
+function closeCmClose(){
+    companionModal.style.display='none';
+    document.querySelector('.companionUl').innerHTML='';
+}
 
 async function generateInviteUrl() {
     const response = await fetch("/invite", {
@@ -813,10 +855,6 @@ function search() {
                     </div>`;
                 })
 
-                //호버했을때 변환없음!
-
-
-
                 document.querySelector('.searchResultDiv').innerHTML = resultDiv;
 
                 if (totalCount > currentPage * itemsPage) {
@@ -932,6 +970,7 @@ function newPlanF(event) {
     const contentId = searchDiv.querySelector('.depth2_search_name, .heart_name').getAttribute('data-id');
     const placeName = searchDiv.querySelector('.depth2_search_name, .heart_name').innerText
     const placeAddress = searchDiv.querySelector('.depth2_search_addr, .heart_addr').innerText;
+    const placeCate = searchDiv.querySelector('.heart_cate').innerText;
 
     const existingLi = document.querySelector(`.contentArea li[data-id="${contentId}"]`);
     if(existingLi) {
@@ -947,7 +986,7 @@ function newPlanF(event) {
                             </div>
                             <div class="name_cate">
                                 <span class="placeName">${placeName}</span>
-                                <span class="placeCate"></span>
+                                <span class="placeCate">${placeCate}</span>
                             </div>
                             <div class="placeAddr">${placeAddress}</div>
                             <div class="rate_count">
@@ -1226,17 +1265,17 @@ async function getDatePlan(sco, date) {
     }
 }
 
-// async function getMemo(sco) {
-//     try {
-//         const url = "/schedule/getMemo/" + sco;
-//         const config = {method: 'post'}
-//         const response = await fetch(url, config);
-//         const result = await response.json();
-//         return result;
-//     } catch (err) {
-//         console.log(err);
-//     }
-// }
+async function getMemo(sco) {
+    try {
+        const url = "/schedule/getMemo/" + sco;
+        const config = {method: 'post'}
+        const response = await fetch(url, config);
+        const result = await response.json();
+        return result;
+    } catch (err) {
+        console.log(err);
+    }
+}
 
 async function getAllCourse(sco) {
     try {
@@ -1258,7 +1297,6 @@ function getHeartData(){
                 method:'get',
             }).then(response=>response.json())
                 .then(data=>{
-                    console.log(data)
                     const depth2_heart = document.querySelector('.depth2_heart');
                     depth2_heart.innerHTML='';
                     if(data.length>0){
@@ -1268,24 +1306,58 @@ function getHeartData(){
                             if(matchedItem) {
                                 const imgUrl = matchedItem.firstimage ?  matchedItem.firstimage : '/dist/image/noImage.jpg';
 
-                                depth2_heart.innerHTML+=`
-                                    <div class="heart_area">
-                                        <div class="heart_img" style="background-image: url('${imgUrl}'); background-position: center; background-repeat: no-repeat; background-size: cover"></div>
-                                        <div class="heart_name" data-id="${matchedItem.contentid}">${matchedItem.title}</div>
-                                        <div class="heart_addr">${matchedItem.addr1}</div>
-                                        <div class="heart_addBtn" onclick="newPlanF(event)" style="background-image: url('/dist/image/plus-circle.svg'); background-size: cover; background-repeat: no-repeat; background-position: center"></div>
-                                    </div>`
+                                const heartArea = document.createElement('div');
+                                heartArea.classList.add('heart_area');
 
-                                const heart_addBtn = document.querySelectorAll('.heart_addBtn');
-                                heart_addBtn.forEach(btn=>{
-                                    btn.addEventListener('mouseover', () => {
-                                        btn.style.backgroundImage = "url('/dist/image/plus-circle-back.svg')";
-                                        btn.style.cursor='pointer';
-                                    });
-                                    btn.addEventListener('mouseout', () => {
-                                        btn.style.backgroundImage = "url('/dist/image/plus-circle.svg')";
-                                    });
-                                })
+                                heartArea.innerHTML+=`
+                                        <div class="heart_img" style="background-image: url('${imgUrl}'); background-position: center; background-repeat: no-repeat; background-size: cover"></div>
+                                        <div class="heart_name_cate" data-id="${matchedItem.contentid}">
+                                            <span class="heart_name">${matchedItem.title}</span>
+                                            <span class="heart_cate"></span>
+                                            <span class="heart_addr">${matchedItem.addr1}</span>
+                                        </div>
+                                        <div class="heart_addBtn" onclick="newPlanF(event)" style="background-image: url('/dist/image/plus-circle.svg'); background-size: cover; background-repeat: no-repeat; background-position: center"></div>`
+                                depth2_heart.appendChild(heartArea);
+
+                                const heartCate = heartArea.querySelector('.heart_cate');
+                                const heartAddBtn = heartArea.querySelector('.heart_addBtn');
+
+                                // Category logic
+                                console.log(matchedItem.cat1);
+                                if (matchedItem.cat1 == "A02" || matchedItem.cat1 == "A01") {
+                                    fetch('/dist/json/planCategory.json')
+                                        .then(response => response.json())
+                                        .then(cate => {
+                                            const category = cate.find(c => c.categoryCode == matchedItem.cat3);
+                                            if (category) {
+                                                if (matchedItem.cat1 == "A02") {
+                                                    heartCate.innerHTML = "인문 (문화,예술,역사) > " + category.categoryName;
+                                                } else {
+                                                    heartCate.innerHTML = category.categoryName;
+                                                }
+                                            }
+                                        });
+                                } else {
+                                    if (matchedItem.cat1 == "A03") {
+                                        heartCate.innerHTML = "레포츠";
+                                    } else if (matchedItem.cat1 == "A04") {
+                                        heartCate.innerHTML = "쇼핑";
+                                    } else if (matchedItem.cat1 == "A05") {
+                                        heartCate.innerHTML = "음식";
+                                    } else if (matchedItem.cat1 == "B02") {
+                                        heartCate.innerHTML = "숙박";
+                                    } else {
+                                        heartCate.innerHTML = "기타";
+                                    }
+                                }
+
+                                heartAddBtn.addEventListener('mouseover', () => {
+                                    heartAddBtn.style.backgroundImage = "url('/dist/image/plus-circle-back.svg')";
+                                    heartAddBtn.style.cursor = 'pointer';
+                                });
+                                heartAddBtn.addEventListener('mouseout', () => {
+                                    heartAddBtn.style.backgroundImage = "url('/dist/image/plus-circle.svg')";
+                                });
                             }
                         });
                     } else {
@@ -1299,7 +1371,6 @@ function getHeartData(){
 
         })
 }
-
 
 async function generateInviteUrl(sco, unoNum) {
     const response = await fetch("/schedule/generateInviteUrl", {
@@ -1354,9 +1425,10 @@ async function getCompanion(sco){
 //마지막 장소 기반으로 추천 여행지 출력, 검색 기본값 출력
 //일정전체적인 지역코드 저장 => 검색시 그 지역코드 기반으로 출력
 //스케줄좍좍부분에 뭐넣을지
-//장소카테고리 넣어야함!
+//장소카테고리 넣어야함!**
 //dot 하단 길이 조절 필요
 //이미지 없는 장소 forEach 못돌아서 오류남(getSlideImg 함수)
 //일정 수정 후 저장 alert 두번뜸
 //맨위 index는 ^버튼 삭제, 맨아래 index는 v버튼 삭제
 //날짜지난일정은 메모, 동행자, 편집버튼 전부 삭제
+//이름 점처리

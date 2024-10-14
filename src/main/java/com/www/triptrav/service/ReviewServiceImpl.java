@@ -1,5 +1,6 @@
 package com.www.triptrav.service;
 
+import com.www.triptrav.domain.ReviewReportVO;
 import com.www.triptrav.domain.ReviewVO;
 import com.www.triptrav.repository.ReviewMapper;
 import lombok.RequiredArgsConstructor;
@@ -89,6 +90,26 @@ public class ReviewServiceImpl implements ReviewService{
     @Override
     public int getPlaceScore(String contentId) {
         return reviewMapper.getPlaceScore(contentId);
+    }
+
+    @Override
+    public int saveReport(ReviewReportVO reviewReportVO) {
+        return reviewMapper.saveReport(reviewReportVO);
+    }
+
+    @Override
+    public int checkReport(long rno, long uno) {
+        return reviewMapper.checkReport(rno, uno);
+    }
+
+    @Override
+    public void updateReportCount(long rno) {
+        reviewMapper.updateReportCount(rno);
+    }
+
+    @Override
+    public int getReportCount(long rno) {
+        return reviewMapper.getReportCount(rno);
     }
 
 }
