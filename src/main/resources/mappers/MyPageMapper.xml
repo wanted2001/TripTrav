@@ -62,7 +62,7 @@
     </select>
 
     <delete id="delLike">
-        delete from `like` where uno =#{uno} and like_code=#{likeCode} and type_id = #{typeId}
+        delete from `like` where uno =#{uno} and like_code=#{likeCode}
     </delete>
 
 </mapper>

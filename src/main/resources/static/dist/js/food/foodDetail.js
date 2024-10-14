@@ -54,7 +54,7 @@ fetch(foodCommonUrl)
             imageUrls.push(...result);
             console.log(result);
             if(result.length === 0){
-
+                return;
             }
             updateImages();
         });

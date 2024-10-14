@@ -63,9 +63,9 @@ courseCall(currentPage).then(re => {
 
 // 스크롤 이벤트 핸들러 추가
 window.addEventListener('scroll', () => {
-    console.log("스크롤");
-    console.log(this.innerHeight);
-    console.log(this.scrollY);
+    // console.log("스크롤");
+    // console.log(this.innerHeight);
+    // console.log(this.scrollY);
     if (this.innerHeight + this.scrollY >= !isLoading) {
         isLoading = true; // 중복 로드를 방지
         courseCall(currentPage).then(re => {
