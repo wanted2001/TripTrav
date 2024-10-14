@@ -10,6 +10,7 @@ likeCall(unoNum).then(data => {
     if (data.length === 0) {
         place.appendChild(noChild("wishPlace"));
         document.querySelector(".cateBtn").style.display = "none";
+        return;
     }
     data.forEach(likeList => {
         let type = `${likeList.contentTypeId}`;
