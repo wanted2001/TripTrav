@@ -28,8 +28,6 @@ public class TripController {
     @GetMapping("/courseCall")
     public List<PathVO> goCourseCall(){
         List<PathVO> pathVOList = psv.loadServeList();
-        log.info("goCourseCall");
-        log.info("pathVOList >>{}", pathVOList);
         return psv.loadServeList();
     }
 
