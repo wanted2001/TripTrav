@@ -22,7 +22,7 @@
             <img src="/dist/image/send.svg">
             <p class="checkName"></p>
             <p class="checkDate"></p>
-            <p class="checkSche">스케줄쫙쫙.. 작성</p>
+            <p class="checkSche"></p>
         </div>
         <div class="addMemoBtn" onclick="openModal()">메모추가 +</div>
         <div class="memoModal">
@@ -77,8 +77,14 @@
                 </div>
                 <div class="editBtn btnText hidden">편집</div>
                 <div class="disableEdit hidden"></div>
+                <div class="noPlanText hidden">
+                    <img src="/dist/image/sad-tear.svg">
+                    생성된 일정이 없습니다.<span>하단의 버튼으로 나만의 여행 일정을 만들어보세요!</span>
+                </div>
                 <ul class="contentArea"></ul>
-                <div class="addPlan" onclick="clickAddPlan()">여행지 추가 + </div>
+                <div class="addArea">
+                    <div class="addPlan" onclick="clickAddPlan()">여행지 추가 + </div>
+                </div>
             </div>
             <div class="mapContentBox2Depth hidden">
                 <ul class="depth2_ul">
