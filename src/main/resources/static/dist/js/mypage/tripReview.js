@@ -7,28 +7,28 @@ getReviewList(unoNum)
     .then(data => {
         let tripPlaceNum =0;
         let tripFoodNum = 0;
-        console.log(data);
         if(data.length === 0){
             tripPlaceReviewList.appendChild(noChild("review"));
             tripFoodReviewList.appendChild(noChild("review"));
+            return;
         }
         data.forEach(datas => {
             const review = datas.review;
             const imagePaths = datas.imagePaths;
             if (!imagePaths || imagePaths.length === 0) {
-                console.log("이미지 경로가 없습니다.");
             } else {
                 // console.log(imagePaths);
             }
+            var type = `${review.reContentType}`;
             const li = document.createElement("li");
             const div = document.createElement("div");
             div.classList.add("tripCard");
             div.innerHTML = `
-                <div class="reviewPlaceMain"><img src="${datas.firstImage}" class="reviewMain"></div>
+                <div class="reviewPlaceMain"><img src="${datas.firstImage ? `${datas.firstImage}` : `/dist/image/noimage.jpg`}"  class="reviewMain"></div>
                 <div class="tripReviewImgDiv"></div>
                 <div class="tripReviewInfo">
                     <ul class="tripReviewUl">
-                        <li><h3 class="reviewPlaceName">${review.reContentName}</h3></li>
+                        <li><a href="${locationfind(type)}${review.reContentId}"><h3 class="reviewPlaceName">${review.reContentName}</h3></a></li>
                         <li><p class="reviewRating">${convertRatingToStars(`${review.reRate}`)}</p></li>
                         <li><p class="reviewRegDate">${changeDate(`${review.reDate}`)}</p></li>
                         <li><p class="reviewContent">${review.reContent}</p></li>
@@ -48,9 +48,11 @@ getReviewList(unoNum)
                 image.src = `/reviewImages/${changeSrc}`; // 이미지 경로 설정
                 imageDiv.appendChild(image); // 현재 이미지 div에 이미지 추가
             });
+
             li.appendChild(div);
+
             switch (review.reContentType) {
-                case 12:
+                case 12 || 14:
                     tripFoodReviewList.appendChild(li);
                     tripFoodNum++;
                     break;

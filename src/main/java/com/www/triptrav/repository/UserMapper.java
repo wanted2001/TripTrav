@@ -2,7 +2,9 @@ package com.www.triptrav.repository;
 
 import com.www.triptrav.domain.AuthVO;
 import com.www.triptrav.domain.UserVO;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -41,4 +43,10 @@ public interface UserMapper {
     int addAdditionalInfo(UserVO uvo);
 
     boolean checkAdditionalInfo(long unoNum);
+
+    UserVO getUvo(long unoNum);
+
+    int getUserCount();
+
+    void insertUser(UserVO user);
 }

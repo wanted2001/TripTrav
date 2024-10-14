@@ -59,4 +59,16 @@
     <delete id="removeAllImagePath">
         delete from review_image where rno = #{rno}
     </delete>
+    <insert id="saveReport">
+        insert into review_report(rno, uno, report_reason) values (#{rno}, #{uno}, #{reportReason})
+    </insert>
+    <select id="checkReport" resultType="int">
+        select count(*) from review_report where rno = #{rno} and uno = #{uno}
+    </select>
+    <update id="updateReportCount">
+        update review set re_report = re_report+1 where rno = #{rno}
+    </update>
+    <select id="getReportCount" resultType="int">
+        select re_report from review where rno = #{rno}
+    </select>
 </mapper>

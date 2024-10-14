@@ -60,7 +60,6 @@ public class MyPageServiceImpl implements MyPageService {
         } else {
             isOk = myPageMapper.userComYPw(userVO);  // 비밀번호 포함 업데이트
         }
-
         return isOk;
     }
 
@@ -75,7 +74,21 @@ public class MyPageServiceImpl implements MyPageService {
     public int scheduleDelete(long sco) {
         int isOk = 0;
         isOk = myPageMapper.scheduleDelete(sco);
-        log.info("isOk = {}", isOk);
         return isOk;
+    }
+
+    @Override
+    public List<LikeVO> getLikePlace(LikeVO lvo) {
+        return myPageMapper.getLikePlace(lvo);
+    }
+
+    @Override
+    public int getRole(ScheduleRoleVO srvo) {
+        return myPageMapper.getRole(srvo);
+    }
+
+    @Override
+    public int delLike(LikeVO likeVO) {
+        return myPageMapper.delLike(likeVO);
     }
 }

@@ -52,4 +52,14 @@
         FROM user
         WHERE uno = #{uno}
     </select>
+    <select id="getUvo" resultType="com.www.triptrav.domain.UserVO">
+        select * from user where uno = #{uno}
+    </select>
+    <select id="getUserCount" resultType="int">
+        SELECT COUNT(*) FROM user
+    </select>
+    <insert id="insertUser" parameterType="com.www.triptrav.domain.UserVO" useGeneratedKeys="true" keyProperty="uno">
+        INSERT INTO user (email, nickname, age, gender)
+        VALUES (#{email}, #{nickname}, #{age}, #{gender})
+    </insert>
 </mapper>

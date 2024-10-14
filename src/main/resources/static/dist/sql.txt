@@ -105,22 +105,22 @@ CREATE TABLE `like` (
 	`uno` bigint NOT NULL,
 	`like_code` bigint NOT NULL,
 	`like_name` text NOT NULL,
+	`type_id` int NOT NULL,
 	FOREIGN KEY (`uno`) REFERENCES `user`(`uno`)
 );
 
 CREATE TABLE `category` (
-    `category_id` int AUTO_INCREMENT PRIMARY KEY,
+    `cno` int AUTO_INCREMENT PRIMARY KEY,
     `category_code` VARCHAR(255) NOT NULL,
     `category_name` VARCHAR(255) NOT NULL,
     UNIQUE (`category_code`, `category_name`)
 );
 
 CREATE TABLE `taste` (
-    `tno` bigint AUTO_INCREMENT PRIMARY KEY,
     `uno` bigint NOT NULL,
-    `category_id` int NOT NULL,
+    `cno` int NOT NULL,
     FOREIGN KEY (`uno`) REFERENCES `user`(`uno`),
-    FOREIGN KEY (`category_id`) REFERENCES `category`(`category_id`)
+    FOREIGN KEY (`cno`) REFERENCES `category`(`cno`)
 );
 
 
@@ -148,7 +148,7 @@ insert into category(`category_code`, `category_name`) values("A02010100", "고�
 insert into category(`category_code`, `category_name`) values("A02020200", "관광단지");
 insert into category(`category_code`, `category_name`) values("A02020600", "테마공원");
 insert into category(`category_code`, `category_name`) values("A02030200", "전통체험");
-insert into category(`category_code`, `category_name`) values("A02030300", "산사체험");
+insert into category(`category_code`, `category_name`) values("A02080500", "전시회");
 insert into category(`category_code`, `category_name`) values("A02030400", "이색체험");
 insert into category(`category_code`, `category_name`) values("A02030600", "이색거리");
 insert into category(`category_code`, `category_name`) values("A0205", "건축/조형물");

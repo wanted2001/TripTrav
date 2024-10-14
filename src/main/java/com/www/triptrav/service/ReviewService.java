@@ -1,5 +1,6 @@
 package com.www.triptrav.service;
 
+import com.www.triptrav.domain.ReviewReportVO;
 import com.www.triptrav.domain.ReviewVO;
 
 import java.util.List;
@@ -34,5 +35,13 @@ public interface ReviewService {
     void removeAllImagePath(long rno);
 
     int getPlaceScore(String contentId);
+
+    int saveReport(ReviewReportVO reviewReportVO);
+
+    int checkReport(long rno, long uno);
+
+    void updateReportCount(long rno);
+
+    int getReportCount(long rno);
 }
 

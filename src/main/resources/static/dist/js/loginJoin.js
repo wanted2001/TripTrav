@@ -54,7 +54,6 @@
                 } else if (page === 'findPw') {
                     script.src = '/dist/js/user/findPw.js';
                 }
-
                 document.body.appendChild(script);
             })
             .catch(error => {
@@ -62,4 +61,5 @@
             });
     }
 })();
+
 

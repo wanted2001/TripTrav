@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/schedule/*")
@@ -32,6 +33,7 @@ public class ScheduleController {
     private final ScheduleMemoService smsv;
     private final ScheduleCompanionService scsv;
     private final UserService usrv;
+    private final LikeService lsv;
 
     @Value("${invite.secret-key}")
     private String secretKey;
@@ -119,16 +121,16 @@ public class ScheduleController {
         return scheDVO;
     }
 
-    @PostMapping("/memo/{sco}")
+    @PostMapping("/memo/{sco}/{userNickname}")
     @ResponseBody
     @Transactional
-    public String saveMemo(@PathVariable("sco") long sco, @RequestBody String memo) {
+    public String saveMemo(@PathVariable("sco") long sco, @PathVariable("userNickname") String nick, @RequestBody String memo) {
         int isOk = ssv.insertMemo(1, sco);
         int memoResult = 0;
         memo = memo.substring(1, memo.length() - 1);
         log.info("memo :{}", memo);
         if (isOk > 0) {
-            memoResult = smsv.insertMemoContent(memo, sco);
+            memoResult = smsv.insertMemoContent(memo, sco, nick);
         }
         return memoResult > 0 ? "1" : "0";
     }
@@ -244,6 +246,7 @@ public class ScheduleController {
     @ResponseBody
     public ScheduleRoleVO getUserRole(@PathVariable long uno, @PathVariable long sco) {
         ScheduleRoleVO result = srsv.checkScheduleRole(uno, sco);
+        log.info("userRoleResult : {}", result);
         return result;
     }
 
@@ -278,6 +281,34 @@ public class ScheduleController {
     public List<ScheduleCompanionVO> getCompanion(@PathVariable long sco){
         List<ScheduleCompanionVO> scVOList = scsv.getCompanionList(sco);
         return scVOList!=null ? scVOList : Collections.emptyList();
+    }
+
+    @GetMapping("/getLikeList/{unoNum}")
+    @ResponseBody
+    public List<LikeVO> getLikeList(@PathVariable long unoNum){
+        List<LikeVO> like = lsv.getLikeList(unoNum);
+        return like!=null ? like : Collections.emptyList();
+    }
+
+    @PostMapping("/updateRole/{uno}/{sco}")
+    @ResponseBody
+    public String updateRole(@PathVariable long uno, @PathVariable long sco, @RequestBody Map<String, Object> role) {
+        int roleValue = (int) role.get("role");
+        log.info("roleValue {}", roleValue);
+        int isOk = srsv.updateRole(uno,sco,roleValue);
+        return isOk>0?"1":"0";
+    }
+
+    @DeleteMapping("/deleteCompanion/{sco}/{uno}")
+    @ResponseBody
+    public String deleteCompanion(@PathVariable long sco, @PathVariable long uno) {
+        int isOk = srsv.deleteRole(sco, uno);
+        log.info("delete isOk : {}", isOk);
+        if(isOk>0) {
+            int isOk2 = scsv.deleteCompanion(sco, uno);
+            return isOk2>0?"1":"0";
+        }
+        return "-1";
     }
 
 }

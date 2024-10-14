@@ -10,4 +10,8 @@
     <select id="getCompanionList" resultType="com.www.triptrav.domain.ScheduleCompanionVO">
         select * from schedule_companion where sco=${sco}
     </select>
+
+    <delete id="deleteCompanion">
+        delete from schedule_companion where uno=#{uno} and sco=#{sco}
+    </delete>
 </mapper>

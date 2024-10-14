@@ -47,21 +47,24 @@ public class MyPageController {
     @ResponseBody
     @GetMapping("/scheduleCall")
     public List<ScheduleDTO> scheduleCall(@RequestParam long uno) {
-        log.info("scheduleCall uno = {}", uno);
         List<ScheduleVO> scheList = msv.scheduleCall(uno);
         List<ScheduleDTO> scheduleDTOList = new ArrayList<>();
         for (ScheduleVO svo : scheList) {
             ScheduleDTO scheDTO = new ScheduleDTO();
             ScheduleDetailVO sdvo = msv.getScheduleDetail(svo.getSco());
+            ScheduleRoleVO srvo = new ScheduleRoleVO(
+                    svo.getSco(),
+                    uno);
+            int roleNum = msv.getRole(srvo);
             scheDTO.setSco(svo.getSco());
             scheDTO.setScheName(svo.getScheName());
             scheDTO.setScheStart(svo.getScheStart());
             scheDTO.setScheEnd(svo.getScheEnd());
             scheDTO.setScheTitle(sdvo.getScheTitle());
             scheDTO.setScheImg(svo.getScheImg());
+            scheDTO.setScheRole(roleNum);
             scheduleDTOList.add(scheDTO);
         }
-        log.info("scheduleCall scheduleDTOList = {}", scheduleDTOList);
         return scheduleDTOList;
     }
 
@@ -70,9 +73,9 @@ public class MyPageController {
     public List<ReviewDTO> getReviewList(@RequestParam long uno) {
         List<ReviewVO> reList = msv.getReviewList(uno);
         List<ReviewDTO> reviewDTOList = new ArrayList<>();
+        List<PathVO>mainImg = psv.loadPathList();
         for (ReviewVO review : reList) {
             ReviewDTO reviewDTO = new ReviewDTO();
-            List<PathVO>mainImg = psv.loadPathList();
             for(PathVO pathVO : mainImg) {
                 if(review.getReContentId() == pathVO.getContentId()){
                     if(pathVO.getFirstImage().isEmpty()){
@@ -91,15 +94,12 @@ public class MyPageController {
             reviewDTO.setImagePaths(imagePaths);
             reviewDTOList.add(reviewDTO);
         }
-        log.info("reviewList = {}", reList);
-        log.info("reviewDTOList = {}", reviewDTOList);
         return reviewDTOList;
     }
 
 
     @GetMapping("/reviewPopup")
     public String reviewPopup(@RequestParam long rno, Model model) {
-        log.info("reviewPopup rno = {}", rno);
         ReviewVO reList = msv.getPopReview(rno);
         ReviewDTO reviewDTOList = new ReviewDTO();
         reviewDTOList.setReview(reList); // 리뷰 정보 설정
@@ -109,10 +109,7 @@ public class MyPageController {
             imagePaths.add(image.getImagePath());
         }
         reviewDTOList.setImagePaths(imagePaths);
-        log.info("reviewList >> {}", reList);
-        log.info("reviewDTOListPopup = {}", reviewDTOList);
         model.addAttribute("review", reviewDTOList);
-        log.info("model = {}", model);
         return "mypage/reviewPopup";
     }
 
@@ -128,7 +125,6 @@ public class MyPageController {
         userVO.setUno(uno);
         if(provider.equals("null")) {
             if(!pw.isEmpty()) {
-                log.info("pw = {}", pw.length());
             userVO.setPw(passwordEncoder.encode(pw));
             }
             userVO.setNickname(nickname);
@@ -140,7 +136,6 @@ public class MyPageController {
                 if (!uploadPath.exists()) {
                     uploadPath.mkdirs();
                 }
-                log.info("이미지 처리: {}", profile.getOriginalFilename());
                 String uuid = UUID.randomUUID().toString();
                 String originalFilename = profile.getOriginalFilename();
                 String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
@@ -149,26 +144,80 @@ public class MyPageController {
                 profile.transferTo(savePath.toFile());
                 String path = savePath.toString().replace("\\","/");
                 userVO.setProfile(path.replace("C:/image/", ""));
-                log.info(path.replace("C:/image/", ""));
             }
-            log.info("userVO11111111 = {}",userVO);
            return msv.updateCommonUser(userVO);
         }else{
             userVO.setUno(uno);
             userVO.setNickname(nickname);
-            log.info("userVO = {}",userVO);
           return msv.updateSocialUserName(userVO);
         }
 
     }
 
+    @ResponseBody
     @DeleteMapping("schedule")
     public int scheduleDelete(@RequestParam long sco) {
-        log.info("scheduleDelete sco = {}", sco);
         int isDel = msv.scheduleDelete(sco);
-        log.info("isDel = {}", isDel);
         return isDel;
     }
+
+    @ResponseBody
+    @GetMapping("likeCall")
+    public List<LikeDTO> likeCall(@RequestParam long uno) {
+        LikeVO lvo = new LikeVO();
+        lvo.setUno(uno);
+        lvo.setTypeId(0);
+        List<LikeVO> like = msv.getLikePlace(lvo);
+        List<LikeDTO> likeDTOList = new ArrayList<>();
+        List<PathVO> pathVOList = psv.loadPathList();
+        for(LikeVO likeVO : like) {
+            LikeDTO likeDTO = new LikeDTO();
+            likeDTO.setLike(likeVO);
+            for(PathVO pathVO : pathVOList) {
+                if(likeVO.getLikeCode() == pathVO.getContentId()){
+                    likeDTO.setFirstImage(pathVO.getFirstImage());
+                    likeDTO.setContentTypeId(pathVO.getContentTypeId());
+                }
+            }
+            likeDTOList.add(likeDTO);
+        }
+        return likeDTOList;
+    }
+
+    @ResponseBody
+    @GetMapping("tripCall")
+    public List<LikeDTO> tripCall(@RequestParam long uno) {
+        LikeVO lvo = new LikeVO();
+        lvo.setUno(uno);
+        lvo.setTypeId(1);
+        log.info("lvo >> {}",lvo);
+        List<LikeVO> tripList = msv.getLikePlace(lvo);
+        List<LikeDTO> likeDTOList = new ArrayList<>();
+        List<PathVO> pathVOList = psv.loadServeList();
+        for(LikeVO likeVO : tripList) {
+            LikeDTO likeDTO = new LikeDTO();
+            likeDTO.setLike(likeVO);
+            for(PathVO pathVO : pathVOList) {
+                if(likeVO.getLikeCode() == pathVO.getContentId()){
+                    likeDTO.setFirstImage(pathVO.getFirstImage());
+                    likeDTO.setContentTypeId(pathVO.getContentTypeId());
+                    likeDTO.setTitle(pathVO.getTitle());
+                }
+            }
+            likeDTOList.add(likeDTO);
+        }
+        log.info("DTOList >> {}", likeDTOList);
+        return likeDTOList;
+    }
+
+
+    @ResponseBody
+    @DeleteMapping("likeDel")
+    public int likeDel(@RequestBody LikeVO likeVO) {
+        log.info("lvo >>> {}",likeVO);
+        return msv.delLike(likeVO);
+    }
+
 
     @GetMapping("/tripList")
     public void tripList() {

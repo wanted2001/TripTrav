@@ -16,4 +16,13 @@
         insert into schedule_role (sco, uno)
         value (#{sco}, #{uno})
     </insert>
+
+    <update id="updateRole">
+        update schedule_role set sche_role=#{roleValue}
+        where sco=#{sco} and uno=#{uno}
+    </update>
+
+    <delete id="deleteRole">
+        delete from schedule_role where sco=#{sco} and uno=#{uno}
+    </delete>
 </mapper>

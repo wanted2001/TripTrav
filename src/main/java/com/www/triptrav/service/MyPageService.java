@@ -24,4 +24,10 @@ public interface MyPageService {
     int updateSocialUserName(UserVO userVO);
 
     int scheduleDelete(long sco);
+
+    List<LikeVO> getLikePlace(LikeVO lvo);
+
+    int getRole(ScheduleRoleVO roleVO);
+
+    int delLike(LikeVO likeVO);
 }

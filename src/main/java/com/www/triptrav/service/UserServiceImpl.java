@@ -1,10 +1,16 @@
 package com.www.triptrav.service;
 
 import com.www.triptrav.domain.UserVO;
+import com.www.triptrav.repository.TasteMapper;
 import com.www.triptrav.repository.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -12,14 +18,13 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
+    private final TasteMapper tasteMapper;
 
     @Override
     public void joinUser(UserVO uvo) {
-        int isOk = userMapper.joinUser(uvo); // 가입 시도
+        int isOk = userMapper.joinUser(uvo);
         if (isOk == 1) {
             long uno = uvo.getUno();
-            log.info("가입할 User의 uno >>>> {}", uno);
-
             if (uno != 0) {
                 userMapper.insertAuth(uno);
             } else {
@@ -35,15 +40,15 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-                @Override
-                public UserVO checkEmail (String email){
-                    UserVO user = userMapper.checkEmail(email);
-                    if (user != null) {
-                        user.setAuthList(userMapper.selectAuth(email));
-                        return user;
-                    }
-                    return null;
-                }
+    @Override
+    public UserVO checkEmail (String email){
+        UserVO user = userMapper.checkEmail(email);
+        if (user != null) {
+            user.setAuthList(userMapper.selectAuth(email));
+            return user;
+        }
+        return null;
+    }
 
     @Override
     public int duplicationNick(String nickName) {
@@ -80,5 +85,30 @@ public class UserServiceImpl implements UserService {
         return userMapper.checkAdditionalInfo(unoNum);
     }
 
+    @Override
+    public UserVO getUvo(long unoNum) {
+        return userMapper.getUvo(unoNum);
+    }
+
+
+    public void insertTestUsersIfEmpty() {
+        Random random = new Random();
+        if (userMapper.getUserCount() == 0) {
+            for (int i = 1; i <= 500; i++) {
+                UserVO user = new UserVO();
+                user.setEmail("user" + i + "@example.com");
+                user.setNickname("user"+i);
+                user.setAge(random.nextInt(99) + 1);
+                user.setGender(random.nextInt(2));
+                userMapper.insertUser(user);
+                long uno = user.getUno();
+                int numberOfTastes = random.nextInt(5) + 1;
+                for (int j = 0; j < numberOfTastes; j++) {
+                    int cno = random.nextInt(30) + 1;
+                    tasteMapper.insertTaste(uno, cno);
+                }
+            }
+        }
+    }
 }
 

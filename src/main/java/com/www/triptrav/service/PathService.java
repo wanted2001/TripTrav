@@ -23,13 +23,14 @@ public class PathService {
     public PathService(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
         imagePath();
+        coursePath();
     }
 
     private void imagePath() {
         if (pathList == null) {
             pathList = new ArrayList<>();
             try {
-                Resource resource = resourceLoader.getResource("classpath:static/dist/json/AITourData.json");
+                Resource resource = resourceLoader.getResource("classpath:static/dist/json/planData.json");
                 ObjectMapper objectMapper = new ObjectMapper();
 
                 JsonNode rootNode = objectMapper.readTree(resource.getInputStream());
@@ -37,9 +38,34 @@ public class PathService {
                 for (JsonNode item : rootNode) {
                     PathVO data = new PathVO(
                             item.path("contentid").asLong(),
-                            item.path("firstimage").asText()
+                            item.path("firstimage").asText(),
+                            item.path("contenttypeid").asLong()
                     );
                     pathList.add(data);
+                }
+            } catch (IOException e) {
+                log.error("데이터 로딩 에러", e);
+            }
+        }
+    }
+
+    private void coursePath() {
+        if (serveList == null) {
+            serveList = new ArrayList<>();
+            try {
+                Resource resource = resourceLoader.getResource("classpath:static/dist/json/courseData.json");
+                ObjectMapper objectMapper = new ObjectMapper();
+
+                JsonNode rootNode = objectMapper.readTree(resource.getInputStream());
+
+                for (JsonNode item : rootNode) {
+                    PathVO data = new PathVO(
+                            item.path("contentid").asLong(),
+                            item.path("firstimage").asText(),
+                            item.path("contenttypeid").asLong(),
+                            item.path("title").asText()
+                    );
+                    serveList.add(data);
                 }
             } catch (IOException e) {
                 log.error("데이터 로딩 에러", e);
@@ -50,5 +76,9 @@ public class PathService {
 
     public List<PathVO> loadPathList() {
         return pathList;
+    }
+
+    public List<PathVO> loadServeList() {
+        return serveList;
     }
 }

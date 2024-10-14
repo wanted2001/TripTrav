@@ -15,7 +15,7 @@
                 z-index: 100;
                 width: 1440px;
                 top: 30px;
-                left: 52%;
+                left: 50%;
                 transform: translateX(-50%);
                 display: flex;
                 justify-content: space-between;
@@ -27,16 +27,40 @@
                 display: flex;
                 justify-content: space-around;
                 font-size: 19px;
+                line-height: 83px;
+                position: absolute;
+                left: 34%;
             }
 
             .rightUl {
                 font-family: LINESeedKR-Rg;
                 display: flex;
+                line-height: 83px;
             }
 
             a {
                 color: white;
                 cursor: pointer;
+            }
+            button:focus {
+                outline: none;
+            }
+            input:focus{
+                outline: none;
+            }
+            textarea:focus{
+                outline: none;
+            }
+            .leftBox{
+                line-height: 83px;
+                position: relative;
+            }
+            .leftBox img{
+                width: 180px;
+                height: 66px;
+                position: absolute;
+                top: 9px;
+                filter: invert();
             }
         </style>
     </head>
@@ -44,7 +68,7 @@
     <nav class="header-nav" id="header">
         <div class="leftBox">
             <a th:href="@{/}">
-                <img src="/" class="logoImg">
+                <img src="/dist/image/TripTravLogo.png" class="logoImg" id="logo">
             </a>
         </div>
         <div class="middleBox">
@@ -96,6 +120,7 @@
         </div>
     </div>
     <script src="/dist/js/loginJoin.js"></script>
+    <script src="/dist/js/header.js"></script>
     <script>
         let url = window.location.href;
 
@@ -103,7 +128,6 @@
             if (url === "http://localhost:8099/") {
                 changeSearch();
             } else {
-                console.log("다른 페이지");
                 window.location.href = "http://localhost:8099/?search=true";
             }
         });
@@ -111,6 +135,7 @@
         function changeSearch() {
             document.querySelector('.mainText').style.display = 'none';
             document.querySelector('.mainBtnDiv').style.display = 'none';
+            document.querySelector('.tasteDiv').style.display = 'none';
             document.querySelector('.inputWrap').style.display = '';
         }
     </script>
@@ -128,28 +153,21 @@
         }
 
         function goToMyPage(unoNum) {
-            window.location.href = `/mypage?uno=${unoNum}`;
+            window.location.href = `/mypage?uno=${unoNum}&modal=modifyNick`;
         }
     </script>
     <script>
         function changeHeaderColor() {
             const header = document.getElementById('header');
+            const logo = document.getElementById('logo');
             const currentURL = window.location.href;
-            console.log({currentURL})
-            const headerText = document.querySelectorAll('#header a'); // header 내의 <a> 요소 선택
+            const headerText = document.querySelectorAll('#header a');
 
-            if (currentURL.includes('/maps')) {
+            if (currentURL.includes('/maps') || currentURL.includes('/mypage') || currentURL.includes('/taste') || currentURL.includes('/place')||currentURL.includes('/food')) {
                 headerText.forEach(link => {
                     link.style.color = 'black';
                     link.style.setProperty('color', 'black', 'important');
-                });
-                header.style.position = 'absolute';
-                header.style.width = '1440px';
-                header.style.margin = '0 auto';
-            } else if(currentURL.includes('/mypage')) {
-                headerText.forEach(link => {
-                    link.style.color = 'black';
-                    link.style.setProperty('color', 'black', 'important');
+                    logo.style.filter = 'unset';
                 });
                 header.style.position = 'absolute';
                 header.style.width = '1440px';
@@ -161,21 +179,6 @@
                 });
             }
         }
-
-        // function changeHeaderColor() {
-        //     const header = document.getElementById('header');
-        //     const currentURL = window.location.href;
-
-        //     // URL에 따라 배경색 변경
-        //     if (currentURL.includes('/maps')) {
-        //         header.style.position = 'absolute';
-        //         header.style.backgroundColor = 'orange';
-        //         header.style.width = ' 1440px';
-        //         header.style.margin = '0 auto';
-        //     } else {
-        //         header.style.backgroundColor = ''; // 기본 배경색
-        //     }
-        // }
 
         // 페이지 로드 시 실행
         window.addEventListener('load', changeHeaderColor)

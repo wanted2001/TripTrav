@@ -17,7 +17,7 @@ window.addEventListener('click', (e) => {
                     </div>
                     <div class="name_cate">
                         <span class="placeName"></span>
-                        <span class="placeCate">장소카테고리</span>
+                        <span class="placeCate"></span>
                     </div>
                     <div class="placeAddr"></div>
                     <div class="rate_count">
@@ -67,7 +67,6 @@ days.forEach(day => {
 let slideWrap = document.querySelector('.slideWrap');
 let innerSlide = document.querySelector('.innerSlide');
 let slideItems = document.querySelectorAll('.slideItem');
-console.log(slideItems.length);
 
 let pressed = false;
 let startPoint;
@@ -81,18 +80,20 @@ const saveMemo = document.querySelector('.saveMemo');
 const memoWrap = document.querySelector('.memoWrap');
 
 //일정편집
-const editBtn = document.querySelector('.editBtn');
-const saveBtn = document.querySelector('.saveBtn');
+const editRole = document.querySelector('.editRole');
+const editRoleSave = document.querySelector('.editRoleSave');
 const disableEditBtn = document.querySelector('.disableEdit');
+const editBtn = document.querySelector('.editBtn');
 
 document.addEventListener('DOMContentLoaded', () => {
-    initTmap();
-    console.log(slideItems.length);
+    // initTmap();
 
     getUserRole(unoNum, sco).then(result => {
         console.log(result);
         if (result.scheRole === 1) {
-            editBtn.classList.remove('hidden');
+            editRole.classList.remove('hidden');
+            editRoleSave.classList.remove('hidden')
+            editBtn.classList.remove('hidden'); //일정편집버튼
         } else {
             disableEditBtn.classList.remove('hidden');
             const addPlan = document.querySelector('.addPlan');
@@ -105,16 +106,11 @@ document.addEventListener('DOMContentLoaded', () => {
             addPlan.addEventListener('mouseover', () => {
                 addPlan.style.cursor = 'default';
             });
-
-            addPersonBtn.style.display = 'none';
+            addPersonBtn.classList.add('hidden');
         }
     });
     getAllCourse(sco).then(async result => {
-        console.log(result)
         await Promise.all(result.map(key => getSlideImg(key.scheContentId)))
-        // result.forEach(key => {
-        //     getSlideImg(key.scheContentId);
-        // })
         slideItems = document.querySelectorAll('.slideItem');
         updateInnerSlideWidth();
         makeDot();
@@ -133,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <div class="name_cate">
                         <span class="placeName"></span>
-                        <span class="placeCate">장소카테고리</span>
+                        <span class="placeCate"></span>
                     </div>
                     <div class="placeAddr"></div>
                     <div class="rate_count">
@@ -170,7 +166,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const memoContents = document.querySelector('.memoContents');
         saveMemo.removeEventListener('click', saveMemoF);
         if (r) {
-            console.log("메모있음")
             addMemoBtn.innerText = '메모확인';
             memoContents.innerHTML = `${r.scheMemoContent}`;
             memoContents.readOnly = true;
@@ -185,8 +180,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     //드래그 슬라이드 부분
-    
-
     slideWrap.addEventListener('mousedown', e => {
         pressed = true;
         startPoint = e.offsetX - innerSlide.offsetLeft;
@@ -214,13 +207,125 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
+function editRoleUser() {
+    getCompanion(sco).then(companionList => {
+        companionList.sort((a, b) => a.uno - b.uno);
+
+        const rolePromises = companionList.map((res, index) => {
+            return getUserRole(res.uno, sco).then(r => ({
+                res,
+                r,
+                index
+            }));
+        });
+
+        Promise.all(rolePromises).then(results => {
+            const companionUl = document.querySelector('.companionUl');
+            companionUl.innerHTML = '';
+
+            results.forEach(({ res, r, index }) => {
+                const isCurrentUser = (res.uno === unoNum) ? ' (나)' : '';
+
+                const isCheckedEditor = (r.scheRole === 1) ? 'checked' : '';
+                const isCheckedCompanion = (r.scheRole !== 1) ? 'checked' : '';
+
+                const li = document.createElement('li');
+                li.className = 'companionLi';
+                const unoData = res.uno;
+
+                li.setAttribute('data-uno', unoData);
+
+                li.innerHTML = `
+                    ${index + 1}) ${res.scheNick}${isCurrentUser}
+                    <label>
+                        <input type="radio" name="role_${res.uno}" value="1" ${isCheckedEditor}> 편집자
+                    </label>
+                    <label>
+                        <input type="radio" name="role_${res.uno}" value="0" ${isCheckedCompanion}> 동행자
+                    </label>
+                `;
+
+                const deleteBtn = document.createElement('img');
+                deleteBtn.src = '/dist/image/minus-circle.svg';
+                deleteBtn.className = 'deleteCompanionBtn';
+
+                deleteBtn.addEventListener('click', () => {
+                    deleteCompanion(sco, unoData, res.scheNick);
+                });
+
+                li.appendChild(deleteBtn);
+                companionUl.appendChild(li);
+            });
+        });
+    });
+}
+
+
+function deleteCompanion(sco, uno, nick) {
+    if (confirm(`${nick}님을 동행인에서 삭제하시겠습니까?`)) {
+        fetch(`/schedule/deleteCompanion/${sco}/${uno}`, {
+            method: 'DELETE'
+        }).then(response => response.json())
+            .then(data => {
+                if (data === 1) {
+                    alert(`${nick}님이 동행인에서 삭제되었습니다.`);
+                    location.reload();
+                } else {
+                    alert('동행인 삭제 중 오류가 발생하였습니다. \n다시 시도해주세요.');
+                }
+            })
+    }
+}
+
+
+document.querySelector('.editRoleSave').addEventListener('click', () => {
+    const companionList = document.querySelectorAll('.companionLi');
+    const updates = [];
+
+    companionList.forEach(li => {
+        const radioEditor = li.querySelector(`input[type="radio"][value="1"]`);
+        const radioCompanion = li.querySelector(`input[type="radio"][value="0"]`);
+        let roleValue;
+
+        // 선택된 역할 확인
+        if (radioEditor && radioEditor.checked) {
+            roleValue = 1;
+        } else if (radioCompanion && radioCompanion.checked) {
+            roleValue = 0;
+        } else {
+            return;
+        }
+
+        const uno = li.getAttribute('data-uno');
+        updates.push({uno, roleValue});
+    });
+
+    if(updates.length>0 && confirm("수정된 권한을 저장하시겠습니까?")){
+        updates.forEach(({uno, roleValue})=>{
+            updateRole(uno, sco, roleValue);
+        })
+    }
+});
+
+function updateRole(uno, sco, roleValue){
+    fetch(`/schedule/updateRole/${uno}/${sco}`,{
+        method:'POST',
+        headers:{
+            'content-type':'application/json'
+        },
+        body:JSON.stringify({role:roleValue})
+    }).then(response=>response.json())
+        .then(data=>{
+            console.log(data);
+        })
+}
+
 //메모모달 열기/닫기
 function openModal() {
     memoModal.style.display = 'flex';
 }
-
-function closeModal(modal) {
-    modal.style.display = 'none';
+function closeModal() {
+    memoModal.style.display = 'none';
 }
 
 //메모수정
@@ -245,7 +350,7 @@ function modifyMemoContent() {
                             alert("메모가 삭제되었습니다.")
                             document.querySelector('.modifyMemo').remove();
                             memoModal.style.display = 'none';
-                            location.reload();
+                            // location.reload();
                         }
                     })
             }
@@ -264,7 +369,7 @@ function modifyMemoContent() {
                         alert("메모 수정이 완료되었습니다.")
                         memoContent.readOnly = true;
                         isEditing = false;
-                        location.reload();
+                        // location.reload();
                         memoModal.style.display = 'flex';
                     } else {
                         alert("메모 수정에 오류가 발생했습니다.\n다시 시도해주세요.")
@@ -283,7 +388,7 @@ function saveMemoF() {
         document.querySelector('.memoContents').focus();
     } else {
         if (confirm('메모를 저장하시겠습니까?')) {
-            fetch(`/schedule/memo/${sco}`, {
+            fetch(`/schedule/memo/${sco}/${userNickname}`, {
                 method: 'post',
                 headers: {
                     'content-type': 'application/json'
@@ -295,7 +400,7 @@ function saveMemoF() {
                     console.log(data)
                     if (data === "1") {
                         alert("메모가 저장되었습니다!")
-                        location.reload();
+                        // location.reload();
                         memoModal.style.display = 'flex';
                     } else {
                         alert("메모 저장 중 오류가 발생했습니다. \n다시 시도해주세요.");
@@ -334,6 +439,7 @@ async function getSlideImg(key) {
     let addedLocations = new Set();
 
     const res = await getData(url)
+    // console.log(res);
     res.items.item.forEach(img => {
         if (!addedLocations.has(img.contentid)) {
             innerSlide.innerHTML += `<div class="slideItem" style="background-image: url('${img.originimgurl}'); background-size: cover; background-position: center; background-repeat: no-repeat;"></div>`;
@@ -357,16 +463,55 @@ function initTmap() {
 
 //주소삽입
 function getAddr(key) {
-    const detailInfoUrl = `https://apis.data.go.kr/B551011/KorService1/detailCommon1?MobileOS=ETC&MobileApp=TripTrav&contentId=${key}&defaultYN=Y&firstImageYN=Y&areacodeYN=Y&catcodeYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&serviceKey=${tourAPIKEY}&_type=json`;
     const addrLi = document.querySelector(`li[data-id="${key}"] .placeAddr`);
     const titleLi = document.querySelector(`li[data-id="${key}"] .placeName`);
-    getData(detailInfoUrl).then(res => {
-        // console.log(res)
-        res.items.item.forEach(result => {
-            addrLi.innerHTML = `${result.addr1}`;
-            titleLi.innerHTML = `${result.title}`
+    const cateLi = document.querySelector(`li[data-id="${key}"] .placeCate`)
+
+    fetch('/dist/json/planData.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch JSON file");
+            }
+            return response.json();
         })
-    })
+        .then(jsonData => {
+            const result = jsonData.find(item => item.contentid == key);
+
+            if (result) {
+                addrLi.innerHTML = result.addr1;
+                titleLi.innerHTML = result.title;
+                if(result.cat1=="A02" || result.cat1=="AO1"){
+                    fetch('/dist/json/planCategory.json')
+                        .then(response=> response.json())
+                        .then(cate =>{
+                            const category = cate.find(item=>item.categoryCode == result.cat3)
+                            if(category){
+                                if(result.cat1=="A02"){
+                                    cateLi.innerHTML="인문 (문화,예술,역사) > ";
+                                }
+                                cateLi.innerHTML+=category.categoryName;
+                            }
+                        })
+                } else {
+                    if (result.cat1 == "A03") {
+                        cateLi.innerHTML = "레포츠";
+                    } else if (result.cat1 == "A04") {
+                        cateLi.innerHTML = "쇼핑";
+                    } else if (result.cat1 == "A05") {
+                        cateLi.innerHTML = "음식";
+                    } else if (result.cat1 == "B02") {
+                        cateLi.innerHTML = "숙박";
+                    } else {
+                        cateLi.innerHTML = "기타";
+                    }
+                }
+            } else {
+                console.log(`Content with id ${key} not found`);
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching the JSON file:", error);
+        });
 }
 
 //동행자 추가 모달
@@ -407,14 +552,17 @@ function checkPersonF() {
             console.log(data)
             if (data) {
                 companionModal.style.display = 'flex';
-                document.querySelector('.cmCloseBtn').onclick = () => {
-                    companionModal.style.display = 'none';
-                }
                 if (data.length > 0) {
+                    data.sort((a, b) => a.uno - b.uno);
                     data.forEach(r => {
                         const li = `<li class="companionLi">${r.scheNick}</li>`
                         document.querySelector('.companionUl').innerHTML += li;
                     })
+                } else {
+                    document.querySelector('.editRole').classList.add('hidden');
+                    document.querySelector('.editRoleSave').classList.add('hidden');
+                    document.querySelector('.companionUl').innerHTML+=`<img src="/dist/image/face-sad-sweat.svg" class="sadFace">
+                            <div class="noPeopleText">여행을 함께하는 동행자가 없습니다. <span class="urlText">URL을 이용해 동행자를 초대해보세요!</span></div>`
                 }
             }
         })
@@ -423,6 +571,11 @@ function checkPersonF() {
 pmCloseBtn.addEventListener('click', () => {
     personModal.style.display = 'none';
 })
+
+function closeCmClose(){
+    companionModal.style.display='none';
+    document.querySelector('.companionUl').innerHTML='';
+}
 
 async function generateInviteUrl() {
     const response = await fetch("/invite", {
@@ -485,7 +638,6 @@ function checkSelectedItem() {
             item.style.width = '195px';
             item.style.height = '195px';
             item.style.marginTop = '-35px';
-            item.style.background = 'gold';
 
             const dot = item.querySelector('.dot');
             if (dot) {
@@ -495,7 +647,6 @@ function checkSelectedItem() {
             item.style.width = '160px';
             item.style.height = '160px';
             item.style.marginTop = '0px';
-            item.style.background = 'pink';
 
             const dot = item.querySelector('.dot');
             if (dot) {
@@ -632,13 +783,14 @@ ul.addEventListener('click', (e) => {
         search: document.querySelectorAll('.depth2_search'),
         heart: document.querySelectorAll('.depth2_heart'),
         searchInput: document.querySelector('.depth2_search_input_area'),
-        morePlaceBtn: document.querySelector('.morePlaceBtn')
+        morePlaceBtn: document.querySelector('.morePlaceBtn'),
+        searchResultDiv: document.querySelector('.searchResultDiv')
     }
 
     const state = {
-        '1': {recommend: false, search: true, heart: true, searchInput: true, morePlaceBtn: true},
-        '2': {recommend: true, search: false, heart: true, searchInput: false, morePlaceBtn: false},
-        '3': {recommend: true, search: true, heart: false, searchInput: true, morePlaceBtn: true}
+        '1': {recommend: false, search: true, heart: true, searchInput: true, morePlaceBtn: true, searchResultDiv: true},
+        '2': {recommend: true, search: false, heart: true, searchInput: false, morePlaceBtn: false, searchResultDiv: false},
+        '3': {recommend: true, search: true, heart: false, searchInput: true, morePlaceBtn: true, searchResultDiv: true}
     }
 
     const currentState = state[clickNumber];
@@ -685,6 +837,7 @@ function search() {
         function displayResult(result) {
             totalCount = result.totalCount;
 
+            console.log(totalCount)
             if (totalCount >= 1) {
                 const start = (currentPage - 1) * itemsPage;
                 const end = Math.min(start + itemsPage, totalCount);
@@ -693,12 +846,12 @@ function search() {
                 itemsDisplay.forEach(key => {
                     resultDiv += `
                     <div class="depth2_search">
-                        <div class="depth2_search_area">
+                        <div class="depth2_search_area" >
                             <div class="depth2_search_img" data-image="${key.firstimage}"></div>
                             <div class="depth2_search_name" data-id="${key.contentid}">${key.title}</div>
                             <div class="depth2_search_addr">${key.addr1}</div>
+                            <div class="addPlanBtn" onclick="newPlan(event)" style="background-image: url('/dist/image/plus-circle.svg'); background-size: cover; background-repeat: no-repeat; background-position: center"></div>
                         </div>
-                        <div class="addPlanBtn" onclick="newPlan(event)"><img src="/dist/image/plus.svg"></div>
                     </div>`;
                 })
 
@@ -708,7 +861,6 @@ function search() {
                     const more = `<div class="morePlaceBtn">더보기<img src="/dist/image/chevron-down.svg"></div>`;
                     document.querySelector('.searchResultDiv').innerHTML += more;
 
-                    // Attach event listener programmatically
                     document.querySelector('.morePlaceBtn').addEventListener('click', loadMore);
                     paddingSetting();
                 }
@@ -718,11 +870,15 @@ function search() {
                     imageDivs.forEach(img => {
                         const imageUrl = img.getAttribute('data-image');
                         img.style.backgroundImage = `url(${imageUrl})`;
+                        img.style.backgroundSize = 'cover';
+                        img.style.backgroundPosition = 'center';
+                        img.style.backgroundRepeat = 'no-repeat';
                     });
+                    addButtonListeners();
                 });
                 paddingSetting();
             } else if (totalCount < 1) {
-                const noResult = `<div class="noResult"><img src="/dist/image/alert-circle.svg">검색결과가 없습니다</div>`
+                const noResult = `<div class="noResult visible"><img src="/dist/image/alert-circle.svg">검색결과가 없습니다</div>`
                 document.querySelector('.searchResultDiv').innerHTML = noResult;
             }
         }
@@ -748,6 +904,20 @@ function search() {
             displayResult(result);
         })
     }
+}
+
+function addButtonListeners() {
+    const addPlanBtn = document.querySelectorAll('.addPlanBtn');
+    addPlanBtn.forEach(btn => {
+        console.log(btn);
+        btn.addEventListener('mouseover', () => {
+            btn.style.backgroundImage = "url('/dist/image/plus-circle-back.svg')";
+            btn.style.cursor = 'pointer';
+        });
+        btn.addEventListener('mouseout', () => {
+            btn.style.backgroundImage = "url('/dist/image/plus-circle.svg')";
+        });
+    });
 }
 
 async function searchKeyword(url) {
@@ -796,10 +966,17 @@ function newPlan(event) {
 }
 
 function newPlanF(event) {
-    const searchDiv = event.target.closest('.depth2_search');
-    const contentId = searchDiv.querySelector('.depth2_search_name').getAttribute('data-id');
-    const placeName = searchDiv.querySelector('.depth2_search_name').innerText
-    const placeAddress = searchDiv.querySelector('.depth2_search_addr').innerText;
+    const searchDiv = event.target.closest('.depth2_search, .heart_area');
+    const contentId = searchDiv.querySelector('.depth2_search_name, .heart_name').getAttribute('data-id');
+    const placeName = searchDiv.querySelector('.depth2_search_name, .heart_name').innerText
+    const placeAddress = searchDiv.querySelector('.depth2_search_addr, .heart_addr').innerText;
+    const placeCate = searchDiv.querySelector('.heart_cate').innerText;
+
+    const existingLi = document.querySelector(`.contentArea li[data-id="${contentId}"]`);
+    if(existingLi) {
+        alert('이미 추가된 장소입니다.')
+        return
+    }
 
     const newLi = `<li class="oneContent" data-id="${contentId}">
                             <div class="deletePlan" onclick="deletePlan(event)">&times;</div>
@@ -809,7 +986,7 @@ function newPlanF(event) {
                             </div>
                             <div class="name_cate">
                                 <span class="placeName">${placeName}</span>
-                                <span class="placeCate"></span>
+                                <span class="placeCate">${placeCate}</span>
                             </div>
                             <div class="placeAddr">${placeAddress}</div>
                             <div class="rate_count">
@@ -868,7 +1045,7 @@ function editPlan(event) {
                 titleInput.remove();
                 editPlanTitle.classList.add('hidden');
                 setPlanData(sco);
-                location.reload();
+                // location.reload();
                 alert('일정이 저장되었습니다!');
             } else {
                 deleteBtn.forEach(btn => {
@@ -883,8 +1060,7 @@ function editPlan(event) {
                 target.innerText = '편집';
                 editPlanTitle.classList.add('hidden');
                 setPlanData(sco);
-                location.reload();
-                alert('일정이 저장되었습니다!');
+                // location.reload();
             }
         }
     }
@@ -894,13 +1070,11 @@ function setPlanData(sco) {
     const allLi = document.querySelectorAll('li.oneContent');
     const planArray = [];
     let arrayKey = true;
-
     allLi.forEach((plan, index) => {
         const sche_content_id = plan.getAttribute('data-id');
         const sche_name = document.querySelector('.nameZone').innerText;
         const sche_date = document.querySelector('.day_focus').getAttribute('data-date');
         const sche_title = plan.querySelector('.placeName').innerText;
-
         const planData = {
             sche_content_id: sche_content_id,
             sche_name: sche_name,
@@ -909,7 +1083,6 @@ function setPlanData(sco) {
             sche_title: sche_title,
             sco: sco
         };
-
         if (planArray.length > 0) {
             const lastPlan = planArray[planArray.length - 1];
             if (
@@ -923,9 +1096,7 @@ function setPlanData(sco) {
                 arrayKey = false;
             }
         }
-
         planArray.push(planData);
-
         console.log(planArray);
         console.log(arrayKey)
     });
@@ -959,9 +1130,6 @@ function countTriangle() {
     const triangleButtons = document.querySelectorAll('.triangle');
     const downTriangleButtons = document.querySelectorAll('.downTriangle');
 
-    //버튼 이벤트 오류생김(triangle 버튼 못찾음)
-    console.log(triangleButtons.length);
-
     triangleButtons.forEach(function (button) {
         button.addEventListener('click', function () {
             let currentLi = button.closest('.oneContent');
@@ -977,6 +1145,7 @@ function countTriangle() {
                         currentLi.parentNode.insertBefore(currentLi, prevLi);
                         currentLi.classList.remove('moving-up');
                         prevLi.classList.remove('moving-down');
+                        updateTriangleVisibility();
                     }, 400); // CSS transition 시간과 맞춰줌
                 });
             }
@@ -998,13 +1167,39 @@ function countTriangle() {
                         currentLi.parentNode.insertBefore(nextLi, currentLi);
                         currentLi.classList.remove('moving-down');
                         nextLi.classList.remove('moving-up');
+                        updateTriangleVisibility();
                     }, 400); // CSS transition 시간과 맞춰줌
                 });
             }
         });
     });
+
+    function updateTriangleVisibility() {
+        const allItems = document.querySelectorAll('.oneContent');
+
+        allItems.forEach((item, index) => {
+            const triangleButton = item.querySelector('.triangle');
+            const downTriangleButton = item.querySelector('.downTriangle');
+
+            if (index === 0) {
+                triangleButton.style.display = 'none';
+            } else {
+                triangleButton.style.display = 'block';
+            }
+
+            if (index === allItems.length - 1) {
+                downTriangleButton.style.display = 'none';
+            } else {
+                downTriangleButton.style.display = 'block';
+            }
+        });
+    }
+
+    updateTriangleVisibility();
 }
 
+
+//일정삭제
 function deletePlan(event) {
     if (confirm("해당 일정을 삭제하시겠습니까?")) {
         if (event.target.classList.contains('deletePlan')) {
@@ -1094,6 +1289,88 @@ async function getAllCourse(sco) {
     }
 }
 
+function getHeartData(){
+    fetch('/dist/json/planData.json')
+        .then(response=>response.json())
+        .then(storedData=>{
+            fetch("/schedule/getLikeList/"+unoNum,{
+                method:'get',
+            }).then(response=>response.json())
+                .then(data=>{
+                    const depth2_heart = document.querySelector('.depth2_heart');
+                    depth2_heart.innerHTML='';
+                    if(data.length>0){
+                        data.forEach(likeItem=>{
+                            const matchedItem = storedData.find(stored => stored.contentid === likeItem.likeCode.toString())
+
+                            if(matchedItem) {
+                                const imgUrl = matchedItem.firstimage ?  matchedItem.firstimage : '/dist/image/noImage.jpg';
+
+                                const heartArea = document.createElement('div');
+                                heartArea.classList.add('heart_area');
+
+                                heartArea.innerHTML+=`
+                                        <div class="heart_img" style="background-image: url('${imgUrl}'); background-position: center; background-repeat: no-repeat; background-size: cover"></div>
+                                        <div class="heart_name_cate" data-id="${matchedItem.contentid}">
+                                            <span class="heart_name">${matchedItem.title}</span>
+                                            <span class="heart_cate"></span>
+                                            <span class="heart_addr">${matchedItem.addr1}</span>
+                                        </div>
+                                        <div class="heart_addBtn" onclick="newPlanF(event)" style="background-image: url('/dist/image/plus-circle.svg'); background-size: cover; background-repeat: no-repeat; background-position: center"></div>`
+                                depth2_heart.appendChild(heartArea);
+
+                                const heartCate = heartArea.querySelector('.heart_cate');
+                                const heartAddBtn = heartArea.querySelector('.heart_addBtn');
+
+                                // Category logic
+                                console.log(matchedItem.cat1);
+                                if (matchedItem.cat1 == "A02" || matchedItem.cat1 == "A01") {
+                                    fetch('/dist/json/planCategory.json')
+                                        .then(response => response.json())
+                                        .then(cate => {
+                                            const category = cate.find(c => c.categoryCode == matchedItem.cat3);
+                                            if (category) {
+                                                if (matchedItem.cat1 == "A02") {
+                                                    heartCate.innerHTML = "인문 (문화,예술,역사) > " + category.categoryName;
+                                                } else {
+                                                    heartCate.innerHTML = category.categoryName;
+                                                }
+                                            }
+                                        });
+                                } else {
+                                    if (matchedItem.cat1 == "A03") {
+                                        heartCate.innerHTML = "레포츠";
+                                    } else if (matchedItem.cat1 == "A04") {
+                                        heartCate.innerHTML = "쇼핑";
+                                    } else if (matchedItem.cat1 == "A05") {
+                                        heartCate.innerHTML = "음식";
+                                    } else if (matchedItem.cat1 == "B02") {
+                                        heartCate.innerHTML = "숙박";
+                                    } else {
+                                        heartCate.innerHTML = "기타";
+                                    }
+                                }
+
+                                heartAddBtn.addEventListener('mouseover', () => {
+                                    heartAddBtn.style.backgroundImage = "url('/dist/image/plus-circle-back.svg')";
+                                    heartAddBtn.style.cursor = 'pointer';
+                                });
+                                heartAddBtn.addEventListener('mouseout', () => {
+                                    heartAddBtn.style.backgroundImage = "url('/dist/image/plus-circle.svg')";
+                                });
+                            }
+                        });
+                    } else {
+                        depth2_heart.innerHTML = `
+                                                <div class="noResultLike">
+                                                    <img src="/dist/image/alert-circle.svg">
+                                                    찜한 여행지가 없습니다! <span class="line2">나의 취향의 맞는 여행지를 찜 해보세요!</span>
+                                                </div>`;
+                    }
+                })
+
+        })
+}
 
 async function generateInviteUrl(sco, unoNum) {
     const response = await fetch("/schedule/generateInviteUrl", {
@@ -1104,17 +1381,15 @@ async function generateInviteUrl(sco, unoNum) {
         body: JSON.stringify({sco: sco, uno: unoNum})
     });
 
-    // 서버로부터 초대 URL을 받아옴
     const result = await response.json();
 
     if (response.ok) {
-        // 초대 URL을 페이지에 표시
         console.log(result.inviteUrl);
     } else {
         console.log(result.message)
     }
 
-    return result; // 이 줄은 마지막에 두어야 함
+    return result;
 }
 
 //유저 권환 확인
@@ -1129,9 +1404,31 @@ async function getUserRole(uno, sco) {
     }
 }
 
+async function getCompanion(sco){
+    try{
+        const url = "/schedule/getCompanion/"+sco;
+        const config = {method:'get'};
+        const resp = await fetch(url, config);
+        return resp.json();
+    } catch (err){
+        console.log(err)
+    }
+}
 
-//고민점
-//투어 id 가져가서 각 id별 좌표값, 대표이미지, 서브이미지 가져오기(subname수만큼)
-//일정 편집 안들어갔는데 2depth 열어서 일정추가하면 일정을 편집하시겠습니까? confirm 띄우고 ok하면 일정편집으로 들어가기
-//2depth 닫으면 class on 추천 여행지로 돌아가게 만들기
-//일정편집 중에 닫기 버튼누르면 편집을 그만히시겠습니까? 띄우고 ok하면 해당 순서 배열로 저장, 버튼 저장으로 돌려서 닫기
+
+//할일
+//일정생성하거나 편집할때 1개면 안들어감
+//동행자 편집(hidden 없애는 함수부터)**
+//동행자 삭제**
+//동행자 확인할때 값 누적됨**
+//일정편집없는 유저 동행자확인 버튼 2개뜸(아래가 빈버튼)**
+//마지막 장소 기반으로 추천 여행지 출력, 검색 기본값 출력
+//일정전체적인 지역코드 저장 => 검색시 그 지역코드 기반으로 출력
+//스케줄좍좍부분에 뭐넣을지
+//장소카테고리 넣어야함!**
+//dot 하단 길이 조절 필요
+//이미지 없는 장소 forEach 못돌아서 오류남(getSlideImg 함수)
+//일정 수정 후 저장 alert 두번뜸
+//맨위 index는 ^버튼 삭제, 맨아래 index는 v버튼 삭제
+//날짜지난일정은 메모, 동행자, 편집버튼 전부 삭제
+//이름 점처리

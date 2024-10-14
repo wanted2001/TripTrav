@@ -9,7 +9,7 @@
     </select>
 
     <select id="scheduleCall" resultType="com.www.triptrav.domain.ScheduleVO">
-        select * from schedule where uno = #{uno}
+        select * from schedule where uno = #{uno} order by sche_start asc, sche_end asc
     </select>
     <!--내가 쓴 리뷰 -->
     <select id="getReviewList" resultType="com.www.triptrav.domain.ReviewVO">
@@ -33,7 +33,7 @@
     </select>
 
     <select id="scheduleComCall" resultType="com.www.triptrav.domain.ScheduleVO">
-        select * from schedule where sco=#{sco}
+        select * from schedule where sco=#{sco} order by sche_start asc, sche_end asc
     </select>
 
     <update id="userComNPw">
@@ -49,8 +49,20 @@
     </update>
 
     <delete id="scheduleDelete">
-        DELETE FROM schedule
-        WHERE schedule.sco = #{sco};
+        delete from schedule
+        where schedule.sco = #{sco};
+    </delete>
+
+    <select id="getLikePlace" resultType="com.www.triptrav.domain.LikeVO">
+        select * from `like` where uno=#{uno} and type_id = #{typeId};
+    </select>
+
+    <select id="getRole">
+        select sche_role from schedule_role where uno=#{uno} and sco=#{sco}
+    </select>
+
+    <delete id="delLike">
+        delete from `like` where uno =#{uno} and like_code=#{likeCode} and type_id = #{typeId}
     </delete>
 
 </mapper>

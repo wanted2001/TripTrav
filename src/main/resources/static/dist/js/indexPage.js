@@ -85,8 +85,10 @@ function loadTaste(){
             document.querySelector('.additionalInfo').style.display = ''
             document.querySelector('.mainText').style.display = 'none';
             document.querySelector('.mainBtnDiv').style.display = 'none';
+            document.getElementById('searchA').addEventListener('click', () => {
+                document.querySelector('.additionalInfo').style.display = 'none'
+            })
         }
-
     }else{
         if(confirm("로그인 한 사용자만 이용가능 한 서비스입니다. \n로그인 페이지로 이동하시겠습니까?")){
             document.getElementById('myModal').style.display = 'flex';
@@ -112,29 +114,34 @@ buttons.forEach(button => {
         else {
             alert('최대 5개까지 선택할 수 있습니다.');
         }
-        console.log(selectedButtons);
     });
 });
 
-// 분석하기 버튼 클릭 시
 document.querySelector('.analyze-button').addEventListener('click', function() {
+    const requestBody = {
+        categoryNames: selectedButtons,
+        uno: unoNum
+    };
     fetch('/taste/addTaste', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(selectedButtons)
+        body: JSON.stringify(requestBody)
     })
-        .then(response => {
-            return response.json();
-        })
-        .then(data => {
-            console.log('카테고리 코드:', data);
+        .then(response => response.text())
+        .then(result =>{
+            if(result == "fail"){
+                alert("분석에러")
+            }else{
+                window.location.href = "/taste/";
+            }
         })
         .catch(error => {
             console.error('Error:', error);
         });
 });
+
 
 //성별, 나이 업데이트
 document.getElementById('additionalInfoFormButton').addEventListener('click', function() {

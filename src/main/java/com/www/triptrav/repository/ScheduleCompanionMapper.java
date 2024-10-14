@@ -11,4 +11,6 @@ public interface ScheduleCompanionMapper {
     int inviteUserAddPlan(@Param("uno") long uno, @Param("sco") long sco, @Param("nick") String nick);
 
     List<ScheduleCompanionVO> getCompanionList(long sco);
+
+    int deleteCompanion(@Param("sco") long sco, @Param("uno") long uno);
 }

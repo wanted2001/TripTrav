@@ -13,4 +13,9 @@ public class ScheduleRoleVO {
     private long sco;
     private long uno;
     private int scheRole;
+
+    public ScheduleRoleVO(long sco, long uno) {
+        this.sco = sco;
+        this.uno = uno;
+    }
 }
