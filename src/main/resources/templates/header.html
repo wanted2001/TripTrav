@@ -120,6 +120,7 @@
         </div>
     </div>
     <script src="/dist/js/loginJoin.js"></script>
+    <script src="/dist/js/header.js"></script>
     <script>
         let url = window.location.href;
 
@@ -127,7 +128,6 @@
             if (url === "http://localhost:8099/") {
                 changeSearch();
             } else {
-                console.log("다른 페이지");
                 window.location.href = "http://localhost:8099/?search=true";
             }
         });
@@ -135,6 +135,7 @@
         function changeSearch() {
             document.querySelector('.mainText').style.display = 'none';
             document.querySelector('.mainBtnDiv').style.display = 'none';
+            document.querySelector('.tasteDiv').style.display = 'none';
             document.querySelector('.inputWrap').style.display = '';
         }
     </script>
@@ -160,8 +161,7 @@
             const header = document.getElementById('header');
             const logo = document.getElementById('logo');
             const currentURL = window.location.href;
-            console.log({currentURL})
-            const headerText = document.querySelectorAll('#header a'); // header 내의 <a> 요소 선택
+            const headerText = document.querySelectorAll('#header a');
 
             if (currentURL.includes('/maps') || currentURL.includes('/mypage') || currentURL.includes('/taste') || currentURL.includes('/place')||currentURL.includes('/food') || currentURL.includes('/trip')) {
                 headerText.forEach(link => {
@@ -179,21 +179,6 @@
                 });
             }
         }
-
-        // function changeHeaderColor() {
-        //     const header = document.getElementById('header');
-        //     const currentURL = window.location.href;
-
-        //     // URL에 따라 배경색 변경
-        //     if (currentURL.includes('/maps')) {
-        //         header.style.position = 'absolute';
-        //         header.style.backgroundColor = 'orange';
-        //         header.style.width = ' 1440px';
-        //         header.style.margin = '0 auto';
-        //     } else {
-        //         header.style.backgroundColor = ''; // 기본 배경색
-        //     }
-        // }
 
         // 페이지 로드 시 실행
         window.addEventListener('load', changeHeaderColor)

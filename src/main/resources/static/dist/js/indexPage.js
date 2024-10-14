@@ -85,6 +85,9 @@ function loadTaste(){
             document.querySelector('.additionalInfo').style.display = ''
             document.querySelector('.mainText').style.display = 'none';
             document.querySelector('.mainBtnDiv').style.display = 'none';
+            document.getElementById('searchA').addEventListener('click', () => {
+                document.querySelector('.additionalInfo').style.display = 'none'
+            })
         }
     }else{
         if(confirm("로그인 한 사용자만 이용가능 한 서비스입니다. \n로그인 페이지로 이동하시겠습니까?")){

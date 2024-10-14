@@ -39,14 +39,11 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         if (returnUrl != null && !returnUrl.isEmpty()) {
             getRedirectStrategy().sendRedirect(request, response, returnUrl);
             return;
-        }
-
-        // 닉네임 체크 후 리다이렉트
-        if (user.getNickname().contains("_user")) {
+        } else if (user.getNickname().contains("_user")) {
             response.sendRedirect("/?message=notAllowedNickName");
         } else {
             response.sendRedirect("/");
         }
-        // 리다이렉트 수행되었으므로 super 호출 안함
+
     }
 }
