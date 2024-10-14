@@ -37,7 +37,7 @@
     font-family: 'LINESeedKR-Rg';
     font-size: 14px;
 }
-.addMemoBtn:hover,.addPersonBtn:hover,.checkPersonBtn:hover {
+.addMemoBtn:hover,.addPersonBtn:hover,.checkPersonBtn:hover, .heart_addBtn:hover {
     cursor: pointer;
     background: #ffffff2e;
 }
@@ -346,45 +346,45 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
     color: white;
     box-shadow: 0 2px 7px 1px #dfdfdf
 }
-.depth2_recomm, .depth2_search {
-    height: 100px;
-    padding-top: 23px;
-}
-.depth2_recomm:hover, .depth2_search:hover{
+/*.depth2_search {*/
+/*    height: 100px;*/
+/*    padding-top: 23px;*/
+/*}*/
+.recomm_area:hover, .depth2_search_base:hover, .heart_area:hover, .depth2_search_area:hover{
     background: #ededed99;
 }
-.recomm_img, .depth2_search_img {
-    float: left;
-    width: 70px;
-    height: 70px;
-    background: #e4e4e4;
-    border-radius: 100px;
-    margin-left: 15px;
-}
-.recomm_name, .depth2_search_name{
-    font-family: 'LINESeedKR-Rg';
-    width: 60%;
-    padding: 13px 0 0 94px;
-}
-.recomm_addr, .depth2_search_addr {
-    font-family: 'LINESeedKR-Th';
-    width: 63%;
-    padding: 10px 0 0 94px;
-    font-size: 15px;
-}
-.recomm_addBtn,.depth2_search_addBtn {
-    float: right;
-    border: 1px solid #3f3f3f;
-    padding: 9px 9px 6px;
-    font-family: 'LINESeedKR-Rg';
-    border-radius: 3px;
-    margin: -43px 13px;
-    color: #3f3f3f;
-    cursor: pointer;
-}
-.recomm_addBtn:hover,.depth2_search_addBtn:hover{
-    background: #80808029;
-}
+/*.depth2_search_img {*/
+/*    float: left;*/
+/*    width: 70px;*/
+/*    height: 70px;*/
+/*    background: #e4e4e4;*/
+/*    border-radius: 100px;*/
+/*    margin-left: 15px;*/
+/*}*/
+/*.depth2_search_name{*/
+/*    font-family: 'LINESeedKR-Rg';*/
+/*    width: 60%;*/
+/*    padding: 13px 0 0 94px;*/
+/*}*/
+/*.depth2_search_addr {*/
+/*    font-family: 'LINESeedKR-Th';*/
+/*    width: 63%;*/
+/*    padding: 10px 0 0 94px;*/
+/*    font-size: 15px;*/
+/*}*/
+/*.depth2_search_addBtn {*/
+/*    float: right;*/
+/*    border: 1px solid #3f3f3f;*/
+/*    padding: 9px 9px 6px;*/
+/*    font-family: 'LINESeedKR-Rg';*/
+/*    border-radius: 3px;*/
+/*    margin: -43px 13px;*/
+/*    color: #3f3f3f;*/
+/*    cursor: pointer;*/
+/*}*/
+/*.depth2_search_addBtn:hover{*/
+/*    background: #80808029;*/
+/*}*/
 .addPlanBtn{
     width: 27px;
     height: 27px;
@@ -484,16 +484,19 @@ button.depth2_searchBtn {
     transform: translate(-50%, -192%);
     opacity: 0.5;
 }
-
-.heart_area {
+.depth2_search_base {
+    width: 111%;
+    margin-left: -16px;
+}
+.heart_area, .recomm_area, .depth2_search_base,.depth2_search_area{
     display: flex;
     align-items: flex-start;
     height: 100px;
-    padding-top: 25px;
+    padding-top: 30px;
     position: relative;
 }
 
-.heart_img {
+.heart_img, .recomm_img, .search_img, .search_result_img {
     width: 70px;
     height: 70px;
     background: #e4e4e4;
@@ -501,22 +504,23 @@ button.depth2_searchBtn {
     margin-left: 15px;
 }
 
-.heart_name_cate {
+.heart_name_cate, .recomm_name_cate, .search_name_cate, .search_result_name_cate {
     width: 216px;
     margin-left: 10px;
     overflow: hidden;
     text-overflow: ellipsis;
+    margin-top: 12px;
+    height: 58px;
 }
 
-.heart_name {
+.heart_name,.recomm_name, .search_name, .search_result_name {
     font-family: 'LINESeedKR-Rg';
-    font-weight: bold;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.heart_cate {
+.heart_cate,.recomm_cate, .search_cate,.search_result_cate {
     font-family: 'LINESeedKR-Th';
     font-size: 13px;
     font-weight: bold;
@@ -524,9 +528,10 @@ button.depth2_searchBtn {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    transform: translateY(2px);
 }
 
-.heart_addr {
+.heart_addr,.recomm_addr, .search_addr,.search_result_addr {
     font-family: 'LINESeedKR-Th';
     font-size: 15px;
     margin-top: 5px;
@@ -535,12 +540,16 @@ button.depth2_searchBtn {
     text-overflow: ellipsis;
 }
 
-.heart_addBtn {
+.heart_addBtn, .recomm_addBtn, .search_addBtn,.search_result_addBtn {
     width: 27px;
     height: 27px;
     position: absolute;
-    right: 15px;
-    bottom: 10px;
+    right: 12px;
+    top: 47px;
+    z-index: 1000;
+}
+.aTag{
+    color: black;
 }
 
 /*.addPlanBtn {*/
