@@ -311,4 +311,11 @@ public class ScheduleController {
         return "-1";
     }
 
+    @GetMapping("/getSchedule/{sco}")
+    @ResponseBody
+    public ScheduleVO getSchedule(@PathVariable long sco){
+        ScheduleVO sdvo = ssv.getScheduleVO(sco);
+        return sdvo;
+    }
+
 }

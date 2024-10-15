@@ -2,6 +2,7 @@ const accordionButton = document.querySelector('.accordion');
 const buttons = document.querySelectorAll('.taste-button');
 const reTasteBtn = document.querySelector('.reTaste');
 let selectedButtons = [...cnoList];
+let reState =false;
 
 //초기페이지
 document.querySelector('.tasteTitle').innerText = `${userNickname}님의 취향분석 결과`;
@@ -48,9 +49,11 @@ buttons.forEach(button => {
         if (isDifferent) {
             if(selectedButtons.length != 0){
                 reTasteBtn.style.display = '';
+                reState = true;
             }
         } else {
             reTasteBtn.style.display = 'none';
+            reState = false;
         }
     });
 });
@@ -288,4 +291,22 @@ async function trendData(age, gender){
         console.log(error);
     }
 }
-
+let open = false;
+document.querySelector('.accordion').addEventListener('click', ()=>{
+    if(open == true){
+        document.querySelector('.openButton').src = "/dist/image/chevron-down.svg";
+        document.querySelector('.reTaste').style.display = 'none';
+        open = false;
+        if(reState ==false){
+            document.querySelector('.reTaste').style.display = 'none';
+        }
+    }else{
+        document.querySelector('.openButton').src = "/dist/image/chevron-up.svg";
+        open = true;
+        if(reState == true){
+            document.querySelector('.reTaste').style.display = '';
+        }else{
+            document.querySelector('.reTaste').style.display = 'none';
+        }
+    }
+})
