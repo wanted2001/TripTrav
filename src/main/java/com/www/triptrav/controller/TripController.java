@@ -27,7 +27,6 @@ public class TripController {
     @ResponseBody
     @GetMapping("/courseCall")
     public List<PathVO> goCourseCall(){
-        List<PathVO> pathVOList = psv.loadServeList();
         return psv.loadServeList();
     }
 

@@ -1,0 +1,54 @@
+.tripWrap {
+    width: 90%;
+    max-width: 1900px;
+    margin: 140px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.list-container{
+    width: 1440px;
+    height: 700px;
+}
+
+.list-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 25px;
+    border: 2px solid #ccc;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    background-color: #ffffff;
+    transition: transform 0.3s, box-shadow 0.3s;
+    width: 100%; /* 너비를 100%로 설정 */
+    max-width: 1000px; /* 최대 너비를 설정하여 카드 크기 조정 */
+}
+
+
+.list-item:hover {
+    transform: translateY(-5px); /* 마우스 오버 시 더 위로 이동 */
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3); /* 그림자 효과 강조 */
+}
+
+.list-item img {
+    width: 200px; /* 이미지 크기 증가 */
+    height: 150px; /* 이미지 크기 증가 */
+    object-fit: cover; /* 비율 유지 */
+    margin-right: 20px; /* 이미지와 텍스트 간격 증가 */
+    border-radius: 8px; /* 모서리 둥글게 */
+    border: 2px solid #ddd; /* 경계선 두껍게 */
+}
+
+.list-item h3 {
+    margin: 0 0 10px; /* 제목과 다른 정보 간의 여백 조정 */
+    font-size: 26px; /* 제목 크기 증가 */
+    color: #2c3e50; /* 제목 색상 */
+}
+
+.list-item p {
+    margin: 5px 0; /* 문단 간격 조정 */
+    color: #34495e; /* 텍스트 색상 */
+    font-size: 16px; /* 텍스트 크기 증가 */
+}

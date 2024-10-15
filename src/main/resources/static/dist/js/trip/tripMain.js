@@ -1,79 +1,75 @@
-console.log('tripCourse in');
+document.addEventListener("DOMContentLoaded", () => {
+    console.log('tripCourse in');
 
-// courseCall().then(re => {
-//     const container = document.getElementById('cardContainer');
-//     re.forEach(result => {
-//         const card = document.createElement("div");
-//         card.classList.add("card");
-//         const image = document.createElement("img");
-//         image.src = result.firstImage;
-//         const content = document.createElement("div");
-//         content.classList.add("card-content");
-//         const link = document.createElement("a");
-//         link.href = `/tripdetail=${result.contentId}`;
-//         link.innerText = result.title;
-//         content.appendChild(link);
-//         card.appendChild(image);
-//         card.appendChild(content);
-//         container.appendChild(card);
-//     });
-// });
 
-console.log('tripCourse in');
+    
 
-let currentPage = 1;
-const itemsPerPage = 10; // 한 번에 불러올 데이터 개수
-let isLoading = false; // 중복 로드를 방지하기 위한 플래그
-
-// 데이터 로드 함수
-async function courseCall(page) {
-    const response = await fetch(`/trip/courseCall?page=${page}&limit=${itemsPerPage}`);
-    return await response.json();
-}
-
-// 화면에 카드 추가 함수
-function appendTrips(trips) {
-    const container = document.getElementById('cardContainer');
-    trips.forEach(result => {
-        const card = document.createElement("div");
-        card.classList.add("card");
-
-        const image = document.createElement("img");
-        image.src = result.firstImage;
-
-        const content = document.createElement("div");
-        content.classList.add("card-content");
-
-        const link = document.createElement("a");
-        link.href = `/tripdetail=${result.contentId}`;
-        link.innerText = result.title;
-
-        content.appendChild(link);
-        card.appendChild(image);
-        card.appendChild(content);
-        container.appendChild(card);
+    courseCall().then(re => {
+        appendTrips(re.slice(0, 5)); // 첫 5개 항목 처리
     });
-}
 
-// 최초 데이터 로드
-courseCall(currentPage).then(re => {
-    appendTrips(re);
-    currentPage++;
-});
+    // 데이터 로드 함수
+    async function courseCall() {
+        const response = await fetch(`/trip/courseCall`);
+        return await response.json();
+    }
 
-// 스크롤 이벤트 핸들러 추가
-window.addEventListener('scroll', () => {
-    // console.log("스크롤");
-    // console.log(this.innerHeight);
-    // console.log(this.scrollY);
-    if (this.innerHeight + this.scrollY >= !isLoading) {
-        isLoading = true; // 중복 로드를 방지
-        courseCall(currentPage).then(re => {
-            if (re.length > 0) {
-                appendTrips(re);
-                currentPage++;
+    async function courseDetailCall(contentId) {
+        const url = await fetch(`https://apis.data.go.kr/B551011/KorService1/detailIntro1?MobileOS=ETC&MobileApp=tr&_type=json&contentId=${contentId}&contentTypeId=25&serviceKey=${tourAPIKEY}`);
+        const res = await url.json();
+        return res.response.body.items.item; // 전체 아이템 반환
+    }
+
+    async function appendTrips(trips) {
+        const listContainer = document.getElementById('listContainer');
+
+        for (const trip of trips) {
+            const detailInfoArray = await courseDetailCall(trip.contentId); // 각 trip의 contentId를 사용하여 세부정보를 요청
+
+            if (!detailInfoArray || detailInfoArray.length === 0) {
+                console.log(`리스트 정보를 추가할 수 없습니다. trip ID: ${trip.contentId}의 detailInfo가 없습니다.`);
+                continue;
             }
-            isLoading = false; // 데이터 로드 완료 후 다시 로드 가능하도록 설정
-        });
+
+            const detailInfo = detailInfoArray[0]; // 첫 번째 아이템 사용
+
+            const listItem = document.createElement("div");
+            listItem.classList.add("list-item");
+
+            const image = document.createElement("img");
+            image.src = trip.firstImage; // 이미지 추가
+            image.alt = "코스 이미지"; // 이미지에 대한 설명
+
+            const info = document.createElement("div");
+
+            const title = document.createElement("h3");
+            title.innerText = `${trip.title ? trip.title : "정보 없음"}`; // 제목 추가
+
+            const address = document.createElement("p");
+            address.innerText = `${trip.addr1 ? trip.addr1 : "정보 없음"}`;
+
+            const distance = document.createElement("p");
+            distance.innerText = `총 거리${detailInfo.distance ? detailInfo.distance : "정보 없음"}`; // 거리 추가
+
+            // const taketime = document.createElement("p");
+            // taketime.innerText = `소요 시간: ${detailInfo.taketime ? detailInfo.taketime : "정보 없음"}`; // 소요 시간 추가
+
+            const schedule = document.createElement("p");
+            schedule.innerText = `일정: ${detailInfo.schedule ? detailInfo.schedule : "정보 없음"}`; // 일정 추가
+
+            const theme = document.createElement("p");
+            theme.innerText = `테마: ${detailInfo.theme ? detailInfo.theme : "정보 없음"}`; // 테마 추가
+
+            info.appendChild(title);
+            info.appendChild(address);
+            info.appendChild(distance);
+            // info.appendChild(taketime);
+            info.appendChild(schedule);
+            info.appendChild(theme);
+
+            listItem.appendChild(image);
+            listItem.appendChild(info);
+            listContainer.appendChild(listItem);
+        }
     }
 });
