@@ -12,7 +12,8 @@ import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
-public class SearchController {
+public class
+SearchController {
 
     private final TourDataService tourDataService;
 
