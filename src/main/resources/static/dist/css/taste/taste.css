@@ -287,4 +287,9 @@ main {
     color: gray;
     font-size: 16px;
 }
-
+.displayTasteAIList{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 20px;
+}

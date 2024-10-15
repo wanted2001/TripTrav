@@ -1,6 +1,8 @@
 const accordionButton = document.querySelector('.accordion');
 const buttons = document.querySelectorAll('.taste-button');
 const reTasteBtn = document.querySelector('.reTaste');
+const placeNames = [];
+const placeTag = [];
 let selectedButtons = [...cnoList];
 let reState =false;
 
@@ -11,6 +13,7 @@ const selectedTaste = document.querySelector('.selectedTaste');
 selectedTaste.innerHTML = ``;
 for(let tags of selectedButtons){
     selectedTaste.innerHTML += `<span class="tags">#${changeCno(tags)}</span>`
+    placeTag.push(changeCno(tags));
 }
 //아코디언처리
 accordionButton.addEventListener('click', () => {
@@ -183,6 +186,7 @@ Promise.all([
             for (let contentId of similarPlace) {
                 if (contentId == displayData.contentid) {
                     const titleText = displayData.title;
+                    placeNames.push(titleText);
                     if (displayData.contenttypeid == "15") {
                         displayTasteCodeList.innerHTML +=
                             `<a href="https://www.google.com/search?q=${encodeURIComponent(displayData.title)}" target="_blank">
@@ -260,14 +264,114 @@ Promise.all([
                             }
                         }
                         displayCount++;
+
                     }
                 }
             });
         });
+        async function fetchAndDisplayAI() {
+            try {
+                const result = await analyzeWithAI(placeNames, placeTag);
+                console.log(result);
+                const analysisContent = result.choices[0].message.content;
+                console.log("원본 응답:", analysisContent);
+
+                const jsonString = analysisContent.match(/\[.*\]/s);
+
+                if (jsonString && jsonString[0]) {
+                    try {
+                        const parsedData = JSON.parse(jsonString[0]);
+                        console.log("파싱된 데이터:", parsedData);
+
+                        const displayTasteAIList = document.querySelector('.displayTasteAIList');
+                        const matchedPlaces = [];
+                        const uniquePlaceNames = new Set();
+
+                        while (matchedPlaces.length < 10) {
+                            for (let place of parsedData) {
+                                const placeName = place["이름"].replace(/[\[\]]/g, "").trim();
+                                const placeReason = place["추천이유"];
+
+                                if (uniquePlaceNames.has(placeName)) {
+                                    continue;
+                                }
+                                uniquePlaceNames.add(placeName);
+
+                                for (let content of data) {
+                                    if (content.title.toLowerCase().includes(placeName.toLowerCase()) && content.firstimage) {
+                                        console.log("찾음:", content.title);
+
+                                        matchedPlaces.push({
+                                            title: content.title,
+                                            firstimage: content.firstimage,
+                                            contentid: content.contentid,
+                                            placeReason: placeReason
+                                        });
+                                        if (matchedPlaces.length >= 10) {
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                if (matchedPlaces.length >= 10) {
+                                    break;
+                                }
+                            }
+
+                            if (matchedPlaces.length < 10) {
+                                console.log("매칭된 장소가 10개 미만입니다. API를 다시 호출합니다.");
+                                await fetchAndDisplayAI();
+                            } else {
+                                console.log("매칭된 장소가 10개입니다:", matchedPlaces);
+                                displayMatchedPlaces(matchedPlaces, displayTasteAIList);
+                                break;
+                            }
+                        }
+                    } catch (error) {
+                        console.error("JSON 파싱 오류:", error);
+                    }
+                } else {
+                    console.error("JSON 문자열을 찾을 수 없습니다.");
+                }
+            } catch (error) {
+                console.error('데이터 로딩 에러:', error);
+            }
+        }
+
+        function displayMatchedPlaces(matchedPlaces, displayTasteAIList) {
+            const shuffledPlaces = shuffleArray(matchedPlaces);
+
+            displayTasteAIList.innerHTML = '';
+
+            shuffledPlaces.forEach(place => {
+                const {title, firstimage, contentid, placeReason} = place;
+                if (contentid) {
+                    displayTasteAIList.innerHTML +=
+                        `<a href="/place/${contentid}">
+                            <div class="oneTasteCode">
+                                <img src="${firstimage}" alt="${title}">
+                                    <span title="${placeReason}">${title}</span>
+                            </div>
+                        </a>`;
+                } else {
+                    displayTasteAIList.innerHTML +=
+                        `<a href="https://www.google.com/search?q=${encodeURIComponent(title)}" target="_blank">
+                            <div class="oneTasteCode">
+                                <img src="${firstimage}" alt="${title}">
+                                    <span title="${placeReason}">${title}</span>
+                            </div>
+                        </a>`;
+                }
+            });
+        }
+
+        fetchAndDisplayAI();
+
     })
     .catch(error => {
         console.error('데이터 로딩 에러:', error);
     });
+
 
 //매번 랜덤값 넣기
 function shuffleArray(array) {
@@ -310,3 +414,24 @@ document.querySelector('.accordion').addEventListener('click', ()=>{
         }
     }
 })
+async function analyzeWithAI(placeNames, placeTag) {
+    try {
+        const requestBody = {
+            placeNames: placeNames,
+            placeTag: placeTag
+        }
+        const url = "/ai/analyze"
+        const option = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
+        }
+        const resp = await fetch(url, option);
+        return await resp.json();
+    }catch(error){
+        console.log(error);
+    }
+}
+
