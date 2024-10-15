@@ -32,9 +32,7 @@ public class PathService {
             try {
                 Resource resource = resourceLoader.getResource("classpath:static/dist/json/planData.json");
                 ObjectMapper objectMapper = new ObjectMapper();
-
                 JsonNode rootNode = objectMapper.readTree(resource.getInputStream());
-
                 for (JsonNode item : rootNode) {
                     PathVO data = new PathVO(
                             item.path("contentid").asLong(),
@@ -55,15 +53,17 @@ public class PathService {
             try {
                 Resource resource = resourceLoader.getResource("classpath:static/dist/json/courseData.json");
                 ObjectMapper objectMapper = new ObjectMapper();
-
                 JsonNode rootNode = objectMapper.readTree(resource.getInputStream());
-
                 for (JsonNode item : rootNode) {
+                    if (item.path("firstimage").isMissingNode() || item.path("firstimage").asText().isEmpty() || item.path("addr1").isMissingNode() || item.path("addr1").asText().isEmpty()) {
+                        continue;
+                    }
                     PathVO data = new PathVO(
                             item.path("contentid").asLong(),
                             item.path("firstimage").asText(),
                             item.path("contenttypeid").asLong(),
-                            item.path("title").asText()
+                            item.path("title").asText(),
+                            item.path("addr1").asText()
                     );
                     serveList.add(data);
                 }
