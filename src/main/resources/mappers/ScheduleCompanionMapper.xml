@@ -7,7 +7,7 @@
         insert into schedule_companion values (#{uno}, #{sco}, #{nick})
     </insert>
 
-    <select id="getCompanionList" resultType="com.www.triptrav.domain.ScheduleCompanionVO">
+    <select id="getCompanionList" resultType="com.www.triptrav.domain.ScheduleCompanionDTO">
         select
         s.uno, s.sco, s.sche_nick, u.profile
         from schedule_companion s

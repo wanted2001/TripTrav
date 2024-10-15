@@ -132,6 +132,15 @@
     margin-top: 15px;
     font-family: 'LINESeedKR-Rg';
 }
+.compaNick {
+    display: block;
+    position: absolute;
+    transform: translate(47px, -46px);
+}
+.companionLi img {
+    width: 39px;
+    border-radius: 50px;
+}
 .cmCloseBtn {
     position: absolute;
     font-size: large;
@@ -197,15 +206,35 @@
     padding: 7px 13px 6px;
     /* border: 3px solid; */
 }
-.modifyMemo, .editRole{
+.modifyMemo{
     right: 186px;
     background: #c5c5c5
 }
 .editRole {
-    transform: translate(553px, 72px);
+    transform: translate(-60px, 62px);
+    color: gray;
+    border: none;
+    font-size: 17px;
+    position: absolute;
+    right: 14px;
+    top: 394px;
+    font-family: 'LINESeedKR-Rg';
+    border-radius: 8px;
+    background: #FFFBE6;
+    padding: 7px 13px 6px;
 }
 .editRoleSave {
-    transform: translate(436px, 71px);
+    transform: translate(7px, 62px);
+    color: white;
+    border: none;
+    font-size: 17px;
+    position: absolute;
+    right: 14px;
+    top: 394px;
+    font-family: 'LINESeedKR-Rg';
+    border-radius: 8px;
+    background: #e1cc05;
+    padding: 7px 13px 6px;
 }
 .sadFace {
     width: 45px;
