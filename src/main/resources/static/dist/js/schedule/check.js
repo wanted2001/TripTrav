@@ -270,7 +270,6 @@ function editRoleUser() {
                 li.setAttribute('data-uno', unoData);
 
                 li.innerHTML = `
-                    ${index + 1}) ${res.scheNick}${isCurrentUser}
                     <label>
                         <input type="radio" name="role_${res.uno}" value="1" ${isCheckedEditor}> 편집자
                     </label>
@@ -588,7 +587,7 @@ function checkPersonF() {
                 if (data.length > 0) {
                     data.sort((a, b) => a.uno - b.uno);
                     data.forEach(r => {
-                        const li = `<li class="companionLi">${r.scheNick}</li>`
+                        const li = `<li class="companionLi"><img src="${r.profile ? `/profile/${r.profile}` : '/dist/image/smile-beam.svg'}"><span class="compaNick">${r.scheNick}</span></li>`
                         document.querySelector('.companionUl').innerHTML += li;
                     })
                 } else {
