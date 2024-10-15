@@ -1,14 +1,45 @@
 let currentPage = 1;
 const itemsPerPage = 5;
 let isLoading = false;
-let trips = []; // 전체 데이터를 저장할 변수
+let trips = [];
+let isLike = false;
 
 document.addEventListener("DOMContentLoaded", () => {
     console.log('tripCourse in');
     loadTrips(currentPage); // 첫 페이지 데이터 로드
 
-    window.addEventListener("scroll", handleScroll); // 스크롤 이벤트 리스너 추가
+    window.addEventListener("scroll", handleScroll);
 });
+
+// document.getElementById("likeBtn").addEventListener('click',()=>{
+//     if(typeof userNickname !== 'undefined' && userNickname !== null){
+//         if(courseLikeResult == true){
+//             alert("찜 취소 하시겠습니까?")
+//             deleteLike(unoNum, contentId).then(result =>{
+//                 if(result == "deleteSuccess"){
+//                     document.querySelector('.placeHeart').src = "/dist/image/heart.svg"
+//                     alert("취소 완료")
+//                     courseLikeResult = false;
+//                 }
+//             })
+//         }else if(courseLikeResult == false){
+//             alert("찜하시겠습니까?")
+//             addLike(unoNum, contentId, contentName).then(result => {
+//                 if(result == "success"){
+//                     document.querySelector('.placeHeart').src = "/dist/image/heart-on.svg"
+//                     if(confirm("등록완료 마이페이지에서 확인하시겠습니까?")){
+//                         location.href=`/mypage?uno=${unoNum}&location=wishTrip`;
+//                     }
+//                     placeLikeResult = true;
+//                 }
+//             })
+//         }
+//     }else{
+//         if(confirm("로그인 한 사용자만 이용가능 한 서비스입니다. \n로그인 페이지로 이동하시겠습니까?")){
+//             document.getElementById('myModal').style.display = 'flex';
+//         }
+//     }
+// })
 
 async function courseCall() {
     const response = await fetch(`/trip/courseCall`);
@@ -20,13 +51,13 @@ async function loadTrips(page) {
 
     isLoading = true;
 
-    if (trips.length === 0) { // 데이터가 비어 있으면 전체 데이터 로드
+    if (trips.length === 0) {
         trips = await courseCall();
     }
 
-    const start = (page - 1) * itemsPerPage; // 시작 인덱스
-    const end = start + itemsPerPage; // 끝 인덱스
-    const tripsToDisplay = trips.slice(start, end); // 필요한 개수만큼 잘라서 표시
+    const start = (page - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    const tripsToDisplay = trips.slice(start, end);
     appendTrips(tripsToDisplay);
     isLoading = false;
 }
@@ -82,6 +113,9 @@ async function appendTrips(trips) {
 
         const theme = document.createElement("p");
         theme.innerText = `테마: ${detailInfo.theme ? detailInfo.theme : "정보 없음"}`;
+
+        const btnDiv = document.createElement("div");
+        btnDiv.innerHTML=`<button type="button" onclick="like" id="likeBtn"><img src="/dist/image/heart.svg"></button>`;
 
         info.appendChild(title);
         info.appendChild(address);
