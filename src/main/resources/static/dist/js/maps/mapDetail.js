@@ -26,6 +26,7 @@ const contentTypeIdMap = {
     25: "여행코스",
     28: "레포츠",
     38: "쇼핑",
+    14: "축제/공연/행사"
 };
 
 let selectedContentTypeId = null;
@@ -109,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let scrollHeight = tourInfoList.scrollHeight;
         let regionCode = window.location.hash.replace('#', '');
 
-        if (scrollTop + clientHeight + 500 > scrollHeight && !isLoading) {
+        if (scrollTop + clientHeight + 10 > scrollHeight && !isLoading) {
             fetchTourInfo(regionCode, selectedContentTypeId);
         }
     });
