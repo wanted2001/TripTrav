@@ -62,18 +62,18 @@ courseCall(currentPage).then(re => {
 });
 
 // 스크롤 이벤트 핸들러 추가
-window.addEventListener('scroll', () => {
-    console.log("스크롤");
-    console.log(this.innerHeight);
-    console.log(this.scrollY);
-    if (this.innerHeight + this.scrollY >= !isLoading) {
-        isLoading = true; // 중복 로드를 방지
-        courseCall(currentPage).then(re => {
-            if (re.length > 0) {
-                appendTrips(re);
-                currentPage++;
-            }
-            isLoading = false; // 데이터 로드 완료 후 다시 로드 가능하도록 설정
-        });
-    }
-});
+// window.addEventListener('scroll', () => {
+//     console.log("스크롤");
+//     console.log(this.innerHeight);
+//     console.log(this.scrollY);
+//     if (this.innerHeight + this.scrollY >= !isLoading) {
+//         isLoading = true; // 중복 로드를 방지
+//         courseCall(currentPage).then(re => {
+//             if (re.length > 0) {
+//                 appendTrips(re);
+//                 currentPage++;
+//             }
+//             isLoading = false; // 데이터 로드 완료 후 다시 로드 가능하도록 설정
+//         });
+//     }
+// });

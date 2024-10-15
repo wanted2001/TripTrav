@@ -1,24 +1,52 @@
 .checkBackImg{
-    background: gainsboro;
+    /*background: gainsboro;*/
+    background: url("../../image/main4.jpg") no-repeat center/cover;
     position: absolute;
     top: 0;
     width: 100%;
-    height: 506px;
+    height: 518px;
+}
+.blurImg {
+    width: 100%;
+    height: 519px;
+    position: absolute;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), rgb(255 255 255 / 4%), rgb(255 255 255 / 11%), rgb(255 255 255 / 0%), rgba(255, 255, 255, 0));
+
+    backdrop-filter: blur(3px);
 }
 .checkTitle{
-    width: 1210px;
-    margin: 130px auto;
+    width: 1110px;
+    margin: 130px 255px;
     display: flex;
     flex-wrap: wrap;
+    position: relative;
+    z-index: 100;
+    color: white;
 }
 .checkTitle img{
-    width: 17px;
+    width: 27px;
+    position: absolute;
 }
-.checkName{
-    font-family: 'LINESeedKR-Rg';
-    font-size: 1.3em;
-    margin: -16px 0 0 25px;
+.modalList {
+    display: flex;
+    position: absolute;
+    right: 301px;
+    top: 126px;
+    width: 176px;
+    height: 50px;
+    justify-content: space-around;
+}
+.addMemoBtn img, .checkPersonBtn img, .addPersonBtn img {
+    width: 38px;
+    height: 50px;
+    cursor: pointer;
+}
+.checkName {
+    font-family: 'LINESeedKR-Bd';
+    font-size: 31px;
+    margin: 1px 0px 2px 36px;
     width: 100%;
+    letter-spacing: 1px;
 }
 .checkDate {
     font-family: 'LINESeedKR-Th';
@@ -28,36 +56,12 @@
 .checkSche {
     font-family: 'LINESeedKR-Rg';
     margin-top: 46px;
-    margin-left: -167px;
-    width: 1081px;
+    margin-left: -171px;
+    width: 1105px;
     overflow: hidden;
     white-space: nowrap;
     /* display: block; */
     text-overflow: ellipsis;
-}
-.addMemoBtn,.addPersonBtn, .checkPersonBtn {
-    position: absolute;
-    right: 325px;
-    top: 129px;
-    height: 12px;
-    border: 1px solid orange;
-    border-radius: 16px;
-    padding: 10px 15px;
-    text-align: center;
-    line-height: 16px;
-    font-family: 'LINESeedKR-Rg';
-    font-size: 14px;
-}
-.addMemoBtn:hover,.addPersonBtn:hover,.checkPersonBtn:hover, .heart_addBtn:hover {
-    cursor: pointer;
-    background: #ffffff2e;
-}
-.checkPersonBtn {
-    top: 171px;
-}
-.addPersonBtn {
-    top: 213px;
-    z-index: 100;
 }
 .memoModal, .companionModal {
     display: none;
@@ -79,26 +83,34 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    width: 540px;
+    height: 440px;
+    background: #fff6a2;
+    border: none;
+    border-radius: 5px;
 }
 .memoCloseBtn {
     color: gray;
     border: none;
-    font-size: 24px;
-    position: relative;
+    font-size: x-large;
     right: -543px;
     top: -414px;
-    background: #ffffff00;
+    float: right;
 }
 .memoContents {
     resize: none;
     border: none;
     outline: none;
-    width: 500px;
-    height: 400px;
-    padding: 20px;
+    width: 480px;
+    height: 340px;
+    padding: 12px;
     font-family: 'LINESeedKR-Rg';
     font-size: 16px;
-    border-radius: 6px;
+    /* border-radius: 6px; */
+    position: absolute;
+    background: none;
+    left: 16px;
+    top: 10px;
 }
 .memoContents::-webkit-scrollbar, .contentArea::-webkit-scrollbar{
     display: none;
@@ -132,9 +144,9 @@
     background: #fdfdfd;
     width: 20%;
     height: 24%;
-    top: 255px;
-    right: 326px;
-    box-shadow: 4px 5px 8px 0px #9e9e9ecc;
+    top: 184px;
+    right: 312px;
+    box-shadow: 4px 5px 8px 0px #2b2b2b;
     border-radius: 5px;
 }
 .personModalWrap{
@@ -172,17 +184,18 @@
     border-left: 1px solid #b7b7b7;
     padding-left: 6px;
 }
-.saveMemo, .modifyMemo, .editRoleSave, .editRole {
-    color: black;
+.saveMemo, .modifyMemo {
+    color: white;
     border: none;
     font-size: 17px;
-    position: relative;
-    right: 62px;
-    top: 29px;
+    position: absolute;
+    right: 14px;
+    top: 394px;
     font-family: 'LINESeedKR-Rg';
-    border-radius: 6px;
-    background: gainsboro;
-    padding: 6px 13px;
+    border-radius: 8px;
+    background: #e1cc05;
+    padding: 7px 13px 6px;
+    /* border: 3px solid; */
 }
 .modifyMemo, .editRole{
     right: 186px;
@@ -272,7 +285,7 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
     margin-top: 40px;
 }
 .slideItem{
-    background: pink;
+    background: rgba(255, 255, 255, 0);
     height: 160px;
     width: 160px;
     border-radius: 16px;
@@ -280,20 +293,21 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
     margin-right: 36px;
 }
 .dot {
-    width: 30px;
-    height: 30px;
-    background: aliceblue;
+    width: 20px;
+    height: 20px;
+    background: #FFFBE6;
     border-radius: 46px;
     position: absolute;
     top: 172px;
     margin-left: 64px;
     z-index: 10;
+    border: 5px solid #ffb42a;
 }
 .selectDot {
     margin-left: 80px;
 }
 .innerLine {
-    border: 3px dashed pink;
+    border: 4px dashed #ffb42a;
     position: absolute;
     z-index: 0;
     top: 115%;
@@ -302,7 +316,6 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
 .mapOpenBtn button, .mapCloseBtn{
     border: none;
     outline: none;
-    background: white;
     border-radius: 8px;
     box-shadow: -2px 2px 5px 0px #979797b8;
     position: absolute;
@@ -312,17 +325,23 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
     transition: opacity 0.5s ease;
 }
 .mapOpenBtn button{
-    top: 542px;
-    left: 161px;
+    top: 553px;
+    left: 163px;
     opacity: 1;
+    background: white;
+    border: 3px solid #ffb42a;
+    width: 35px;
+    height: 50px;
 }
 .mapCloseBtn{
-    top: 540px;
+    top: 551px;
     left: 520px;
     z-index: 100;
     transform: translateX(2%);
     opacity: 0;
     pointer-events: none;
+    background: white;
+    border: 3px solid #ffb42a;
 }
 .mapCloseBtn button{
     border: none;
@@ -340,7 +359,7 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
     position: absolute;
     z-index: 10;
     left: 152px;
-    top: 534px;
+    top: 546px;
     border-radius: 8px 0 0 8px;
     box-shadow: 4px 4px 15px 6px #9797974a;
     opacity: 0;
@@ -731,6 +750,10 @@ button.depth2_searchBtn {
 }
 .name_cate{
     margin: 7px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 316px;
 }
 .placeName{
     font-family: 'LINESeedKR-Rg';
@@ -742,7 +765,6 @@ button.depth2_searchBtn {
     font-weight: bold;
 }
 .placeImgDiv {
-    display: flex;
     justify-content: space-between;
     margin-left: -5px;
 }

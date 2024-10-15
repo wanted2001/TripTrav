@@ -18,13 +18,18 @@
     <th:block th:replace="~{header :: header}"></th:block>
     <input class="inviteUser" th:value="${session.inviteeUser}" style="display: none">
     <div class="checkBackImg">
+        <div class="blurImg"></div>
         <div class="checkTitle">
-            <img src="/dist/image/send.svg">
+            <img src="/dist/image/sendW.svg">
             <p class="checkName"></p>
             <p class="checkDate"></p>
             <p class="checkSche"></p>
         </div>
-        <div class="addMemoBtn" onclick="openModal()">메모추가 +</div>
+        <div class="modalList">
+            <div class="addMemoBtn" th:title="메모" onclick="openModal()"><img src="/dist/image/file-text.svg"></div>
+            <div class="checkPersonBtn" th:attr="title='동행자 확인'" onclick="checkPersonF()"><img src="/dist/image/users.svg"></div>
+            <div class="addPersonBtn" th:attr="title='동행자 추가'" onclick="addPersonF()"><img src="/dist/image/user-plus.svg"></div>
+        </div>
         <div class="memoModal">
             <div class="memoWrap">
                 <button class="memoCloseBtn" onclick="closeModal()">&times;</button>
@@ -32,8 +37,6 @@
                 <button class="saveMemo" onclick="saveMemoF()">저장</button>
             </div>
         </div>
-        <div class="checkPersonBtn" onclick="checkPersonF()">동행자 확인</div>
-        <div class="addPersonBtn" onclick="addPersonF()">동행자추가 +</div>
         <div class="personModal">
             <div class="personModalWrap">
                 <span>동행자 추가</span>

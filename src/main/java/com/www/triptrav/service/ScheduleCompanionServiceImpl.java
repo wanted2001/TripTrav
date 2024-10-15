@@ -1,5 +1,6 @@
 package com.www.triptrav.service;
 
+import com.www.triptrav.domain.ScheduleCompanionDTO;
 import com.www.triptrav.domain.ScheduleCompanionVO;
 import com.www.triptrav.repository.ScheduleCompanionMapper;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class ScheduleCompanionServiceImpl implements ScheduleCompanionService{
     }
 
     @Override
-    public List<ScheduleCompanionVO> getCompanionList(long sco) {
+    public List<ScheduleCompanionDTO> getCompanionList(long sco) {
         return scheduleCompanionMapper.getCompanionList(sco);
     }
 
