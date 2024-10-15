@@ -269,38 +269,28 @@ Promise.all([
                 }
             });
         });
+        //AI추천 출력
         async function fetchAndDisplayAI() {
             try {
                 const result = await analyzeWithAI(placeNames, placeTag);
-                console.log(result);
                 const analysisContent = result.choices[0].message.content;
-                console.log("원본 응답:", analysisContent);
-
                 const jsonString = analysisContent.match(/\[.*\]/s);
-
                 if (jsonString && jsonString[0]) {
                     try {
                         const parsedData = JSON.parse(jsonString[0]);
-                        console.log("파싱된 데이터:", parsedData);
-
                         const displayTasteAIList = document.querySelector('.displayTasteAIList');
                         const matchedPlaces = [];
                         const uniquePlaceNames = new Set();
-
                         while (matchedPlaces.length < 10) {
                             for (let place of parsedData) {
                                 const placeName = place["이름"].replace(/[\[\]]/g, "").trim();
                                 const placeReason = place["추천이유"];
-
                                 if (uniquePlaceNames.has(placeName)) {
                                     continue;
                                 }
                                 uniquePlaceNames.add(placeName);
-
                                 for (let content of data) {
                                     if (content.title.toLowerCase().includes(placeName.toLowerCase()) && content.firstimage) {
-                                        console.log("찾음:", content.title);
-
                                         matchedPlaces.push({
                                             title: content.title,
                                             firstimage: content.firstimage,
@@ -312,19 +302,16 @@ Promise.all([
                                         }
                                     }
                                 }
-
                                 if (matchedPlaces.length >= 10) {
                                     break;
                                 }
                             }
-
-                            if (matchedPlaces.length < 10) {
-                                console.log("매칭된 장소가 10개 미만입니다. API를 다시 호출합니다.");
-                                await fetchAndDisplayAI();
-                            } else {
-                                console.log("매칭된 장소가 10개입니다:", matchedPlaces);
+                            if (matchedPlaces.length >= 10) {
                                 displayMatchedPlaces(matchedPlaces, displayTasteAIList);
                                 break;
+                            } else {
+                                await fetchAndDisplayAI();
+                                return;
                             }
                         }
                     } catch (error) {
@@ -337,41 +324,39 @@ Promise.all([
                 console.error('데이터 로딩 에러:', error);
             }
         }
-
+        //화면출력
         function displayMatchedPlaces(matchedPlaces, displayTasteAIList) {
             const shuffledPlaces = shuffleArray(matchedPlaces);
-
             displayTasteAIList.innerHTML = '';
 
-            shuffledPlaces.forEach(place => {
-                const {title, firstimage, contentid, placeReason} = place;
-                if (contentid) {
-                    displayTasteAIList.innerHTML +=
-                        `<a href="/place/${contentid}">
-                            <div class="oneTasteCode">
-                                <img src="${firstimage}" alt="${title}">
-                                    <span title="${placeReason}">${title}</span>
-                            </div>
-                        </a>`;
-                } else {
-                    displayTasteAIList.innerHTML +=
-                        `<a href="https://www.google.com/search?q=${encodeURIComponent(title)}" target="_blank">
-                            <div class="oneTasteCode">
-                                <img src="${firstimage}" alt="${title}">
-                                    <span title="${placeReason}">${title}</span>
-                            </div>
-                        </a>`;
+            if (shuffledPlaces.length > 0) {
+                const placeReason = shuffledPlaces[0].placeReason;
+                const tasteAIListSection = document.querySelector('.tasteAIList');
+                let reasonElement = tasteAIListSection.querySelector('.placeReason');
+                if (!reasonElement) {
+                    reasonElement = document.createElement('span');
+                    reasonElement.classList.add('placeReason');
+                    tasteAIListSection.insertBefore(reasonElement, displayTasteAIList);
                 }
+                reasonElement.innerText = placeReason;
+            }
+            shuffledPlaces.forEach(place => {
+                const { title, firstimage, contentid } = place;
+                const placeElement = `
+            <a href="${contentid ? `/place/${contentid}` : `https://www.google.com/search?q=${encodeURIComponent(title)}`}" target="_blank">
+                <div class="oneTasteCode">
+                    <img src="${firstimage}" alt="${title}">
+                    <span class="placeTitle" title="${title}">${title}</span>
+                </div>
+            </a>`;
+                displayTasteAIList.innerHTML += placeElement;
             });
         }
-
         fetchAndDisplayAI();
-
     })
     .catch(error => {
         console.error('데이터 로딩 에러:', error);
     });
-
 
 //매번 랜덤값 넣기
 function shuffleArray(array) {
@@ -395,6 +380,7 @@ async function trendData(age, gender){
         console.log(error);
     }
 }
+//아코디언 인지 처리
 let open = false;
 document.querySelector('.accordion').addEventListener('click', ()=>{
     if(open == true){
@@ -414,6 +400,7 @@ document.querySelector('.accordion').addEventListener('click', ()=>{
         }
     }
 })
+//API 호출
 async function analyzeWithAI(placeNames, placeTag) {
     try {
         const requestBody = {

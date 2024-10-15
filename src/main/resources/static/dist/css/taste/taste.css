@@ -293,3 +293,6 @@ main {
     gap: 16px;
     padding: 20px;
 }
+.placeReason{
+    font-size: 16px;
+}
