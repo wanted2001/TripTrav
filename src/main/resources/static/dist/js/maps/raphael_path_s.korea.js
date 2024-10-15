@@ -101,41 +101,48 @@ window.onload = function () {
 		R.renderfix();
 		// console.log({R, south: document.querySelector("#south")})
 		// 이벤트 핸들링 코드 다시 설정
+		let previous = null; // 이전에 클릭된 지역을 추적하는 변수
+
 		for (var state in aus) {
-			aus[state].color = Raphael.getColor();
+			aus[state].color = "orange";  // 원하는 색상 설정 (주황색)
 			(function (st, state) {
-				// console.log({aus, st, state})
 				st[0].style.cursor = "pointer";
 				st[0].onmouseover = function () {
 					if (current && aus[current]) {
-						aus[current].animate({ fill: "#fff", stroke: "#666" }, 500);
-						// ausText[current].animate({fill: "#00000000"}, 10);
+						aus[current].animate({ fill: "#fff", stroke: "#666" }, 500); // 마우스오버 시 기본 색상으로 복원
 					}
 					st.animate({ fill: st.color, stroke: "#ccc" }, 500);
-
 					current = state;
-					document.querySelector("#regionName").innerHTML = toText[current]
-					// ausText[current].attr({fill: "#000000ff"});
+					document.querySelector("#regionName").innerHTML = toText[current];
 					R.safari();
 				};
 
 				st[0].onmouseout = function () {
-					st.animate({ fill: "#fff", stroke: "#666" }, 500);
-					// ausText[current].attr({fill: "#00000000"});
+					if (state !== current) {  // 현재 클릭된 상태가 아니면 마우스아웃 시 원래 색으로 돌아감
+						st.animate({ fill: "#fff", stroke: "#666" }, 500);
+					}
 					R.safari();
+				};
+
+				st[0].onclick = function () {
+					if (previous && previous !== current) {
+						// 이전에 클릭된 지역의 색상을 기본 색상으로 변경
+						aus[previous].animate({ fill: "#fff", stroke: "#666" }, 500);
+					}
+					previous = current; // 현재 클릭된 지역을 이전으로 저장
+
+					st.animate({ fill: st.color, stroke: "#ccc" }, 500);  // 클릭 시 지역을 주황색으로 유지
+					location.href = "#" + state;
+					current = state;
 				};
 
 				// 서울 선택 시 자동적으로 활성화 (필요 시 다른 지역도 조건 추가)
 				if (state === "seoul") {
 					st[0].onmouseover();
 				}
-
-				st[0].onclick = function () {
-					location.href = "#" + state;
-					current = state;
-				};
 			})(aus[state], state);
 		}
+
 	}
 
 	// 처음 지도 생성
@@ -145,7 +152,7 @@ window.onload = function () {
 	window.onresize = function () {
 		createMap();
 		// console.log(document.querySelector("#south > svg"));
-		
-		
+
+
 	};
 };
