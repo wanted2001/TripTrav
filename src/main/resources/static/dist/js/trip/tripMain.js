@@ -88,7 +88,6 @@ async function appendTrips(trips) {
             console.log(`리스트 정보를 추가할 수 없습니다. trip ID: ${trip.contentId}의 detailInfo가 없습니다.`);
             continue;
         }
-
         const detailInfo = detailInfoArray[0];
         const listItem = document.createElement("div");
         listItem.classList.add("list-item");
@@ -128,3 +127,20 @@ async function appendTrips(trips) {
         listContainer.appendChild(listItem);
     }
 }
+// 스크롤 이벤트 핸들러 추가
+// window.addEventListener('scroll', () => {
+//     console.log("스크롤");
+//     console.log(this.innerHeight);
+//     console.log(this.scrollY);
+//     if (this.innerHeight + this.scrollY >= !isLoading) {
+//         isLoading = true; // 중복 로드를 방지
+//         courseCall(currentPage).then(re => {
+//             if (re.length > 0) {
+//                 appendTrips(re);
+//                 currentPage++;
+//             }
+//             isLoading = false; // 데이터 로드 완료 후 다시 로드 가능하도록 설정
+//         });
+//     }
+// });
+

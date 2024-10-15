@@ -97,12 +97,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const startDate = new Date(startDateStr);
         startDate.setHours(0,0,0,0)
         if(startDate<today){
-            console.log("일정이 지남!")
-            document.querySelector('.editBtn').classList.add('hidden');
+            document.querySelector('.editBtn').remove();
             document.querySelector('.disableEdit').classList.remove('hidden');
-
-        } else {
-            console.log("안지남!")
+            document.querySelector('.addPersonBtn').remove();
+            document.querySelector('.addMemoBtn').remove();
+            document.querySelector('.checkPersonBtn').style.top='185px';
+            document.querySelector('.addPlan').addEventListener('click',(event)=>{
+                alert('일정이 지난 여행은 편집할 수 없습니다.');
+                document.querySelector('.mapContentBox2Depth').remove();
+                document.querySelector('.mapCloseBtn').style.left='520px';
+            })
         }
     })
 
@@ -146,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //일차별 일정출력
     if (sco) {
         getUserCourse(sco, 1).then(result => {
-            console.log(result)
+            // console.log(result)
             let content = '';
             result.forEach(key => {
                 content = `
@@ -238,6 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function editRoleUser() {
     getCompanion(sco).then(companionList => {
+        console.log(companionList)
         companionList.sort((a, b) => a.uno - b.uno);
 
         const rolePromises = companionList.map((res, index) => {
@@ -265,7 +270,6 @@ function editRoleUser() {
                 li.setAttribute('data-uno', unoData);
 
                 li.innerHTML = `
-                    ${index + 1}) ${res.scheNick}${isCurrentUser}
                     <label>
                         <input type="radio" name="role_${res.uno}" value="1" ${isCheckedEditor}> 편집자
                     </label>
@@ -583,7 +587,7 @@ function checkPersonF() {
                 if (data.length > 0) {
                     data.sort((a, b) => a.uno - b.uno);
                     data.forEach(r => {
-                        const li = `<li class="companionLi">${r.scheNick}</li>`
+                        const li = `<li class="companionLi"><img src="${r.profile ? `/profile/${r.profile}` : '/dist/image/smile-beam.svg'}"><span class="compaNick">${r.scheNick}</span></li>`
                         document.querySelector('.companionUl').innerHTML += li;
                     })
                 } else {
@@ -897,7 +901,7 @@ function recommendData() {
         function displayItems(items, currentPage, itemsPerPage) {
             const start = (currentPage - 1) * itemsPerPage;
             const end = Math.min(start + itemsPerPage, items.length);
-            const itemsToDisplay = items.slice(start, end); // start + 1 -> start으로 변경
+            const itemsToDisplay = items.slice(start+1, end);
 
             itemsToDisplay.forEach(key => {
                 const recommDiv = document.createElement('div');

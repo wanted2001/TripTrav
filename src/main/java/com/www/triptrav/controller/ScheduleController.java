@@ -278,8 +278,8 @@ public class ScheduleController {
 
     @GetMapping("/getCompanion/{sco}")
     @ResponseBody
-    public List<ScheduleCompanionVO> getCompanion(@PathVariable long sco){
-        List<ScheduleCompanionVO> scVOList = scsv.getCompanionList(sco);
+    public List<ScheduleCompanionDTO> getCompanion(@PathVariable long sco){
+        List<ScheduleCompanionDTO> scVOList = scsv.getCompanionList(sco);
         return scVOList!=null ? scVOList : Collections.emptyList();
     }
 
