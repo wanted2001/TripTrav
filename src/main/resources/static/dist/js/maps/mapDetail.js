@@ -45,7 +45,7 @@ async function fetchTourInfo(regionCode, contentTypeId = null) {
         try {
             const response = await fetch(apiUrl);
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                throw new Error('fetching error');
             }
 
             const data = await response.json();
@@ -61,8 +61,8 @@ async function fetchTourInfo(regionCode, contentTypeId = null) {
                         const contentType = contentTypeIdMap[item.contenttypeid] || '알 수 없는 유형';
                         const firstImage = item.firstimage || '';
                         const noImageSrc = '/dist/image/noimage.jpg';
-                        const infoText = document.getElementById('infoText');
 
+                        const infoText = document.getElementById('infoText');
                         infoText.innerHTML = '';
 
                         li.innerHTML = `
@@ -81,19 +81,22 @@ async function fetchTourInfo(regionCode, contentTypeId = null) {
                     });
                     currentPage++;
                 } else {
-                    displayNoTourInfo(tourInfoList);
+                    // 더 이상 데이터가 없을 때
+                    alert('더 이상 데이터가 없습니다.');
+                    isLoading = true;
                 }
             } else {
-                displayNoTourInfo(tourInfoList);
+                alert('더 이상 데이터가 없습니다.');
+                isLoading = true;
             }
         } catch (error) {
             console.error('Error:', error);
-            displayNoTourInfo(document.getElementById('tourInfoList'));
+            alert('데이터를 가져오는 중 오류가 발생했습니다.');
         } finally {
             isLoading = false;
         }
     } else {
-        console.error('Invalid region code or already loading');
+        console.error('잘못된 지역 코드');
     }
 }
 
