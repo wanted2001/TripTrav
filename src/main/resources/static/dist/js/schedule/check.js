@@ -1,10 +1,12 @@
 const UrlParams = new URLSearchParams(window.location.search);
 const sco = UrlParams.get('sco');
+const planDataArray=[];
+let lastData;
+
 window.addEventListener('click', (e) => {
     let date = e.target.getAttribute('data-date');
     if (sco && date) {
         getUserCourse(sco, date).then(result => {
-            console.log(result);
             let content = '';
             document.querySelector('.contentArea').innerHTML = '';
             result.forEach(key => {
@@ -43,7 +45,6 @@ window.addEventListener('click', (e) => {
 const days = document.querySelectorAll('.day');
 days.forEach(day => {
     day.addEventListener('click', (e) => {
-        console.log(e.target);
         days.forEach(d => {
             if (d !== e.target) {
                 d.classList.remove('day_focus');
@@ -53,9 +54,10 @@ days.forEach(day => {
         const date = e.target.getAttribute('data-date');
 
         getDatePlan(sco, date).then(r => {
-            console.log(r)
             if (r.length === 0) {
-                document.querySelector('.contentArea').innerHTML = `<div class="noPlanText"><span>생성된 일정이 없습니다.</span> 하단의 버튼으로 나만의 여행 일정을 만들어보세요!</div>`
+                document.querySelector('.noPlanText').classList.remove('hidden');
+            } else {
+                document.querySelector('.noPlanText').classList.add('hidden');
             }
         })
 
@@ -88,8 +90,27 @@ const editBtn = document.querySelector('.editBtn');
 document.addEventListener('DOMContentLoaded', () => {
     // initTmap();
 
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    getSchedule(sco).then(result=>{
+        const startDateStr = result.scheStart.substring(0,10);
+        const startDate = new Date(startDateStr);
+        startDate.setHours(0,0,0,0)
+        if(startDate<today){
+            document.querySelector('.editBtn').remove();
+            document.querySelector('.disableEdit').classList.remove('hidden');
+            document.querySelector('.addPersonBtn').remove();
+            document.querySelector('.addMemoBtn').remove();
+            document.querySelector('.checkPersonBtn').style.top='185px';
+            document.querySelector('.addPlan').addEventListener('click',(event)=>{
+                alert('일정이 지난 여행은 편집할 수 없습니다.');
+                document.querySelector('.mapContentBox2Depth').remove();
+                document.querySelector('.mapCloseBtn').style.left='520px';
+            })
+        }
+    })
+
     getUserRole(unoNum, sco).then(result => {
-        console.log(result);
         if (result.scheRole === 1) {
             editRole.classList.remove('hidden');
             editRoleSave.classList.remove('hidden')
@@ -114,10 +135,22 @@ document.addEventListener('DOMContentLoaded', () => {
         slideItems = document.querySelectorAll('.slideItem');
         updateInnerSlideWidth();
         makeDot();
+        const checkScheElement = document.querySelector('.checkSche');
+
+        let scheduleText = '';
+        result.forEach((title, index) => {
+            scheduleText += title.scheTitle;
+            if (index !== result.length - 1) {
+                scheduleText += ' • ';
+            }
+        });
+
+        checkScheElement.textContent=scheduleText;
     })
     //일차별 일정출력
     if (sco) {
         getUserCourse(sco, 1).then(result => {
+            // console.log(result)
             let content = '';
             result.forEach(key => {
                 content = `
@@ -209,6 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function editRoleUser() {
     getCompanion(sco).then(companionList => {
+        console.log(companionList)
         companionList.sort((a, b) => a.uno - b.uno);
 
         const rolePromises = companionList.map((res, index) => {
@@ -236,7 +270,6 @@ function editRoleUser() {
                 li.setAttribute('data-uno', unoData);
 
                 li.innerHTML = `
-                    ${index + 1}) ${res.scheNick}${isCurrentUser}
                     <label>
                         <input type="radio" name="role_${res.uno}" value="1" ${isCheckedEditor}> 편집자
                     </label>
@@ -417,7 +450,6 @@ function getImage(key) {
     const imgLi = document.querySelector(`li[data-id="${key}"] .placeImg`);
 
     getData(url).then(res => {
-        // console.log(res);
         if (res.totalCount < 1) {
             if (imgLi) {
                 imgLi.innerHTML += `<img src="/dist/image/noimage.jpg">`;
@@ -555,7 +587,7 @@ function checkPersonF() {
                 if (data.length > 0) {
                     data.sort((a, b) => a.uno - b.uno);
                     data.forEach(r => {
-                        const li = `<li class="companionLi">${r.scheNick}</li>`
+                        const li = `<li class="companionLi"><img src="${r.profile ? `/profile/${r.profile}` : '/dist/image/smile-beam.svg'}"><span class="compaNick">${r.scheNick}</span></li>`
                         document.querySelector('.companionUl').innerHTML += li;
                     })
                 } else {
@@ -765,6 +797,8 @@ function clickAddPlan() {
     depth2.classList.remove('hidden');
     depth2.classList.add('visible');
     closeBtn.style.left = '883px';
+    document.querySelector('.depth2_recomm').classList.remove('hidden');
+    recommendData();
 }
 
 const ul = document.querySelector('.depth2_ul');
@@ -809,102 +843,352 @@ ul.addEventListener('click', (e) => {
     })
 })
 
+// 추천여행지
+function recommendData() {
+    // 현재 일정 배열
+    const liItems = document.querySelectorAll('.contentArea .oneContent');
+    const planDataArray = [];
+
+    liItems.forEach((item) => {
+        const data = item.getAttribute('data-id');
+        planDataArray.push(data);
+    });
+
+    if (planDataArray.length > 0) {
+        const lastData = planDataArray[planDataArray.length - 1];
+        const url = `https://apis.data.go.kr/B551011/KorService1/detailCommon1?MobileOS=ETC&MobileApp=TripTrav&contentId=${lastData}&defaultYN=Y&firstImageYN=Y&areacodeYN=Y&catcodeYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&serviceKey=${tourAPIKEY}&_type=json`;
+
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let totalCount = 0;
+
+        getData(url).then(result => {
+            const mapx = result.items.item[0].mapx;
+            const mapy = result.items.item[0].mapy;
+            const mapUrl = `https://apis.data.go.kr/B551011/KorService1/locationBasedList1?MobileOS=ETC&MobileApp=TripTrav&_type=json&arrange=S&numOfRows=200&mapX=${mapx}&mapY=${mapy}&radius=2000&serviceKey=${tourAPIKEY}`;
+
+            getData(mapUrl).then(res => {
+                totalCount = res.totalCount;
+                console.log(totalCount);
+
+                if (totalCount >= 1) {
+                    displayItems(res.items.item, currentPage, itemsPerPage);
+                    createMoreButton(totalCount, res.items.item);
+                }
+            });
+        });
+
+        function createMoreButton(totalCount, items) {
+            if (totalCount > currentPage * itemsPerPage) {
+                const moreBtn = document.createElement('div');
+                moreBtn.classList.add('morePlaceBtn');
+                moreBtn.innerHTML = `더보기<img src="/dist/image/chevron-down.svg">`;
+                document.querySelector('.depth2_recomm').appendChild(moreBtn);
+
+                moreBtn.addEventListener('click', () => {
+                    currentPage++;
+                    moreBtn.remove();
+                    loadMore(items);
+                });
+            }
+        }
+
+        function loadMore(items) {
+            displayItems(items, currentPage, itemsPerPage);
+            createMoreButton(totalCount, items);
+        }
+
+        function displayItems(items, currentPage, itemsPerPage) {
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = Math.min(start + itemsPerPage, items.length);
+            const itemsToDisplay = items.slice(start+1, end);
+
+            itemsToDisplay.forEach(key => {
+                const recommDiv = document.createElement('div');
+                recommDiv.classList.add('recomm_area');
+
+                recommDiv.innerHTML += `
+                    <div class="recomm_img" style="background-image: url('${key.firstimage}'); background-position: center; background-repeat: no-repeat; background-size: cover"></div>
+                    <div class="recomm_name_cate" data-id="${key.contentid}" onclick="locationPage(${key.contentid})">
+                        <div class="name_cate2">
+                            <span class="recomm_name">${key.title}</span>
+                            <span class="recomm_cate"></span>
+                        </div>
+                        <span class="recomm_addr">${key.addr1}</span>
+                    </div>
+                    <div class="recomm_addBtn" onclick="newPlan(event)" style="background-image: url('/dist/image/plus-circle.svg'); background-size: cover; background-repeat: no-repeat; background-position: center"></div>`;
+
+                document.querySelector('.depth2_recomm').appendChild(recommDiv);
+
+                const recommCate = recommDiv.querySelector('.recomm_cate');
+                const recommNameCate = recommDiv.querySelector('.recomm_name_cate');
+                assignCategory(recommCate, recommNameCate, key);
+
+                const recommAddBtn = recommDiv.querySelector('.recomm_addBtn');
+                recommAddBtn.addEventListener('mouseover', () => {
+                    recommAddBtn.style.backgroundImage = "url('/dist/image/plus-circle-back.svg')";
+                    recommAddBtn.style.cursor = 'pointer';
+                });
+                recommAddBtn.addEventListener('mouseout', () => {
+                    recommAddBtn.style.backgroundImage = "url('/dist/image/plus-circle.svg')";
+                });
+            });
+        }
+
+        function assignCategory(recommCate, recommNameCate, key) {
+            if (key.cat1 === "A02" || key.cat1 === "A01") {
+                fetch('/dist/json/planCategory.json')
+                    .then(response => response.json())
+                    .then(cate => {
+                        const category = cate.find(c => c.categoryCode === key.cat3);
+                        recommCate.innerHTML = key.cat1 === "A02" ? "인문 (문화,예술,역사) > " + category.categoryName : category.categoryName;
+                    });
+            } else {
+                const categoryName = getCategoryName(key.cat1);
+                recommCate.innerHTML = categoryName;
+
+                // '기타'일 때 recomm_name_cate의 margin-top을 23px로 설정
+                if (categoryName === "기타") {
+                    recommNameCate.style.marginTop = '23px';
+                } else {
+                    recommNameCate.style.marginTop = ''; // 기타가 아닐 경우 margin-top 초기화
+                }
+            }
+        }
+
+        function getCategoryName(cat1) {
+            switch (cat1) {
+                case "A03":
+                    return "레포츠";
+                case "A04":
+                    return "쇼핑";
+                case "A05":
+                    return "음식";
+                case "B02":
+                    return "숙박";
+                default:
+                    return "기타";
+            }
+        }
+    }
+}
+
+
+function locationPage(key) {
+    if(confirm("현재 페이지를 벗어나시겠습니까? \n페이지 수정내용이 저장되지 않을 수 있습니다.")){
+        location.href=`/place/${key}`;
+    }
+}
+
 //검색(2Depth)
 const searchBtn = document.querySelector('.depth2_searchBtn');
 const searchInput = document.querySelector('.depth2_input');
+const resultDiv = document.querySelector('.searchResultDiv');
 
 searchBtn.addEventListener('click', () => {
+    resultDiv.innerHTML='';
     search();
 })
 
 searchInput.addEventListener('keyup', (e) => {
     if (e.keyCode === 13) {
+        resultDiv.innerHTML='';
         search();
     }
 })
 
+const searchDataArray=[];
+function baseSearch() {
+    const existingResultDiv = document.querySelector('.searchResultDiv .depth2_search_area');
+
+    if (existingResultDiv) {
+        return;
+    }
+
+    const liItems = document.querySelectorAll('.contentArea .oneContent');
+    const searchDataArray = [];
+
+    liItems.forEach((item) => {
+        const data = item.getAttribute('data-id');
+        searchDataArray.push(data);
+    });
+
+    if (searchDataArray.length > 0) {
+        const lastData = searchDataArray[searchDataArray.length - 1];
+        fetch('/dist/json/planData.json')
+            .then(response => response.json())
+            .then(jsonData => {
+                const area = jsonData.find(item => item.contentid === lastData);
+
+                if (area) {
+                    const areaCode = area.areacode;
+                    const url = `https://apis.data.go.kr/B551011/KorService1/areaBasedList1?MobileOS=ETC&MobileApp=TripTrav&_type=json&arrange=O&areaCode=${areaCode}&numOfRows=10&contentTypeId=12&serviceKey=${tourAPIKEY}`;
+                    // document.querySelector('.depth2_search_input_area').innerHTML=``;
+
+                    getData(url).then(result => {
+                        result.items.item.forEach(async (key) => {
+                            const base = document.createElement('div');
+                            base.classList.add('depth2_search_base');
+                            base.innerHTML = `
+                                <div class="search_img" style="background-image: url('${key.firstimage}'); background-position: center; background-repeat: no-repeat; background-size: cover"></div>
+                                <div class="search_name_cate" data-id="${key.contentid}" onclick="locationPage(${key.contentid})">
+                                    <div class="name_cate2">
+                                        <span class="search_name">${key.title}</span>
+                                        <span class="search_cate"></span>
+                                    </div>
+                                    <span class="search_addr">${key.addr1}</span>
+                                </div>
+                                <div class="search_addBtn" onclick="newPlan(event)" style="background-image: url('/dist/image/plus-circle.svg'); background-size: cover; background-repeat: no-repeat; background-position: center"></div>`;
+                            document.querySelector('.depth2_search_input_area').appendChild(base);
+
+                            const searchCate = base.querySelector('.search_cate');
+                            const category = await getCategoryName(key); // 비동기 함수로 카테고리 값을 가져옴
+                            searchCate.innerHTML = category;
+
+                            const searchAddBtn = base.querySelector('.search_addBtn');
+                            searchAddBtn.addEventListener('mouseover', () => {
+                                searchAddBtn.style.backgroundImage = "url('/dist/image/plus-circle-back.svg')";
+                                searchAddBtn.style.cursor = 'pointer';
+                            });
+                            searchAddBtn.addEventListener('mouseout', () => {
+                                searchAddBtn.style.backgroundImage = "url('/dist/image/plus-circle.svg')";
+                            });
+                        });
+                    });
+                }
+            });
+    }
+}
+
+async function getCategoryName(key) {
+    if (key.cat1 === "A02" || key.cat1 === "A01") {
+        const response = await fetch('/dist/json/planCategory.json');
+        const cate = await response.json();
+        const category = cate.find(c => c.categoryCode === key.cat3);
+        if (category) {
+            if (key.cat1 === "A02") {
+                return "인문 (문화,예술,역사) > " + category.categoryName;
+            } else {
+                return category.categoryName;
+            }
+        }
+    } else {
+        switch (key.cat1) {
+            case "A03":
+                return "레포츠";
+            case "A04":
+                return "쇼핑";
+            case "A05":
+                return "음식";
+            case "B02":
+                return "숙박";
+            default:
+                return "기타";
+        }
+    }
+}
+
 function search() {
     if (searchInput.value === '') {
-        alert('검색어를 입력해주세요.')
+        alert('검색어를 입력해주세요.');
+        baseSearch();
     } else {
+        // 초기화
+        document.querySelectorAll('.depth2_search_base').forEach(base => {
+            base.remove();
+        });
+
         let currentPage = 1;
-        const itemsPage = 10;
+        const itemsPerPage = 10;
         let totalCount = 0;
-        let resultDiv = '';
         let keyword = searchInput.value;
-        let url = `https://apis.data.go.kr/B551011/KorService1/searchKeyword1?serviceKey=${tourAPIKEY}&MobileApp=TripTrav&MobileOS=ETC&pageNo=&numOfRows=100&listYN=Y&&arrange=A&contentTypeId=12&keyword=${keyword}&_type=json`;
+        let url = `https://apis.data.go.kr/B551011/KorService1/searchKeyword1?serviceKey=${tourAPIKEY}&MobileApp=TripTrav&MobileOS=ETC&pageNo=&numOfRows=100&listYN=Y&&arrange=O&contentTypeId=12&keyword=${keyword}&_type=json`;
 
         function displayResult(result) {
             totalCount = result.totalCount;
 
-            console.log(totalCount)
             if (totalCount >= 1) {
-                const start = (currentPage - 1) * itemsPage;
-                const end = Math.min(start + itemsPage, totalCount);
+                const start = (currentPage - 1) * itemsPerPage;
+                const end = Math.min(start + itemsPerPage, totalCount);
                 const itemsDisplay = result.items.item.slice(start, end);
 
-                itemsDisplay.forEach(key => {
-                    resultDiv += `
-                    <div class="depth2_search">
-                        <div class="depth2_search_area" >
-                            <div class="depth2_search_img" data-image="${key.firstimage}"></div>
-                            <div class="depth2_search_name" data-id="${key.contentid}">${key.title}</div>
-                            <div class="depth2_search_addr">${key.addr1}</div>
-                            <div class="addPlanBtn" onclick="newPlan(event)" style="background-image: url('/dist/image/plus-circle.svg'); background-size: cover; background-repeat: no-repeat; background-position: center"></div>
+                itemsDisplay.forEach(async (key) => {
+                    const searchDiv = document.createElement('div');
+                    searchDiv.classList.add('depth2_search_area');
+                    searchDiv.innerHTML = `
+                        <div class="search_result_img" style="background-image: url('${key.firstimage}'); background-position: center; background-repeat: no-repeat; background-size: cover"></div>
+                        <div class="search_result_name_cate" data-id="${key.contentid}" onclick="locationPage(${key.contentid})">
+                            <div class="name_cate2">
+                                <span class="search_result_name">${key.title}</span>
+                                <span class="search_result_cate"></span>
+                            </div>
+                            <span class="search_result_addr">${key.addr1}</span>
                         </div>
-                    </div>`;
-                })
+                        <div class="search_result_addBtn" onclick="newPlan(event)" style="background-image: url('/dist/image/plus-circle.svg'); background-size: cover; background-repeat: no-repeat; background-position: center"></div>`;
 
-                document.querySelector('.searchResultDiv').innerHTML = resultDiv;
+                    document.querySelector('.searchResultDiv').appendChild(searchDiv);
 
-                if (totalCount > currentPage * itemsPage) {
-                    const more = `<div class="morePlaceBtn">더보기<img src="/dist/image/chevron-down.svg"></div>`;
-                    document.querySelector('.searchResultDiv').innerHTML += more;
+                    // 카테고리 가져오기
+                    const searchCate = searchDiv.querySelector('.search_result_cate');
+                    const category = await getCategoryName(key); // 비동기 함수로 카테고리 값을 가져옴
+                    searchCate.innerHTML = category;
 
-                    document.querySelector('.morePlaceBtn').addEventListener('click', loadMore);
-                    paddingSetting();
+                    const searchAddBtn = searchDiv.querySelector('.search_result_addBtn');
+                    searchAddBtn.addEventListener('mouseover', () => {
+                        searchAddBtn.style.backgroundImage = "url('/dist/image/plus-circle-back.svg')";
+                        searchAddBtn.style.cursor = 'pointer';
+                    });
+                    searchAddBtn.addEventListener('mouseout', () => {
+                        searchAddBtn.style.backgroundImage = "url('/dist/image/plus-circle.svg')";
+                    });
+                });
+
+                if (totalCount > currentPage * itemsPerPage) {
+                    const moreBtn = document.createElement('div');
+                    moreBtn.classList.add('morePlaceBtn');
+                    moreBtn.innerHTML = `더보기<img src="/dist/image/chevron-down.svg">`;
+                    document.querySelector('.searchResultDiv').appendChild(moreBtn);
+
+                    moreBtn.addEventListener('click', () => {
+                        currentPage++;
+                        moreBtn.remove();
+                        loadMore();
+                    });
                 }
 
                 requestAnimationFrame(() => {
-                    const imageDivs = document.querySelectorAll('.depth2_search_img');
+                    const imageDivs = document.querySelectorAll('.search_result_img');
                     imageDivs.forEach(img => {
-                        const imageUrl = img.getAttribute('data-image');
-                        img.style.backgroundImage = `url(${imageUrl})`;
-                        img.style.backgroundSize = 'cover';
-                        img.style.backgroundPosition = 'center';
-                        img.style.backgroundRepeat = 'no-repeat';
+                        const imageUrl = img.style.backgroundImage;
+                        if (!imageUrl || imageUrl.includes('no-image.svg')) {
+                            img.style.backgroundImage = 'url(/dist/image/placeholder.svg)';
+                        }
                     });
                     addButtonListeners();
                 });
-                paddingSetting();
-            } else if (totalCount < 1) {
-                const noResult = `<div class="noResult visible"><img src="/dist/image/alert-circle.svg">검색결과가 없습니다</div>`
+            } else {
+                const noResult = `<div class="noResult visible"><img src="/dist/image/alert-circle.svg">검색결과가 없습니다</div>`;
                 document.querySelector('.searchResultDiv').innerHTML = noResult;
             }
         }
 
         function loadMore() {
-            currentPage++;
-            searchKeyword(url).then(result => {
+            let nextPageUrl = `${url}&pageNo=${currentPage}`;
+            searchKeyword(nextPageUrl).then(result => {
                 displayResult(result);
-            })
-        }
 
-        function paddingSetting() {
-            const name = document.querySelectorAll('.depth2_search_name');
-            name.forEach(nameKey => {
-                if (nameKey.innerText.length >= 19) {
-                    nameKey.style.paddingTop = '0';
+                if (currentPage * itemsPerPage >= totalCount) {
+                    document.querySelector('.morePlaceBtn').remove();
                 }
-            })
+            });
         }
 
         searchKeyword(url).then(result => {
-            console.log(result);
             displayResult(result);
-        })
+        });
     }
 }
+
 
 function addButtonListeners() {
     const addPlanBtn = document.querySelectorAll('.addPlanBtn');
@@ -937,8 +1221,8 @@ const btnText = document.querySelector('.btnText');
 function newPlan(event) {
     if (btnText.innerText === '편집') {
         if (confirm('일정을 편집하시겠습니까?')) {
-            if (document.querySelector('.noPlanText')) {
-                document.querySelector('.contentArea').innerHTML = '';
+            if (!document.querySelector('.noPlanText').classList.contains('.hidden')) {
+                document.querySelector('.noPlanText').classList.add('hidden');
             }
             const deleteBtn = document.querySelectorAll('.deletePlan');
             const changeBtn = document.querySelectorAll('.changePlan');
@@ -956,8 +1240,8 @@ function newPlan(event) {
             countTriangle();
         }
     } else {
-        if (document.querySelector('.noPlanText')) {
-            document.querySelector('.contentArea').innerHTML = '';
+        if (!document.querySelector('.noPlanText').classList.contains('.hidden')) {
+            document.querySelector('.noPlanText').classList.add('hidden');
         }
         editPlan(event);
         newPlanF(event);
@@ -966,11 +1250,11 @@ function newPlan(event) {
 }
 
 function newPlanF(event) {
-    const searchDiv = event.target.closest('.depth2_search, .heart_area');
-    const contentId = searchDiv.querySelector('.depth2_search_name, .heart_name').getAttribute('data-id');
-    const placeName = searchDiv.querySelector('.depth2_search_name, .heart_name').innerText
-    const placeAddress = searchDiv.querySelector('.depth2_search_addr, .heart_addr').innerText;
-    const placeCate = searchDiv.querySelector('.heart_cate').innerText;
+    const searchDiv = event.target.closest('.depth2_search_area, .heart_area, .recomm_area, .depth2_search_base');
+    const contentId = searchDiv.querySelector('.search_result_name_cate, .heart_name_cate, .recomm_name_cate, .search_name_cate').getAttribute('data-id');
+    const placeName = searchDiv.querySelector('.search_result_name, .heart_name, .recomm_name, .search_name').innerText
+    const placeAddress = searchDiv.querySelector('.search_result_addr, .heart_addr, .recomm_addr, .search_addr').innerText;
+    const placeCate = searchDiv.querySelector('.search_result_cate, .heart_cate, .recomm_cate, .search_cate').innerText;
 
     const existingLi = document.querySelector(`.contentArea li[data-id="${contentId}"]`);
     if(existingLi) {
@@ -1067,8 +1351,8 @@ function editPlan(event) {
 }
 
 function setPlanData(sco) {
-    const allLi = document.querySelectorAll('li.oneContent');
     const planArray = [];
+    const allLi = document.querySelectorAll('li.oneContent');
     let arrayKey = true;
     allLi.forEach((plan, index) => {
         const sche_content_id = plan.getAttribute('data-id');
@@ -1201,11 +1485,18 @@ function countTriangle() {
 
 //일정삭제
 function deletePlan(event) {
-    if (confirm("해당 일정을 삭제하시겠습니까?")) {
+    const liItems = document.querySelectorAll('.contentArea .oneContent');
+    if(liItems.length===1){
+        alert("일정은 최소 한 개 이상 있어야 합니다.");
+        return;
+    }
+
+    if (confirm("해당 일정을 삭제 하시겠습니까?")) {
         if (event.target.classList.contains('deletePlan')) {
             const li = event.target.closest('li');
             if (li) {
                 li.remove();
+                countTriangle();
             }
         }
     }
@@ -1311,19 +1602,19 @@ function getHeartData(){
 
                                 heartArea.innerHTML+=`
                                         <div class="heart_img" style="background-image: url('${imgUrl}'); background-position: center; background-repeat: no-repeat; background-size: cover"></div>
-                                        <div class="heart_name_cate" data-id="${matchedItem.contentid}">
-                                            <span class="heart_name">${matchedItem.title}</span>
-                                            <span class="heart_cate"></span>
+                                        <div class="heart_name_cate" data-id="${matchedItem.contentid}" onclick="locationPage(${matchedItem.contentid})">
+                                            <div class="name_cate2">
+                                                <span class="heart_name">${matchedItem.title}</span>
+                                                <span class="heart_cate"></span>
+                                            </div>
                                             <span class="heart_addr">${matchedItem.addr1}</span>
                                         </div>
-                                        <div class="heart_addBtn" onclick="newPlanF(event)" style="background-image: url('/dist/image/plus-circle.svg'); background-size: cover; background-repeat: no-repeat; background-position: center"></div>`
+                                        <div class="heart_addBtn" onclick="newPlan(event)" style="background-image: url('/dist/image/plus-circle.svg'); background-size: cover; background-repeat: no-repeat; background-position: center"></div>`
                                 depth2_heart.appendChild(heartArea);
 
                                 const heartCate = heartArea.querySelector('.heart_cate');
                                 const heartAddBtn = heartArea.querySelector('.heart_addBtn');
 
-                                // Category logic
-                                console.log(matchedItem.cat1);
                                 if (matchedItem.cat1 == "A02" || matchedItem.cat1 == "A01") {
                                     fetch('/dist/json/planCategory.json')
                                         .then(response => response.json())
@@ -1372,6 +1663,7 @@ function getHeartData(){
         })
 }
 
+
 async function generateInviteUrl(sco, unoNum) {
     const response = await fetch("/schedule/generateInviteUrl", {
         method: "POST",
@@ -1404,9 +1696,21 @@ async function getUserRole(uno, sco) {
     }
 }
 
+//동행자 확인
 async function getCompanion(sco){
     try{
         const url = "/schedule/getCompanion/"+sco;
+        const config = {method:'get'};
+        const resp = await fetch(url, config);
+        return resp.json();
+    } catch (err){
+        console.log(err)
+    }
+}
+
+async function getSchedule(sco){
+    try{
+        const url = "/schedule/getSchedule/"+sco;
         const config = {method:'get'};
         const resp = await fetch(url, config);
         return resp.json();

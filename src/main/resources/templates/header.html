@@ -74,7 +74,7 @@
         <div class="middleBox">
             <ul class="middleUl">
                 <li><a id="goToMaps" th:href="@{/maps/mapsMain}">Maps</a></li>
-                <li><a th:href="@{/}">Trips</a></li>
+                <li><a th:href="@{/trip/}">Trips</a></li>
                 <li><a id="searchA">Search</a></li>
             </ul>
         </div>
@@ -144,6 +144,7 @@
         let userNickname = `[[${#authentication.getPrincipal().getUser().getNickname()}]]`;
         var urlParams = new URLSearchParams(window.location.search);
         const message = urlParams.get('message');
+        console.log(message);
         if (message) {
             alert("허용되지 않은 닉네임입니다.\n닉네임을 변경해주세요. ");
             goToMyPage(unoNum);
@@ -163,7 +164,7 @@
             const currentURL = window.location.href;
             const headerText = document.querySelectorAll('#header a');
 
-            if (currentURL.includes('/maps') || currentURL.includes('/mypage') || currentURL.includes('/taste') || currentURL.includes('/place')||currentURL.includes('/food')) {
+            if (currentURL.includes('/maps') || currentURL.includes('/mypage') || currentURL.includes('/taste') || currentURL.includes('/place')||currentURL.includes('/food') || currentURL.includes('/trip')) {
                 headerText.forEach(link => {
                     link.style.color = 'black';
                     link.style.setProperty('color', 'black', 'important');

@@ -1,7 +1,10 @@
 const accordionButton = document.querySelector('.accordion');
 const buttons = document.querySelectorAll('.taste-button');
 const reTasteBtn = document.querySelector('.reTaste');
+const placeNames = [];
+const placeTag = [];
 let selectedButtons = [...cnoList];
+let reState =false;
 
 //초기페이지
 document.querySelector('.tasteTitle').innerText = `${userNickname}님의 취향분석 결과`;
@@ -10,6 +13,7 @@ const selectedTaste = document.querySelector('.selectedTaste');
 selectedTaste.innerHTML = ``;
 for(let tags of selectedButtons){
     selectedTaste.innerHTML += `<span class="tags">#${changeCno(tags)}</span>`
+    placeTag.push(changeCno(tags));
 }
 //아코디언처리
 accordionButton.addEventListener('click', () => {
@@ -48,9 +52,11 @@ buttons.forEach(button => {
         if (isDifferent) {
             if(selectedButtons.length != 0){
                 reTasteBtn.style.display = '';
+                reState = true;
             }
         } else {
             reTasteBtn.style.display = 'none';
+            reState = false;
         }
     });
 });
@@ -180,6 +186,7 @@ Promise.all([
             for (let contentId of similarPlace) {
                 if (contentId == displayData.contentid) {
                     const titleText = displayData.title;
+                    placeNames.push(titleText);
                     if (displayData.contenttypeid == "15") {
                         displayTasteCodeList.innerHTML +=
                             `<a href="https://www.google.com/search?q=${encodeURIComponent(displayData.title)}" target="_blank">
@@ -257,10 +264,95 @@ Promise.all([
                             }
                         }
                         displayCount++;
+
                     }
                 }
             });
         });
+        //AI추천 출력
+        async function fetchAndDisplayAI() {
+            try {
+                const result = await analyzeWithAI(placeNames, placeTag);
+                const analysisContent = result.choices[0].message.content;
+                const jsonString = analysisContent.match(/\[.*\]/s);
+                if (jsonString && jsonString[0]) {
+                    try {
+                        const parsedData = JSON.parse(jsonString[0]);
+                        const displayTasteAIList = document.querySelector('.displayTasteAIList');
+                        const matchedPlaces = [];
+                        const uniquePlaceNames = new Set();
+                        while (matchedPlaces.length < 10) {
+                            for (let place of parsedData) {
+                                const placeName = place["이름"].replace(/[\[\]]/g, "").trim();
+                                const placeReason = place["추천이유"];
+                                if (uniquePlaceNames.has(placeName)) {
+                                    continue;
+                                }
+                                uniquePlaceNames.add(placeName);
+                                for (let content of data) {
+                                    if (content.title.toLowerCase().includes(placeName.toLowerCase()) && content.firstimage) {
+                                        matchedPlaces.push({
+                                            title: content.title,
+                                            firstimage: content.firstimage,
+                                            contentid: content.contentid,
+                                            placeReason: placeReason
+                                        });
+                                        if (matchedPlaces.length >= 10) {
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (matchedPlaces.length >= 10) {
+                                    break;
+                                }
+                            }
+                            if (matchedPlaces.length >= 10) {
+                                displayMatchedPlaces(matchedPlaces, displayTasteAIList);
+                                break;
+                            } else {
+                                await fetchAndDisplayAI();
+                                return;
+                            }
+                        }
+                    } catch (error) {
+                        console.error("JSON 파싱 오류:", error);
+                    }
+                } else {
+                    console.error("JSON 문자열을 찾을 수 없습니다.");
+                }
+            } catch (error) {
+                console.error('데이터 로딩 에러:', error);
+            }
+        }
+        //화면출력
+        function displayMatchedPlaces(matchedPlaces, displayTasteAIList) {
+            const shuffledPlaces = shuffleArray(matchedPlaces);
+            displayTasteAIList.innerHTML = '';
+
+            if (shuffledPlaces.length > 0) {
+                const placeReason = shuffledPlaces[0].placeReason;
+                const tasteAIListSection = document.querySelector('.tasteAIList');
+                let reasonElement = tasteAIListSection.querySelector('.placeReason');
+                if (!reasonElement) {
+                    reasonElement = document.createElement('span');
+                    reasonElement.classList.add('placeReason');
+                    tasteAIListSection.insertBefore(reasonElement, displayTasteAIList);
+                }
+                reasonElement.innerText = placeReason;
+            }
+            shuffledPlaces.forEach(place => {
+                const { title, firstimage, contentid } = place;
+                const placeElement = `
+            <a href="${contentid ? `/place/${contentid}` : `https://www.google.com/search?q=${encodeURIComponent(title)}`}" target="_blank">
+                <div class="oneTasteCode">
+                    <img src="${firstimage}" alt="${title}">
+                    <span class="placeTitle" title="${title}">${title}</span>
+                </div>
+            </a>`;
+                displayTasteAIList.innerHTML += placeElement;
+            });
+        }
+        fetchAndDisplayAI();
     })
     .catch(error => {
         console.error('데이터 로딩 에러:', error);
@@ -284,6 +376,47 @@ async function trendData(age, gender){
         }
         const resp = await fetch(url, option);
         return resp.json();
+    }catch(error){
+        console.log(error);
+    }
+}
+//아코디언 인지 처리
+let open = false;
+document.querySelector('.accordion').addEventListener('click', ()=>{
+    if(open == true){
+        document.querySelector('.openButton').src = "/dist/image/chevron-down.svg";
+        document.querySelector('.reTaste').style.display = 'none';
+        open = false;
+        if(reState ==false){
+            document.querySelector('.reTaste').style.display = 'none';
+        }
+    }else{
+        document.querySelector('.openButton').src = "/dist/image/chevron-up.svg";
+        open = true;
+        if(reState == true){
+            document.querySelector('.reTaste').style.display = '';
+        }else{
+            document.querySelector('.reTaste').style.display = 'none';
+        }
+    }
+})
+//API 호출
+async function analyzeWithAI(placeNames, placeTag) {
+    try {
+        const requestBody = {
+            placeNames: placeNames,
+            placeTag: placeTag
+        }
+        const url = "/ai/analyze"
+        const option = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
+        }
+        const resp = await fetch(url, option);
+        return await resp.json();
     }catch(error){
         console.log(error);
     }

@@ -53,6 +53,9 @@ fetch(foodCommonUrl)
         getImage(imgUrl).then(result => {
             imageUrls.push(...result);
             console.log(result);
+            if(result.length === 0){
+                return;
+            }
             updateImages();
         });
         //장소 평점가져오기
@@ -138,7 +141,7 @@ function updateImages() {
     const visibleImages = imageUrls.slice(currentIndex, currentIndex + 5);
     visibleImages.forEach(url => {
         const imgElement = document.createElement('img');
-        imgElement.src = url;
+        imgElement.src = `${url? `${url}` : "/dist/image/noimage.jpg"}`;
         imgElement.classList.add('slideImage');
         imageUrlsDiv.appendChild(imgElement);
     });

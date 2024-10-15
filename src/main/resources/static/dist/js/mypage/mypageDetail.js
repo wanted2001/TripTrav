@@ -29,7 +29,7 @@ isSocialUser(unoNum).then(data => {
     document.querySelector(".userId").innerText = email;
     const profile = document.querySelectorAll(".profileUpdateImg, .profileImg");
     profile.forEach(img => {
-        img.src = `${data.profile ? `/profile/${data.profile}` : '/dist/image/noimage.jpg'}`
+        img.src = `${data.profile ? `/profile/${data.profile}` : '/dist/image/smile-beam.svg'}`
     });
     if (data.provider !== null) {
         document.getElementById("pw").disabled = true;
@@ -205,16 +205,18 @@ function loadScript(page) {
 // src를 keep 할것인지 추후 결정 예정...
 //js 삭제
 function removeAllScript(src) {
-    const toKeep = ['/dist/js/header.js', '/dist/js/loginJoin.js', js + '/mypageDetail.js'];
+    const toKeep = ['/dist/js/header.js', '/dist/js/loginJoin.js', js + '/mypageDetail.js','chrome-extension:'];
     const scripts = document.getElementsByTagName('script');
     for (let i = 0; i < scripts.length; i++) {
         let isToKeep = false;
         for (let j = 0; j < toKeep.length; j++) {
+            console.log(toKeep[j]);
             if (scripts[i].src.includes(toKeep[j])) {
                 isToKeep = true;
             }
         }
         if (!isToKeep) {
+            console.log(scripts[i]);
             document.body.removeChild(scripts[i]);
         }
     }

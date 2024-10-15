@@ -13,6 +13,7 @@ public class PathVO {
     private String firstImage;
     private long contentTypeId;
     private String title;
+    private String addr1;
 
     public PathVO(long contentid, String firstimage, long contenttypeid) {
         this.contentId = contentid;

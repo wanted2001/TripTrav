@@ -18,13 +18,18 @@
     <th:block th:replace="~{header :: header}"></th:block>
     <input class="inviteUser" th:value="${session.inviteeUser}" style="display: none">
     <div class="checkBackImg">
+        <div class="blurImg"></div>
         <div class="checkTitle">
-            <img src="/dist/image/send.svg">
+            <img src="/dist/image/sendW.svg">
             <p class="checkName"></p>
             <p class="checkDate"></p>
-            <p class="checkSche">스케줄쫙쫙.. 작성</p>
+            <p class="checkSche"></p>
         </div>
-        <div class="addMemoBtn" onclick="openModal()">메모추가 +</div>
+        <div class="modalList">
+            <div class="addMemoBtn" th:title="메모" onclick="openModal()"><img src="/dist/image/file-text.svg"></div>
+            <div class="checkPersonBtn" th:attr="title='동행자 확인'" onclick="checkPersonF()"><img src="/dist/image/users.svg"></div>
+            <div class="addPersonBtn" th:attr="title='동행자 추가'" onclick="addPersonF()"><img src="/dist/image/user-plus.svg"></div>
+        </div>
         <div class="memoModal">
             <div class="memoWrap">
                 <button class="memoCloseBtn" onclick="closeModal()">&times;</button>
@@ -32,8 +37,6 @@
                 <button class="saveMemo" onclick="saveMemoF()">저장</button>
             </div>
         </div>
-        <div class="checkPersonBtn" onclick="checkPersonF()">동행자 확인</div>
-        <div class="addPersonBtn" onclick="addPersonF()">동행자추가 +</div>
         <div class="personModal">
             <div class="personModalWrap">
                 <span>동행자 추가</span>
@@ -77,39 +80,22 @@
                 </div>
                 <div class="editBtn btnText hidden">편집</div>
                 <div class="disableEdit hidden"></div>
+                <div class="noPlanText hidden">
+                    <img src="/dist/image/sad-tear.svg">
+                    생성된 일정이 없습니다.<span>하단의 버튼으로 나만의 여행 일정을 만들어보세요!</span>
+                </div>
                 <ul class="contentArea"></ul>
-                <div class="addPlan" onclick="clickAddPlan()">여행지 추가 + </div>
+                <div class="addArea">
+                    <div class="addPlan" onclick="clickAddPlan()">여행지 추가 + </div>
+                </div>
             </div>
             <div class="mapContentBox2Depth hidden">
                 <ul class="depth2_ul">
                     <li class="on" data-number="1">추천 여행지</li>
-                    <li data-number="2">검색</li>
+                    <li data-number="2" onclick="baseSearch()">검색</li>
                     <li data-number="3" onclick="getHeartData()">My 찜</li>
                 </ul>
-                <div class="depth2_recomm">
-                    <div class="recomm_area">
-                        <div class="recomm_img"></div>
-                        <div class="recomm_name">추천장소 이름</div>
-                        <div class="recomm_addr">추천장소 주소</div>
-                        <div class="recomm_addBtn">추가</div>
-                    </div>
-                </div>
-                <div class="depth2_recomm">
-                    <div class="recomm_area">
-                        <div class="recomm_img"></div>
-                        <div class="recomm_name">추천장소 이름</div>
-                        <div class="recomm_addr">추천장소 주소</div>
-                        <div class="recomm_addBtn">추가</div>
-                    </div>
-                </div>
-                <div class="depth2_recomm">
-                    <div class="recomm_area">
-                        <div class="recomm_img"></div>
-                        <div class="recomm_name">추천장소 이름</div>
-                        <div class="recomm_addr">추천장소 주소</div>
-                        <div class="recomm_addBtn">추가</div>
-                    </div>
-                </div>
+                <div class="depth2_recomm hidden"></div>
                 <div class="depth2_search_input_area hidden">
                     <input class="depth2_input">
                     <button type="submit" class="depth2_searchBtn"><img src="/dist/image/search.svg"></button>

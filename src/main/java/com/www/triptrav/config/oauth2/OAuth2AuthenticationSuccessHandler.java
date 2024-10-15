@@ -23,6 +23,12 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         UserVO user = principalDetails.getUser();
 
+        // 닉네임 조건이 우선순위
+        if (user.getNickname().contains("_user")) {
+            response.sendRedirect("/?message=notAllowedNickName");
+            return; // 더 이상 실행하지 않고 종료
+        }
+
         Cookie[] cookies = request.getCookies();
         String returnUrl = null;
         if (cookies != null) {
@@ -38,9 +44,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         if (returnUrl != null && !returnUrl.isEmpty()) {
             getRedirectStrategy().sendRedirect(request, response, returnUrl);
-            return;
-        } else if (user.getNickname().contains("_user")) {
-            response.sendRedirect("/?message=notAllowedNickName");
         } else {
             response.sendRedirect("/");
         }

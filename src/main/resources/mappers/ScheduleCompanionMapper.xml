@@ -7,8 +7,13 @@
         insert into schedule_companion values (#{uno}, #{sco}, #{nick})
     </insert>
 
-    <select id="getCompanionList" resultType="com.www.triptrav.domain.ScheduleCompanionVO">
-        select * from schedule_companion where sco=${sco}
+    <select id="getCompanionList" resultType="com.www.triptrav.domain.ScheduleCompanionDTO">
+        select
+        s.uno, s.sco, s.sche_nick, u.profile
+        from schedule_companion s
+        join user u
+        on s.uno = u.uno
+        where sco=${sco}
     </select>
 
     <delete id="deleteCompanion">

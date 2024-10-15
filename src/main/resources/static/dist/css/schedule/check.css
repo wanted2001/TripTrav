@@ -1,52 +1,67 @@
 .checkBackImg{
-    background: gainsboro;
+    /*background: gainsboro;*/
+    background: url("../../image/main4.jpg") no-repeat center/cover;
     position: absolute;
     top: 0;
     width: 100%;
-    height: 480px;
+    height: 518px;
+}
+.blurImg {
+    width: 100%;
+    height: 519px;
+    position: absolute;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), rgb(255 255 255 / 4%), rgb(255 255 255 / 11%), rgb(255 255 255 / 0%), rgba(255, 255, 255, 0));
+
+    backdrop-filter: blur(3px);
 }
 .checkTitle{
-    width: 1210px;
-    margin: 130px auto;
+    width: 1110px;
+    margin: 130px 255px;
     display: flex;
     flex-wrap: wrap;
+    position: relative;
+    z-index: 100;
+    color: white;
 }
 .checkTitle img{
-    width: 17px;
-}
-.checkName{
-    font-family: 'LINESeedKR-Rg';
-    font-size: 1.3em;
-    margin: -16px 0 0 25px;
-    width: 100%;
-}
-.checkSche{
-    font-family: 'LINESeedKR-Rg';
-    margin-top: 21px;
-}
-.addMemoBtn,.addPersonBtn, .checkPersonBtn {
+    width: 27px;
     position: absolute;
-    right: 325px;
-    top: 129px;
-    height: 12px;
-    border: 1px solid orange;
-    border-radius: 16px;
-    padding: 10px 15px;
-    text-align: center;
-    line-height: 16px;
-    font-family: 'LINESeedKR-Rg';
-    font-size: 14px;
 }
-.addMemoBtn:hover,.addPersonBtn:hover,.checkPersonBtn:hover {
+.modalList {
+    display: flex;
+    position: absolute;
+    right: 301px;
+    top: 126px;
+    width: 176px;
+    height: 50px;
+    justify-content: space-around;
+}
+.addMemoBtn img, .checkPersonBtn img, .addPersonBtn img {
+    width: 38px;
+    height: 50px;
     cursor: pointer;
-    background: #ffffff2e;
 }
-.checkPersonBtn {
-    top: 171px;
+.checkName {
+    font-family: 'LINESeedKR-Bd';
+    font-size: 31px;
+    margin: 1px 0px 2px 36px;
+    width: 100%;
+    letter-spacing: 1px;
 }
-.addPersonBtn {
-    top: 213px;
-    z-index: 100;
+.checkDate {
+    font-family: 'LINESeedKR-Th';
+    font-weight: bold;
+    margin-top: 14px;
+}
+.checkSche {
+    font-family: 'LINESeedKR-Rg';
+    margin-top: 46px;
+    margin-left: -171px;
+    width: 1105px;
+    overflow: hidden;
+    white-space: nowrap;
+    /* display: block; */
+    text-overflow: ellipsis;
 }
 .memoModal, .companionModal {
     display: none;
@@ -68,28 +83,36 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    width: 540px;
+    height: 440px;
+    background: #fff6a2;
+    border: none;
+    border-radius: 5px;
 }
 .memoCloseBtn {
     color: gray;
     border: none;
-    font-size: 24px;
-    position: relative;
+    font-size: x-large;
     right: -543px;
     top: -414px;
-    background: #ffffff00;
+    float: right;
 }
 .memoContents {
     resize: none;
     border: none;
     outline: none;
-    width: 500px;
-    height: 400px;
-    padding: 20px;
+    width: 480px;
+    height: 340px;
+    padding: 12px;
     font-family: 'LINESeedKR-Rg';
     font-size: 16px;
-    border-radius: 6px;
+    /* border-radius: 6px; */
+    position: absolute;
+    background: none;
+    left: 16px;
+    top: 10px;
 }
-.memoContents::-webkit-scrollbar{
+.memoContents::-webkit-scrollbar, .contentArea::-webkit-scrollbar{
     display: none;
 }
 .companionModalWrap {
@@ -109,6 +132,15 @@
     margin-top: 15px;
     font-family: 'LINESeedKR-Rg';
 }
+.compaNick {
+    display: block;
+    position: absolute;
+    transform: translate(47px, -46px);
+}
+.companionLi img {
+    width: 39px;
+    border-radius: 50px;
+}
 .cmCloseBtn {
     position: absolute;
     font-size: large;
@@ -121,9 +153,9 @@
     background: #fdfdfd;
     width: 20%;
     height: 24%;
-    top: 255px;
-    right: 326px;
-    box-shadow: 4px 5px 8px 0px #9e9e9ecc;
+    top: 184px;
+    right: 312px;
+    box-shadow: 4px 5px 8px 0px #2b2b2b;
     border-radius: 5px;
 }
 .personModalWrap{
@@ -161,27 +193,48 @@
     border-left: 1px solid #b7b7b7;
     padding-left: 6px;
 }
-.saveMemo, .modifyMemo, .editRoleSave, .editRole {
-    color: black;
+.saveMemo, .modifyMemo {
+    color: white;
     border: none;
     font-size: 17px;
-    position: relative;
-    right: 62px;
-    top: 29px;
+    position: absolute;
+    right: 14px;
+    top: 394px;
     font-family: 'LINESeedKR-Rg';
-    border-radius: 6px;
-    background: gainsboro;
-    padding: 6px 13px;
+    border-radius: 8px;
+    background: #e1cc05;
+    padding: 7px 13px 6px;
+    /* border: 3px solid; */
 }
-.modifyMemo, .editRole{
+.modifyMemo{
     right: 186px;
     background: #c5c5c5
 }
 .editRole {
-    transform: translate(553px, 72px);
+    transform: translate(-60px, 62px);
+    color: gray;
+    border: none;
+    font-size: 17px;
+    position: absolute;
+    right: 14px;
+    top: 394px;
+    font-family: 'LINESeedKR-Rg';
+    border-radius: 8px;
+    background: #FFFBE6;
+    padding: 7px 13px 6px;
 }
 .editRoleSave {
-    transform: translate(436px, 71px);
+    transform: translate(7px, 62px);
+    color: white;
+    border: none;
+    font-size: 17px;
+    position: absolute;
+    right: 14px;
+    top: 394px;
+    font-family: 'LINESeedKR-Rg';
+    border-radius: 8px;
+    background: #e1cc05;
+    padding: 7px 13px 6px;
 }
 .sadFace {
     width: 45px;
@@ -194,6 +247,27 @@
     font-family: 'LINESeedKR-Rg';
     text-align: center;
     color: gray;
+}
+.noPlanText {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 36%);
+    font-family: 'LINESeedKR-Rg';
+    color: #464646;
+    width: 88%;
+    font-size: 15px;
+    text-align: center;
+}
+.noPlanText img{
+    width: 28px;
+    display: block;
+    margin: -26px auto 17px;
+    opacity: 0.7;
+}
+.noPlanText span{
+    display: block;
+    margin-top: 9px;
 }
 .urlText {
     font-size: 16px;
@@ -212,7 +286,7 @@
 }
 
 #checkMap{
-    margin: 305px auto 0;
+    margin: 320px auto 0;
 }
 .checkBottom{
     height: 25px;
@@ -240,7 +314,7 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
     margin-top: 40px;
 }
 .slideItem{
-    background: pink;
+    background: rgba(255, 255, 255, 0);
     height: 160px;
     width: 160px;
     border-radius: 16px;
@@ -248,20 +322,21 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
     margin-right: 36px;
 }
 .dot {
-    width: 30px;
-    height: 30px;
-    background: aliceblue;
+    width: 20px;
+    height: 20px;
+    background: #FFFBE6;
     border-radius: 46px;
     position: absolute;
     top: 172px;
     margin-left: 64px;
     z-index: 10;
+    border: 5px solid #ffb42a;
 }
 .selectDot {
     margin-left: 80px;
 }
 .innerLine {
-    border: 3px dashed pink;
+    border: 4px dashed #ffb42a;
     position: absolute;
     z-index: 0;
     top: 115%;
@@ -270,7 +345,6 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
 .mapOpenBtn button, .mapCloseBtn{
     border: none;
     outline: none;
-    background: white;
     border-radius: 8px;
     box-shadow: -2px 2px 5px 0px #979797b8;
     position: absolute;
@@ -280,17 +354,23 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
     transition: opacity 0.5s ease;
 }
 .mapOpenBtn button{
-    top: 500px;
-    left: 161px;
+    top: 553px;
+    left: 163px;
     opacity: 1;
+    background: white;
+    border: 3px solid #ffb42a;
+    width: 35px;
+    height: 50px;
 }
 .mapCloseBtn{
-    top: 500px;
+    top: 551px;
     left: 520px;
     z-index: 100;
     transform: translateX(2%);
     opacity: 0;
     pointer-events: none;
+    background: white;
+    border: 3px solid #ffb42a;
 }
 .mapCloseBtn button{
     border: none;
@@ -308,7 +388,7 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
     position: absolute;
     z-index: 10;
     left: 152px;
-    top: 494px;
+    top: 546px;
     border-radius: 8px 0 0 8px;
     box-shadow: 4px 4px 15px 6px #9797974a;
     opacity: 0;
@@ -331,8 +411,8 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
 .mapContentBox2Depth ul{
     display: flex;
     justify-content: space-around;
-    margin-top: 13px;
-    padding-bottom: 26px;
+    margin-top: 18px;
+    padding-bottom: 18px;
 }
 .mapContentBox2Depth ul li{
     font-family: 'LINESeedKR-Rg';
@@ -346,44 +426,22 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
     color: white;
     box-shadow: 0 2px 7px 1px #dfdfdf
 }
-.depth2_recomm, .depth2_search {
-    height: 100px;
-    padding-top: 23px;
-}
-.depth2_recomm:hover, .depth2_search:hover{
+.recomm_area:hover, .depth2_search_base:hover, .heart_area:hover, .depth2_search_area:hover{
     background: #ededed99;
 }
-.recomm_img, .depth2_search_img {
-    float: left;
-    width: 70px;
-    height: 70px;
-    background: #e4e4e4;
-    border-radius: 100px;
-    margin-left: 15px;
+.depth2_search_base:first-child{
+    margin-top: 43px;
 }
-.recomm_name, .depth2_search_name{
-    font-family: 'LINESeedKR-Rg';
-    width: 60%;
-    padding: 13px 0 0 94px;
+.depth2_search_base:first-child, .recomm_area:first-child, .heart_area:first-child, .depth2_search_area:first-child {
+    border-top: 1px solid gainsboro;
 }
-.recomm_addr, .depth2_search_addr {
-    font-family: 'LINESeedKR-Th';
-    width: 63%;
-    padding: 10px 0 0 94px;
-    font-size: 15px;
-}
-.recomm_addBtn,.depth2_search_addBtn {
-    float: right;
-    border: 1px solid #3f3f3f;
-    padding: 9px 9px 6px;
-    font-family: 'LINESeedKR-Rg';
-    border-radius: 3px;
-    margin: -43px 13px;
-    color: #3f3f3f;
-    cursor: pointer;
-}
-.recomm_addBtn:hover,.depth2_search_addBtn:hover{
-    background: #80808029;
+.addArea {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0);
+    /*box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);*/
+    text-align: center;
 }
 .addPlanBtn{
     width: 27px;
@@ -396,7 +454,7 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
     background: #e8e8e8;
     width: 90%;
     height: 35px;
-    margin: 0 0 20px 16px;
+    margin: -6px 0 20px 17px;
     padding-top: 12px;
 }
 .depth2_input {
@@ -412,7 +470,7 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
 }
 .depth2_searchBtn img {
     position: absolute;
-    top: 89px;
+    top: 80px;
     left: 305px;
 }
 .noResultLike {
@@ -441,7 +499,7 @@ button.depth2_searchBtn {
     outline: none;
 }
 .mapContentBox2Depth::-webkit-scrollbar{
-    width: 4px;
+    width: 3px;
 }
 .mapContentBox2Depth::-webkit-scrollbar-thumb {
     background: #d2d2d2;
@@ -484,16 +542,20 @@ button.depth2_searchBtn {
     transform: translate(-50%, -192%);
     opacity: 0.5;
 }
-
-.heart_area {
+.depth2_search_base {
+    width: 111%;
+    margin-left: -16px;
+}
+.heart_area, .recomm_area, .depth2_search_base,.depth2_search_area{
     display: flex;
     align-items: flex-start;
-    height: 100px;
-    padding-top: 25px;
+    height: 99px;
+    padding-top: 30px;
     position: relative;
+    border-bottom: 1px solid gainsboro;
 }
 
-.heart_img {
+.heart_img, .recomm_img, .search_img, .search_result_img {
     width: 70px;
     height: 70px;
     background: #e4e4e4;
@@ -501,22 +563,21 @@ button.depth2_searchBtn {
     margin-left: 15px;
 }
 
-.heart_name_cate {
+.heart_name_cate, .recomm_name_cate, .search_name_cate, .search_result_name_cate {
     width: 216px;
     margin-left: 10px;
     overflow: hidden;
     text-overflow: ellipsis;
+    margin-top: 12px;
+    height: 58px;
 }
 
-.heart_name {
+.heart_name,.recomm_name, .search_name, .search_result_name {
     font-family: 'LINESeedKR-Rg';
-    font-weight: bold;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
-.heart_cate {
+.heart_cate,.recomm_cate, .search_cate,.search_result_cate {
     font-family: 'LINESeedKR-Th';
     font-size: 13px;
     font-weight: bold;
@@ -524,9 +585,10 @@ button.depth2_searchBtn {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    transform: translateY(2px);
+    padding-left: 6px;
 }
-
-.heart_addr {
+.heart_addr,.recomm_addr, .search_addr,.search_result_addr {
     font-family: 'LINESeedKR-Th';
     font-size: 15px;
     margin-top: 5px;
@@ -534,15 +596,19 @@ button.depth2_searchBtn {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-
-.heart_addBtn {
+.heart_addBtn, .recomm_addBtn, .search_addBtn,.search_result_addBtn {
     width: 27px;
     height: 27px;
     position: absolute;
-    right: 15px;
-    bottom: 10px;
+    right: 12px;
+    top: 47px;
+    z-index: 1000;
 }
-
+.name_cate2 {
+    display: flex;
+    margin-bottom: 8px;
+    margin-top: 3px;
+}
 /*.addPlanBtn {*/
 /*    float: right;*/
 /*    border: 1px solid gray;*/
@@ -633,7 +699,7 @@ button.depth2_searchBtn {
     text-align: center;
     line-height: 33px;
     font-family: 'LINESeedKR-Rg';
-    margin-left: 300px;
+    margin: 0 0 10px 300px;
     font-size: 14px;
 }
 .disableEdit{
@@ -668,11 +734,18 @@ button.depth2_searchBtn {
 .deletePlan:hover{
     font-weight: bold;
 }
+.contentArea{
+    height: 622px;
+    overflow-x: hidden;
+}
 .oneContent {
     width: 330px;
     border-bottom: 1px solid gainsboro;
     padding: 12px 16px 3px;
     position: relative;
+}
+.oneContent:first-child{
+    border-top: 1px solid gainsboro;
 }
 .oneContent.moving-up {
     transform: translateY(-100%);
@@ -706,6 +779,10 @@ button.depth2_searchBtn {
 }
 .name_cate{
     margin: 7px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 316px;
 }
 .placeName{
     font-family: 'LINESeedKR-Rg';
@@ -717,7 +794,6 @@ button.depth2_searchBtn {
     font-weight: bold;
 }
 .placeImgDiv {
-    display: flex;
     justify-content: space-between;
     margin-left: -5px;
 }

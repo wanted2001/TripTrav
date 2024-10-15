@@ -278,8 +278,8 @@ public class ScheduleController {
 
     @GetMapping("/getCompanion/{sco}")
     @ResponseBody
-    public List<ScheduleCompanionVO> getCompanion(@PathVariable long sco){
-        List<ScheduleCompanionVO> scVOList = scsv.getCompanionList(sco);
+    public List<ScheduleCompanionDTO> getCompanion(@PathVariable long sco){
+        List<ScheduleCompanionDTO> scVOList = scsv.getCompanionList(sco);
         return scVOList!=null ? scVOList : Collections.emptyList();
     }
 
@@ -309,6 +309,13 @@ public class ScheduleController {
             return isOk2>0?"1":"0";
         }
         return "-1";
+    }
+
+    @GetMapping("/getSchedule/{sco}")
+    @ResponseBody
+    public ScheduleVO getSchedule(@PathVariable long sco){
+        ScheduleVO sdvo = ssv.getScheduleVO(sco);
+        return sdvo;
     }
 
 }
