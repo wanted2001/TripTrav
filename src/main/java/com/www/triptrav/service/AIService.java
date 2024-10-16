@@ -80,6 +80,39 @@ public class AIService {
             return "Error parsing response.";
         }
     }
+    public String analyzeReviews(List<String> reviews) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + apiKey);
+        headers.set("Content-Type", "application/json");
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("model", "gpt-4o-mini");
+        Map<String, String> messageContent = new HashMap<>();
+        messageContent.put("role", "user");
+        messageContent.put("content", generateReviewPrompt(reviews));
+        List<Map<String, String>> messages = new ArrayList<>();
+        messages.add(messageContent);
+        requestBody.put("messages", messages);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonRequestBody;
+        try {
+            jsonRequestBody = objectMapper.writeValueAsString(requestBody);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return "Error creating request body.";
+        }
+        HttpEntity<String> entity = new HttpEntity<>(jsonRequestBody, headers);
 
+        ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.POST, entity, String.class);
+        return parseResponse(response.getBody());
+    }
 
+    private String generateReviewPrompt(List<String> reviews) {
+        return "다음 리뷰리스트를 분석해서 분석결과를 요약해줘"
+                + "내가 보낸 리뷰리스트를 다시 출력해줄 필요는 없어"
+                + "긍정적, 부정적 리뷰를 모아서 보여줄 필요는 없어"
+                + "분석결과는 3줄로 어느정도 길게 요약해줘"
+                + String.join(", ", reviews)
+                + "난 종합결과만 필요해 예시로 종합결과 : 내용 이런형태로";
+    }
 }
