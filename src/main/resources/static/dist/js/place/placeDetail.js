@@ -968,7 +968,7 @@ async function getReviewCount(){
     }
 }
 getReviewCount().then(result => {
-    document.querySelector('.reviewCount').innerText = result+" 개"
+    document.querySelector('.reviewCount').innerText = "("+result+")"
     totalCount = result;
 })
 
