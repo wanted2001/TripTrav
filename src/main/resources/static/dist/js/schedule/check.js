@@ -504,15 +504,93 @@ async function getSlideImg(key) {
 }
 
 
-//지도 띄우기
+var map;
+var markers = [];
+
 function initTmap() {
-    let map = new Tmapv3.Map("checkMap",
-        {
-            center: new Tmapv3.LatLng(37.566481622437934, 126.98502302169841), // 지도 초기 좌표
-            width: "1600px",
-            height: "800px",
-            zoom: 16
+    getAllCourse(sco).then(result => {
+        fetch('/dist/json/mapData.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('JSON 파일 로딩 실패');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const firstResult = result[0];
+                const matchedItem = data.find(item => item.contentid == firstResult.scheContentId);
+
+                if (matchedItem) {
+                    const mapx = matchedItem.mapx;
+                    const mapy = matchedItem.mapy;
+
+
+                    map = new Tmapv3.Map("checkMap", {
+                        center: new Tmapv3.LatLng(mapy, mapx),
+                        width: "1600px",
+                        height: "800px",
+                        zoom: 17
+                    });
+
+                    addMarkersWithLabels(result, data);
+                    map.on("ConfigLoad", function() {
+                        addPolyline(result, data)
+                    })
+                } else {
+                    console.error('일치하는 첫 번째 결과의 좌표를 찾을 수 없습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+}
+
+function addMarkersWithLabels(result, data) {
+    removeMarkers();
+    result.forEach(resultItem => {
+        const matchedItem = data.find(item => item.contentid == resultItem.scheContentId);
+        if (matchedItem) {
+            const mapx = matchedItem.mapx;
+            const mapy = matchedItem.mapy;
+            const title = matchedItem.title;
+            const marker = new Tmapv3.Marker({
+                position: new Tmapv3.LatLng(mapy, mapx),
+                icon: Tmapv3.asset.Icon.get('b_m_a'),
+                label: title
+            });
+            marker.setMap(map);
+            markers.push(marker);
+        }
+    });
+}
+
+function removeMarkers() {
+    markers.forEach(marker => {
+        marker.setMap(null);
+    });
+    markers = [];
+}
+function addPolyline(result, data) {
+    const coordinates = [];
+    result.forEach(resultItem => {
+        const matchedItem = data.find(item => item.contentid == resultItem.scheContentId);
+
+        if (matchedItem) {
+            const latLng = new Tmapv3.LatLng(matchedItem.mapy, matchedItem.mapx);
+            coordinates.push(latLng);
+        }
+    });
+    if (coordinates.length > 1) {
+        var polyline = new Tmapv3.Polyline({
+            path: coordinates,
+            strokeColor: "#0409f5",
+            strokeWeight:6,
+            map: map
         });
+    } else {
+        console.log('연결할 장소가 2개 이상 필요합니다.');
+    }
 }
 
 //주소삽입
