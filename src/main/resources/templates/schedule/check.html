@@ -7,14 +7,9 @@
     <link rel="stylesheet" th:href="@{/dist/css/schedule/check.css}">
     <script src="/dist/js/key.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.10/clipboard.min.js"></script>
-    <script src="https://toptmaptile2.tmap.co.kr/scriptSDKV3/tmapjs3.min.js?version=20231206"></script>
-    <script type="text/javascript">
-        const script = document.createElement('script');
-        script.src = `https://apis.openapi.sk.com/tmap/vectorjs?version=1&appKey=${tMapAPIKEY}`;
-        document.head.appendChild(script);
-    </script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2405143deeab244b2402da9e3bd9a581&libraries=services,clusterer,drawing"></script>
 </head>
-<body onload="initTmap()">
+<body onload="initKakaoMap()">
     <th:block th:replace="~{header :: header}"></th:block>
     <input class="inviteUser" th:value="${session.inviteeUser}" style="display: none">
     <div class="checkBackImg">
@@ -64,7 +59,7 @@
                 <div class="innerLine"></div>
             </div>
         </div>
-        <div id="checkMap">
+        <div id="checkMap" style="width: 1600px; height: 800px">
             <div class="mapOpenBtn">
                 <button><img src="/dist/image/chevrons-right.svg"></button>
             </div>
