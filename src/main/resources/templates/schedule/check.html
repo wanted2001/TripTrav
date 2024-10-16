@@ -26,13 +26,16 @@
             <p class="checkSche"></p>
         </div>
         <div class="modalList">
-            <div class="addMemoBtn" th:title="메모" onclick="openModal()"><img src="/dist/image/file-text.svg"></div>
+            <div class="addMemoBtn" th:title="메모" onclick="openModal()"><img src="/dist/image/file-text.svg"><img src="/dist/image/plusW.svg" style="width: 15px" class="plusImg"></div>
             <div class="checkPersonBtn" th:attr="title='동행자 확인'" onclick="checkPersonF()"><img src="/dist/image/users.svg"></div>
             <div class="addPersonBtn" th:attr="title='동행자 추가'" onclick="addPersonF()"><img src="/dist/image/user-plus.svg"></div>
         </div>
         <div class="memoModal">
             <div class="memoWrap">
-                <button class="memoCloseBtn" onclick="closeModal()">&times;</button>
+                <div class="memoTitle">
+                    <span class="titleText">MEMO +</span>
+                    <button class="memoCloseBtn" onclick="closeModal()">&times;</button>
+                </div>
                 <textarea placeholder="메모를 작성하세요..." class="memoContents"></textarea>
                 <button class="saveMemo" onclick="saveMemoF()">저장</button>
             </div>
@@ -49,7 +52,7 @@
         </div>
         <div class="companionModal">
             <div class="companionModalWrap">
-                <span>동행자 확인</span>
+                <span class="compaModal">동행자 확인</span>
                 <button class="cmCloseBtn" onclick="closeCmClose()">&times;</button>
                 <ul class="companionUl"></ul>
                 <button class="editRole hidden" onclick="editRoleUser()">편집</button>
@@ -91,7 +94,7 @@
             </div>
             <div class="mapContentBox2Depth hidden">
                 <ul class="depth2_ul">
-                    <li class="on" data-number="1">추천 여행지</li>
+                    <li class="on" data-number="1" onclick="recommendData()">추천 여행지</li>
                     <li data-number="2" onclick="baseSearch()">검색</li>
                     <li data-number="3" onclick="getHeartData()">My 찜</li>
                 </ul>

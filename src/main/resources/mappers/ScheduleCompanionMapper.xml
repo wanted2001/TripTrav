@@ -4,12 +4,12 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.www.triptrav.repository.ScheduleCompanionMapper">
     <insert id="inviteUserAddPlan">
-        insert into schedule_companion values (#{uno}, #{sco}, #{nick})
+        insert into schedule_companion values (#{uno}, #{sco})
     </insert>
 
     <select id="getCompanionList" resultType="com.www.triptrav.domain.ScheduleCompanionDTO">
         select
-        s.uno, s.sco, s.sche_nick, u.profile
+        s.uno, s.sco, u.nickName, u.profile
         from schedule_companion s
         join user u
         on s.uno = u.uno

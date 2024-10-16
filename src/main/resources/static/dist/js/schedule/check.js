@@ -197,18 +197,14 @@ document.addEventListener('DOMContentLoaded', () => {
     //메모여부확인
     getMemo(sco).then(r => {
         const memoContents = document.querySelector('.memoContents');
-        saveMemo.removeEventListener('click', saveMemoF);
-        if (r) {
-            addMemoBtn.innerText = '메모확인';
+        console.log(r)
+        if (!r.sco==0) {
+            document.querySelector('.plusImg').remove();
             memoContents.innerHTML = `${r.scheMemoContent}`;
             memoContents.readOnly = true;
-            saveMemo.innerText = '확인';
-            saveMemo.addEventListener('click', () => {
-                memoModal.style.display = 'none'
-            });
-            memoWrap.innerHTML += `<button class="modifyMemo" onclick="modifyMemoContent()">수정</button>`
-        } else {
-            saveMemo.addEventListener('click', saveMemoF);
+            document.querySelector('.saveMemo').style.display='hidden';
+            memoWrap.innerHTML += `<button class="modifyMemo" onclick="modifyMemoContent()">수정</button>
+                        <button class="modifyMemoSave" onclick="modifyMemoContentSave()">저장</button>`
         }
     });
 
@@ -241,74 +237,91 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function editRoleUser() {
-    getCompanion(sco).then(companionList => {
-        console.log(companionList)
-        companionList.sort((a, b) => a.uno - b.uno);
+    getCompanion(sco)
+        .then(companionList => {
+            console.log(companionList); // Check if companionList is correct
+            companionList.sort((a, b) => a.uno - b.uno);
 
-        const rolePromises = companionList.map((res, index) => {
-            return getUserRole(res.uno, sco).then(r => ({
-                res,
-                r,
-                index
-            }));
-        });
+            const rolePromises = companionList.map((res, index) => {
+                return getUserRole(res.uno, sco).then(r => ({
+                    res,
+                    r,
+                    index
+                }));
+            });
 
-        Promise.all(rolePromises).then(results => {
+            return Promise.all(rolePromises);
+        })
+        .then(results => {
             const companionUl = document.querySelector('.companionUl');
-            companionUl.innerHTML = '';
+            if (!companionUl) {
+                console.error('companionUl element not found!');
+                return;
+            }
+
+            companionUl.innerHTML = ''; // Clear existing items
 
             results.forEach(({ res, r, index }) => {
                 const isCurrentUser = (res.uno === unoNum) ? ' (나)' : '';
-
                 const isCheckedEditor = (r.scheRole === 1) ? 'checked' : '';
                 const isCheckedCompanion = (r.scheRole !== 1) ? 'checked' : '';
 
                 const li = document.createElement('li');
                 li.className = 'companionLi';
-                const unoData = res.uno;
-
-                li.setAttribute('data-uno', unoData);
+                li.setAttribute('data-uno', res.uno);
 
                 li.innerHTML = `
-                    <label>
-                        <input type="radio" name="role_${res.uno}" value="1" ${isCheckedEditor}> 편집자
-                    </label>
-                    <label>
-                        <input type="radio" name="role_${res.uno}" value="0" ${isCheckedCompanion}> 동행자
-                    </label>
+                    <img src="${res.profile ? `/profile/${res.profile}` : '/dist/image/smile-beam.svg'}">
+                    <span class="compaNick changeRole">${res.nickName}${isCurrentUser}
+                        <img src="/dist/image/minus-circle.svg" style="width: 20px; height: 20px" class="deleteCompanionBtn" onclick="deleteCompanion(sco, ${res.uno}, '${res.nickName}')">
+                    </span>
+                    <div class="checkRole">
+                        <label>
+                            <input type="radio" name="role_${res.uno}" value="1" ${isCheckedEditor}> 편집자
+                        </label>
+                        <label>
+                            <input type="radio" name="role_${res.uno}" value="0" ${isCheckedCompanion}> 동행자
+                        </label>
+                    </div>
                 `;
 
-                const deleteBtn = document.createElement('img');
-                deleteBtn.src = '/dist/image/minus-circle.svg';
-                deleteBtn.className = 'deleteCompanionBtn';
-
-                deleteBtn.addEventListener('click', () => {
-                    deleteCompanion(sco, unoData, res.scheNick);
-                });
-
-                li.appendChild(deleteBtn);
                 companionUl.appendChild(li);
             });
+        })
+        .catch(error => {
+            console.error('Error in processing companions:', error);
         });
-    });
 }
 
 
 function deleteCompanion(sco, uno, nick) {
     if (confirm(`${nick}님을 동행인에서 삭제하시겠습니까?`)) {
-        fetch(`/schedule/deleteCompanion/${sco}/${uno}`, {
-            method: 'DELETE'
-        }).then(response => response.json())
-            .then(data => {
-                if (data === 1) {
-                    alert(`${nick}님이 동행인에서 삭제되었습니다.`);
-                    location.reload();
-                } else {
-                    alert('동행인 삭제 중 오류가 발생하였습니다. \n다시 시도해주세요.');
-                }
-            })
+        const companionLi = document.querySelector(`.companionLi[data-uno="${uno}"]`);
+        if (companionLi) {
+            companionLi.remove();
+        }
+        document.querySelector('.editRoleSave').addEventListener('click',()=>{
+            fetch(`/schedule/deleteCompanion/${sco}/${uno}`, {
+                method: 'DELETE'
+            }).then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    if (data === 1) {
+                        console.log("동행인 삭제됨")
+                        location.reload();
+                    } else {
+                        console.log("동행인 삭제 중 오류발생")
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch 오류:', error);
+                    alert('서버와 통신 중 오류가 발생하였습니다.');
+                });
+
+        })
     }
 }
+
 
 
 document.querySelector('.editRoleSave').addEventListener('click', () => {
@@ -350,6 +363,12 @@ function updateRole(uno, sco, roleValue){
     }).then(response=>response.json())
         .then(data=>{
             console.log(data);
+            if (data === 1) {
+                alert(`권한이 저장되었습니다.`);
+                location.reload();
+            } else {
+                alert('동행인 삭제 중 오류가 발생하였습니다. \n다시 시도해주세요.');
+            }
         })
 }
 
@@ -359,57 +378,6 @@ function openModal() {
 }
 function closeModal() {
     memoModal.style.display = 'none';
-}
-
-//메모수정
-let isEditing = false; //편집상태 저장
-function modifyMemoContent() {
-    const memoContent = document.querySelector('.memoContents');
-    if (!isEditing) {
-        memoContent.readOnly = false;
-        memoContent.focus();
-        isEditing = true;
-    } else {
-        const memo = memoContent.value;
-        if (memo === '') {
-            if (confirm("모든 메모를 지우시겠습니까?")) {
-                fetch(`/schedule/memoDelete/${sco}`, {
-                    method: 'delete'
-                })
-                    .then(response => response.text())
-                    .then(data => {
-                        console.log(data)
-                        if (data === "1") {
-                            alert("메모가 삭제되었습니다.")
-                            document.querySelector('.modifyMemo').remove();
-                            memoModal.style.display = 'none';
-                            // location.reload();
-                        }
-                    })
-            }
-        } else {
-            fetch(`/schedule/memoModify/${sco}`, {
-                method: 'put',
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify(memo)
-            })
-                .then(response => response.text())
-                .then(data => {
-                    console.log(data)
-                    if (data === "1") {
-                        alert("메모 수정이 완료되었습니다.")
-                        memoContent.readOnly = true;
-                        isEditing = false;
-                        // location.reload();
-                        memoModal.style.display = 'flex';
-                    } else {
-                        alert("메모 수정에 오류가 발생했습니다.\n다시 시도해주세요.")
-                    }
-                })
-        }
-    }
 }
 
 //메모저장부분
@@ -433,13 +401,67 @@ function saveMemoF() {
                     console.log(data)
                     if (data === "1") {
                         alert("메모가 저장되었습니다!")
-                        // location.reload();
-                        memoModal.style.display = 'flex';
+                        location.reload();
+                        document.querySelector('.memoModal').style.display = 'block';
                     } else {
                         alert("메모 저장 중 오류가 발생했습니다. \n다시 시도해주세요.");
                     }
                 })
         }
+    }
+}
+
+//메모수정
+let isEditing = false; //편집상태 저장
+function modifyMemoContent() {
+    const memoContent = document.querySelector('.memoContents');
+    if (!isEditing) {
+        memoContent.readOnly = false;
+        memoContent.focus();
+        isEditing = true;
+    }
+}
+
+function modifyMemoContentSave(){
+    const memoContent = document.querySelector('.memoContents');
+    const memo = memoContent.value;
+    if (memo === '') {
+        if (confirm("모든 메모를 지우시겠습니까?")) {
+            fetch(`/schedule/memoDelete/${sco}`, {
+                method: 'delete'
+            })
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data)
+                    if (data === "1") {
+                        alert("메모가 삭제되었습니다.")
+                        document.querySelector('.modifyMemo').remove();
+                        // memoModal.style.display = 'none';
+                        location.reload();
+                    }
+                })
+        }
+    } else {
+        fetch(`/schedule/memoModify/${sco}`, {
+            method: 'put',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(memo)
+        })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data)
+                if (data === "1") {
+                    alert("메모 수정이 완료되었습니다.")
+                    memoContent.readOnly = true;
+                    isEditing = false;
+                    location.reload();
+                    // memoModal.style.display = 'flex';
+                } else {
+                    alert("메모 수정에 오류가 발생했습니다.\n다시 시도해주세요.")
+                }
+            })
     }
 }
 
@@ -587,7 +609,7 @@ function checkPersonF() {
                 if (data.length > 0) {
                     data.sort((a, b) => a.uno - b.uno);
                     data.forEach(r => {
-                        const li = `<li class="companionLi"><img src="${r.profile ? `/profile/${r.profile}` : '/dist/image/smile-beam.svg'}"><span class="compaNick">${r.scheNick}</span></li>`
+                        const li = `<li class="companionLi"><img src="${r.profile ? `/profile/${r.profile}` : '/dist/image/smile-beam.svg'}"><span class="compaNick">${r.nickName}</span></li>`
                         document.querySelector('.companionUl').innerHTML += li;
                     })
                 } else {
@@ -853,10 +875,12 @@ function recommendData() {
         const data = item.getAttribute('data-id');
         planDataArray.push(data);
     });
+    console.log(planDataArray);
 
     if (planDataArray.length > 0) {
         const lastData = planDataArray[planDataArray.length - 1];
         const url = `https://apis.data.go.kr/B551011/KorService1/detailCommon1?MobileOS=ETC&MobileApp=TripTrav&contentId=${lastData}&defaultYN=Y&firstImageYN=Y&areacodeYN=Y&catcodeYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&serviceKey=${tourAPIKEY}&_type=json`;
+        console.log(url)
 
         let currentPage = 1;
         const itemsPerPage = 10;
@@ -901,7 +925,9 @@ function recommendData() {
         function displayItems(items, currentPage, itemsPerPage) {
             const start = (currentPage - 1) * itemsPerPage;
             const end = Math.min(start + itemsPerPage, items.length);
-            const itemsToDisplay = items.slice(start+1, end);
+            const itemsToDisplay = items.slice(start, end); // Changed here to start instead of start + 1
+
+            document.querySelector('.depth2_recomm').innerHTML = '';
 
             itemsToDisplay.forEach(key => {
                 const recommDiv = document.createElement('div');
@@ -933,6 +959,8 @@ function recommendData() {
                     recommAddBtn.style.backgroundImage = "url('/dist/image/plus-circle.svg')";
                 });
             });
+
+            createMoreButton(totalCount, items);
         }
 
         function assignCategory(recommCate, recommNameCate, key) {
@@ -1023,7 +1051,9 @@ function baseSearch() {
                 if (area) {
                     const areaCode = area.areacode;
                     const url = `https://apis.data.go.kr/B551011/KorService1/areaBasedList1?MobileOS=ETC&MobileApp=TripTrav&_type=json&arrange=O&areaCode=${areaCode}&numOfRows=10&contentTypeId=12&serviceKey=${tourAPIKEY}`;
-                    // document.querySelector('.depth2_search_input_area').innerHTML=``;
+                    document.querySelector('.depth2_search_input_area').innerHTML=``;
+                    document.querySelector('.depth2_search_input_area').innerHTML=`<input class="depth2_input">
+                    <button type="submit" class="depth2_searchBtn"><img src="/dist/image/search.svg"></button>`;
 
                     getData(url).then(result => {
                         result.items.item.forEach(async (key) => {
