@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('.addPlan').addEventListener('click',(event)=>{
                 alert('일정이 지난 여행은 편집할 수 없습니다.');
                 document.querySelector('.mapContentBox2Depth').remove();
-                document.querySelector('.mapCloseBtn').style.left='520px';
+                document.querySelector('.mapCloseBtn').style.left='364px';
             })
         }
     })
@@ -579,6 +579,8 @@ function addMarkersWithLabels(result, data) {
             e.parentElement.style.left = "50%";
             e.parentElement.style.marginLeft = -ml + "px";
             e.parentElement.style.width = w + "px";
+            e.parentElement.style.fontFamily="LINESeedKR-Rg";
+            e.parentElement.style.paddingTop="2px"
             e.parentElement.previousSibling.style.display = "none";
             e.parentElement.parentElement.style.border = "0px";
             e.parentElement.parentElement.style.background = "unset";
@@ -852,7 +854,7 @@ openBtn.addEventListener('click', () => {
     toggleVisibility(openBtn, false);
     toggleVisibility(mapContentBox, true);
     toggleVisibility(closeBtn, true);
-    closeBtn.style.left = '520px';
+    closeBtn.style.left = '364px';
 });
 
 //여행추가하기 버튼 contentArea 높이에 맞춰 위치 변경
@@ -874,7 +876,7 @@ function checkHeight() {
 closeBtn.addEventListener('click', () => {
     if (!depth2.classList.contains('hidden')) {
         depth2.classList.add('hidden');
-        closeBtn.style.left = '520px'
+        closeBtn.style.left = '364px'
     } else {
         if (btnText.innerText === '저장') {
             if (confirm('현재 일정을 저장하시겠습니까?')) {
@@ -928,7 +930,7 @@ const depth2 = document.querySelector('.mapContentBox2Depth');
 function clickAddPlan() {
     depth2.classList.remove('hidden');
     depth2.classList.add('visible');
-    closeBtn.style.left = '883px';
+    closeBtn.style.left = '721px';
     document.querySelector('.depth2_recomm').classList.remove('hidden');
     recommendData();
 }
@@ -1045,7 +1047,7 @@ function recommendData() {
 
                 recommDiv.innerHTML += `
                     <div class="recomm_img" style="background-image: url('${key.firstimage}'); background-position: center; background-repeat: no-repeat; background-size: cover"></div>
-                    <div class="recomm_name_cate" data-id="${key.contentid}" onclick="locationPage(${key.contentid})">
+                    <div class="recomm_name_cate" data-id="${key.contentid}" onclick="locationPage(${key.addr1 ? `'${key.addr1}'` : null} ,${key.contentid}, '${key.title}')">
                         <div class="name_cate2">
                             <span class="recomm_name">${key.title}</span>
                             <span class="recomm_cate"></span>
@@ -1112,9 +1114,15 @@ function recommendData() {
 }
 
 
-function locationPage(key) {
-    if(confirm("현재 페이지를 벗어나시겠습니까? \n페이지 수정내용이 저장되지 않을 수 있습니다.")){
-        location.href=`/place/${key}`;
+function locationPage(addr1, key, name) {
+    if(addr1 == null){
+        if(confirm("현재 페이지를 벗어나시겠습니까? \n페이지 수정내용이 저장되지 않을 수 있습니다.")){
+            location.href = `https://www.google.com/search?q=${encodeURIComponent(name)}`
+        }
+    }else{
+        if(confirm("현재 페이지를 벗어나시겠습니까? \n페이지 수정내용이 저장되지 않을 수 있습니다.")){
+            location.href=`/place/${key}`;
+        }
     }
 }
 
@@ -1161,9 +1169,9 @@ function baseSearch() {
                 if (area) {
                     const areaCode = area.areacode;
                     const url = `https://apis.data.go.kr/B551011/KorService1/areaBasedList1?MobileOS=ETC&MobileApp=TripTrav&_type=json&arrange=O&areaCode=${areaCode}&numOfRows=10&contentTypeId=12&serviceKey=${tourAPIKEY}`;
-                    document.querySelector('.depth2_search_input_area').innerHTML=``;
-                    document.querySelector('.depth2_search_input_area').innerHTML=`<input class="depth2_input">
-                    <button type="submit" class="depth2_searchBtn"><img src="/dist/image/search.svg"></button>`;
+                    // document.querySelector('.depth2_search_input_area').innerHTML=``;
+                    // document.querySelector('.depth2_search_input_area').innerHTML=`<input class="depth2_input">
+                    // <button type="submit" class="depth2_searchBtn"><img src="/dist/image/search.svg"></button>`;
 
                     getData(url).then(result => {
                         result.items.item.forEach(async (key) => {
@@ -1171,7 +1179,8 @@ function baseSearch() {
                             base.classList.add('depth2_search_base');
                             base.innerHTML = `
                                 <div class="search_img" style="background-image: url('${key.firstimage}'); background-position: center; background-repeat: no-repeat; background-size: cover"></div>
-                                <div class="search_name_cate" data-id="${key.contentid}" onclick="locationPage(${key.contentid})">
+                                <div class="search_name_cate" data-id="${key.contentid}" onclick="locationPage(${key.addr1 ? `'${key.addr1}'` : null}, '${key.contentid}', '${key.title}')">
+
                                     <div class="name_cate2">
                                         <span class="search_name">${key.title}</span>
                                         <span class="search_cate"></span>
@@ -1257,7 +1266,7 @@ function search() {
                     searchDiv.classList.add('depth2_search_area');
                     searchDiv.innerHTML = `
                         <div class="search_result_img" style="background-image: url('${key.firstimage}'); background-position: center; background-repeat: no-repeat; background-size: cover"></div>
-                        <div class="search_result_name_cate" data-id="${key.contentid}" onclick="locationPage(${key.contentid})">
+                        <div class="search_result_name_cate" data-id="${key.contentid}" onclick="locationPage(${key.addr1 ? `'${key.addr1}'` : null} ,${key.contentid},'${key.title}')">
                             <div class="name_cate2">
                                 <span class="search_result_name">${key.title}</span>
                                 <span class="search_result_cate"></span>
@@ -1742,7 +1751,7 @@ function getHeartData(){
 
                                 heartArea.innerHTML+=`
                                         <div class="heart_img" style="background-image: url('${imgUrl}'); background-position: center; background-repeat: no-repeat; background-size: cover"></div>
-                                        <div class="heart_name_cate" data-id="${matchedItem.contentid}" onclick="locationPage(${matchedItem.contentid})">
+                                        <div class="heart_name_cate" data-id="${matchedItem.contentid}" onclick="locationPage(${matchedItem.addr1 ? `'${matchedItem.addr1}'` : null} ,${matchedItem.contentid}, '${matchedItem.title}')">
                                             <div class="name_cate2">
                                                 <span class="heart_name">${matchedItem.title}</span>
                                                 <span class="heart_cate"></span>

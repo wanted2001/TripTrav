@@ -447,8 +447,7 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
     transition: opacity 0.5s ease;
 }
 .mapOpenBtn button{
-    top: 590px;
-    left: 163px;
+
     opacity: 1;
     background: white;
     border: 3px solid #ffb42a;
@@ -456,8 +455,6 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
     height: 50px;
 }
 .mapCloseBtn{
-    top: 588px;
-    left: 520px;
     z-index: 100;
     transform: translateX(2%);
     opacity: 0;
@@ -476,12 +473,10 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
 }
 .mapContentBox {
     background: white;
-    width: 19%;
+    width: 364px;
     height: 800px;
     position: absolute;
     z-index: 10;
-    left: 152px;
-    top: 580px;
     border-radius: 8px 0 0 8px;
     box-shadow: 4px 4px 15px 6px #9797974a;
     opacity: 0;
@@ -495,7 +490,7 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
     background: white;
     position: absolute;
     z-index: 10;
-    left: 507px;
+    left: 357px;
     box-shadow: 5px 2px 14px 0px #c9c9c9;
     transform: translateX(2%);
     transition: opacity 0.5s ease, transform 0.5s ease-in-out;
@@ -931,8 +926,13 @@ button.depth2_searchBtn {
     color: #000000;
     text-align: center;
     height: 24px;
-    line-height:22px;
+    line-height: 22px;
     border: 1px solid black;
-    border-radius:4px;
-    padding:0px 10px;
+    border-radius: 4px;
+    padding: 5px 10px 0px;
+}
+
+#checkMap{
+    border-radius: 10px;
+    box-shadow: 0 0 20px -5px #666666;
 }
