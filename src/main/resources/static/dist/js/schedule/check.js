@@ -507,7 +507,8 @@ async function getSlideImg(key) {
 var map;
 var markers = [];
 
-function initTmap() {
+//지도출력
+function initKakaoMap() {
     getAllCourse(sco).then(result => {
         fetch('/dist/json/mapData.json')
             .then(response => {
@@ -524,18 +525,16 @@ function initTmap() {
                     const mapx = matchedItem.mapx;
                     const mapy = matchedItem.mapy;
 
+                    var mapContainer = document.getElementById('checkMap');
+                    var mapOption = {
+                        center: new kakao.maps.LatLng(mapy, mapx),
+                        level: 5
+                    };
 
-                    map = new Tmapv3.Map("checkMap", {
-                        center: new Tmapv3.LatLng(mapy, mapx),
-                        width: "1600px",
-                        height: "800px",
-                        zoom: 17
-                    });
+                    map = new kakao.maps.Map(mapContainer, mapOption);
 
                     addMarkersWithLabels(result, data);
-                    map.on("ConfigLoad", function() {
-                        addPolyline(result, data)
-                    })
+                    addPolyline(result,data)
                 } else {
                     console.error('일치하는 첫 번째 결과의 좌표를 찾을 수 없습니다.');
                 }
@@ -546,52 +545,85 @@ function initTmap() {
     });
 }
 
+//마커라벨
 function addMarkersWithLabels(result, data) {
     removeMarkers();
+
     result.forEach(resultItem => {
         const matchedItem = data.find(item => item.contentid == resultItem.scheContentId);
         if (matchedItem) {
             const mapx = matchedItem.mapx;
             const mapy = matchedItem.mapy;
             const title = matchedItem.title;
-            const marker = new Tmapv3.Marker({
-                position: new Tmapv3.LatLng(mapy, mapx),
-                icon: Tmapv3.asset.Icon.get('b_m_a'),
-                label: title
+            var marker = new kakao.maps.Marker({
+                position: new kakao.maps.LatLng(mapy, mapx),
+                map: map,
+                title: title,
+                content: title
             });
-            marker.setMap(map);
             markers.push(marker);
+            var mLabel = new kakao.maps.InfoWindow({
+                position: new kakao.maps.LatLng(mapy, mapx),
+                content: `<span class="info-title">${title}</span>`
+            });
+            mLabel.open(map, marker);
         }
     });
+
+    setTimeout(() => {
+        var infoTitle = document.querySelectorAll('.info-title');
+        infoTitle.forEach(function (e) {
+            var w = e.offsetWidth + 10;
+            var ml = w / 2;
+            e.parentElement.style.top = "82px";
+            e.parentElement.style.left = "50%";
+            e.parentElement.style.marginLeft = -ml + "px";
+            e.parentElement.style.width = w + "px";
+            e.parentElement.previousSibling.style.display = "none";
+            e.parentElement.parentElement.style.border = "0px";
+            e.parentElement.parentElement.style.background = "unset";
+        });
+    }, 0);
 }
 
+
+//마커제거
 function removeMarkers() {
     markers.forEach(marker => {
         marker.setMap(null);
     });
     markers = [];
 }
+
+//선긋기
 function addPolyline(result, data) {
     const coordinates = [];
     result.forEach(resultItem => {
         const matchedItem = data.find(item => item.contentid == resultItem.scheContentId);
 
         if (matchedItem) {
-            const latLng = new Tmapv3.LatLng(matchedItem.mapy, matchedItem.mapx);
+            const latLng = new kakao.maps.LatLng(matchedItem.mapy, matchedItem.mapx);
             coordinates.push(latLng);
         }
     });
+
     if (coordinates.length > 1) {
-        var polyline = new Tmapv3.Polyline({
+        var polyline = new kakao.maps.Polyline({
             path: coordinates,
-            strokeColor: "#0409f5",
-            strokeWeight:6,
-            map: map
+            strokeWeight: 5,
+            strokeColor: 'blue',
+            strokeOpacity: 0.7,
+            strokeStyle: 'solid'
         });
+
+        polyline.setMap(map);
     } else {
         console.log('연결할 장소가 2개 이상 필요합니다.');
     }
 }
+
+
+
 
 //주소삽입
 function getAddr(key) {

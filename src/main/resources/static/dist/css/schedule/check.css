@@ -924,3 +924,15 @@ button.depth2_searchBtn {
          transform: translate(-50%, -50%);
      }
  }
+
+.info-title {
+    display: block;
+    background: #ffffff;
+    color: #000000;
+    text-align: center;
+    height: 24px;
+    line-height:22px;
+    border: 1px solid black;
+    border-radius:4px;
+    padding:0px 10px;
+}
