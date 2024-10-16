@@ -166,7 +166,7 @@ public class MyPageController {
     public List<LikeDTO> likeCall(@RequestParam long uno) {
         LikeVO lvo = new LikeVO();
         lvo.setUno(uno);
-        lvo.setTypeId(0);
+        lvo.setTypeId(0); //장소 불러오기
         List<LikeVO> like = msv.getLikePlace(lvo);
         List<LikeDTO> likeDTOList = new ArrayList<>();
         List<PathVO> pathVOList = psv.loadPathList();
@@ -189,7 +189,7 @@ public class MyPageController {
     public List<LikeDTO> tripCall(@RequestParam long uno) {
         LikeVO lvo = new LikeVO();
         lvo.setUno(uno);
-        lvo.setTypeId(1);
+        lvo.setTypeId(1); // 코스 불러오기
         log.info("lvo >> {}",lvo);
         List<LikeVO> tripList = msv.getLikePlace(lvo);
         List<LikeDTO> likeDTOList = new ArrayList<>();
