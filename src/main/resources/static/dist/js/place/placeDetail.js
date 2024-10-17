@@ -510,6 +510,8 @@ async function displayReviews(result) {
                 modifyButton.addEventListener("click", () => {
                     fillReviewForm(review, imagePaths);
                     document.querySelector('.cameraInput').style.marginRight = "85px";
+                    document.querySelector('.cameraInput').style.marginTop = "14px";
+                    document.querySelector('.addButton').style.marginTop="14px"
                     document.getElementById('fileCount').style.marginRight = "3px";
                 });
                 reviewInfoDiv.appendChild(modifyButton);

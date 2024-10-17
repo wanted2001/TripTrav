@@ -487,16 +487,19 @@ img.camera {
     /* margin-top: 25px; */
     /* margin-left: 169px; */
 }
-#previewContainer{
-    position: absolute;
-    left: 462px;
-    top: 195px;
+#previewContainer {
+    position: relative;
+    left: 167px;
+    /* top: 195px; */
+    /* display: block; */
 }
 
 #fileCount {
-    position: absolute;
+    /* position: absolute; */
     left: 872px;
     top: 209px;
+    width: 100px;
+    transform: translate(962px, -114px);
 }
 .modifyImg{
     position: absolute;
@@ -597,11 +600,12 @@ img.camera {
     width: auto;
     height: auto;
 }
-.review-images{
+.review-images {
     width: auto;
     height: auto;
-    margin-left: 60px;
-    margin-bottom: 30px;
+    margin-left: 71px;
+    margin-bottom: 23px;
+    margin-top: -13px;
 }
 .reviewContent{
     height: auto;
@@ -906,7 +910,7 @@ img.camera {
     display: block;
     font-size: 12px;
     transform: translate(32px, 36px);
-    margin-bottom: 40px;
+    margin-bottom: 58px;
 }
 
 .reportModalWrap label:nth-child(1){
@@ -962,7 +966,6 @@ input[type="radio"]:checked::before {
     border: 1px solid #ccc;
     border-radius: 3px;
 }
-
 .reportBtn {
     width: 86%;
     background: orange;
@@ -978,12 +981,17 @@ input[type="radio"]:checked::before {
     line-height: 39px;
 }
 
+.reported {
+    display: block;
+    margin: 0 auto;
+}
+
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
 .blind-div{
-    width: 880px;
+    width: 100%;
     height: 119px;
     line-height: 119px;
     text-align: center;
