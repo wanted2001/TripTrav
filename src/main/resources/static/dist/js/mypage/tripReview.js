@@ -84,7 +84,7 @@ async function deleteReview(rno) {
         const resp = await fetch(url, config);
         if (resp.ok) {
             alert("리뷰가 삭제되었습니다.");
-            window.location.reload();
+            location.href=`/mypage?uno=${unoNum}&location=tripReview`;
         } else {
             alert("리뷰 삭제에 실패했습니다.");
         }

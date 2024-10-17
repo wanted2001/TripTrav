@@ -46,7 +46,7 @@ public class TripController {
         if(isOk == 1){
             return "de";
         }
-        return "no delete";
+        return "nodelete";
     }
 
     @ResponseBody
@@ -56,7 +56,7 @@ public class TripController {
         if(isOk == 1){
             return "in";
         }
-        return "no insert";
+        return "noinsert";
 
     }
 

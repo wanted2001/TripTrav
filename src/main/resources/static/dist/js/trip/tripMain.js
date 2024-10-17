@@ -113,7 +113,7 @@ async function appendTrips(trips) {
         schedule.innerText = `일정: ${detailInfo.schedule ? detailInfo.schedule : "정보 없음"}`;
 
         const theme = document.createElement("p");
-        theme.innerText = `테마: ${detailInfo.theme ? detailInfo.theme : "정보 없음"}`;
+        theme.innerText = `테마: ${detailInfo.theme ? detailInfo.theme.replaceAll("-", "") : "정보 없음"}`;
 
         const btnDiv = document.createElement("div");
         btnDiv.classList.add("btnDiv");
