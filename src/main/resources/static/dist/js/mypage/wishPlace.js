@@ -38,6 +38,12 @@ likeCall(unoNum).then(data => {
             foodList.appendChild(foodLi);
             foodNum++;
         }
+        if(foodNum === 0){
+            foodList.appendChild(noChild("wishPlace"));
+        }
+        if(placeNum===0){
+            placeList.appendChild(noChild("wishPlace"));
+        }
         place.appendChild(li);
         placeList.style.display = "none";
         foodList.style.display = "none";
