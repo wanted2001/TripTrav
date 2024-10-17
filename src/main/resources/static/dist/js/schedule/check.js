@@ -55,8 +55,6 @@ window.addEventListener('click', (e) => {
                     getAddr(key.scheContentId);
                     getImage(key.scheContentId);
                 });
-            } else {
-                document.querySelector('.contentArea').innerHTML = '<p>No data available for the selected date.</p>';
             }
             spinner.style.display = 'none';
             overlay.style.display = 'none';
