@@ -3,8 +3,12 @@ const buttons = document.querySelectorAll('.taste-button');
 const reTasteBtn = document.querySelector('.reTaste');
 const placeNames = [];
 const placeTag = [];
+const spinner = document.getElementById('spinner');
+const overlay = document.getElementById('overlay');
 let selectedButtons = [...cnoList];
 let reState =false;
+spinner.style.display = 'block';
+overlay.style.display = 'block';
 
 //초기페이지
 document.querySelector('.tasteTitle').innerText = `${userNickname}님의 취향분석 결과`;
@@ -270,60 +274,68 @@ Promise.all([
             });
         });
         //AI추천 출력
-        async function fetchAndDisplayAI() {
-            try {
-                const result = await analyzeWithAI(placeNames, placeTag);
-                const analysisContent = result.choices[0].message.content;
-                const jsonString = analysisContent.match(/\[.*\]/s);
-                if (jsonString && jsonString[0]) {
-                    try {
-                        const parsedData = JSON.parse(jsonString[0]);
-                        const displayTasteAIList = document.querySelector('.displayTasteAIList');
-                        const matchedPlaces = [];
-                        const uniquePlaceNames = new Set();
-                        while (matchedPlaces.length < 10) {
-                            for (let place of parsedData) {
-                                const placeName = place["이름"].replace(/[\[\]]/g, "").trim();
-                                const placeReason = place["추천이유"];
-                                if (uniquePlaceNames.has(placeName)) {
-                                    continue;
-                                }
-                                uniquePlaceNames.add(placeName);
-                                for (let content of data) {
-                                    if (content.title.toLowerCase().includes(placeName.toLowerCase()) && content.firstimage) {
-                                        matchedPlaces.push({
-                                            title: content.title,
-                                            firstimage: content.firstimage,
-                                            contentid: content.contentid,
-                                            placeReason: placeReason
-                                        });
-                                        if (matchedPlaces.length >= 10) {
-                                            break;
+        function fetchAndDisplayAI() {
+            analyzeWithAI(placeNames, placeTag)
+                .then(result => {
+                    spinner.style.display = 'none';
+                    overlay.style.display = 'none';
+
+                    const analysisContent = result.choices[0].message.content;
+                    const jsonString = analysisContent.match(/\[.*\]/s);
+                    if (jsonString && jsonString[0]) {
+                        try {
+                            const parsedData = JSON.parse(jsonString[0]);
+                            const displayTasteAIList = document.querySelector('.displayTasteAIList');
+                            const matchedPlaces = [];
+                            const uniquePlaceNames = new Set();
+                            while (matchedPlaces.length < 10) {
+                                for (let place of parsedData) {
+                                    const placeName = place["이름"].replace(/[\[\]]/g, "").trim();
+                                    const placeReason = place["추천이유"];
+                                    if (uniquePlaceNames.has(placeName)) {
+                                        continue;
+                                    }
+                                    uniquePlaceNames.add(placeName);
+                                    for (let content of data) {
+                                        if (content.title.toLowerCase().includes(placeName.toLowerCase()) && content.firstimage) {
+                                            matchedPlaces.push({
+                                                title: content.title,
+                                                firstimage: content.firstimage,
+                                                contentid: content.contentid,
+                                                placeReason: placeReason
+                                            });
+                                            if (matchedPlaces.length >= 10) {
+                                                break;
+                                            }
                                         }
+                                    }
+                                    if (matchedPlaces.length >= 10) {
+                                        break;
                                     }
                                 }
                                 if (matchedPlaces.length >= 10) {
+                                    displayMatchedPlaces(matchedPlaces, displayTasteAIList);
                                     break;
+                                } else {
+                                    return fetchAndDisplayAI();
                                 }
                             }
-                            if (matchedPlaces.length >= 10) {
-                                displayMatchedPlaces(matchedPlaces, displayTasteAIList);
-                                break;
-                            } else {
-                                await fetchAndDisplayAI();
-                                return;
-                            }
+                        } catch (error) {
+                            console.error("JSON 파싱 오류:", error);
                         }
-                    } catch (error) {
-                        console.error("JSON 파싱 오류:", error);
+                    } else {
+                        console.error("JSON 문자열을 찾을 수 없습니다.");
                     }
-                } else {
-                    console.error("JSON 문자열을 찾을 수 없습니다.");
-                }
-            } catch (error) {
-                console.error('데이터 로딩 에러:', error);
-            }
+                })
+                .catch(error => {
+                    console.error('데이터 로딩 에러:', error);
+                })
+                .finally(() => {
+                    spinner.style.display = 'none';
+                    overlay.style.display = 'none';
+                });
         }
+
         //화면출력
         function displayMatchedPlaces(matchedPlaces, displayTasteAIList) {
             const shuffledPlaces = shuffleArray(matchedPlaces);

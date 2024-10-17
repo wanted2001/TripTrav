@@ -4,6 +4,10 @@ main {
     margin: 0;
     padding: 0;
     /* background: #f3f3f3d9; */
+
+}
+html {
+    scroll-behavior: smooth;
 }
 button{
     cursor: pointer;
@@ -422,7 +426,7 @@ textarea{
     margin: 10px auto;
     display: block;
     border: none;
-    background: #e7e7e7;
+    background: #f4f4f4;
     border-radius: 5px;
     outline: none;
 }
@@ -447,9 +451,9 @@ textarea{
 .inputDiv > form > button {
     margin-top: 7px;
     font-size: 15px;
-    position: absolute;
+    /* position: absolute; */
     right: 195px;
-    top: 316px;
+    top: 455px;
     font-family: 'LINESeedKR-Rg';
 }
 .cameraInput {
@@ -991,3 +995,25 @@ input[type="radio"]:checked::before {
 .hiddenData{
     display: none;
 }
+
+.aiAnalyze {
+    width: 1015px;
+    margin-left: 173px;
+    margin-top: 22px;
+    font-family: 'LINESeedKR-Rg';
+    border: 2px solid orange;
+    border-radius: 10px;
+    box-shadow: 3px 3px 6px -2px #b9b9b9;
+}
+.aiTitle{
+    margin-left: 13px;
+    position: absolute;
+    top: 78px;
+    left: 221px;
+    font-size: 18px;
+    font-weight: bold;
+    background-color: white;
+    width: 100px;
+    margin: 0 auto;
+}
+.aiText{display: block;padding: 10px 24px 15px;line-height: 25px;}
