@@ -6,6 +6,14 @@ const overlay = document.getElementById('overlay');
 const planDataArray=[];
 let lastData;
 
+function getRandomRating() {
+    return (Math.random() * 5).toFixed(1); // 소수점 1자리까지 표현
+}
+
+function getRandomNumber() {
+    return Math.floor(Math.random() * 1000) + 1;
+}
+
 window.addEventListener('click', (e) => {
     let date = e.target.getAttribute('data-date');
     if (sco && date) {
@@ -20,6 +28,8 @@ window.addEventListener('click', (e) => {
             // Check if there are results
             if (result.length > 0) {
                 result.forEach(key => {
+                    const star = getRandomRating();
+                    const number = getRandomNumber();
                     content = `
                     <li class="oneContent" data-id="${key.scheContentId}">
                         <div class="deletePlan hidden" onclick="deletePlan(event)">&times;</div>
@@ -34,8 +44,8 @@ window.addEventListener('click', (e) => {
                         <div class="placeAddr"></div>
                         <div class="rate_count">
                             <img src="/dist/image/star.svg">
-                            <div class="placeRate">4.0</div>
-                            <div class="placeRateCount">(356)</div>
+                            <div class="placeRate">${star}</div>
+                            <div class="placeRateCount">(${number})</div>
                         </div>
                         <div class="placeImgDiv">
                             <div class="placeImg"></div>
@@ -172,6 +182,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // console.log(result)
             let content = '';
             result.forEach(key => {
+                const star = getRandomRating();
+                const number = getRandomNumber();
                 content = `
                 <li class="oneContent" data-id="${key.scheContentId}">
                     <div class="deletePlan hidden" onclick="deletePlan(event)">&times;</div>
@@ -186,8 +198,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="placeAddr"></div>
                     <div class="rate_count">
                         <img src="/dist/image/star.svg">
-                        <div class="placeRate">4.0</div>
-                        <div class="placeRateCount">(356)</div>
+                        <div class="placeRate">${star}</div>
+                        <div class="placeRateCount">(${number})</div>
                     </div>
                     <div class="placeImgDiv">
                         <div class="placeImg"></div>
@@ -1426,6 +1438,8 @@ function newPlanF(event) {
         return
     }
 
+    const star = getRandomRating();
+    const number = getRandomNumber();
     const newLi = `<li class="oneContent" data-id="${contentId}">
                             <div class="deletePlan" onclick="deletePlan(event)">&times;</div>
                             <div class="changePlan">
@@ -1439,8 +1453,8 @@ function newPlanF(event) {
                             <div class="placeAddr">${placeAddress}</div>
                             <div class="rate_count">
                                 <img src="/dist/image/star.svg">
-                                <div class="placeRate">4.0</div>
-                                <div class="placeRateCount">(356)</div>
+                                <div class="placeRate">${star}</div>
+                                <div class="placeRateCount">(${number})</div>
                             </div>
                             <div class="placeImgDiv">
                                 <div class="placeImg"></div>
