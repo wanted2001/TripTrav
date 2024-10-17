@@ -6,7 +6,7 @@ import com.www.triptrav.domain.ScheduleCompanionVO;
 import java.util.List;
 
 public interface ScheduleCompanionService {
-    int inviteUserAddPlan(long uno, long sco, String nick);
+    int inviteUserAddPlan(long uno, long sco);
 
     List<ScheduleCompanionDTO> getCompanionList(long sco);
 

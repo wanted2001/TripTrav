@@ -12,6 +12,6 @@ import lombok.Setter;
 public class ScheduleCompanionDTO {
     private long uno;
     private long sco;
-    private String scheNick;
+    private String nickName;
     private String profile;
 }

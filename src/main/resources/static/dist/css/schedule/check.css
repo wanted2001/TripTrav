@@ -1,22 +1,20 @@
 .checkBackImg{
-    /*background: gainsboro;*/
     background: url("../../image/main4.jpg") no-repeat center/cover;
     position: absolute;
     top: 0;
     width: 100%;
-    height: 518px;
+    height: 551px;
 }
 .blurImg {
     width: 100%;
-    height: 519px;
+    height: 552px;
     position: absolute;
     background: linear-gradient(to right, rgba(255, 255, 255, 0), rgb(255 255 255 / 4%), rgb(255 255 255 / 11%), rgb(255 255 255 / 0%), rgba(255, 255, 255, 0));
-
     backdrop-filter: blur(3px);
 }
 .checkTitle{
     width: 1110px;
-    margin: 130px 255px;
+    margin: 164px 255px 125px;
     display: flex;
     flex-wrap: wrap;
     position: relative;
@@ -30,14 +28,20 @@
 .modalList {
     display: flex;
     position: absolute;
-    right: 301px;
-    top: 126px;
+    right: 307px;
+    top: 155px;
     width: 176px;
     height: 50px;
     justify-content: space-around;
 }
+.plusImg {
+    position: absolute;
+    width: 15px;
+    top: -15px;
+    left: 36px;
+}
 .addMemoBtn img, .checkPersonBtn img, .addPersonBtn img {
-    width: 38px;
+    width: 34px;
     height: 50px;
     cursor: pointer;
 }
@@ -63,7 +67,7 @@
     /* display: block; */
     text-overflow: ellipsis;
 }
-.memoModal, .companionModal {
+.memoModal {
     display: none;
     position: fixed;
     background-color: rgba(0, 0, 0, 0.34);
@@ -85,66 +89,167 @@
     transform: translate(-50%, -50%);
     width: 540px;
     height: 440px;
-    background: #fff6a2;
+    background: #fff7d1;
     border: none;
     border-radius: 5px;
+    animation: fadeIn 0.3s ease-in-out;
+}
+.memoTitle {
+    background: #fff2ab;
+    height: 37px;
+    border-radius: 5px;
+}
+.titleText {
+    display: inline-block;
+    padding: 14px;
+    font-family: 'LINESeedKR-Rg';
+    font-weight: bold;
+    color: #535353;
 }
 .memoCloseBtn {
-    color: gray;
+    color: #535353;
     border: none;
-    font-size: x-large;
-    right: -543px;
-    top: -414px;
-    float: right;
+    font-size: 21px;
+    font-weight: bolder;
+    position: absolute;
+    right: 6px;
+    top: 6px;
 }
 .memoContents {
     resize: none;
     border: none;
     outline: none;
-    width: 480px;
-    height: 340px;
-    padding: 12px;
+    width: 510px;
+    height: 336px;
     font-family: 'LINESeedKR-Rg';
     font-size: 16px;
-    /* border-radius: 6px; */
     position: absolute;
     background: none;
     left: 16px;
-    top: 10px;
+    top: 49px;
 }
 .memoContents::-webkit-scrollbar, .contentArea::-webkit-scrollbar{
     display: none;
 }
-.companionModalWrap {
-    background: white;
-    width: 500px;
-    height: 500px;
-    position: absolute;
+.companionModal {
+    display: none;
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.5); /* Darker, subtle backdrop */
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
     z-index: 1000;
+}
+.companionModalWrap {
+    background: #fff;
+    width: 450px;
+    max-width: 90%;
+    height: 368px;
+    padding: 20px 30px;
+    position: absolute;
+    z-index: 1001;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    border-radius: 6px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease-in-out;
+    font-family: 'LINESeedKR-Rg', sans-serif;
 }
-.companionModalWrap span{
-    display: block;
+.compaModal {
+    font-size: 22px;
     text-align: center;
-    margin-top: 15px;
-    font-family: 'LINESeedKR-Rg';
-}
-.compaNick {
-    display: block;
-    position: absolute;
-    transform: translate(47px, -46px);
-}
-.companionLi img {
-    width: 39px;
-    border-radius: 50px;
+    font-weight: bold;
+    margin: 0 0 15px -12px;
+    color: #333;
 }
 .cmCloseBtn {
+    color: #535353;
+    border: none;
+    font-size: 21px;
+    font-weight: bolder;
     position: absolute;
-    font-size: large;
-    transform: translate(475px, -27px);
+    right: 9px;
+    top: 10px;
+}
+.companionLi {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #f1f1f1;
+}
+.companionLi:last-child {
+    border-bottom: none;
+    padding-bottom: 10px;
+}
+.companionLi img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+.compaNick {
+    font-size: 17px;
+    font-weight: 600;
+    color: #333;
+}
+.changeRole {
+    margin-right: auto;
+}
+.checkRole {
+    display: flex;
+    align-items: center;
+}
+
+.checkRole label {
+    margin-left: 10px;
+    font-size: 16px;
+}
+.deleteCompanionBtn {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    padding-bottom: 1px;
+}
+.deleteCompanionBtn:hover {
+    transform: scale(1.1);
+}
+
+.editRole {
+    transform: translate(-60px, 62px);
+    color: #353535;
+    font-size: 17px;
+    position: absolute;
+    right: 13px;
+    top: 299px;
+    font-family: 'LINESeedKR-Rg';
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 6px 10px 2px;
+    border: 3px solid #fff0a3;
+    transition: border-color 0.3s ease-in-out;
+}
+.editRoleSave {
+    transform: translate(7px, 62px);
+    color: black;
+    border: none;
+    font-size: 17px;
+    position: absolute;
+    right: 17px;
+    top: 299px;
+    font-family: 'LINESeedKR-Rg';
+    border-radius: 8px;
+    background: #fff0a3;
+    padding: 8px 13px 5px;
+}
+.editRole:hover{
+    border: 3px solid #ffb836;
+}
+.editRoleSave:hover {
+    background-color: #ffb836;
+    color: white;
+    transition: background-color 0.5s ease-in-out;
 }
 .personModal {
     display: none;
@@ -152,9 +257,9 @@
     z-index: 500;
     background: #fdfdfd;
     width: 20%;
-    height: 24%;
-    top: 184px;
-    right: 312px;
+    height: 21%;
+    top: 206px;
+    right: 318px;
     box-shadow: 4px 5px 8px 0px #2b2b2b;
     border-radius: 5px;
 }
@@ -193,52 +298,27 @@
     border-left: 1px solid #b7b7b7;
     padding-left: 6px;
 }
-.saveMemo, .modifyMemo {
-    color: white;
+.saveMemo, .modifyMemo, .modifyMemoSave {
+    color: black;
     border: none;
     font-size: 17px;
     position: absolute;
-    right: 14px;
-    top: 394px;
+    right: 18px;
+    top: 391px;
     font-family: 'LINESeedKR-Rg';
     border-radius: 8px;
-    background: #e1cc05;
-    padding: 7px 13px 6px;
-    /* border: 3px solid; */
-}
-.modifyMemo{
-    right: 186px;
-    background: #c5c5c5
-}
-.editRole {
-    transform: translate(-60px, 62px);
-    color: gray;
-    border: none;
-    font-size: 17px;
-    position: absolute;
-    right: 14px;
-    top: 394px;
-    font-family: 'LINESeedKR-Rg';
-    border-radius: 8px;
-    background: #FFFBE6;
+    background: #ffec82;
     padding: 7px 13px 6px;
 }
-.editRoleSave {
-    transform: translate(7px, 62px);
-    color: white;
-    border: none;
-    font-size: 17px;
-    position: absolute;
-    right: 14px;
-    top: 394px;
-    font-family: 'LINESeedKR-Rg';
-    border-radius: 8px;
-    background: #e1cc05;
+.modifyMemo {
+    right: 82px;
+    top: 392px;
+    background: #ebda7b;
     padding: 7px 13px 6px;
 }
 .sadFace {
     width: 45px;
-    margin: 145px auto 0;
+    margin: 77px auto 0;
     display: block;
     opacity: 0.6;
 }
@@ -271,18 +351,31 @@
 }
 .urlText {
     font-size: 16px;
+    display: block;
+    margin-top: 10px;
 }
 .companionUl {
-    width: 64%;
-    margin: 17px auto 0;
-    height: 307px;
+    width: 100%;
+    margin: 16px auto 0;
+    height: 283px;
     overflow: auto;
+}
+.companionUl::-webkit-scrollbar{
+    width: 3px;
+}
+.companionUl::-webkit-scrollbar-thumb {
+    background: #d2d2d2;
+    border-radius: 10px;
+}
+.companionUl::-webkit-scrollbar-track {
+    background: #eeeeee;
 }
 .companionLi {
     border-bottom: 1px solid gainsboro;
-    padding: 30px 0 9px 6px;
+    padding: 19px 17px 12px 13px;
     font-family: 'LINESeedKR-Th';
     font-weight: bold;
+    height: 43px;
 }
 
 #checkMap{
@@ -354,8 +447,7 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
     transition: opacity 0.5s ease;
 }
 .mapOpenBtn button{
-    top: 553px;
-    left: 163px;
+
     opacity: 1;
     background: white;
     border: 3px solid #ffb42a;
@@ -363,8 +455,6 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
     height: 50px;
 }
 .mapCloseBtn{
-    top: 551px;
-    left: 520px;
     z-index: 100;
     transform: translateX(2%);
     opacity: 0;
@@ -383,12 +473,10 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
 }
 .mapContentBox {
     background: white;
-    width: 19%;
+    width: 364px;
     height: 800px;
     position: absolute;
     z-index: 10;
-    left: 152px;
-    top: 546px;
     border-radius: 8px 0 0 8px;
     box-shadow: 4px 4px 15px 6px #9797974a;
     opacity: 0;
@@ -402,7 +490,7 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
     background: white;
     position: absolute;
     z-index: 10;
-    left: 507px;
+    left: 357px;
     box-shadow: 5px 2px 14px 0px #c9c9c9;
     transform: translateX(2%);
     transition: opacity 0.5s ease, transform 0.5s ease-in-out;
@@ -554,7 +642,6 @@ button.depth2_searchBtn {
     position: relative;
     border-bottom: 1px solid gainsboro;
 }
-
 .heart_img, .recomm_img, .search_img, .search_result_img {
     width: 70px;
     height: 70px;
@@ -562,7 +649,6 @@ button.depth2_searchBtn {
     border-radius: 100px;
     margin-left: 15px;
 }
-
 .heart_name_cate, .recomm_name_cate, .search_name_cate, .search_result_name_cate {
     width: 216px;
     margin-left: 10px;
@@ -571,12 +657,10 @@ button.depth2_searchBtn {
     margin-top: 12px;
     height: 58px;
 }
-
 .heart_name,.recomm_name, .search_name, .search_result_name {
     font-family: 'LINESeedKR-Rg';
     white-space: nowrap;
 }
-
 .heart_cate,.recomm_cate, .search_cate,.search_result_cate {
     font-family: 'LINESeedKR-Th';
     font-size: 13px;
@@ -609,25 +693,6 @@ button.depth2_searchBtn {
     margin-bottom: 8px;
     margin-top: 3px;
 }
-/*.addPlanBtn {*/
-/*    float: right;*/
-/*    border: 1px solid gray;*/
-/*    border-radius: 2px;*/
-/*    position: relative;*/
-/*    width: 20px;*/
-/*    height: 20px;*/
-/*    margin-top: -60px;*/
-/*    margin-right: 5px;*/
-/*    cursor: pointer;*/
-/*}*/
-/*.addPlanBtn:hover{*/
-/*    background: #5e5e5e40;*/
-/*    border: 1px solid #f5deb300;*/
-/*    padding: 1px;*/
-/*}*/
-/*.addPlanBtn img {*/
-/*    width: 20px;*/
-/*}*/
 .addPlan {
     /* border: 1px solid orange; */
     height: 38px;
@@ -830,9 +895,6 @@ button.depth2_searchBtn {
     float: right;
     margin-top: -1px;
     cursor: pointer;
-    /*border: 1px solid #a8a8a8;*/
-    /*border-radius: 4px;*/
-    /*line-height: 1px;*/
 }
 .drag img{
     width: 100%;
@@ -846,4 +908,31 @@ button.depth2_searchBtn {
 
 .hidden{
     display: none;
+}
+@keyframes fadeIn {
+     0% {
+         opacity: 0;
+         transform: translate(-50%, -55%);
+     }
+     100% {
+         opacity: 1;
+         transform: translate(-50%, -50%);
+     }
+ }
+
+.info-title {
+    display: block;
+    background: #ffffff;
+    color: #000000;
+    text-align: center;
+    height: 24px;
+    line-height: 22px;
+    border: 1px solid black;
+    border-radius: 4px;
+    padding: 5px 10px 0px;
+}
+
+#checkMap{
+    border-radius: 10px;
+    box-shadow: 0 0 20px -5px #666666;
 }

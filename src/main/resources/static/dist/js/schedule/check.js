@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('.addPlan').addEventListener('click',(event)=>{
                 alert('일정이 지난 여행은 편집할 수 없습니다.');
                 document.querySelector('.mapContentBox2Depth').remove();
-                document.querySelector('.mapCloseBtn').style.left='520px';
+                document.querySelector('.mapCloseBtn').style.left='364px';
             })
         }
     })
@@ -197,18 +197,14 @@ document.addEventListener('DOMContentLoaded', () => {
     //메모여부확인
     getMemo(sco).then(r => {
         const memoContents = document.querySelector('.memoContents');
-        saveMemo.removeEventListener('click', saveMemoF);
-        if (r) {
-            addMemoBtn.innerText = '메모확인';
+        console.log(r)
+        if (!r.sco==0) {
+            document.querySelector('.plusImg').remove();
             memoContents.innerHTML = `${r.scheMemoContent}`;
             memoContents.readOnly = true;
-            saveMemo.innerText = '확인';
-            saveMemo.addEventListener('click', () => {
-                memoModal.style.display = 'none'
-            });
-            memoWrap.innerHTML += `<button class="modifyMemo" onclick="modifyMemoContent()">수정</button>`
-        } else {
-            saveMemo.addEventListener('click', saveMemoF);
+            document.querySelector('.saveMemo').style.display='hidden';
+            memoWrap.innerHTML += `<button class="modifyMemo" onclick="modifyMemoContent()">수정</button>
+                        <button class="modifyMemoSave" onclick="modifyMemoContentSave()">저장</button>`
         }
     });
 
@@ -241,74 +237,91 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function editRoleUser() {
-    getCompanion(sco).then(companionList => {
-        console.log(companionList)
-        companionList.sort((a, b) => a.uno - b.uno);
+    getCompanion(sco)
+        .then(companionList => {
+            console.log(companionList); // Check if companionList is correct
+            companionList.sort((a, b) => a.uno - b.uno);
 
-        const rolePromises = companionList.map((res, index) => {
-            return getUserRole(res.uno, sco).then(r => ({
-                res,
-                r,
-                index
-            }));
-        });
+            const rolePromises = companionList.map((res, index) => {
+                return getUserRole(res.uno, sco).then(r => ({
+                    res,
+                    r,
+                    index
+                }));
+            });
 
-        Promise.all(rolePromises).then(results => {
+            return Promise.all(rolePromises);
+        })
+        .then(results => {
             const companionUl = document.querySelector('.companionUl');
-            companionUl.innerHTML = '';
+            if (!companionUl) {
+                console.error('companionUl element not found!');
+                return;
+            }
+
+            companionUl.innerHTML = ''; // Clear existing items
 
             results.forEach(({ res, r, index }) => {
                 const isCurrentUser = (res.uno === unoNum) ? ' (나)' : '';
-
                 const isCheckedEditor = (r.scheRole === 1) ? 'checked' : '';
                 const isCheckedCompanion = (r.scheRole !== 1) ? 'checked' : '';
 
                 const li = document.createElement('li');
                 li.className = 'companionLi';
-                const unoData = res.uno;
-
-                li.setAttribute('data-uno', unoData);
+                li.setAttribute('data-uno', res.uno);
 
                 li.innerHTML = `
-                    <label>
-                        <input type="radio" name="role_${res.uno}" value="1" ${isCheckedEditor}> 편집자
-                    </label>
-                    <label>
-                        <input type="radio" name="role_${res.uno}" value="0" ${isCheckedCompanion}> 동행자
-                    </label>
+                    <img src="${res.profile ? `/profile/${res.profile}` : '/dist/image/smile-beam.svg'}">
+                    <span class="compaNick changeRole">${res.nickName}${isCurrentUser}
+                        <img src="/dist/image/minus-circle.svg" style="width: 20px; height: 20px" class="deleteCompanionBtn" onclick="deleteCompanion(sco, ${res.uno}, '${res.nickName}')">
+                    </span>
+                    <div class="checkRole">
+                        <label>
+                            <input type="radio" name="role_${res.uno}" value="1" ${isCheckedEditor}> 편집자
+                        </label>
+                        <label>
+                            <input type="radio" name="role_${res.uno}" value="0" ${isCheckedCompanion}> 동행자
+                        </label>
+                    </div>
                 `;
 
-                const deleteBtn = document.createElement('img');
-                deleteBtn.src = '/dist/image/minus-circle.svg';
-                deleteBtn.className = 'deleteCompanionBtn';
-
-                deleteBtn.addEventListener('click', () => {
-                    deleteCompanion(sco, unoData, res.scheNick);
-                });
-
-                li.appendChild(deleteBtn);
                 companionUl.appendChild(li);
             });
+        })
+        .catch(error => {
+            console.error('Error in processing companions:', error);
         });
-    });
 }
 
 
 function deleteCompanion(sco, uno, nick) {
     if (confirm(`${nick}님을 동행인에서 삭제하시겠습니까?`)) {
-        fetch(`/schedule/deleteCompanion/${sco}/${uno}`, {
-            method: 'DELETE'
-        }).then(response => response.json())
-            .then(data => {
-                if (data === 1) {
-                    alert(`${nick}님이 동행인에서 삭제되었습니다.`);
-                    location.reload();
-                } else {
-                    alert('동행인 삭제 중 오류가 발생하였습니다. \n다시 시도해주세요.');
-                }
-            })
+        const companionLi = document.querySelector(`.companionLi[data-uno="${uno}"]`);
+        if (companionLi) {
+            companionLi.remove();
+        }
+        document.querySelector('.editRoleSave').addEventListener('click',()=>{
+            fetch(`/schedule/deleteCompanion/${sco}/${uno}`, {
+                method: 'DELETE'
+            }).then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    if (data === 1) {
+                        console.log("동행인 삭제됨")
+                        location.reload();
+                    } else {
+                        console.log("동행인 삭제 중 오류발생")
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch 오류:', error);
+                    alert('서버와 통신 중 오류가 발생하였습니다.');
+                });
+
+        })
     }
 }
+
 
 
 document.querySelector('.editRoleSave').addEventListener('click', () => {
@@ -350,6 +363,12 @@ function updateRole(uno, sco, roleValue){
     }).then(response=>response.json())
         .then(data=>{
             console.log(data);
+            if (data === 1) {
+                alert(`권한이 저장되었습니다.`);
+                location.reload();
+            } else {
+                alert('동행인 삭제 중 오류가 발생하였습니다. \n다시 시도해주세요.');
+            }
         })
 }
 
@@ -359,57 +378,6 @@ function openModal() {
 }
 function closeModal() {
     memoModal.style.display = 'none';
-}
-
-//메모수정
-let isEditing = false; //편집상태 저장
-function modifyMemoContent() {
-    const memoContent = document.querySelector('.memoContents');
-    if (!isEditing) {
-        memoContent.readOnly = false;
-        memoContent.focus();
-        isEditing = true;
-    } else {
-        const memo = memoContent.value;
-        if (memo === '') {
-            if (confirm("모든 메모를 지우시겠습니까?")) {
-                fetch(`/schedule/memoDelete/${sco}`, {
-                    method: 'delete'
-                })
-                    .then(response => response.text())
-                    .then(data => {
-                        console.log(data)
-                        if (data === "1") {
-                            alert("메모가 삭제되었습니다.")
-                            document.querySelector('.modifyMemo').remove();
-                            memoModal.style.display = 'none';
-                            // location.reload();
-                        }
-                    })
-            }
-        } else {
-            fetch(`/schedule/memoModify/${sco}`, {
-                method: 'put',
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify(memo)
-            })
-                .then(response => response.text())
-                .then(data => {
-                    console.log(data)
-                    if (data === "1") {
-                        alert("메모 수정이 완료되었습니다.")
-                        memoContent.readOnly = true;
-                        isEditing = false;
-                        // location.reload();
-                        memoModal.style.display = 'flex';
-                    } else {
-                        alert("메모 수정에 오류가 발생했습니다.\n다시 시도해주세요.")
-                    }
-                })
-        }
-    }
 }
 
 //메모저장부분
@@ -433,13 +401,67 @@ function saveMemoF() {
                     console.log(data)
                     if (data === "1") {
                         alert("메모가 저장되었습니다!")
-                        // location.reload();
-                        memoModal.style.display = 'flex';
+                        location.reload();
+                        document.querySelector('.memoModal').style.display = 'block';
                     } else {
                         alert("메모 저장 중 오류가 발생했습니다. \n다시 시도해주세요.");
                     }
                 })
         }
+    }
+}
+
+//메모수정
+let isEditing = false; //편집상태 저장
+function modifyMemoContent() {
+    const memoContent = document.querySelector('.memoContents');
+    if (!isEditing) {
+        memoContent.readOnly = false;
+        memoContent.focus();
+        isEditing = true;
+    }
+}
+
+function modifyMemoContentSave(){
+    const memoContent = document.querySelector('.memoContents');
+    const memo = memoContent.value;
+    if (memo === '') {
+        if (confirm("모든 메모를 지우시겠습니까?")) {
+            fetch(`/schedule/memoDelete/${sco}`, {
+                method: 'delete'
+            })
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data)
+                    if (data === "1") {
+                        alert("메모가 삭제되었습니다.")
+                        document.querySelector('.modifyMemo').remove();
+                        // memoModal.style.display = 'none';
+                        location.reload();
+                    }
+                })
+        }
+    } else {
+        fetch(`/schedule/memoModify/${sco}`, {
+            method: 'put',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(memo)
+        })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data)
+                if (data === "1") {
+                    alert("메모 수정이 완료되었습니다.")
+                    memoContent.readOnly = true;
+                    isEditing = false;
+                    location.reload();
+                    // memoModal.style.display = 'flex';
+                } else {
+                    alert("메모 수정에 오류가 발생했습니다.\n다시 시도해주세요.")
+                }
+            })
     }
 }
 
@@ -482,16 +504,128 @@ async function getSlideImg(key) {
 }
 
 
-//지도 띄우기
-function initTmap() {
-    let map = new Tmapv3.Map("checkMap",
-        {
-            center: new Tmapv3.LatLng(37.566481622437934, 126.98502302169841), // 지도 초기 좌표
-            width: "1600px",
-            height: "800px",
-            zoom: 16
-        });
+var map;
+var markers = [];
+
+//지도출력
+function initKakaoMap() {
+    getAllCourse(sco).then(result => {
+        fetch('/dist/json/mapData.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('JSON 파일 로딩 실패');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const firstResult = result[0];
+                const matchedItem = data.find(item => item.contentid == firstResult.scheContentId);
+
+                if (matchedItem) {
+                    const mapx = matchedItem.mapx;
+                    const mapy = matchedItem.mapy;
+
+                    var mapContainer = document.getElementById('checkMap');
+                    var mapOption = {
+                        center: new kakao.maps.LatLng(mapy, mapx),
+                        level: 5
+                    };
+
+                    map = new kakao.maps.Map(mapContainer, mapOption);
+
+                    addMarkersWithLabels(result, data);
+                    addPolyline(result,data)
+                } else {
+                    console.error('일치하는 첫 번째 결과의 좌표를 찾을 수 없습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
 }
+
+//마커라벨
+function addMarkersWithLabels(result, data) {
+    removeMarkers();
+
+    result.forEach(resultItem => {
+        const matchedItem = data.find(item => item.contentid == resultItem.scheContentId);
+        if (matchedItem) {
+            const mapx = matchedItem.mapx;
+            const mapy = matchedItem.mapy;
+            const title = matchedItem.title;
+            var marker = new kakao.maps.Marker({
+                position: new kakao.maps.LatLng(mapy, mapx),
+                map: map,
+                title: title,
+                content: title
+            });
+            markers.push(marker);
+            var mLabel = new kakao.maps.InfoWindow({
+                position: new kakao.maps.LatLng(mapy, mapx),
+                content: `<span class="info-title">${title}</span>`
+            });
+            mLabel.open(map, marker);
+        }
+    });
+
+    setTimeout(() => {
+        var infoTitle = document.querySelectorAll('.info-title');
+        infoTitle.forEach(function (e) {
+            var w = e.offsetWidth + 10;
+            var ml = w / 2;
+            e.parentElement.style.top = "82px";
+            e.parentElement.style.left = "50%";
+            e.parentElement.style.marginLeft = -ml + "px";
+            e.parentElement.style.width = w + "px";
+            e.parentElement.style.fontFamily="LINESeedKR-Rg";
+            e.parentElement.style.paddingTop="2px"
+            e.parentElement.previousSibling.style.display = "none";
+            e.parentElement.parentElement.style.border = "0px";
+            e.parentElement.parentElement.style.background = "unset";
+        });
+    }, 0);
+}
+
+
+//마커제거
+function removeMarkers() {
+    markers.forEach(marker => {
+        marker.setMap(null);
+    });
+    markers = [];
+}
+
+//선긋기
+function addPolyline(result, data) {
+    const coordinates = [];
+    result.forEach(resultItem => {
+        const matchedItem = data.find(item => item.contentid == resultItem.scheContentId);
+
+        if (matchedItem) {
+            const latLng = new kakao.maps.LatLng(matchedItem.mapy, matchedItem.mapx);
+            coordinates.push(latLng);
+        }
+    });
+
+    if (coordinates.length > 1) {
+        var polyline = new kakao.maps.Polyline({
+            path: coordinates,
+            strokeWeight: 5,
+            strokeColor: 'blue',
+            strokeOpacity: 0.7,
+            strokeStyle: 'solid'
+        });
+
+        polyline.setMap(map);
+    } else {
+        console.log('연결할 장소가 2개 이상 필요합니다.');
+    }
+}
+
+
+
 
 //주소삽입
 function getAddr(key) {
@@ -587,7 +721,7 @@ function checkPersonF() {
                 if (data.length > 0) {
                     data.sort((a, b) => a.uno - b.uno);
                     data.forEach(r => {
-                        const li = `<li class="companionLi"><img src="${r.profile ? `/profile/${r.profile}` : '/dist/image/smile-beam.svg'}"><span class="compaNick">${r.scheNick}</span></li>`
+                        const li = `<li class="companionLi"><img src="${r.profile ? `/profile/${r.profile}` : '/dist/image/smile-beam.svg'}"><span class="compaNick">${r.nickName}</span></li>`
                         document.querySelector('.companionUl').innerHTML += li;
                     })
                 } else {
@@ -720,7 +854,7 @@ openBtn.addEventListener('click', () => {
     toggleVisibility(openBtn, false);
     toggleVisibility(mapContentBox, true);
     toggleVisibility(closeBtn, true);
-    closeBtn.style.left = '520px';
+    closeBtn.style.left = '364px';
 });
 
 //여행추가하기 버튼 contentArea 높이에 맞춰 위치 변경
@@ -742,7 +876,7 @@ function checkHeight() {
 closeBtn.addEventListener('click', () => {
     if (!depth2.classList.contains('hidden')) {
         depth2.classList.add('hidden');
-        closeBtn.style.left = '520px'
+        closeBtn.style.left = '364px'
     } else {
         if (btnText.innerText === '저장') {
             if (confirm('현재 일정을 저장하시겠습니까?')) {
@@ -796,7 +930,7 @@ const depth2 = document.querySelector('.mapContentBox2Depth');
 function clickAddPlan() {
     depth2.classList.remove('hidden');
     depth2.classList.add('visible');
-    closeBtn.style.left = '883px';
+    closeBtn.style.left = '721px';
     document.querySelector('.depth2_recomm').classList.remove('hidden');
     recommendData();
 }
@@ -853,10 +987,12 @@ function recommendData() {
         const data = item.getAttribute('data-id');
         planDataArray.push(data);
     });
+    console.log(planDataArray);
 
     if (planDataArray.length > 0) {
         const lastData = planDataArray[planDataArray.length - 1];
         const url = `https://apis.data.go.kr/B551011/KorService1/detailCommon1?MobileOS=ETC&MobileApp=TripTrav&contentId=${lastData}&defaultYN=Y&firstImageYN=Y&areacodeYN=Y&catcodeYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&serviceKey=${tourAPIKEY}&_type=json`;
+        console.log(url)
 
         let currentPage = 1;
         const itemsPerPage = 10;
@@ -901,7 +1037,9 @@ function recommendData() {
         function displayItems(items, currentPage, itemsPerPage) {
             const start = (currentPage - 1) * itemsPerPage;
             const end = Math.min(start + itemsPerPage, items.length);
-            const itemsToDisplay = items.slice(start+1, end);
+            const itemsToDisplay = items.slice(start, end); // Changed here to start instead of start + 1
+
+            document.querySelector('.depth2_recomm').innerHTML = '';
 
             itemsToDisplay.forEach(key => {
                 const recommDiv = document.createElement('div');
@@ -909,7 +1047,7 @@ function recommendData() {
 
                 recommDiv.innerHTML += `
                     <div class="recomm_img" style="background-image: url('${key.firstimage}'); background-position: center; background-repeat: no-repeat; background-size: cover"></div>
-                    <div class="recomm_name_cate" data-id="${key.contentid}" onclick="locationPage(${key.contentid})">
+                    <div class="recomm_name_cate" data-id="${key.contentid}" onclick="locationPage(${key.addr1 ? `'${key.addr1}'` : null} ,${key.contentid}, '${key.title}')">
                         <div class="name_cate2">
                             <span class="recomm_name">${key.title}</span>
                             <span class="recomm_cate"></span>
@@ -933,6 +1071,8 @@ function recommendData() {
                     recommAddBtn.style.backgroundImage = "url('/dist/image/plus-circle.svg')";
                 });
             });
+
+            createMoreButton(totalCount, items);
         }
 
         function assignCategory(recommCate, recommNameCate, key) {
@@ -974,9 +1114,15 @@ function recommendData() {
 }
 
 
-function locationPage(key) {
-    if(confirm("현재 페이지를 벗어나시겠습니까? \n페이지 수정내용이 저장되지 않을 수 있습니다.")){
-        location.href=`/place/${key}`;
+function locationPage(addr1, key, name) {
+    if(addr1 == null){
+        if(confirm("현재 페이지를 벗어나시겠습니까? \n페이지 수정내용이 저장되지 않을 수 있습니다.")){
+            location.href = `https://www.google.com/search?q=${encodeURIComponent(name)}`
+        }
+    }else{
+        if(confirm("현재 페이지를 벗어나시겠습니까? \n페이지 수정내용이 저장되지 않을 수 있습니다.")){
+            location.href=`/place/${key}`;
+        }
     }
 }
 
@@ -1024,6 +1170,8 @@ function baseSearch() {
                     const areaCode = area.areacode;
                     const url = `https://apis.data.go.kr/B551011/KorService1/areaBasedList1?MobileOS=ETC&MobileApp=TripTrav&_type=json&arrange=O&areaCode=${areaCode}&numOfRows=10&contentTypeId=12&serviceKey=${tourAPIKEY}`;
                     // document.querySelector('.depth2_search_input_area').innerHTML=``;
+                    // document.querySelector('.depth2_search_input_area').innerHTML=`<input class="depth2_input">
+                    // <button type="submit" class="depth2_searchBtn"><img src="/dist/image/search.svg"></button>`;
 
                     getData(url).then(result => {
                         result.items.item.forEach(async (key) => {
@@ -1031,7 +1179,8 @@ function baseSearch() {
                             base.classList.add('depth2_search_base');
                             base.innerHTML = `
                                 <div class="search_img" style="background-image: url('${key.firstimage}'); background-position: center; background-repeat: no-repeat; background-size: cover"></div>
-                                <div class="search_name_cate" data-id="${key.contentid}" onclick="locationPage(${key.contentid})">
+                                <div class="search_name_cate" data-id="${key.contentid}" onclick="locationPage(${key.addr1 ? `'${key.addr1}'` : null}, '${key.contentid}', '${key.title}')">
+
                                     <div class="name_cate2">
                                         <span class="search_name">${key.title}</span>
                                         <span class="search_cate"></span>
@@ -1117,7 +1266,7 @@ function search() {
                     searchDiv.classList.add('depth2_search_area');
                     searchDiv.innerHTML = `
                         <div class="search_result_img" style="background-image: url('${key.firstimage}'); background-position: center; background-repeat: no-repeat; background-size: cover"></div>
-                        <div class="search_result_name_cate" data-id="${key.contentid}" onclick="locationPage(${key.contentid})">
+                        <div class="search_result_name_cate" data-id="${key.contentid}" onclick="locationPage(${key.addr1 ? `'${key.addr1}'` : null} ,${key.contentid},'${key.title}')">
                             <div class="name_cate2">
                                 <span class="search_result_name">${key.title}</span>
                                 <span class="search_result_cate"></span>
@@ -1602,7 +1751,7 @@ function getHeartData(){
 
                                 heartArea.innerHTML+=`
                                         <div class="heart_img" style="background-image: url('${imgUrl}'); background-position: center; background-repeat: no-repeat; background-size: cover"></div>
-                                        <div class="heart_name_cate" data-id="${matchedItem.contentid}" onclick="locationPage(${matchedItem.contentid})">
+                                        <div class="heart_name_cate" data-id="${matchedItem.contentid}" onclick="locationPage(${matchedItem.addr1 ? `'${matchedItem.addr1}'` : null} ,${matchedItem.contentid}, '${matchedItem.title}')">
                                             <div class="name_cate2">
                                                 <span class="heart_name">${matchedItem.title}</span>
                                                 <span class="heart_cate"></span>

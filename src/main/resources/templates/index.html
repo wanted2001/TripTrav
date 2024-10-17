@@ -31,13 +31,15 @@
                 <span class="additionalInfoTitle">성별과 나이를 입력해주세요!</span><br>
                 <span class="additionalInfoSmall">(해당 정보는 최초 한 번만 입력받습니다.)</span><br>
                 <input type="hidden" id="unoForm" name="uno" value="">
-                <input type="radio" id="man" name="gender" value="0">
-                <label for="man" style="font-size: 25px">남성</label>
-                <input type="radio" id="woman" name="gender" value="1">
-                <label for="woman" style="font-size: 25px">여성</label>
-                <label for="age"></label><br>
-                <input type="number" min="1" max="99" id="age" name="age" placeholder="나이" ><br>
-                <button type="button" id="additionalInfoFormButton">저장</button>
+                <div class="dataDIv">
+                    <input type="radio" id="man" name="gender" value="0">
+                    <label for="man" style="font-size: 25px">남성</label>
+                    <input type="radio" id="woman" name="gender" value="1">
+                    <label for="woman" style="font-size: 25px">여성</label>
+                    <label for="age"></label><br>
+                    <input type="number" min="1" max="99" id="age" name="age" placeholder="나이" ><br>
+                    <button type="button" id="additionalInfoFormButton">저장</button>
+                </div>
             </form>
         </div>
         <div class="inputWrap" style="display: none">
