@@ -14,8 +14,8 @@ public class ScheduleCompanionServiceImpl implements ScheduleCompanionService{
     private final ScheduleCompanionMapper scheduleCompanionMapper;
 
     @Override
-    public int inviteUserAddPlan(long uno, long sco, String nick) {
-        return scheduleCompanionMapper.inviteUserAddPlan(uno, sco, nick);
+    public int inviteUserAddPlan(long uno, long sco) {
+        return scheduleCompanionMapper.inviteUserAddPlan(uno, sco);
     }
 
     @Override

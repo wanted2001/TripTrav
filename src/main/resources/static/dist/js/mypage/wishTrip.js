@@ -30,36 +30,6 @@ tripCall(unoNum).then(data => {
     console.log(err);
 });
 
-var buttons = document.getElementsByTagName("button");
-
-// Array.from(buttons).forEach(button => {
-//     button.addEventListener("click", function(e) {
-//         switch (e.target.id) {
-//             case "allList":
-//                 placeList.style.display = "none";
-//                 foodList.style.display = "none";
-//                 place.style.display = "flex";
-//                 console.log("전체");
-//                 break;
-//             case "onlyFoodList":
-//                 place.style.display = "none";
-//                 placeList.style.display = "none";
-//                 foodList.style.display = "flex";
-//                 console.log("음식");
-//                 break;
-//             case "onlyPlaceList":
-//                 place.style.display = "none";
-//                 foodList.style.display = "none";
-//                 placeList.style.display = "flex";
-//                 console.log("장소");
-//                 break;
-//             default:
-//                 console.log("다른 버튼");
-//                 break;
-//         }
-//     });
-// });
-
 async function delHandler(likeNum){
     const info ={
         uno : unoNum,
@@ -69,7 +39,7 @@ async function delHandler(likeNum){
     console.log(result);
     if(result === "1"){
         alert("코스 삭제");
-        location.reload();
+        location.href = `/mypage?uno=${unoNum}&location=wishTrip`;
     }else{
         alert("코스 삭제 실패");
     }

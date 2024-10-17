@@ -5,6 +5,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    font-family: LINESeedKR-Rg;
 }
 
 .list-container{
@@ -27,6 +28,7 @@
     transition: transform 0.3s, box-shadow 0.3s;
     width: 100%;
     max-width: 1000px;
+    position: relative;
 }
 
 
@@ -35,7 +37,7 @@
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
 }
 
-.list-item img {
+.list-item > .courseImg {
     width: 200px;
     height: 150px;
     object-fit: cover;
@@ -54,4 +56,16 @@
     margin: 5px 0;
     color: #34495e;
     font-size: 16px;
+}
+
+.heartImg{
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+
+.btnDiv{
+    position: absolute;
+    bottom: 20px;
+    right: 15px;
 }

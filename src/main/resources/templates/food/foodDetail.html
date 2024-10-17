@@ -13,8 +13,8 @@
 <th:block th:replace="~{header :: header}"></th:block>
 <main>
     <section class="titleSection">
-        <div class="location">
-        </div>
+        <div class="blurImg"></div>
+        <div class="location"></div>
         <img src="/dist/image/heart.svg" alt="그림없음" class="placeHeart">
         <img src="/dist/image/map.svg" alt="그림없음" class="placeMap" onclick="savePlace(event)">
         <div class="savePlaceModal"></div>
@@ -28,12 +28,14 @@
             <span class="rating"></span>
             <span class="score"></span>
         </div>
-        <span class="locationInfo"></span><br>
-        <span class="telInfo"></span><br>
-        <span class="restInfo"></span><br>
-        <span class="timeInfo"></span><br>
-        <span class="priceInfo"></span><br>
-        <a class="homepageInfo"></a>
+        <div class="infoDiv">
+            <span class="locationInfo"></span>
+            <span class="telInfo"></span>
+            <span class="restInfo"></span>
+            <span class="timeInfo"></span>
+            <span class="priceInfo"></span>
+            <a class="homepageInfo"></a>
+        </div>
     </section>
     <section class="buttonSection">
         <button class="outlineMove">개요</button>
@@ -46,7 +48,6 @@
         <span class="sectionTitle">리뷰</span><span class="reviewCount">개</span>
         <div class="inputDiv">
             <form action="/review/POST" method="post" enctype="multipart/form-data" class="reviewForm">
-                <textarea class="reviewArea" name="reContent" cols="30" rows="5" placeholder="로그인 후 리뷰를 남겨보세요."></textarea><br>
                 <div class="star-rating">
                     <div class="stars" id="stars">
                         <span class="star" data-value="1"></span>
@@ -55,11 +56,12 @@
                         <span class="star" data-value="4"></span>
                         <span class="star" data-value="5"></span>
                     </div>
-                    <p>별점: <span id="rating-value">0</span></p>
+                    <p class="hiddenData">별점: <span id="rating-value">0</span></p>
                 </div>
+                <textarea class="reviewArea" name="reContent" cols="30" rows="5" placeholder="로그인 후 리뷰를 남겨보세요."></textarea>
                 <input type="file" id="imageInput" name="images" accept="image/jpeg, image/png" multiple style="display: none;" onchange="handleFileUpload(event)">
                 <button type="button" class="cameraInput" onclick="document.getElementById('imageInput').click();">
-                    카메라
+                    <img src="/dist/image/camera.svg" class="camera">
                 </button>
                 <div id="previewContainer"></div>
                 <div id="fileCount"></div>
@@ -73,10 +75,11 @@
         </div>
         <div class="review">
         </div>
+        <div class="report"></div>
     </section>
     <section class="transportation">
         <p class="sectionTitle">찾아가는 길</p>
-        <div id="staticMap" style="width:1000px;height:500px; margin: 0 auto"></div>
+        <div id="staticMap" style="width:1000px;height:500px; margin: 0 auto 20px;"></div>
     </section>
     <section class="nearby">
         <p class="sectionTitle">근처 관광지</p>
@@ -99,8 +102,8 @@
                 </div>
             </div>
         </div>
-        <div class="blank"></div>
     </section>
+    <div class="blank"></div>
     <div class="overlay" id="overlay">
         <div class="spinner" id="spinner">
             <div class="loading-spinner"></div>
@@ -109,6 +112,7 @@
 </main>
 <script src="/dist/js/food/foodDetail.js"></script>
 <script src="/dist/js/place/savePlace.js"></script>
+<script src="/dist/js/place/reviewAnalyze.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
 </body>
 </html>

@@ -41,4 +41,11 @@ public class AIController {
             return Map.of("error", "파싱에러");
         }
     }
+    @PostMapping("/analyzeReviews")
+    public ResponseEntity<Map<String, Object>> analyzeReviews(@RequestBody Map<String, List<String>> requestBody) {
+        List<String> reviews = requestBody.get("reviews");
+        String analysisResult = aiService.analyzeReviews(reviews);
+        Map<String, Object> analysisResponse = parseAnalysisResult(analysisResult);
+        return ResponseEntity.ok(analysisResponse);
+    }
 }

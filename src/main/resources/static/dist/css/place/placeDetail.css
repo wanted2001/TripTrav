@@ -3,6 +3,11 @@ main {
     font-family: LINESeedKR-Rg;
     margin: 0;
     padding: 0;
+    /* background: #f3f3f3d9; */
+
+}
+html {
+    scroll-behavior: smooth;
 }
 button{
     cursor: pointer;
@@ -10,31 +15,44 @@ button{
 .sectionTitle{
     font-size: 25px;
     font-weight: bold;
+    margin-top: -5px;
 }
-.reviewCount{
-    font-size: 25px;
-    font-weight: bold;
+.reviewCount {
+    font-size: 17px;
+    /* font-weight: bold; */
+    font-family: 'LINESeedKR-Rg';
+    /* padding: 6px; */
+    position: absolute;
+    top: 41px;
+    left: 238px;
 }
 .titleSection {
     width: 100%;
-    height: 480px;
+    height: 584px;
     display: inline-block;
     position: relative;
     margin: 0 auto;
-    background-color: #f9e6cf;
+    background: url("../../image/placeBackImg7.png") no-repeat center/cover;
     border-bottom: 1px solid black;
 }
-
+.blurImg {
+    width: 100%;
+    height: 585px;
+    position: absolute;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), rgb(255 255 255 / 4%), rgb(255 255 255 / 11%), rgb(255 255 255 / 0%), rgba(255, 255, 255, 0));
+    backdrop-filter: blur(4px);
+}
 .location {
     width: 1400px;
     height: 50px;
     position: relative;
-    top: 150px;
-    left: 300px;
+    top: 186px;
+    left: 306px;
     text-align: left;
     line-height: 55px;
     font-size: 35px;
     z-index: 1;
+    font-weight: bold;
 }
 textarea{
     font-family: LINESeedKR-Rg;
@@ -42,7 +60,7 @@ textarea{
 
 .placeHeart{
     position: absolute;
-    top: 170px;
+    top: 206px;
     right: 265px;
     cursor: pointer;
     z-index: 100;
@@ -50,7 +68,7 @@ textarea{
 
 .placeMap{
     position: absolute;
-    top: 170px;
+    top: 206px;
     right: 220px;
     cursor: pointer;
     z-index: 100;
@@ -183,7 +201,7 @@ textarea{
     width: 1400px;
     height: 300px;
     position: absolute;
-    top: 220px;
+    top: 266px;
     left: 300px;
     overflow: hidden;
     z-index: 0;
@@ -219,17 +237,17 @@ textarea{
 .prev, .next {
     cursor: pointer;
     position: absolute;
-    top: 350px;
+    top: 385px;
     transform: translateY(-50%);
     width: 50px;
 }
 
 .prev {
-    left: 259px;
+    left: 253px;
 }
 
 .next {
-    right: 163px;
+    right: 155px;
 }
 
 .firstLine {
@@ -237,20 +255,68 @@ textarea{
     justify-content: flex-start;
     align-items: center;
     width: 100%;
+    padding-left: 158px;
 }
 
 .infoSection {
-    width: 1400px;
+    width: 1328px;
     height: auto;
     text-align: left;
     position: relative;
     line-height: 50px;
     margin-left: 300px;
+    background: white;
+    /* border: 1px solid gainsboro; */
+    padding: 16px 33px 15px;
+    margin-top: 22px;
+    box-shadow: 0px 0px 12px -1px gainsboro;
 }
 
 .infoSection a {
     color: black;
     text-decoration: none;
+    color: #2665c7;
+}
+
+.infoDiv {
+    width: 76%;
+    margin: 0 auto;
+}
+
+.infoDiv span{
+    display: block;
+}
+
+.infoDiv span img{
+    width: 18px;
+    /* vertical-align: middle; */
+    opacity: 0.7;
+    transform: translateY(4px);
+    padding-right: 3px;
+}
+.locationInfo, .tellInfo {
+    height: 42px;
+}
+.restInfo {
+    margin-top: 6px;
+    white-space: pre-wrap;
+    line-height: 25px;
+}
+.timeInfo {
+    margin-top: 22px;
+    white-space: pre-wrap;
+    line-height: 14px;
+}
+.priceInfo {
+    white-space: pre-wrap;
+    line-height: 14px;
+    margin-top: 32px;
+}
+.homepageInfo img{
+    width: 18px;
+    opacity: 0.7;
+    transform: translateY(4px);
+    padding-right: 3px;
 }
 
 .buttonSection {
@@ -259,15 +325,19 @@ textarea{
     height: 50px;
     display: flex;
     margin-left: 300px;
-    margin-top: 30px;
+    box-shadow: 0px 0px 12px -1px gainsboro;
+    margin-top: 32px;
 }
 
 .buttonSection > button {
     flex: 1;
-    border: 1px solid black;
+    border-right: 1px solid gainsboro;
     background-color: white;
     text-align: center;
     font-size: 20px;
+    font-family: 'LINESeedKR-Rg';
+    line-height: 51px;
+    transition: font-size 0.3s ease;
 }
 
 .buttonSection > button:nth-child(2),
@@ -276,121 +346,179 @@ textarea{
     border-left: none;
 }
 
+.buttonSection button:hover{
+    font-size: 22px;
+    line-height: 50px;
+}
+.outlineMove {
+    /* border-top-left-radius: 7px; */
+    /* border-bottom-left-radius: 7px; */
+}
+.nearbyMove {
+    /* border-top-right-radius: 7px; */
+    /* border-bottom-right-radius: 7px; */
+}
+
 .details {
     position: relative;
     margin-left: 300px;
-    width: 1400px;
+    width: 1361px;
     height: auto;
     text-align: left;
-    line-height: 40px;
-    margin-top: 10px;
-    border-bottom: 1px solid black;
+    line-height: 36px;
+    margin-top: 32px;
+    /* border-bottom: 1px solid black; */
+    /* border: 1px solid gainsboro; */
+    padding: 31px 18px 1px;
+    box-shadow: 0px 0px 12px -1px gainsboro;
+    /* background: white; */
 }
 
-.details > p {
-    padding-right: 120px;
-}
+.details > p {padding-left: 170px;}
 
 .details > span {
     display: block;
     word-break: break-all;
     text-indent: 10px;
-    margin-left: 10px;
-    margin-bottom: 30px;
+    /* margin-left: 10px; */
+    /* margin-bottom: 30px; */
+    width: 1000px;
+    margin: 15px auto 26px;
 }
 
 .reviews {
     position: relative;
     margin-left: 300px;
-    width: 1400px;
+    width: 1361px;
     height: auto;
-    margin-top: 10px;
+    margin-top: 32px;
     text-align: left;
-    border-bottom: 1px solid black;
+    /* border: 1px solid gainsboro; */
+    background: white;
+    box-shadow: 0px 0px 12px -1px gainsboro;
+    padding: 17px 18px 1px;
 }
-
 .reviews > span:first-child {
-    display: inline-block;
+    display: block;
     padding-right: 20px;
-    margin-top: 20px;
-    margin-left: 10px;
+    margin-top: 18px;
+    margin-left: 173px;
 }
 
 .inputDiv {
-    margin-top: 30px;
-    margin-left: 250px;
-    width: 900px;
-    height: 170px;
+    /* margin-top: 30px; */
+    /* margin-left: 250px; */
+    /* width: 95%; */
+    /* height: 162px; */
+    /* background: gainsboro; */
+    margin: 40px auto;
 }
 
 .reviewArea {
-    width: 800px;
-    height: 75px;
+    width: 74%;
+    height: 146px;
     resize: none;
-    margin-left: 43px;
-    margin-top: 30px;
+    /* margin-left: 43px; */
+    /* margin-top: 30px; */
     font-size: 18px;
     padding-left: 10px;
     padding-top: 10px;
+    margin: 10px auto;
+    display: block;
+    border: none;
+    background: #f4f4f4;
+    border-radius: 5px;
+    outline: none;
+}
+
+.reviewArea::placeholder{
+    opacity: 0.5;
 }
 
 .reviewArea:hover {
-    border: 1px solid black;
+    /* border: 1px solid black; */
 }
 
 .inputDiv > form > button {
     margin-top: 7px;
     font-size: 17px;
     position: absolute;
-    right: 293px;
-    top: 194px;
+    right: 198px;
+    top: 319px;
+    font-family: 'LINESeedKR-Rg';
 }
 
+.inputDiv > form > button {
+    margin-top: 7px;
+    font-size: 15px;
+    /* position: absolute; */
+    right: 195px;
+    top: 455px;
+    font-family: 'LINESeedKR-Rg';
+}
 .cameraInput {
-    margin-right: 60px;
+    margin-right: 58px;
+}
+img.camera {
+    width: 33px;
+    margin-top: 1px;
+}
+.addButton {
+    background: gainsboro;
+    padding: 9px 13px 4px;
+    border-radius: 4px;
 }
 
 .buttons {
     margin-top: 50px;
     text-align: right;
+    width: 1015px;
+    margin: 0 auto;
+    position: relative;
+    padding-top: 27px;
 }
 .buttons>button{
     font-size: 18px;
+    font-family: 'LINESeedKR-Rg';
 }
 
 .review {
     height: auto;
-    margin-top: 25px;
-    margin-left: 250px;
+    /* margin-top: 25px; */
+    /* margin-left: 169px; */
 }
-#previewContainer{
-    position: absolute;
-    left: 462px;
-    top: 195px;
+#previewContainer {
+    position: relative;
+    left: 167px;
+    /* top: 195px; */
+    /* display: block; */
 }
 
 #fileCount {
-    position: absolute;
+    /* position: absolute; */
     left: 872px;
     top: 209px;
+    width: 100px;
+    transform: translate(962px, -114px);
 }
 .modifyImg{
     position: absolute;
     top: -2px;
-    left: 692px;
+    left: 870px;
     cursor: pointer;
 }
 .deleteImg{
     position: absolute;
     top: -3px;
-    left: 735px;
+    left: 990px;
     cursor: pointer;
 }
 .star-rating {
     display: inline-block;
     position: relative;
-    top: 3px;
-    left: 40px;
+    top: 0px;
+    left: 527px;
+    /* width: 1000px; */
 }
 
 .stars {
@@ -399,8 +527,8 @@ textarea{
 }
 
 .star {
-    width: 25px;
-    height: 25px;
+    width: 51px;
+    height: 37px;
     background: url('../../image/star-empty.png') no-repeat center;
     background-size: contain;
     position: relative;
@@ -417,8 +545,10 @@ textarea{
 }
 
 .review{
-    margin-top: 35px;
-    position: relative;
+    /* margin-top: 35px; */
+    /* position: relative; */
+    width: 1020px;
+    margin: 0 auto;
 }
 
 .review-img{
@@ -427,58 +557,66 @@ textarea{
     margin-right: 25px;
 }
 .profileImage{
-    width: 45px;
-    height: 45px;
+    width: 65px;
+    height: 65px;
     border-radius: 50%;
 }
 .review-wrapper{
     position: relative;
-    border-bottom: 1px solid gray;
+    border-bottom: 1px solid #d1d1d1a1;
     margin-top: 40px;
-    width: 880px;
+    /* width: 880px; */
+    padding: 0 10px 0;
 }
 .review-wrapper:last-child{
     border-bottom: none;
 }
 .nickName{
-    font-weight: bold;
-    font-size: 20px;
+    /* font-weight: bold; */
+    font-size: 18px;
     position: absolute;
-    top: -2px;
-    left: 60px;
+    top: 5px;
+    left: 84px;
+    font-family: 'LINESeedKR-Rg';
+    /* display: block; */
 }
 .regDate{
-    font-size: 15px;
+    font-size: 12px;
     position: absolute;
-    top: 32px;
-    left: 193px;
+    top: 26px;
+    left: 84px;
+    color: gray;
 }
 .review-rating{
     position: absolute;
-    top: 24px;
-    left: 60px;
+    top: 39px;
+    left: 82px;
 }
 .review-rating>img{
-    width: 25px;
-    height: 25px;
+    width: 17px;
+    height: 17px;
 }
 .review-detail{
     width: auto;
     height: auto;
 }
-.review-images{
+.review-images {
     width: auto;
     height: auto;
-    margin-left: 60px;
-    margin-bottom: 30px;
+    margin-left: 71px;
+    margin-bottom: 23px;
+    margin-top: -13px;
 }
 .reviewContent{
     height: auto;
-    text-align: left;
-    margin-left: 60px;
-    margin-top: 25px;
-    font-size: 20px;
-    margin-bottom: 25px;
+    /* text-align: left; */
+    /* margin-left: 60px; */
+    /* margin-top: 25px; */
+    font-size: 18px;
+    /* margin-bottom: 25px; */
+    width: 86%;
+    margin: 9px auto 30px;
+    line-height: 24px;
 }
 
 .helpButton{
@@ -505,13 +643,18 @@ textarea{
     margin-left: 300px;
     width: 1400px;
     height: auto;
-    border-bottom: 1px solid black;
+    /* border: 1px solid gainsboro; */
+    background: white;
+    box-shadow: 0px 0px 12px -1px gainsboro;
+    margin-top: 32px;
+    padding: 17px 0;
 }
 
 .transportation > p {
     text-align: left;
-    margin-top: 10px;
-    margin-left: 10px;
+    margin-top: 32px;
+    margin-left: 198px;
+    margin-bottom: 32px;
 }
 
 #staticMap{
@@ -550,20 +693,32 @@ textarea{
     margin-left: 300px;
     width: 1400px;
     height: auto;
+    background: white;
+    /* border: 1px solid gainsboro; */
+    margin-top: 32px;
+    box-shadow: 0px 0px 12px -1px gainsboro;
+    padding: 17px 0;
+}
+
+.nearby .sectionTitle:first-child{
+    margin-top: 23px;
 }
 
 .nearby > div {
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
 .nearby > p {
     text-align: left;
     margin-top: 10px;
-    margin-left: 10px;
+    margin-left: 175px;
 }
 
 .nearby > div > a > div {
-    margin-top: 20px;
+    /* margin-top: 20px; */
+    border: 1px solid gainsboro;
+    border-radius: 7px;
+    box-shadow: 0px 0px 13px -1px #c3c3c3;
 }
 
 .food, .attractions {
@@ -573,6 +728,13 @@ textarea{
     justify-content: space-evenly;
     align-items: stretch;
     text-align: center;
+    /* border-bottom: 1px solid gainsboro; */
+    width: 1200px;
+    margin: 0 auto;
+}
+
+.sights-link, .food-link {
+    padding: 5px 0 37px;
 }
 
 .food > a > div, .attractions > a > div {
@@ -594,7 +756,7 @@ textarea{
     width: 100%;
     height: 30%;
     text-align: center;
-    padding: 5px;
+    padding: 13px 5px 5px;
 }
 
 .info > p {
@@ -604,7 +766,7 @@ textarea{
 
 .blank {
     width: 100%;
-    height: 30px;
+    height: 49px;
 }
 
 .overlay {
@@ -748,7 +910,7 @@ textarea{
     display: block;
     font-size: 12px;
     transform: translate(32px, 36px);
-    margin-bottom: 40px;
+    margin-bottom: 58px;
 }
 
 .reportModalWrap label:nth-child(1){
@@ -804,7 +966,6 @@ input[type="radio"]:checked::before {
     border: 1px solid #ccc;
     border-radius: 3px;
 }
-
 .reportBtn {
     width: 86%;
     background: orange;
@@ -820,12 +981,17 @@ input[type="radio"]:checked::before {
     line-height: 39px;
 }
 
+.reported {
+    display: block;
+    margin: 0 auto;
+}
+
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
 .blind-div{
-    width: 880px;
+    width: 100%;
     height: 119px;
     line-height: 119px;
     text-align: center;
@@ -834,3 +1000,28 @@ input[type="radio"]:checked::before {
     background-color: #e9e9e9;
     opacity: 0.8;
 }
+.hiddenData{
+    display: none;
+}
+
+.aiAnalyze {
+    width: 1015px;
+    margin-left: 173px;
+    margin-top: 22px;
+    font-family: 'LINESeedKR-Rg';
+    border: 2px solid orange;
+    border-radius: 10px;
+    box-shadow: 3px 3px 6px -2px #b9b9b9;
+}
+.aiTitle{
+    margin-left: 13px;
+    position: absolute;
+    top: 78px;
+    left: 221px;
+    font-size: 18px;
+    font-weight: bold;
+    background-color: white;
+    width: 100px;
+    margin: 0 auto;
+}
+.aiText{display: block;padding: 10px 24px 15px;line-height: 25px;}

@@ -142,9 +142,9 @@ public class ScheduleController {
         log.info("memo YN : {}", memo);
         if (memo == 1) {
             ScheduleMemoVO sdmVO = smsv.getMemo(sco);
-            return sdmVO!=null? sdmVO : null;
+            return sdmVO!=null? sdmVO : new ScheduleMemoVO();
         } else {
-            return null;
+            return new ScheduleMemoVO();
         }
     }
 
@@ -225,8 +225,7 @@ public class ScheduleController {
         if (user == null) {
             int isIn = srsv.addScheduleRole(uno, sco);
             if (isIn > 0) {
-                String nick = usrv.getUserNick(uno);
-                int isOk = scsv.inviteUserAddPlan(uno, sco, nick);
+                int isOk = scsv.inviteUserAddPlan(uno, sco);
                 log.info("isOk : {}", isOk);
                 if (isOk > 0) {
                     ScheduleVO scheVO = ssv.getScheduleVO(sco);

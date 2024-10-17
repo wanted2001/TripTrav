@@ -9,7 +9,7 @@ import java.util.List;
 
 @Mapper
 public interface ScheduleCompanionMapper {
-    int inviteUserAddPlan(@Param("uno") long uno, @Param("sco") long sco, @Param("nick") String nick);
+    int inviteUserAddPlan(@Param("uno") long uno, @Param("sco") long sco);
 
     List<ScheduleCompanionDTO> getCompanionList(long sco);
 

@@ -47,7 +47,7 @@
 }
 .mainBtn a{
     font-size: 15px;
-    line-height: 15px;
+    line-height: 36px;
     vertical-align: middle;
     color: black;
     font-family: LINESeedKR-Rg;
@@ -57,7 +57,7 @@
     line-height: 15px;
     width: 15px;
     margin-left: 6px;
-    margin-top: 1px;
+    margin-top: -4px;
 }
 .inputWrap {
     position: absolute;
@@ -256,7 +256,7 @@
 }
 
 .taste-button:hover {
-    background-color: #e4e3e3;
+    background-color: #ffb759;
 }
 
 .analyze-button {
@@ -275,31 +275,41 @@
 }
 
 .taste-button.active {
-    background-color: #f0f0f0;
-    color: #323232;
+    background-color: #ffb759;
+    color: #ffffff;
     border: 1px solid #f0f0f0;
 }
 
 .additionalInfo{
+    height: 500px;
+    width: 600px;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: white;
+    color: black;
     text-align: center;
-    font-size: 45px;
+    font-size: 40px;
     font-family: LINESeedKR-Bd;
+    background-color: #ffffff;
+    border-radius: 30px;
+    box-shadow: 0px 0 10px -2px #000000;
+    padding: 5px;
+}
+.additionalInfoTitle{
+    display: inline-block;
+    margin: 41px 10px -5px 10px;
 }
 .additionalInfoSmall{
     display: inline-block;
     font-size: 16px;
-    margin: 10px 0 40px 0;
+    margin: 6px 0 40px 0;
 }
 
 input[type="radio"] {
     margin-right: 3px;
     appearance: none;
-    border: max(2px, 0.1em) solid #ffffff;
+    border: max(2px, 0.1em) solid black;
     border-radius: 50%;
     width: 20px;
     height: 20px;
@@ -309,27 +319,66 @@ input[type="radio"] {
 }
 
 input[type="number"] {
-    width: 15%;
-    padding: 8px;
-    border: 1px solid #ccc;
+    width: 33%;
+    padding: 10px 8px 8px;
+    border: 1px solid #959595;
     border-radius: 4px;
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
     margin-bottom: 15px;
+    font-family: 'LINESeedKR-Rg';
 }
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+.dataDIv {
+    width: 80%;
+    margin: 0 auto;
+    border: 3px solid gainsboro;
+    padding: 55px 0 0;
+    height: 211px;
+    margin-top: 15px;
+    border-radius: 10px;
+}
 #additionalInfoFormButton {
-    width: 30%;
+    position: relative; /* 가상 요소 위치 조정 */
+    background: orange;
     color: white;
-    border: none;
-    border-radius: 4px;
     font-size: 20px;
     cursor: pointer;
+    font-family: 'LINESeedKR-Rg';
+    padding: 8px 69px 4px;
+    border: none; /* 기본적으로 테두리 없음 */
+    transition: 800ms ease all; /* 부드러운 전환 */
+    outline: none;
 }
 
-.additionalInfoFormButton:active {
-    background-color: orange;
+#additionalInfoFormButton:before,
+#additionalInfoFormButton:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 2px;
+    width: 0;
+    background: orange; /* 초기 배경색 */
+    transition: 400ms ease all; /* 애니메이션 설정 */
 }
 
+#additionalInfoFormButton:after {
+    right: inherit;
+    top: inherit;
+    left: 0;
+    bottom: 0;
+}
+
+#additionalInfoFormButton:hover:before,
+#additionalInfoFormButton:hover:after {
+    width: 100%; /* 가상 요소 애니메이션 */
+    transition: 800ms ease all; /* 애니메이션 지속 시간 */
+}
+
+#additionalInfoFormButton:hover {
+    background: white; /* 호버 시 배경을 흰색으로 변경 */
+    color: orange; /* 텍스트 색 변경 */
+}
