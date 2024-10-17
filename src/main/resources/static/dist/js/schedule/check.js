@@ -1,44 +1,73 @@
 const UrlParams = new URLSearchParams(window.location.search);
 const sco = UrlParams.get('sco');
+const spinner = document.getElementById('spinner');
+const overlay = document.getElementById('overlay');
+
 const planDataArray=[];
 let lastData;
+
+function getRandomRating() {
+    return (Math.random() * 5).toFixed(1); // 소수점 1자리까지 표현
+}
+
+function getRandomNumber() {
+    return Math.floor(Math.random() * 1000) + 1;
+}
 
 window.addEventListener('click', (e) => {
     let date = e.target.getAttribute('data-date');
     if (sco && date) {
+        // Show spinner and overlay
+        spinner.style.display = 'block';
+        overlay.style.display = 'block';
+
         getUserCourse(sco, date).then(result => {
             let content = '';
-            document.querySelector('.contentArea').innerHTML = '';
-            result.forEach(key => {
-                content = `
-                <li class="oneContent" data-id="${key.scheContentId}">
-                    <div class="deletePlan hidden" onclick="deletePlan(event)">&times;</div>
-                    <div class="changePlan hidden">
-                        <img src="/dist/image/triangle.svg" class="triangle">
-                        <img src="/dist/image/triangle.svg" class="downTriangle">
-                    </div>
-                    <div class="name_cate">
-                        <span class="placeName"></span>
-                        <span class="placeCate"></span>
-                    </div>
-                    <div class="placeAddr"></div>
-                    <div class="rate_count">
-                        <img src="/dist/image/star.svg">
-                        <div class="placeRate">4.0</div>
-                        <div class="placeRateCount">(356)</div>
-                    </div>
-                    <div class="placeImgDiv">
-                        <div class="placeImg"></div>
-                    </div>
-                </li>`;
-                // document.querySelector('.contentArea').innerHTML+=content;
-                document.querySelector('.contentArea').insertAdjacentHTML('beforeend', content);
-                getAddr(key.scheContentId);
-                getImage(key.scheContentId);
-            })
-        })
+            document.querySelector('.contentArea').innerHTML = ''; // Clear existing content
+
+            // Check if there are results
+            if (result.length > 0) {
+                result.forEach(key => {
+                    const star = getRandomRating();
+                    const number = getRandomNumber();
+                    content = `
+                    <li class="oneContent" data-id="${key.scheContentId}">
+                        <div class="deletePlan hidden" onclick="deletePlan(event)">&times;</div>
+                        <div class="changePlan hidden">
+                            <img src="/dist/image/triangle.svg" class="triangle">
+                            <img src="/dist/image/triangle.svg" class="downTriangle">
+                        </div>
+                        <div class="name_cate">
+                            <span class="placeName"></span>
+                            <span class="placeCate"></span>
+                        </div>
+                        <div class="placeAddr"></div>
+                        <div class="rate_count">
+                            <img src="/dist/image/star.svg">
+                            <div class="placeRate">${star}</div>
+                            <div class="placeRateCount">(${number})</div>
+                        </div>
+                        <div class="placeImgDiv">
+                            <div class="placeImg"></div>
+                        </div>
+                    </li>`;
+                    document.querySelector('.contentArea').insertAdjacentHTML('beforeend', content);
+                    getAddr(key.scheContentId);
+                    getImage(key.scheContentId);
+                });
+            } else {
+                document.querySelector('.contentArea').innerHTML = '<p>No data available for the selected date.</p>';
+            }
+            spinner.style.display = 'none';
+            overlay.style.display = 'none';
+        }).catch(error => {
+            console.error('Error fetching data:', error);
+            spinner.style.display = 'none';
+            overlay.style.display = 'none';
+        });
     }
-})
+});
+
 
 
 //day 선택
@@ -153,6 +182,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // console.log(result)
             let content = '';
             result.forEach(key => {
+                const star = getRandomRating();
+                const number = getRandomNumber();
                 content = `
                 <li class="oneContent" data-id="${key.scheContentId}">
                     <div class="deletePlan hidden" onclick="deletePlan(event)">&times;</div>
@@ -167,8 +198,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="placeAddr"></div>
                     <div class="rate_count">
                         <img src="/dist/image/star.svg">
-                        <div class="placeRate">4.0</div>
-                        <div class="placeRateCount">(356)</div>
+                        <div class="placeRate">${star}</div>
+                        <div class="placeRateCount">(${number})</div>
                     </div>
                     <div class="placeImgDiv">
                         <div class="placeImg"></div>
@@ -992,7 +1023,7 @@ function recommendData() {
     if (planDataArray.length > 0) {
         const lastData = planDataArray[planDataArray.length - 1];
         const url = `https://apis.data.go.kr/B551011/KorService1/detailCommon1?MobileOS=ETC&MobileApp=TripTrav&contentId=${lastData}&defaultYN=Y&firstImageYN=Y&areacodeYN=Y&catcodeYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&serviceKey=${tourAPIKEY}&_type=json`;
-        console.log(url)
+        console.log(url);
 
         let currentPage = 1;
         const itemsPerPage = 10;
@@ -1015,7 +1046,8 @@ function recommendData() {
         });
 
         function createMoreButton(totalCount, items) {
-            if (totalCount > currentPage * itemsPerPage) {
+            const moreBtnExists = document.querySelector('.morePlaceBtn');
+            if (totalCount > currentPage * itemsPerPage && !moreBtnExists) {
                 const moreBtn = document.createElement('div');
                 moreBtn.classList.add('morePlaceBtn');
                 moreBtn.innerHTML = `더보기<img src="/dist/image/chevron-down.svg">`;
@@ -1031,13 +1063,12 @@ function recommendData() {
 
         function loadMore(items) {
             displayItems(items, currentPage, itemsPerPage);
-            createMoreButton(totalCount, items);
         }
 
         function displayItems(items, currentPage, itemsPerPage) {
             const start = (currentPage - 1) * itemsPerPage;
             const end = Math.min(start + itemsPerPage, items.length);
-            const itemsToDisplay = items.slice(start, end); // Changed here to start instead of start + 1
+            const itemsToDisplay = items.slice(start, end);
 
             document.querySelector('.depth2_recomm').innerHTML = '';
 
@@ -1047,7 +1078,7 @@ function recommendData() {
 
                 recommDiv.innerHTML += `
                     <div class="recomm_img" style="background-image: url('${key.firstimage}'); background-position: center; background-repeat: no-repeat; background-size: cover"></div>
-                    <div class="recomm_name_cate" data-id="${key.contentid}" onclick="locationPage(${key.addr1 ? `'${key.addr1}'` : null} ,${key.contentid}, '${key.title}')">
+                    <div class="recomm_name_cate" data-id="${key.contentid}" onclick="locationPage(${key.contentid})">
                         <div class="name_cate2">
                             <span class="recomm_name">${key.title}</span>
                             <span class="recomm_cate"></span>
@@ -1071,8 +1102,6 @@ function recommendData() {
                     recommAddBtn.style.backgroundImage = "url('/dist/image/plus-circle.svg')";
                 });
             });
-
-            createMoreButton(totalCount, items);
         }
 
         function assignCategory(recommCate, recommNameCate, key) {
@@ -1087,7 +1116,6 @@ function recommendData() {
                 const categoryName = getCategoryName(key.cat1);
                 recommCate.innerHTML = categoryName;
 
-                // '기타'일 때 recomm_name_cate의 margin-top을 23px로 설정
                 if (categoryName === "기타") {
                     recommNameCate.style.marginTop = '23px';
                 } else {
@@ -1112,7 +1140,6 @@ function recommendData() {
         }
     }
 }
-
 
 function locationPage(addr1, key, name) {
     if(addr1 == null){
@@ -1411,6 +1438,8 @@ function newPlanF(event) {
         return
     }
 
+    const star = getRandomRating();
+    const number = getRandomNumber();
     const newLi = `<li class="oneContent" data-id="${contentId}">
                             <div class="deletePlan" onclick="deletePlan(event)">&times;</div>
                             <div class="changePlan">
@@ -1424,8 +1453,8 @@ function newPlanF(event) {
                             <div class="placeAddr">${placeAddress}</div>
                             <div class="rate_count">
                                 <img src="/dist/image/star.svg">
-                                <div class="placeRate">4.0</div>
-                                <div class="placeRateCount">(356)</div>
+                                <div class="placeRate">${star}</div>
+                                <div class="placeRateCount">(${number})</div>
                             </div>
                             <div class="placeImgDiv">
                                 <div class="placeImg"></div>

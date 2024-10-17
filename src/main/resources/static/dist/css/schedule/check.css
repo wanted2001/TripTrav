@@ -449,10 +449,18 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
 .mapOpenBtn button{
 
     opacity: 1;
+
     background: white;
+
     border: 3px solid #ffb42a;
+
     width: 35px;
+
     height: 50px;
+
+    top: 10px;
+
+    left: 13px;
 }
 .mapCloseBtn{
     z-index: 100;
@@ -461,12 +469,15 @@ button, .editBtn, .saveBtn, .memoCloseBtn, .saveMemo, .modifyMemo, .cmCloseBtn{
     pointer-events: none;
     background: white;
     border: 3px solid #ffb42a;
+    top: 10px;
+    margin-left: 9px;
 }
 .mapCloseBtn button{
     border: none;
     outline: none;
     background: #ffffff00;
     height: 45px;
+    /* transform: translate(10px, 10px); */
 }
 .mapCloseBtn button img, .mapOpenBtn button img{
     margin-left: -3px;
@@ -889,7 +900,7 @@ button.depth2_searchBtn {
 .placeRateCount{
     margin-top: 5px;
 }
-/*일정편집*/
+/*ì¼ì •íŽ¸ì§‘*/
 .drag {
     width: 19px;
     float: right;
@@ -910,15 +921,15 @@ button.depth2_searchBtn {
     display: none;
 }
 @keyframes fadeIn {
-     0% {
-         opacity: 0;
-         transform: translate(-50%, -55%);
-     }
-     100% {
-         opacity: 1;
-         transform: translate(-50%, -50%);
-     }
- }
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -55%);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
 
 .info-title {
     display: block;
@@ -935,4 +946,34 @@ button.depth2_searchBtn {
 #checkMap{
     border-radius: 10px;
     box-shadow: 0 0 20px -5px #666666;
+}
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.spinner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.loading-spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #454545;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }

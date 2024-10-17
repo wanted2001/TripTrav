@@ -16,6 +16,9 @@ main {
 
 .tasteBtnDiv {
     font-family: LINESeedKR-Rg;
+    margin-top: 15px;
+}
+.tasteTitleDiv{
     margin-top: 60px;
 }
 
@@ -61,9 +64,9 @@ main {
     width: 1000px;
     height: auto;
     transition: max-height 0.4s ease-in-out;
-    background-color: #faecd3;
-    border: none;
+    border: 1px solid gray;
     border-radius: 10px;
+    box-shadow: 0 0 3px 3px gray;
     margin-top: -25px;
     margin-left: 10px;
     margin-bottom: 20px;
@@ -296,4 +299,34 @@ main {
 }
 .placeReason{
     font-size: 16px;
+}
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.spinner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.loading-spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #454545;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
