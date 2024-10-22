@@ -24,5 +24,5 @@ public interface ScheduleDetailMapper {
 
     int getMaxDate(long sco);
 
-    int getMaxIndex(@Param("sco") long sco, @Param("date") int date);
+    Integer getMaxIndex(@Param("sco") long sco, @Param("date") int date);
 }
