@@ -52,7 +52,7 @@ public class ScheduleDetailServiceImpl implements ScheduleDetailService{
     }
 
     @Override
-    public int getMaxIndex(long sco, int date) {
+    public Integer getMaxIndex(long sco, int date) {
         return scheduleDetailMapper.getMaxIndex(sco, date);
     }
 }

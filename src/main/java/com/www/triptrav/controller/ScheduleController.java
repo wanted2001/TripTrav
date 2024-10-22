@@ -260,15 +260,21 @@ public class ScheduleController {
     @ResponseBody
     public String addPlaceInPlan(@RequestBody ScheduleDetailVO scheduleDetailVO){
         log.info("addPlaceInPlan {}", scheduleDetailVO);
-        int date = sdsv.getMaxDate(scheduleDetailVO.getSco());
-        int index = sdsv.getMaxIndex(scheduleDetailVO.getSco(), date);
-        if(date>0 && index>0){
+        int date = scheduleDetailVO.getScheDate();
+        Integer index = sdsv.getMaxIndex(scheduleDetailVO.getSco(), date);
+
+        if (index == null) {
+            index=0;
+        }
+
+        if(date>0 && index>=0){
             ScheduleDetailVO sdVO = new ScheduleDetailVO();
             sdVO.setSco(scheduleDetailVO.getSco());
             sdVO.setScheContentId(scheduleDetailVO.getScheContentId());
             sdVO.setScheTitle(scheduleDetailVO.getScheTitle());
-            sdVO.setScheDate(date);
+            sdVO.setScheDate(scheduleDetailVO.getScheDate());
             sdVO.setScheIndex(index);
+            log.info("insert schedule {}",sdVO);
             int isOk = sdsv.addPlaceInPlan(sdVO);
             return "1";
         }
@@ -315,6 +321,13 @@ public class ScheduleController {
     public ScheduleVO getSchedule(@PathVariable long sco){
         ScheduleVO sdvo = ssv.getScheduleVO(sco);
         return sdvo;
+    }
+
+    @GetMapping("/getScheduleDate/{sco}")
+    @ResponseBody
+    public int getScheduleDate(@PathVariable long sco){
+        int isOk = ssv.getDate(sco);
+        return isOk;
     }
 
 }

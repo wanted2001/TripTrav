@@ -20,5 +20,5 @@ public interface ScheduleDetailService {
 
     int getMaxDate(long sco);
 
-    int getMaxIndex(long sco, int date);
+    Integer getMaxIndex(long sco, int date);
 }

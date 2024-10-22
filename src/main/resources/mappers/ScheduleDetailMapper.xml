@@ -29,11 +29,7 @@
         select * from schedule_detail where sco=#{sco}
     </select>
 
-    <select id="getMaxDate" resultType="int">
-        select max(sche_date) from schedule_detail where sco=#{sco}
-    </select>
-
-    <select id="getMaxIndex" resultType="int">
+    <select id="getMaxIndex" resultType="Integer">
         select max(sche_index) from schedule_detail
         where sco=#{sco} and sche_date=#{date}
     </select>

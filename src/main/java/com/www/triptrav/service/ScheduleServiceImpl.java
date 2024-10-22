@@ -60,4 +60,9 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleMapper.getUserSchedule(uno);
     }
 
+    @Override
+    public int getDate(long sco) {
+        return scheduleMapper.getDate(sco);
+    }
+
 }

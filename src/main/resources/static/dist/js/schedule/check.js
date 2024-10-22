@@ -1066,7 +1066,7 @@ function recommendData() {
         function displayItems(items, currentPage, itemsPerPage) {
             const start = (currentPage - 1) * itemsPerPage;
             const end = Math.min(start + itemsPerPage, items.length);
-            const itemsToDisplay = items.slice(start, end);
+            const itemsToDisplay = items.slice(start+1, end);
 
             document.querySelector('.depth2_recomm').innerHTML = '';
 
