@@ -29,7 +29,7 @@ isSocialUser(unoNum).then(data => {
     document.querySelector(".userId").innerText = email;
     const profile = document.querySelectorAll(".profileUpdateImg, .profileImg");
     profile.forEach(img => {
-        img.src = `${data.profile ? `/profile/${data.profile}` : '/dist/image/smile-beam.svg'}`
+        img.src = `${data.profile ? `/profile/${data.profile}` : '/dist/image/circle-user.svg'}`
     });
     if (data.provider !== null) {
         document.getElementById("pw").disabled = true;
