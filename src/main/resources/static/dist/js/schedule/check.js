@@ -17,15 +17,13 @@ function getRandomNumber() {
 window.addEventListener('click', (e) => {
     let date = e.target.getAttribute('data-date');
     if (sco && date) {
-        // Show spinner and overlay
         spinner.style.display = 'block';
         overlay.style.display = 'block';
 
         getUserCourse(sco, date).then(result => {
             let content = '';
-            document.querySelector('.contentArea').innerHTML = ''; // Clear existing content
+            document.querySelector('.contentArea').innerHTML = '';
 
-            // Check if there are results
             if (result.length > 0) {
                 result.forEach(key => {
                     const star = getRandomRating();
@@ -142,6 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
             editRole.classList.remove('hidden');
             editRoleSave.classList.remove('hidden')
             editBtn.classList.remove('hidden'); //일정편집버튼
+            document.querySelector('.addPersonBtn').classList.remove('hidden');
         } else {
             disableEditBtn.classList.remove('hidden');
             const addPlan = document.querySelector('.addPlan');
