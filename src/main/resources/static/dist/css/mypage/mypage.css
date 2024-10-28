@@ -129,9 +129,14 @@
 }
 
 .bottomInfoWrap{
-    width: 1440px;
-    height: 700px;
-    margin-top: 20px;
+    width: 1379px;
+    height: auto;
+    margin-top: 30px;
+    border: 1px solid gainsboro;
+    padding: 9px 30px 30px;
+    margin-bottom: 40px;
+    border-radius: 6px;
+    box-shadow: 0px 0px 22px -8px gainsboro;
 }
 
 .bottomInfoWrap h1{
@@ -139,6 +144,7 @@
     margin: 10px 0;
     font-size: 22px;
     font-weight: 600;
+    /* font-family: 'LINESeedKR-Bd'; */
 }
 
 .bottomInfoWrap > div:is(.nextMyTrip, .prevMyTrip, .myWishTrip, .myWishPlace, .myPlaceTripReview, .myFoodTripReview) {
@@ -158,6 +164,8 @@
     height: 120px;
     border: 1px solid #B3B3B3;
     object-fit: cover;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px gainsboro;
 }
 
 .tripCard{
@@ -172,7 +180,7 @@
 .tripinfo{
     display: flex;
     align-items: center;
-    padding-left: 20px;
+    padding-left: 8px;
 }
 
 .tripinfo > ul {
@@ -180,14 +188,13 @@
     flex-direction: column;
     justify-content: space-around;
     width: 500px;
-    height: 130px;
+    height: 111px;
     padding-left: 15px;
-
 }
 
 .tripinfo > ul > li{
-    margin: 10px 0;
-    font-size: 20px;
+    /* margin: 10px 0; */
+    font-size: 18px;
 }
 
 /*내 여행 계획*/
@@ -204,7 +211,7 @@
 
 /*아코디언*/
 :is(.nextTripList, .prevTripList, .tripPlaceReviewList, .tripFoodReviewList,.wishTripDiv){
-    max-height: 500px;
+    max-height: 170px;
     overflow: scroll;
     overflow-x:  hidden;
     transition: max-height 0.3s ease-out;
@@ -215,21 +222,35 @@
     display: block;
 }
 
+#tripListBtn img{
+    opacity: 0.65;
+}
+
 .accordionBtn {
     position: absolute;
-    top : -10px;
-    left : 140px;
+    top: -6px;
+    right: 44px;
     cursor: pointer;
-    padding: 10px;
+    /* padding: 0 0 0 0; */
     border: none;
-    background-color: #007bff;
+    /* background-color: #007bff; */
     color: white;
     border-radius: 5px;
     transition: background-color 0.3s;
+    width: 51px;
+    height: 33px;
+    opacity: 1;
+}
+
+.accordionBtn img{
+    width: 31px;
 }
 
 .accordionBtn:hover {
-    background-color: #0056b3;
+    background-color: gainsboro;
+}
+.hidden{
+    display: none;
 }
 
 /*모달창*/
@@ -373,10 +394,3 @@
 .tripFoodReview::-webkit-scrollbar-thumb:hover {
     background: #F3A701; /* hover 색 */
 }
-
-
-
-
-
-
-
