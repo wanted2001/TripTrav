@@ -35,15 +35,17 @@
     justify-content: space-around;
 }
 .plusImg {
-    position: absolute;
+    /* position: absolute; */
     width: 15px;
     top: -15px;
-    left: 36px;
+    left: -10px;
+    /* position: absolute; */
 }
 .addMemoBtn img, .checkPersonBtn img, .addPersonBtn img {
     width: 34px;
     height: 50px;
     cursor: pointer;
+    position: relative;
 }
 .checkName {
     font-family: 'LINESeedKR-Bd';
@@ -900,7 +902,7 @@ button.depth2_searchBtn {
 .placeRateCount{
     margin-top: 5px;
 }
-/*ì¼ì •íŽ¸ì§‘*/
+/*Ã¬ÂÂ¼Ã¬Â â€¢Ã­Å½Â¸Ã¬Â§â€˜*/
 .drag {
     width: 19px;
     float: right;

@@ -17,13 +17,15 @@ function getRandomNumber() {
 window.addEventListener('click', (e) => {
     let date = e.target.getAttribute('data-date');
     if (sco && date) {
+        // Show spinner and overlay
         spinner.style.display = 'block';
         overlay.style.display = 'block';
 
         getUserCourse(sco, date).then(result => {
             let content = '';
-            document.querySelector('.contentArea').innerHTML = '';
+            document.querySelector('.contentArea').innerHTML = ''; // Clear existing content
 
+            // Check if there are results
             if (result.length > 0) {
                 result.forEach(key => {
                     const star = getRandomRating();
@@ -63,8 +65,6 @@ window.addEventListener('click', (e) => {
         });
     }
 });
-
-
 
 //day 선택
 const days = document.querySelectorAll('.day');
@@ -140,7 +140,6 @@ document.addEventListener('DOMContentLoaded', () => {
             editRole.classList.remove('hidden');
             editRoleSave.classList.remove('hidden')
             editBtn.classList.remove('hidden'); //일정편집버튼
-            document.querySelector('.addPersonBtn').classList.remove('hidden');
         } else {
             disableEditBtn.classList.remove('hidden');
             const addPlan = document.querySelector('.addPlan');
@@ -350,8 +349,6 @@ function deleteCompanion(sco, uno, nick) {
     }
 }
 
-
-
 document.querySelector('.editRoleSave').addEventListener('click', () => {
     const companionList = document.querySelectorAll('.companionLi');
     const updates = [];
@@ -521,16 +518,17 @@ async function getSlideImg(key) {
     let addedLocations = new Set();
 
     const res = await getData(url)
-    // console.log(res);
-    res.items.item.forEach(img => {
-        if (!addedLocations.has(img.contentid)) {
-            innerSlide.innerHTML += `<div class="slideItem" style="background-image: url('${img.originimgurl}'); background-size: cover; background-position: center; background-repeat: no-repeat;"></div>`;
+    console.log(res);
+    if(res.numOfRows>0){
+        res.items.item.forEach(img => {
+            if (!addedLocations.has(img.contentid)) {
+                innerSlide.innerHTML += `<div class="slideItem" style="background-image: url('${img.originimgurl}'); background-size: cover; background-position: center; background-repeat: no-repeat;"></div>`;
 
-            addedLocations.add(img.contentid);
-        }
-    });
+                addedLocations.add(img.contentid);
+            }
+        });
+    }
 }
-
 
 var map;
 var markers = [];
@@ -616,7 +614,6 @@ function addMarkersWithLabels(result, data) {
     }, 0);
 }
 
-
 //마커제거
 function removeMarkers() {
     markers.forEach(marker => {
@@ -651,9 +648,6 @@ function addPolyline(result, data) {
         console.log('연결할 장소가 2개 이상 필요합니다.');
     }
 }
-
-
-
 
 //주소삽입
 function getAddr(key) {
@@ -1018,6 +1012,7 @@ function recommendData() {
     console.log(planDataArray);
 
     if (planDataArray.length > 0) {
+        document.querySelector('.depth2_recomm').innerHTML = '';
         const lastData = planDataArray[planDataArray.length - 1];
         const url = `https://apis.data.go.kr/B551011/KorService1/detailCommon1?MobileOS=ETC&MobileApp=TripTrav&contentId=${lastData}&defaultYN=Y&firstImageYN=Y&areacodeYN=Y&catcodeYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&serviceKey=${tourAPIKEY}&_type=json`;
         console.log(url);
@@ -1029,7 +1024,7 @@ function recommendData() {
         getData(url).then(result => {
             const mapx = result.items.item[0].mapx;
             const mapy = result.items.item[0].mapy;
-            const mapUrl = `https://apis.data.go.kr/B551011/KorService1/locationBasedList1?MobileOS=ETC&MobileApp=TripTrav&_type=json&arrange=S&numOfRows=200&mapX=${mapx}&mapY=${mapy}&radius=2000&serviceKey=${tourAPIKEY}`;
+            const mapUrl = `https://apis.data.go.kr/B551011/KorService1/locationBasedList1?MobileOS=ETC&MobileApp=TripTrav&_type=json&arrange=S&numOfRows=2000&mapX=${mapx}&mapY=${mapy}&radius=2000&serviceKey=${tourAPIKEY}`;
 
             getData(mapUrl).then(res => {
                 totalCount = res.totalCount;
@@ -1054,6 +1049,9 @@ function recommendData() {
                     currentPage++;
                     moreBtn.remove();
                     loadMore(items);
+                    if((currentPage * itemsPerPage) < totalCount) {
+                        createMoreButton(totalCount, items)
+                    }
                 });
             }
         }
@@ -1066,8 +1064,6 @@ function recommendData() {
             const start = (currentPage - 1) * itemsPerPage;
             const end = Math.min(start + itemsPerPage, items.length);
             const itemsToDisplay = items.slice(start+1, end);
-
-            document.querySelector('.depth2_recomm').innerHTML = '';
 
             itemsToDisplay.forEach(key => {
                 const recommDiv = document.createElement('div');
@@ -1657,7 +1653,6 @@ function countTriangle() {
     updateTriangleVisibility();
 }
 
-
 //일정삭제
 function deletePlan(event) {
     const liItems = document.querySelectorAll('.contentArea .oneContent');
@@ -1838,7 +1833,6 @@ function getHeartData(){
         })
 }
 
-
 async function generateInviteUrl(sco, unoNum) {
     const response = await fetch("/schedule/generateInviteUrl", {
         method: "POST",
@@ -1893,21 +1887,3 @@ async function getSchedule(sco){
         console.log(err)
     }
 }
-
-
-//할일
-//일정생성하거나 편집할때 1개면 안들어감
-//동행자 편집(hidden 없애는 함수부터)**
-//동행자 삭제**
-//동행자 확인할때 값 누적됨**
-//일정편집없는 유저 동행자확인 버튼 2개뜸(아래가 빈버튼)**
-//마지막 장소 기반으로 추천 여행지 출력, 검색 기본값 출력
-//일정전체적인 지역코드 저장 => 검색시 그 지역코드 기반으로 출력
-//스케줄좍좍부분에 뭐넣을지
-//장소카테고리 넣어야함!**
-//dot 하단 길이 조절 필요
-//이미지 없는 장소 forEach 못돌아서 오류남(getSlideImg 함수)
-//일정 수정 후 저장 alert 두번뜸
-//맨위 index는 ^버튼 삭제, 맨아래 index는 v버튼 삭제
-//날짜지난일정은 메모, 동행자, 편집버튼 전부 삭제
-//이름 점처리
