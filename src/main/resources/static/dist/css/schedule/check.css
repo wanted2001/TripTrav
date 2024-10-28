@@ -982,3 +982,17 @@ button.depth2_searchBtn {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+#legend{
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    width: 100px;
+    z-index: 999;
+    background-color: rgba(255, 255, 255, 0.64);
+    font-family: LINESeedKR-Rg;
+    font-size: 15px;
+}
