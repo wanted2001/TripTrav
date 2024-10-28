@@ -74,7 +74,6 @@ days.forEach(day => {
         })
         e.target.classList.add('day_focus');
         const date = e.target.getAttribute('data-date');
-        focusOnDay(date);
         getDatePlan(sco, date).then(r => {
             if (r.length === 0) {
                 document.querySelector('.noPlanText').classList.remove('hidden');
@@ -82,6 +81,8 @@ days.forEach(day => {
                 document.querySelector('.noPlanText').classList.add('hidden');
             }
         })
+        focusOnDay(date);
+
 
     })
 })
@@ -221,7 +222,6 @@ document.addEventListener('DOMContentLoaded', () => {
     //메모여부확인
     getMemo(sco).then(r => {
         const memoContents = document.querySelector('.memoContents');
-        console.log(r)
         if (!r.sco==0) {
             document.querySelector('.plusImg').remove();
             memoContents.innerHTML = `${r.scheMemoContent}`;
@@ -703,6 +703,9 @@ function createLegend(days, colors) {
     });
 }
 function focusOnDay(day) {
+    if (!polylines[day]) {
+        return;
+    }
     Object.keys(polylines).forEach(date => {
         if (date === day) {
             polylines[date].setMap(map);
@@ -985,6 +988,9 @@ closeBtn.addEventListener('click', () => {
         map.setCenter(initialCenter);
         map.setLevel("5");
     }
+    Object.values(polylines).forEach(polyline => {
+        polyline.setMap(map);
+    });
 
 });
 
