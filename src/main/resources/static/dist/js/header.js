@@ -5,5 +5,5 @@ function setCookie(name, value, days) {
     document.cookie = name + "=" + value + ";" + expires + ";path=/";
 }
 
-console.log("Saving URL to cookie: " + window.location.href);
+// console.log("Saving URL to cookie: " + window.location.href);
 setCookie("url", window.location.href, 1);  // 하루 동안 유효한 쿠키
