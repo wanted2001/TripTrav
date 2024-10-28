@@ -74,7 +74,6 @@ days.forEach(day => {
         })
         e.target.classList.add('day_focus');
         const date = e.target.getAttribute('data-date');
-        focusOnDay(date);
         getDatePlan(sco, date).then(r => {
             if (r.length === 0) {
                 document.querySelector('.noPlanText').classList.remove('hidden');
@@ -82,7 +81,7 @@ days.forEach(day => {
                 document.querySelector('.noPlanText').classList.add('hidden');
             }
         })
-
+        focusOnDay(date);
     })
 })
 
@@ -221,7 +220,6 @@ document.addEventListener('DOMContentLoaded', () => {
     //메모여부확인
     getMemo(sco).then(r => {
         const memoContents = document.querySelector('.memoContents');
-        console.log(r)
         if (!r.sco==0) {
             document.querySelector('.plusImg').remove();
             memoContents.innerHTML = `${r.scheMemoContent}`;
@@ -527,9 +525,10 @@ async function getSlideImg(key) {
     }
 }
 
-var map;
-var markers = [];
+let map;
+let markersByDate = {};
 const polylines = {};
+let connectingLines = [];
 
 // 지도 초기화 함수
 function initKakaoMap() {
@@ -569,32 +568,38 @@ function initKakaoMap() {
     });
 }
 
-
-//마커라벨
+// 마커 및 라벨 추가
 function addMarkersWithLabels(result, data) {
-    removeMarkers();
-
+    markersByDate = {};
     result.forEach(resultItem => {
         const matchedItem = data.find(item => item.contentid == resultItem.scheContentId);
         if (matchedItem) {
             const mapx = matchedItem.mapx;
             const mapy = matchedItem.mapy;
             const title = matchedItem.title;
+            const scheDate = resultItem.scheDate;
             var marker = new kakao.maps.Marker({
                 position: new kakao.maps.LatLng(mapy, mapx),
                 map: map,
                 title: title,
                 content: title
             });
-            markers.push(marker);
             var mLabel = new kakao.maps.InfoWindow({
                 position: new kakao.maps.LatLng(mapy, mapx),
                 content: `<span class="info-title">${title}</span>`
             });
             mLabel.open(map, marker);
+            if (!markersByDate[scheDate]) {
+                markersByDate[scheDate] = [];
+            }
+            markersByDate[scheDate].push({ marker, label: mLabel });
         }
     });
+    adjustLabelStyles();
+}
 
+// 라벨 스타일 조정
+function adjustLabelStyles() {
     setTimeout(() => {
         var infoTitle = document.querySelectorAll('.info-title');
         infoTitle.forEach(function (e) {
@@ -604,15 +609,14 @@ function addMarkersWithLabels(result, data) {
             e.parentElement.style.left = "50%";
             e.parentElement.style.marginLeft = -ml + "px";
             e.parentElement.style.width = w + "px";
-            e.parentElement.style.fontFamily="LINESeedKR-Rg";
-            e.parentElement.style.paddingTop="2px"
+            e.parentElement.style.fontFamily = "LINESeedKR-Rg";
+            e.parentElement.style.paddingTop = "2px";
             e.parentElement.previousSibling.style.display = "none";
             e.parentElement.parentElement.style.border = "0px";
             e.parentElement.parentElement.style.background = "unset";
         });
     }, 0);
 }
-
 //마커제거
 function removeMarkers() {
     markers.forEach(marker => {
@@ -662,7 +666,6 @@ function addPolyline(result, data) {
         } else {
             console.log(`날짜 ${scheDate}에 연결할 장소가 2개 이상 필요합니다.`);
         }
-
         if (previousDayLastCoordinate && previousColor) {
             const connectingLine = new kakao.maps.Polyline({
                 path: [previousDayLastCoordinate, coordinates[0]],
@@ -672,10 +675,12 @@ function addPolyline(result, data) {
                 strokeStyle: 'solid'
             });
             connectingLine.setMap(map);
+            connectingLines.push(connectingLine);
         }
         previousDayLastCoordinate = coordinates[coordinates.length - 1];
         previousColor = color;
     });
+
     createLegend(Object.keys(dayCoordinates), colors);
 }
 function createLegend(days, colors) {
@@ -703,6 +708,21 @@ function createLegend(days, colors) {
     });
 }
 function focusOnDay(day) {
+    if (!polylines[day]) {
+        return;
+    }
+    Object.values(markersByDate).forEach(dayItems => {
+        dayItems.forEach(({ marker, label }) => {
+            marker.setMap(null);
+            label.close();
+        });
+    });
+    if (markersByDate[day]) {
+        markersByDate[day].forEach(({ marker, label }) => {
+            marker.setMap(map);
+            label.open(map, marker);
+        });
+    }
     Object.keys(polylines).forEach(date => {
         if (date === day) {
             polylines[date].setMap(map);
@@ -710,7 +730,8 @@ function focusOnDay(day) {
             polylines[date].setMap(null);
         }
     });
-    const coordinates = polylines[day].getPath();
+    connectingLines.forEach(line => line.setMap(null));
+    const coordinates = polylines[day]?.getPath();
     if (coordinates && coordinates.length > 0) {
         const bounds = new kakao.maps.LatLngBounds();
         coordinates.forEach(coord => bounds.extend(coord));
@@ -969,6 +990,7 @@ function checkHeight() {
     }
 }
 
+// 닫기 버튼 클릭 이벤트 수정
 closeBtn.addEventListener('click', () => {
     if (!depth2.classList.contains('hidden')) {
         depth2.classList.add('hidden');
@@ -981,11 +1003,19 @@ closeBtn.addEventListener('click', () => {
         }
         closeContent();
     }
+
     if (initialCenter) {
         map.setCenter(initialCenter);
         map.setLevel("5");
     }
-
+    Object.values(polylines).forEach(polyline => polyline.setMap(map));
+    Object.values(markersByDate).forEach(dayItems => {
+        dayItems.forEach(({ marker, label }) => {
+            marker.setMap(map);
+            label.open(map, marker);
+        });
+    });
+    connectingLines.forEach(line => line.setMap(map));
 });
 
 function closeContent() {
