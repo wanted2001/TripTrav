@@ -17,15 +17,12 @@ function getRandomNumber() {
 window.addEventListener('click', (e) => {
     let date = e.target.getAttribute('data-date');
     if (sco && date) {
-        // Show spinner and overlay
         spinner.style.display = 'block';
         overlay.style.display = 'block';
 
         getUserCourse(sco, date).then(result => {
             let content = '';
-            document.querySelector('.contentArea').innerHTML = ''; // Clear existing content
-
-            // Check if there are results
+            document.querySelector('.contentArea').innerHTML = '';
             if (result.length > 0) {
                 result.forEach(key => {
                     const star = getRandomRating();
@@ -624,30 +621,85 @@ function removeMarkers() {
 
 //선긋기
 function addPolyline(result, data) {
-    const coordinates = [];
+    const dayCoordinates = {};
+    const colors = {
+        1: 'blue',
+        2: 'green',
+        3: 'red'
+    };
     result.forEach(resultItem => {
         const matchedItem = data.find(item => item.contentid == resultItem.scheContentId);
 
         if (matchedItem) {
             const latLng = new kakao.maps.LatLng(matchedItem.mapy, matchedItem.mapx);
-            coordinates.push(latLng);
+
+            if (!dayCoordinates[resultItem.scheDate]) {
+                dayCoordinates[resultItem.scheDate] = [];
+            }
+            dayCoordinates[resultItem.scheDate].push(latLng);
         }
     });
 
-    if (coordinates.length > 1) {
-        var polyline = new kakao.maps.Polyline({
-            path: coordinates,
-            strokeWeight: 5,
-            strokeColor: 'blue',
-            strokeOpacity: 0.7,
-            strokeStyle: 'solid'
-        });
+    let previousDayLastCoordinate = null;
+    let previousColor = null;
 
-        polyline.setMap(map);
-    } else {
-        console.log('연결할 장소가 2개 이상 필요합니다.');
-    }
+    Object.keys(dayCoordinates).forEach(scheDate => {
+        const coordinates = dayCoordinates[scheDate];
+        const color = colors[scheDate] || 'gray';
+
+        if (coordinates.length > 1) {
+            const polyline = new kakao.maps.Polyline({
+                path: coordinates,
+                strokeWeight: 5,
+                strokeColor: color,
+                strokeOpacity: 0.7,
+                strokeStyle: 'solid'
+            });
+            polyline.setMap(map);
+        } else {
+            console.log(`날짜 ${scheDate}에 연결할 장소가 2개 이상 필요합니다.`);
+        }
+
+        if (previousDayLastCoordinate && previousColor) {
+            const connectingLine = new kakao.maps.Polyline({
+                path: [previousDayLastCoordinate, coordinates[0]],
+                strokeWeight: 5,
+                strokeColor: previousColor,
+                strokeOpacity: 0.3,
+                strokeStyle: 'solid'
+            });
+            connectingLine.setMap(map);
+        }
+        previousDayLastCoordinate = coordinates[coordinates.length - 1];
+        previousColor = color;
+    });
+    createLegend(Object.keys(dayCoordinates), colors);
 }
+function createLegend(days, colors) {
+    const legendDiv = document.getElementById("legend");
+    legendDiv.innerHTML = "";
+
+    days.forEach((day, index) => {
+        const color = colors[day] || 'gray';
+        const legendItem = document.createElement("div");
+        legendItem.style.display = "flex";
+        legendItem.style.alignItems = "center";
+        legendItem.style.marginBottom = index === days.length - 1 ? "0" : "8px";
+
+        const colorBox = document.createElement("div");
+        colorBox.style.width = "20px";
+        colorBox.style.height = "20px";
+        colorBox.style.backgroundColor = color;
+        colorBox.style.marginRight = "8px";
+
+        const dayText = document.createElement("span");
+        dayText.innerText = `Day ${day}`;
+        legendItem.appendChild(colorBox);
+        legendItem.appendChild(dayText);
+        legendDiv.appendChild(legendItem);
+    });
+}
+
 
 //주소삽입
 function getAddr(key) {
