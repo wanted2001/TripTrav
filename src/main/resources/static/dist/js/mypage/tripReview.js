@@ -62,6 +62,19 @@ getReviewList(unoNum)
                     break;
             }
         });
+
+        if (tripPlaceNum > 1) {
+            const prevH1 = document.querySelector('.myPlaceTripReview').querySelector('h1');
+            const accoBtn = `<button type="button" class="accordionBtn" aria-expanded="false" onclick="accordionToggle(this)"><img src="/dist/image/chevron-down.svg"></button>`;
+            prevH1.insertAdjacentHTML('afterend', accoBtn);
+        }
+
+        if (tripFoodNum > 1) {
+            const nextH1 = document.querySelector('.myFoodTripReview').querySelector('h1');
+            const accoBtn = `<button type="button" class="accordionBtn" aria-expanded="false" onclick="accordionToggle(this)"><img src="/dist/image/chevron-down.svg"></button>`;
+            nextH1.insertAdjacentHTML('afterend', accoBtn);
+        }
+
             if(tripFoodNum === 0){
                 tripFoodReviewList.appendChild(noChild("review"));
             }

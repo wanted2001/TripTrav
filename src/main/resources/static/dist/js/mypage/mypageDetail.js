@@ -123,13 +123,13 @@ document.getElementById("updateProfile").addEventListener("click", () => {
 document.getElementById("pw").addEventListener("keyup",()=>{
     var pwVal = document.getElementById("pw").value;
     const updateBtn = document.getElementById("updateProfile")
-   if(disabledBtn(pwVal)){
-       updateBtn.disabled = false;
-       updateBtn.style.color = "white";
-   }else{
-       updateBtn.disabled = true;
-       updateBtn.style.color = "red";
-   }
+    if(disabledBtn(pwVal)){
+        updateBtn.disabled = false;
+        updateBtn.style.color = "white";
+    }else{
+        updateBtn.disabled = true;
+        updateBtn.style.color = "red";
+    }
 });
 
 function disabledBtn(value){
@@ -302,9 +302,9 @@ function accordionToggle(button) {
     button.setAttribute('aria-expanded', !isExpanded);
     list.classList.toggle('show', !isExpanded);
     if (isExpanded) {
-        button.innerText = "펼치기";
+        button.innerHTML= `<img src="/dist/image/chevron-down.svg">`;
     } else {
-        button.innerText = "접기";
+        button.innerHTML = `<img src="/dist/image/chevron-up.svg">`;
     }
 }
 
