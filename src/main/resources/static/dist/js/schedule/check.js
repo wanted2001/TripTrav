@@ -74,7 +74,7 @@ days.forEach(day => {
         })
         e.target.classList.add('day_focus');
         const date = e.target.getAttribute('data-date');
-
+        focusOnDay(date);
         getDatePlan(sco, date).then(r => {
             if (r.length === 0) {
                 document.querySelector('.noPlanText').classList.remove('hidden');
@@ -85,6 +85,7 @@ days.forEach(day => {
 
     })
 })
+
 
 //상단 회색바탕 위 드래그 슬라이드 구현
 //상단 일수별 슬라이드
@@ -110,7 +111,6 @@ const disableEditBtn = document.querySelector('.disableEdit');
 const editBtn = document.querySelector('.editBtn');
 
 document.addEventListener('DOMContentLoaded', () => {
-    // initTmap();
 
     const today = new Date();
     today.setHours(0,0,0,0);
@@ -529,8 +529,9 @@ async function getSlideImg(key) {
 
 var map;
 var markers = [];
+const polylines = {};
 
-//지도출력
+// 지도 초기화 함수
 function initKakaoMap() {
     getAllCourse(sco).then(result => {
         fetch('/dist/json/mapData.json')
@@ -548,16 +549,16 @@ function initKakaoMap() {
                     const mapx = matchedItem.mapx;
                     const mapy = matchedItem.mapy;
 
-                    var mapContainer = document.getElementById('checkMap');
-                    var mapOption = {
+                    const mapContainer = document.getElementById('checkMap');
+                    const mapOption = {
                         center: new kakao.maps.LatLng(mapy, mapx),
                         level: 5
                     };
 
                     map = new kakao.maps.Map(mapContainer, mapOption);
-
+                    initialCenter = map.getCenter();
                     addMarkersWithLabels(result, data);
-                    addPolyline(result,data)
+                    addPolyline(result, data);
                 } else {
                     console.error('일치하는 첫 번째 결과의 좌표를 찾을 수 없습니다.');
                 }
@@ -567,6 +568,7 @@ function initKakaoMap() {
             });
     });
 }
+
 
 //마커라벨
 function addMarkersWithLabels(result, data) {
@@ -656,6 +658,7 @@ function addPolyline(result, data) {
                 strokeStyle: 'solid'
             });
             polyline.setMap(map);
+            polylines[scheDate] = polyline;
         } else {
             console.log(`날짜 ${scheDate}에 연결할 장소가 2개 이상 필요합니다.`);
         }
@@ -699,7 +702,21 @@ function createLegend(days, colors) {
         legendDiv.appendChild(legendItem);
     });
 }
-
+function focusOnDay(day) {
+    Object.keys(polylines).forEach(date => {
+        if (date === day) {
+            polylines[date].setMap(map);
+        } else {
+            polylines[date].setMap(null);
+        }
+    });
+    const coordinates = polylines[day].getPath();
+    if (coordinates && coordinates.length > 0) {
+        const bounds = new kakao.maps.LatLngBounds();
+        coordinates.forEach(coord => bounds.extend(coord));
+        map.setBounds(bounds);
+    }
+}
 
 //주소삽입
 function getAddr(key) {
@@ -909,6 +926,7 @@ function makeDot() {
 let openBtn = document.querySelector('.mapOpenBtn');
 let closeBtn = document.querySelector('.mapCloseBtn');
 let mapContentBox = document.querySelector('.mapContentBox');
+let initialCenter = null;
 
 function toggleVisibility(element, isVisible) {
     element.classList.toggle("hidden", !isVisible);
@@ -929,6 +947,10 @@ openBtn.addEventListener('click', () => {
     toggleVisibility(mapContentBox, true);
     toggleVisibility(closeBtn, true);
     closeBtn.style.left = '364px';
+    const firstDayBtn = document.querySelector('.day[data-date="1"]');
+    if (firstDayBtn) {
+        firstDayBtn.click();
+    }
 });
 
 //여행추가하기 버튼 contentArea 높이에 맞춰 위치 변경
@@ -958,8 +980,12 @@ closeBtn.addEventListener('click', () => {
             }
         }
         closeContent();
-
     }
+    if (initialCenter) {
+        map.setCenter(initialCenter);
+        map.setLevel("5");
+    }
+
 });
 
 function closeContent() {
