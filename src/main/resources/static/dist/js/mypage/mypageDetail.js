@@ -1,5 +1,3 @@
-var urlParams = new URLSearchParams(window.location.search);
-// message=notAllowedNickName
 var messageVlaue = urlParams.get("modal");
 console.log(messageVlaue);
 var locationValue = urlParams.get('location');
