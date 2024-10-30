@@ -315,6 +315,7 @@
     position: absolute;
     top: 105px;
     right: 85px;
+    cursor: pointer;
 }
 
 .profileUpdateInput{
