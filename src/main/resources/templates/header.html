@@ -102,6 +102,7 @@
                 <form id="loginForm" action="/login" method="post" class="LoginArea">
                     <p class="pClass"><img class="logoImg"></p>
                     <h2>로그인</h2>
+                    <p id="errorMessage" style="color: red; display: none;">아이디와 비밀번호를 확인해주세요.</p>
                     <p class="pClass"><input type="text" id="username" name="email" placeholder="이메일을 입력하세요."></p>
                     <p class="pClass"><input type="password" id="password" name="pw" placeholder="비밀번호를 입력하세요."></p>
                     <p class="pClass"><button type="submit" id="loginBtn">로그인</button></p>
@@ -142,9 +143,8 @@
     <script sec:authorize="isAuthenticated()">
         let unoNum = `[[${#authentication.getPrincipal().getUser().getUno()}]]`;
         let userNickname = `[[${#authentication.getPrincipal().getUser().getNickname()}]]`;
-        var urlParams = new URLSearchParams(window.location.search);
+        const urlParams = new URLSearchParams(window.location.search);
         const message = urlParams.get('message');
-        console.log(message);
         if (message) {
             alert("허용되지 않은 닉네임입니다.\n닉네임을 변경해주세요. ");
             goToMyPage(unoNum);
@@ -188,9 +188,15 @@
 
 
         function openLoginModal() {
-            // 모달 창을 다시 보여주는 로직 추가
             const loginModal = document.querySelector('#myModal');
             loginModal.style.display = 'block';
+            const falseMessage = new URLSearchParams(window.location.search);
+            const errorMessage = document.querySelector('#errorMessage');
+            if (falseMessage.has('false')) {
+                errorMessage.style.display = 'block';
+            } else {
+                errorMessage.style.display = 'none';
+            }
         }
 
         document.getElementById('loginBtn').addEventListener('click', function (e) {
