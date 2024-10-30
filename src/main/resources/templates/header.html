@@ -120,11 +120,11 @@
             </section>
         </div>
     </div>
+    <p th:if="${joinMsg}" th:text="${joinMsg}" id="joinMsg" style="display: none"></p>
     <script src="/dist/js/loginJoin.js"></script>
     <script src="/dist/js/header.js"></script>
     <script>
         let url = window.location.href;
-
         document.getElementById('searchA').addEventListener('click', () => {
             if (url === "http://localhost:8099/") {
                 changeSearch();
@@ -184,9 +184,11 @@
         // 페이지 로드 시 실행
         window.addEventListener('load', changeHeaderColor)
         // window.onload = changeHeaderColor;
-
-
-
+        let joinMsgElement = document.getElementById("joinMsg");
+        if (joinMsgElement) {
+            alert(joinMsgElement.textContent);
+            openLoginModal();
+        }
         function openLoginModal() {
             const loginModal = document.querySelector('#myModal');
             loginModal.style.display = 'block';
