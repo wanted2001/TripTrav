@@ -694,19 +694,24 @@ function createLegend(days, colors) {
         legendItem.style.alignItems = "center";
         legendItem.style.marginBottom = index === days.length - 1 ? "0" : "8px";
 
-        const colorBox = document.createElement("div");
-        colorBox.style.width = "20px";
-        colorBox.style.height = "20px";
-        colorBox.style.backgroundColor = color;
-        colorBox.style.marginRight = "8px";
-
         const dayText = document.createElement("span");
         dayText.innerText = `Day ${day}`;
-        legendItem.appendChild(colorBox);
+        dayText.style.width = "45px";
+
+        const colorBox = document.createElement("div");
+        colorBox.style.width = "35px";
+        colorBox.style.height = "5px";
+        colorBox.style.backgroundColor = color;
+        colorBox.style.marginBottom = "5px";
+        colorBox.style.marginLeft = "15px"
+
         legendItem.appendChild(dayText);
+        legendItem.appendChild(colorBox);
         legendDiv.appendChild(legendItem);
     });
 }
+
+
 function focusOnDay(day) {
     if (!polylines[day]) {
         return;
