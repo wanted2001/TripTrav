@@ -45,7 +45,7 @@
     </update>
 
     <update id="userSocialUpdate">
-        update user set nickname=#{nickname} where uno = #{uno}
+        update user set nickname=#{nickname}, profile=#{profile} where uno = #{uno}
     </update>
 
     <delete id="scheduleDelete">
