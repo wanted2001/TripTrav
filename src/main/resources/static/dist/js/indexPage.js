@@ -18,14 +18,6 @@ window.onload = function () {
     if (urlParams.has('search')) {
         changeSearch();
     }
-
-    // 회원가입 완료 메시지
-    if (urlParams.has('joinMsg')) {
-        alert('회원가입이 완료되었습니다!');
-        history.replaceState(null, '', window.location.pathname); // URL 클린업
-    }
-
-
     if (typeof unoNum != 'undefined' && unoNum != null) {
         const loginModal = document.querySelector('#myModal');
         loginModal.style.display = 'none';

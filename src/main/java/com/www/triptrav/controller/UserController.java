@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @RequestMapping("/user/*")
 @RequiredArgsConstructor
@@ -26,14 +27,13 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/join")
-    public String joinUser(UserVO uvo, Model m){
-        log.info("user join start!");
-        log.info("join user >>> {}", uvo);
+    public String joinUser(UserVO uvo, RedirectAttributes redirectAttributes){
         uvo.setPw(passwordEncoder.encode(uvo.getPw()));
         usv.joinUser(uvo);
-        m.addAttribute("joinMsg","가입이 완료되었습니다!");
-        return "redirect:/?joinMsg=true";
+        redirectAttributes.addFlashAttribute("joinMsg", "회원가입을 환영합니다!");
+        return "redirect:/";
     }
+
 
     @GetMapping("/login")
     public void loginUser(){
