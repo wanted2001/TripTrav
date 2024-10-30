@@ -63,11 +63,13 @@ scheduleCall(unoNum).then(data => {
 
 async function deleteHandler(sco) {
     const result = await deleteSchedule(sco);
-    if (result === "1") {
-        alert("일정삭제 완료")
-        location.reload();
-    } else {
-        alert("일정삭제 실패");
+    if(confirm("일정을 삭제하시겠습니까?")){
+        if (result === "1") {
+            alert("일정삭제 완료")
+            location.reload();
+        } else {
+            alert("일정삭제 실패");
+        }
     }
 }
 

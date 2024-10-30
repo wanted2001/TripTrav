@@ -84,17 +84,19 @@ Array.from(buttons).forEach(button => {
 
 
 async function delHandler(likeNum){
-    const info ={
-        uno : unoNum,
-        likeCode : likeNum
-    };
-    const result = await deleteLike(info);
-    console.log(result);
-    if(result === "1"){
-        alert("찜 삭제");
-        location.reload();
-    }else{
-        alert("찜 삭제 실패");
+    if(confirm("찜을 삭제하시겠습니까?")){
+        const info ={
+            uno : unoNum,
+            likeCode : likeNum
+        };
+        const result = await deleteLike(info);
+        console.log(result);
+        if(result === "1"){
+            alert("찜 삭제");
+            location.reload();
+        }else{
+            alert("찜 삭제 실패");
+        }
     }
 }
 
