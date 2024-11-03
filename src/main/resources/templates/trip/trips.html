@@ -9,11 +9,29 @@
 </head>
 <body>
 <th:block th:replace="~{header :: header}"></th:block>
-<div class="tripWrap">
-    <div class="list-container" id="listContainer">
+<section class="courseWrap">
+    <span class="courseTitle">TripTrav에서 추천하는 여행코스</span>
+</section>
+<div class="course-modal" id="courseModal" style="display: none">
+    <div class="course-modal-content">
+        <span class="course-modal-close" onclick="closeModal()">&times;</span>
+        <div class="course-modal-header">
+            <h3 class="course-modal-title"></h3>
+            <p class="course-overview"></p>
+        </div>
+        <div class="course-progress-bar"></div>
+        <div class="course-modal-slider">
+            <div class="course-slider-container"></div>
+            <a class="course-prev" onclick="changeSlide(-1)">&#10094;</a>
+            <a class="course-next" onclick="changeSlide(1)">&#10095;</a>
+            <div class="course-modal-body">
+                <p class="detail-overview"></p>
+            </div>
+        </div>
     </div>
 </div>
-<script src="/dist/js/trip/tripMain.js"></script>
+
+<script src="/dist/js/trip/course.js"></script>
 <script src="/dist/js/key.js"></script>
 </body>
 </html>
