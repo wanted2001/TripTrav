@@ -23,7 +23,7 @@
         <div class="modalList">
             <div class="addMemoBtn" th:title="메모" onclick="openModal()"><img src="/dist/image/file-text.svg"><img src="/dist/image/plusW.svg" style="width: 15px" class="plusImg"></div>
             <div class="checkPersonBtn" th:attr="title='동행자 확인'" onclick="checkPersonF()"><img src="/dist/image/users.svg"></div>
-            <div class="addPersonBtn" th:attr="title='동행자 추가'" onclick="addPersonF()"><img src="/dist/image/user-plus.svg"></div>
+            <div class="addPersonBtn hidden" th:attr="title='동행자 추가'" onclick="addPersonF()"><img src="/dist/image/user-plus.svg"></div>
         </div>
         <div class="memoModal">
             <div class="memoWrap">
@@ -60,6 +60,7 @@
             </div>
         </div>
         <div id="checkMap" style="width: 1600px; height: 800px">
+            <div id="legend"></div>
             <div class="mapOpenBtn">
                 <button><img src="/dist/image/chevrons-right.svg"></button>
             </div>
@@ -110,6 +111,7 @@
         </div>
     </div>
     <script src="/dist/js/schedule/check.js"></script>
+<!--    <script src="/dist/js/schedule/00.js"></script>-->
     <script src="/dist/js/schedule/inviteUser.js"></script>
 </body>
 </html>

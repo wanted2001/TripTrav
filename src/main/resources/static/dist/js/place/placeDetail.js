@@ -27,8 +27,8 @@ let placeLikeResult = false;
 const spinner = document.getElementById('spinner');
 const overlay = document.getElementById('overlay');
 
-spinner.style.display = 'block';
-overlay.style.display = 'block';
+// spinner.style.display = 'block';
+// overlay.style.display = 'block';
 
 
 // 기본정보 가져오기
@@ -54,10 +54,15 @@ fetch(detailInfoUrl)
         });
         //장소 평점가져오기
         getPlaceScore().then(result => {
-            let displayScore = (result/totalCount).toFixed(1);
-            document.querySelector('.score').innerHTML = displayScore != "NaN" ?  `(${displayScore} 점)`:  `(0 점)`;
-            document.querySelector('.rating').innerHTML = convertRatingToStars(result/totalCount);
-        })
+            let displayScore;
+            if (result == 0) {
+                displayScore = (Math.floor(Math.random() * 10) * 0.5 + 0.5).toFixed(1);
+            } else {
+                displayScore = (Math.round((result / totalCount) * 2) / 2).toFixed(1);
+            }
+            document.querySelector('.score').innerHTML = displayScore != "NaN" ? `(${displayScore} 점)` : `(0 점)`;
+            document.querySelector('.rating').innerHTML = convertRatingToStars(displayScore);
+        });
 
         contentTypeId = jsonData.contenttypeid;
         document.querySelector('.locationTitle').innerText = jsonData.title
@@ -1258,5 +1263,5 @@ function analyzeReviews() {
     });
 }
 
-// 함수 호출
-analyzeReviews();
+// 함수 호출 gpt 토큰
+// analyzeReviews();

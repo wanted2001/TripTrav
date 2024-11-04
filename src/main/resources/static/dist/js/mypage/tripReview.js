@@ -62,6 +62,19 @@ getReviewList(unoNum)
                     break;
             }
         });
+
+        if (tripPlaceNum > 1) {
+            const prevH1 = document.querySelector('.myPlaceTripReview').querySelector('h1');
+            const accoBtn = `<button type="button" class="accordionBtn" aria-expanded="false" onclick="accordionToggle(this)"><img src="/dist/image/chevron-down.svg"></button>`;
+            prevH1.insertAdjacentHTML('afterend', accoBtn);
+        }
+
+        if (tripFoodNum > 1) {
+            const nextH1 = document.querySelector('.myFoodTripReview').querySelector('h1');
+            const accoBtn = `<button type="button" class="accordionBtn" aria-expanded="false" onclick="accordionToggle(this)"><img src="/dist/image/chevron-down.svg"></button>`;
+            nextH1.insertAdjacentHTML('afterend', accoBtn);
+        }
+
             if(tripFoodNum === 0){
                 tripFoodReviewList.appendChild(noChild("review"));
             }
@@ -76,25 +89,25 @@ getReviewList(unoNum)
 
 //리뷰 삭제
 async function deleteReview(rno) {
-    try {
-        const url = `/review/reviewDelete/${rno}`;
-        const config = {
-            method: 'DELETE'
-        };
-        const resp = await fetch(url, config);
-        if (resp.ok) {
-            alert("리뷰가 삭제되었습니다.");
-            location.href=`/mypage?uno=${unoNum}&location=tripReview`;
-        } else {
-            alert("리뷰 삭제에 실패했습니다.");
+    if(confirm("리뷰를 삭제하시겠습니까?")){
+        try {
+            const url = `/review/reviewDelete/${rno}`;
+            const config = {
+                method: 'DELETE'
+            };
+            const resp = await fetch(url, config);
+            if (resp.ok) {
+                alert("리뷰가 삭제되었습니다.");
+                location.href=`/mypage?uno=${unoNum}&location=tripReview`;
+            } else {
+                alert("리뷰 삭제에 실패했습니다.");
+            }
+        } catch (error) {
+            console.log(error);
+            alert("오류가 발생했습니다.");
         }
-    } catch (error) {
-        console.log(error);
-        alert("오류가 발생했습니다.");
     }
 }
-
-
 
 
 function showPopup(rno) {

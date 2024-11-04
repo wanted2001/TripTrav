@@ -116,42 +116,42 @@ public class MyPageController {
     @ResponseBody
     @PostMapping("/updateUser")
     public int updateUser(@RequestParam("uno") Long uno,
-                             @RequestParam("nickname") String nickname,
-                             @RequestParam("pw") String pw,
-                             @RequestParam("provider") String provider,
-                             @RequestParam(value = "profile", required = false) MultipartFile profile)
-                                throws IOException {
+                          @RequestParam("nickname") String nickname,
+                          @RequestParam("pw") String pw,
+                          @RequestParam("provider") String provider,
+                          @RequestParam(value = "profile", required = false) MultipartFile profile)
+            throws IOException {
         UserVO userVO = new UserVO();
         userVO.setUno(uno);
-        if(provider.equals("null")) {
-            if(!pw.isEmpty()) {
+        userVO.setNickname(nickname);
+
+        if (provider.equals("null") && !pw.isEmpty()) {
             userVO.setPw(passwordEncoder.encode(pw));
-            }
-            userVO.setNickname(nickname);
-            if (profile != null && !profile.isEmpty()) {
-                String uploadFolder = "C:/image";
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-                String dateFolder = sdf.format(new Date());
-                File uploadPath = new File(uploadFolder, dateFolder);
-                if (!uploadPath.exists()) {
-                    uploadPath.mkdirs();
-                }
-                String uuid = UUID.randomUUID().toString();
-                String originalFilename = profile.getOriginalFilename();
-                String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-                String savedFilename = uuid + extension;
-                Path savePath = Paths.get(uploadPath.getAbsolutePath(), savedFilename);
-                profile.transferTo(savePath.toFile());
-                String path = savePath.toString().replace("\\","/");
-                userVO.setProfile(path.replace("C:/image/", ""));
-            }
-           return msv.updateCommonUser(userVO);
-        }else{
-            userVO.setUno(uno);
-            userVO.setNickname(nickname);
-          return msv.updateSocialUserName(userVO);
         }
 
+        if (profile != null && !profile.isEmpty()) {
+            String uploadFolder = "C:/image";
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+            String dateFolder = sdf.format(new Date());
+            File uploadPath = new File(uploadFolder, dateFolder);
+
+            if (!uploadPath.exists()) {
+                uploadPath.mkdirs();
+            }
+            String uuid = UUID.randomUUID().toString();
+            String originalFilename = profile.getOriginalFilename();
+            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            String savedFilename = uuid + extension;
+            Path savePath = Paths.get(uploadPath.getAbsolutePath(), savedFilename);
+            profile.transferTo(savePath.toFile());
+            String path = savePath.toString().replace("\\", "/");
+            userVO.setProfile(path.replace("C:/image/", ""));
+        }
+        if (provider.equals("null")) {
+            return msv.updateCommonUser(userVO);
+        } else {
+            return msv.updateSocialUserName(userVO);
+        }
     }
 
     @ResponseBody

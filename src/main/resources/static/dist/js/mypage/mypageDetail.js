@@ -1,5 +1,3 @@
-var urlParams = new URLSearchParams(window.location.search);
-// message=notAllowedNickName
 var messageVlaue = urlParams.get("modal");
 console.log(messageVlaue);
 var locationValue = urlParams.get('location');
@@ -29,11 +27,11 @@ isSocialUser(unoNum).then(data => {
     document.querySelector(".userId").innerText = email;
     const profile = document.querySelectorAll(".profileUpdateImg, .profileImg");
     profile.forEach(img => {
-        img.src = `${data.profile ? `/profile/${data.profile}` : '/dist/image/smile-beam.svg'}`
+        img.src = `${data.profile ? `/profile/${data.profile}` : '/dist/image/circle-user.svg'}`
     });
     if (data.provider !== null) {
         document.getElementById("pw").disabled = true;
-        document.querySelector(".imgBtn").disabled = true;
+        document.getElementById("pw").placeholder = "소셜유저는 비밀번호 변경이 불가합니다"
     }
 })
 
@@ -81,55 +79,98 @@ document.querySelector(".profileUpdateInput").addEventListener("change", (e) => 
     유효성 검사 하기
     이미지 경로처리 방식
 */
-document.getElementById("updateProfile").addEventListener("click", () => {
-    const formData = new FormData();
-    formData.append("uno", unoNum);
-    formData.append("nickname", document.getElementById("nickName").value);
-    formData.append("pw", document.getElementById("pw").value);
-    formData.append("provider", provider);
+document.addEventListener("DOMContentLoaded", () => {
+    const updateButton = document.getElementById("updateProfile");
+    const nickNameInput = document.getElementById("nickName");
+    const pwInput = document.getElementById("pw");
     const fileInput = document.getElementById("profileUpdateImg");
 
-    // 비동기 함수에 다른 사용법을 알게됨
-    const addImageToFormData = async () => {
-        if (!preview.src.includes("/dist/image/noimage.jpg")) {
-            try {
-                const result = await getFileFromImgSrc(preview.src);
-                formData.append("profile", result);
-            } catch (error) {
-                console.log("이미지 파일 가져오기 오류:", error);
-            }
-        }
-        if (fileInput.files.length > 0) {
-            formData.append("profile", fileInput.files);
+    let initialNickName = nickNameInput.value;
+    let initialPw = pwInput.value;
+    let initialProfileSrc = preview.src;
+
+    const disableButton = (button) => {
+        button.disabled = true;
+        button.style.pointerEvents = 'none';
+        button.style.opacity = '0.5';
+    };
+
+    const enableButton = (button) => {
+        button.disabled = false;
+        button.style.pointerEvents = 'auto';
+        button.style.opacity = '1';
+    };
+
+    disableButton(updateButton);
+
+    const checkForChanges = () => {
+        const nicknameChanged = nickNameInput.value !== initialNickName;
+        const passwordChanged = pwInput.value !== initialPw;
+        const profileChanged = preview.src !== initialProfileSrc || fileInput.files.length > 0;
+        const changesDetected = nicknameChanged || passwordChanged || profileChanged;
+        if (changesDetected) {
+            enableButton(updateButton);
+        } else {
+            disableButton(updateButton);
         }
     };
 
-    addImageToFormData().then(() => {
-        updateUser(formData).then(result => {
-            if (result === '1') {
-                alert("회원정보 수정 완료");
-                closeUpdateModal();
-                location.href = `/mypage?uno=${unoNum}`;
-            } else {
-                alert("회원정보 수정 실패");
-                location.reload();
+    nickNameInput.addEventListener("input", checkForChanges);
+    pwInput.addEventListener("input", checkForChanges);
+    fileInput.addEventListener("change", checkForChanges);
+
+    updateButton.addEventListener("click", () => {
+        const formData = new FormData();
+        formData.append("uno", unoNum);
+        formData.append("nickname", nickNameInput.value);
+        formData.append("pw", pwInput.value);
+        formData.append("provider", provider);
+
+        const addImageToFormData = async () => {
+            if (fileInput.files.length > 0) {
+                formData.append("profile", fileInput.files[0]);
+            } else if (!preview.src.includes("/dist/image/noimage.jpg")) {
+                try {
+                    const result = await getFileFromImgSrc(preview.src);
+                    formData.append("profile", result);
+                } catch (error) {
+                    console.log("이미지 파일 가져오기 오류:", error);
+                }
             }
-        }).catch(err => {
-            console.log(err);
+        };
+
+        addImageToFormData().then(() => {
+
+            updateUser(formData).then(result => {
+                for (let [key, value] of formData.entries()) {
+                    console.log(key, value);
+                }
+                if (result == '1') {
+                    alert("회원정보 수정 완료");
+                    closeUpdateModal();
+                    location.href = `/mypage?uno=${unoNum}`;
+                } else {
+                    alert("회원정보 수정 실패");
+                    location.reload();
+                }
+            }).catch(err => {
+                console.log(err);
+            });
         });
     });
+
 });
 
 document.getElementById("pw").addEventListener("keyup",()=>{
     var pwVal = document.getElementById("pw").value;
     const updateBtn = document.getElementById("updateProfile")
-   if(disabledBtn(pwVal)){
-       updateBtn.disabled = false;
-       updateBtn.style.color = "white";
-   }else{
-       updateBtn.disabled = true;
-       updateBtn.style.color = "red";
-   }
+    if(disabledBtn(pwVal)){
+        updateBtn.disabled = false;
+        updateBtn.style.color = "white";
+    }else{
+        updateBtn.disabled = true;
+        updateBtn.style.color = "red";
+    }
 });
 
 function disabledBtn(value){
@@ -140,8 +181,6 @@ function disabledBtn(value){
     }
 
 }
-
-
 
 async function updateUser(userInfo) {
     try {
@@ -302,9 +341,9 @@ function accordionToggle(button) {
     button.setAttribute('aria-expanded', !isExpanded);
     list.classList.toggle('show', !isExpanded);
     if (isExpanded) {
-        button.innerText = "펼치기";
+        button.innerHTML= `<img src="/dist/image/chevron-down.svg">`;
     } else {
-        button.innerText = "접기";
+        button.innerHTML = `<img src="/dist/image/chevron-up.svg">`;
     }
 }
 

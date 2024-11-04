@@ -17,15 +17,12 @@ function getRandomNumber() {
 window.addEventListener('click', (e) => {
     let date = e.target.getAttribute('data-date');
     if (sco && date) {
-        // Show spinner and overlay
         spinner.style.display = 'block';
         overlay.style.display = 'block';
 
         getUserCourse(sco, date).then(result => {
             let content = '';
-            document.querySelector('.contentArea').innerHTML = ''; // Clear existing content
-
-            // Check if there are results
+            document.querySelector('.contentArea').innerHTML = '';
             if (result.length > 0) {
                 result.forEach(key => {
                     const star = getRandomRating();
@@ -66,8 +63,6 @@ window.addEventListener('click', (e) => {
     }
 });
 
-
-
 //day 선택
 const days = document.querySelectorAll('.day');
 days.forEach(day => {
@@ -79,7 +74,6 @@ days.forEach(day => {
         })
         e.target.classList.add('day_focus');
         const date = e.target.getAttribute('data-date');
-
         getDatePlan(sco, date).then(r => {
             if (r.length === 0) {
                 document.querySelector('.noPlanText').classList.remove('hidden');
@@ -87,9 +81,10 @@ days.forEach(day => {
                 document.querySelector('.noPlanText').classList.add('hidden');
             }
         })
-
+        focusOnDay(date);
     })
 })
+
 
 //상단 회색바탕 위 드래그 슬라이드 구현
 //상단 일수별 슬라이드
@@ -115,7 +110,6 @@ const disableEditBtn = document.querySelector('.disableEdit');
 const editBtn = document.querySelector('.editBtn');
 
 document.addEventListener('DOMContentLoaded', () => {
-    // initTmap();
 
     const today = new Date();
     today.setHours(0,0,0,0);
@@ -226,7 +220,6 @@ document.addEventListener('DOMContentLoaded', () => {
     //메모여부확인
     getMemo(sco).then(r => {
         const memoContents = document.querySelector('.memoContents');
-        console.log(r)
         if (!r.sco==0) {
             document.querySelector('.plusImg').remove();
             memoContents.innerHTML = `${r.scheMemoContent}`;
@@ -350,8 +343,6 @@ function deleteCompanion(sco, uno, nick) {
         })
     }
 }
-
-
 
 document.querySelector('.editRoleSave').addEventListener('click', () => {
     const companionList = document.querySelectorAll('.companionLi');
@@ -522,21 +513,24 @@ async function getSlideImg(key) {
     let addedLocations = new Set();
 
     const res = await getData(url)
-    // console.log(res);
-    res.items.item.forEach(img => {
-        if (!addedLocations.has(img.contentid)) {
-            innerSlide.innerHTML += `<div class="slideItem" style="background-image: url('${img.originimgurl}'); background-size: cover; background-position: center; background-repeat: no-repeat;"></div>`;
+    console.log(res);
+    if(res.numOfRows>0){
+        res.items.item.forEach(img => {
+            if (!addedLocations.has(img.contentid)) {
+                innerSlide.innerHTML += `<div class="slideItem" style="background-image: url('${img.originimgurl}'); background-size: cover; background-position: center; background-repeat: no-repeat;"></div>`;
 
-            addedLocations.add(img.contentid);
-        }
-    });
+                addedLocations.add(img.contentid);
+            }
+        });
+    }
 }
 
+let map;
+let markersByDate = {};
+const polylines = {};
+let connectingLines = [];
 
-var map;
-var markers = [];
-
-//지도출력
+// 지도 초기화 함수
 function initKakaoMap() {
     getAllCourse(sco).then(result => {
         fetch('/dist/json/mapData.json')
@@ -554,16 +548,16 @@ function initKakaoMap() {
                     const mapx = matchedItem.mapx;
                     const mapy = matchedItem.mapy;
 
-                    var mapContainer = document.getElementById('checkMap');
-                    var mapOption = {
+                    const mapContainer = document.getElementById('checkMap');
+                    const mapOption = {
                         center: new kakao.maps.LatLng(mapy, mapx),
                         level: 5
                     };
 
                     map = new kakao.maps.Map(mapContainer, mapOption);
-
+                    initialCenter = map.getCenter();
                     addMarkersWithLabels(result, data);
-                    addPolyline(result,data)
+                    addPolyline(result, data);
                 } else {
                     console.error('일치하는 첫 번째 결과의 좌표를 찾을 수 없습니다.');
                 }
@@ -574,31 +568,38 @@ function initKakaoMap() {
     });
 }
 
-//마커라벨
+// 마커 및 라벨 추가
 function addMarkersWithLabels(result, data) {
-    removeMarkers();
-
+    markersByDate = {};
     result.forEach(resultItem => {
         const matchedItem = data.find(item => item.contentid == resultItem.scheContentId);
         if (matchedItem) {
             const mapx = matchedItem.mapx;
             const mapy = matchedItem.mapy;
             const title = matchedItem.title;
+            const scheDate = resultItem.scheDate;
             var marker = new kakao.maps.Marker({
                 position: new kakao.maps.LatLng(mapy, mapx),
                 map: map,
                 title: title,
                 content: title
             });
-            markers.push(marker);
             var mLabel = new kakao.maps.InfoWindow({
                 position: new kakao.maps.LatLng(mapy, mapx),
                 content: `<span class="info-title">${title}</span>`
             });
             mLabel.open(map, marker);
+            if (!markersByDate[scheDate]) {
+                markersByDate[scheDate] = [];
+            }
+            markersByDate[scheDate].push({ marker, label: mLabel });
         }
     });
+    adjustLabelStyles();
+}
 
+// 라벨 스타일 조정
+function adjustLabelStyles() {
     setTimeout(() => {
         var infoTitle = document.querySelectorAll('.info-title');
         infoTitle.forEach(function (e) {
@@ -608,16 +609,14 @@ function addMarkersWithLabels(result, data) {
             e.parentElement.style.left = "50%";
             e.parentElement.style.marginLeft = -ml + "px";
             e.parentElement.style.width = w + "px";
-            e.parentElement.style.fontFamily="LINESeedKR-Rg";
-            e.parentElement.style.paddingTop="2px"
+            e.parentElement.style.fontFamily = "LINESeedKR-Rg";
+            e.parentElement.style.paddingTop = "2px";
             e.parentElement.previousSibling.style.display = "none";
             e.parentElement.parentElement.style.border = "0px";
             e.parentElement.parentElement.style.background = "unset";
         });
     }, 0);
 }
-
-
 //마커제거
 function removeMarkers() {
     markers.forEach(marker => {
@@ -628,33 +627,122 @@ function removeMarkers() {
 
 //선긋기
 function addPolyline(result, data) {
-    const coordinates = [];
+    const dayCoordinates = {};
+    const colors = {
+        1: 'blue',
+        2: 'green',
+        3: 'red'
+    };
     result.forEach(resultItem => {
         const matchedItem = data.find(item => item.contentid == resultItem.scheContentId);
 
         if (matchedItem) {
             const latLng = new kakao.maps.LatLng(matchedItem.mapy, matchedItem.mapx);
-            coordinates.push(latLng);
+
+            if (!dayCoordinates[resultItem.scheDate]) {
+                dayCoordinates[resultItem.scheDate] = [];
+            }
+            dayCoordinates[resultItem.scheDate].push(latLng);
         }
     });
 
-    if (coordinates.length > 1) {
-        var polyline = new kakao.maps.Polyline({
-            path: coordinates,
-            strokeWeight: 5,
-            strokeColor: 'blue',
-            strokeOpacity: 0.7,
-            strokeStyle: 'solid'
-        });
+    let previousDayLastCoordinate = null;
+    let previousColor = null;
 
-        polyline.setMap(map);
-    } else {
-        console.log('연결할 장소가 2개 이상 필요합니다.');
-    }
+    Object.keys(dayCoordinates).forEach(scheDate => {
+        const coordinates = dayCoordinates[scheDate];
+        const color = colors[scheDate] || 'gray';
+
+        if (coordinates.length > 1) {
+            const polyline = new kakao.maps.Polyline({
+                path: coordinates,
+                strokeWeight: 5,
+                strokeColor: color,
+                strokeOpacity: 0.7,
+                strokeStyle: 'solid'
+            });
+            polyline.setMap(map);
+            polylines[scheDate] = polyline;
+        } else {
+            console.log(`날짜 ${scheDate}에 연결할 장소가 2개 이상 필요합니다.`);
+        }
+        if (previousDayLastCoordinate && previousColor) {
+            const connectingLine = new kakao.maps.Polyline({
+                path: [previousDayLastCoordinate, coordinates[0]],
+                strokeWeight: 5,
+                strokeColor: previousColor,
+                strokeOpacity: 0.3,
+                strokeStyle: 'solid'
+            });
+            connectingLine.setMap(map);
+            connectingLines.push(connectingLine);
+        }
+        previousDayLastCoordinate = coordinates[coordinates.length - 1];
+        previousColor = color;
+    });
+
+    createLegend(Object.keys(dayCoordinates), colors);
+}
+function createLegend(days, colors) {
+    const legendDiv = document.getElementById("legend");
+    legendDiv.innerHTML = "";
+
+    days.forEach((day, index) => {
+        const color = colors[day] || 'gray';
+        const legendItem = document.createElement("div");
+        legendItem.style.display = "flex";
+        legendItem.style.alignItems = "center";
+        legendItem.style.marginBottom = index === days.length - 1 ? "0" : "8px";
+
+        const dayText = document.createElement("span");
+        dayText.innerText = `Day ${day}`;
+        dayText.style.width = "45px";
+
+        const colorBox = document.createElement("div");
+        colorBox.style.width = "35px";
+        colorBox.style.height = "5px";
+        colorBox.style.backgroundColor = color;
+        colorBox.style.marginBottom = "5px";
+        colorBox.style.marginLeft = "15px"
+
+        legendItem.appendChild(dayText);
+        legendItem.appendChild(colorBox);
+        legendDiv.appendChild(legendItem);
+    });
 }
 
 
-
+function focusOnDay(day) {
+    if (!polylines[day]) {
+        return;
+    }
+    Object.values(markersByDate).forEach(dayItems => {
+        dayItems.forEach(({ marker, label }) => {
+            marker.setMap(null);
+            label.close();
+        });
+    });
+    if (markersByDate[day]) {
+        markersByDate[day].forEach(({ marker, label }) => {
+            marker.setMap(map);
+            label.open(map, marker);
+        });
+    }
+    Object.keys(polylines).forEach(date => {
+        if (date === day) {
+            polylines[date].setMap(map);
+        } else {
+            polylines[date].setMap(null);
+        }
+    });
+    connectingLines.forEach(line => line.setMap(null));
+    const coordinates = polylines[day]?.getPath();
+    if (coordinates && coordinates.length > 0) {
+        const bounds = new kakao.maps.LatLngBounds();
+        coordinates.forEach(coord => bounds.extend(coord));
+        map.setBounds(bounds);
+    }
+}
 
 //주소삽입
 function getAddr(key) {
@@ -864,6 +952,7 @@ function makeDot() {
 let openBtn = document.querySelector('.mapOpenBtn');
 let closeBtn = document.querySelector('.mapCloseBtn');
 let mapContentBox = document.querySelector('.mapContentBox');
+let initialCenter = null;
 
 function toggleVisibility(element, isVisible) {
     element.classList.toggle("hidden", !isVisible);
@@ -884,6 +973,10 @@ openBtn.addEventListener('click', () => {
     toggleVisibility(mapContentBox, true);
     toggleVisibility(closeBtn, true);
     closeBtn.style.left = '364px';
+    const firstDayBtn = document.querySelector('.day[data-date="1"]');
+    if (firstDayBtn) {
+        firstDayBtn.click();
+    }
 });
 
 //여행추가하기 버튼 contentArea 높이에 맞춰 위치 변경
@@ -902,6 +995,7 @@ function checkHeight() {
     }
 }
 
+// 닫기 버튼 클릭 이벤트 수정
 closeBtn.addEventListener('click', () => {
     if (!depth2.classList.contains('hidden')) {
         depth2.classList.add('hidden');
@@ -913,8 +1007,20 @@ closeBtn.addEventListener('click', () => {
             }
         }
         closeContent();
-
     }
+
+    if (initialCenter) {
+        map.setCenter(initialCenter);
+        map.setLevel("5");
+    }
+    Object.values(polylines).forEach(polyline => polyline.setMap(map));
+    Object.values(markersByDate).forEach(dayItems => {
+        dayItems.forEach(({ marker, label }) => {
+            marker.setMap(map);
+            label.open(map, marker);
+        });
+    });
+    connectingLines.forEach(line => line.setMap(map));
 });
 
 function closeContent() {
@@ -1019,6 +1125,7 @@ function recommendData() {
     console.log(planDataArray);
 
     if (planDataArray.length > 0) {
+        document.querySelector('.depth2_recomm').innerHTML = '';
         const lastData = planDataArray[planDataArray.length - 1];
         const url = `https://apis.data.go.kr/B551011/KorService1/detailCommon1?MobileOS=ETC&MobileApp=TripTrav&contentId=${lastData}&defaultYN=Y&firstImageYN=Y&areacodeYN=Y&catcodeYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&serviceKey=${tourAPIKEY}&_type=json`;
         console.log(url);
@@ -1030,7 +1137,7 @@ function recommendData() {
         getData(url).then(result => {
             const mapx = result.items.item[0].mapx;
             const mapy = result.items.item[0].mapy;
-            const mapUrl = `https://apis.data.go.kr/B551011/KorService1/locationBasedList1?MobileOS=ETC&MobileApp=TripTrav&_type=json&arrange=S&numOfRows=200&mapX=${mapx}&mapY=${mapy}&radius=2000&serviceKey=${tourAPIKEY}`;
+            const mapUrl = `https://apis.data.go.kr/B551011/KorService1/locationBasedList1?MobileOS=ETC&MobileApp=TripTrav&_type=json&arrange=S&numOfRows=2000&mapX=${mapx}&mapY=${mapy}&radius=2000&serviceKey=${tourAPIKEY}`;
 
             getData(mapUrl).then(res => {
                 totalCount = res.totalCount;
@@ -1055,6 +1162,9 @@ function recommendData() {
                     currentPage++;
                     moreBtn.remove();
                     loadMore(items);
+                    if((currentPage * itemsPerPage) < totalCount) {
+                        createMoreButton(totalCount, items)
+                    }
                 });
             }
         }
@@ -1066,9 +1176,7 @@ function recommendData() {
         function displayItems(items, currentPage, itemsPerPage) {
             const start = (currentPage - 1) * itemsPerPage;
             const end = Math.min(start + itemsPerPage, items.length);
-            const itemsToDisplay = items.slice(start, end);
-
-            document.querySelector('.depth2_recomm').innerHTML = '';
+            const itemsToDisplay = items.slice(start+1, end);
 
             itemsToDisplay.forEach(key => {
                 const recommDiv = document.createElement('div');
@@ -1658,7 +1766,6 @@ function countTriangle() {
     updateTriangleVisibility();
 }
 
-
 //일정삭제
 function deletePlan(event) {
     const liItems = document.querySelectorAll('.contentArea .oneContent');
@@ -1839,7 +1946,6 @@ function getHeartData(){
         })
 }
 
-
 async function generateInviteUrl(sco, unoNum) {
     const response = await fetch("/schedule/generateInviteUrl", {
         method: "POST",
@@ -1894,21 +2000,3 @@ async function getSchedule(sco){
         console.log(err)
     }
 }
-
-
-//할일
-//일정생성하거나 편집할때 1개면 안들어감
-//동행자 편집(hidden 없애는 함수부터)**
-//동행자 삭제**
-//동행자 확인할때 값 누적됨**
-//일정편집없는 유저 동행자확인 버튼 2개뜸(아래가 빈버튼)**
-//마지막 장소 기반으로 추천 여행지 출력, 검색 기본값 출력
-//일정전체적인 지역코드 저장 => 검색시 그 지역코드 기반으로 출력
-//스케줄좍좍부분에 뭐넣을지
-//장소카테고리 넣어야함!**
-//dot 하단 길이 조절 필요
-//이미지 없는 장소 forEach 못돌아서 오류남(getSlideImg 함수)
-//일정 수정 후 저장 alert 두번뜸
-//맨위 index는 ^버튼 삭제, 맨아래 index는 v버튼 삭제
-//날짜지난일정은 메모, 동행자, 편집버튼 전부 삭제
-//이름 점처리

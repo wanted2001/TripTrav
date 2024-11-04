@@ -31,20 +31,21 @@ tripCall(unoNum).then(data => {
 });
 
 async function delHandler(likeNum){
-    const info ={
-        uno : unoNum,
-        likeCode : likeNum
-    };
-    const result = await deleteLike(info);
-    console.log(result);
-    if(result === "1"){
-        alert("코스 삭제");
-        location.href = `/mypage?uno=${unoNum}&location=wishTrip`;
-    }else{
-        alert("코스 삭제 실패");
+    if(confirm("코스를 삭제하시겠습니까?")){
+        const info ={
+            uno : unoNum,
+            likeCode : likeNum
+        };
+        const result = await deleteLike(info);
+        console.log(result);
+        if(result === "1"){
+            alert("코스 삭제");
+            location.href = `/mypage?uno=${unoNum}&location=wishTrip`;
+        }else{
+            alert("코스 삭제 실패");
+        }
     }
 }
-
 
 async function tripCall(unoNum) {
     const url = "/mypage/tripCall?uno=" + unoNum;

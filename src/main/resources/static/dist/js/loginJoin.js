@@ -17,6 +17,12 @@
         } else if (e.target && e.target.id === 'findBtn'){
             e.preventDefault();
             pageCall("findPw");
+        } else if (e.target && e.target.id === 'openModalWithJoin'){
+            e.preventDefault();
+            openModal()
+            const joinBtn = document.getElementById('joinBtn');
+            joinBtn.click();
+            pageCall("join");
         }
     });
 

@@ -48,4 +48,8 @@
     <select id="getUserSchedule" resultType="com.www.triptrav.domain.ScheduleVO">
         select * from schedule where uno=${uno}
     </select>
+
+    <select id="getDate" resultType="int">
+        select sche_count from schedule where sco=#{sco}
+    </select>
 </mapper>

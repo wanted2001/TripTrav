@@ -32,12 +32,24 @@ scheduleCall(unoNum).then(data => {
             if (compareDate(`${data[i].scheEnd}`)) {
                 prevList.appendChild(li);
                 prevNum++;
-
             } else {
                 nextList.appendChild(li);
                 nextNum++;
             }
         }
+
+        if (prevNum > 1) {
+            const prevH1 = document.querySelector('.prevMyTrip').querySelector('h1');
+            const accoBtn = `<button type="button" class="accordionBtn" aria-expanded="false" onclick="accordionToggle(this)"><img src="/dist/image/chevron-down.svg"></button>`;
+            prevH1.insertAdjacentHTML('afterend', accoBtn);
+        }
+
+        if (nextNum > 1) {
+            const nextH1 = document.querySelector('.nextMyTrip').querySelector('h1');
+            const accoBtn = `<button type="button" class="accordionBtn" aria-expanded="false" onclick="accordionToggle(this)"><img src="/dist/image/chevron-down.svg"></button>`;
+            nextH1.insertAdjacentHTML('afterend', accoBtn);
+        }
+
         if (prevNum === 0) {
             prevList.appendChild(noChild("list"));
         }
@@ -51,11 +63,13 @@ scheduleCall(unoNum).then(data => {
 
 async function deleteHandler(sco) {
     const result = await deleteSchedule(sco);
-    if (result === "1") {
-        alert("일정삭제 완료")
-        location.reload();
-    } else {
-        alert("일정삭제 실패");
+    if(confirm("일정을 삭제하시겠습니까?")){
+        if (result === "1") {
+            alert("일정삭제 완료")
+            location.reload();
+        } else {
+            alert("일정삭제 실패");
+        }
     }
 }
 

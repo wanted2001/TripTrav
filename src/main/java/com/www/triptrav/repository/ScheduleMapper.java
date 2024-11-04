@@ -27,4 +27,6 @@ public interface ScheduleMapper {
     ScheduleVO getScheduleVO(long sco);
 
     List<ScheduleVO> getUserSchedule(long uno);
+
+    int getDate(long sco);
 }
