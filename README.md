@@ -24,19 +24,27 @@
 
 ## ▶ 담당 파트
 ### 마이페이지 기능
-[여행일정](#tripList) | [리뷰기능](#review) | [찜한 장소](#wishPlace) | [찜한 여행](#wishTrip)
+- [여행일정으로 가기](#tripList)
+- [내가 쓴 리뷰로 가기](#review) <!-- 링크 클릭 시 '내가 쓴 리뷰' 섹션으로 이동 -->
+- [찜한 장소로 가기](#wishPlace)
+- [찜한 여행으로 가기](#wishTrip)
+
 - **프로필 수정**: 
   - 사진, 닉네임, 비밀번호 수정 가능.
   - 가입한 경로에 따라 수정 항목이 달라짐 (API를 통한 가입과 일반 가입의 차이점)
-  
+
+---
+
 ## ▶ 나의 여행일정
 <a id="tripList"></a>
   - 사용자가 작성한 여행일정을 마이페이지에서 확인할 수 있음.
   - 클릭하면 해당 여행일정 페이지로 이동.
   - 지난 여행일정과 예정된 여행일정이 구분되어 표시됨.
 
+---
+
 ## ▶ 내가 쓴 리뷰
-<a id="review"></a>
+<a name="review"></a>
 
 ### 리뷰 작성 전 화면
 <div style="display: flex; align-items: center; gap: 10px;">
@@ -50,23 +58,15 @@
   <p style="font-size: 14px; margin: 0;">이미 작성한 리뷰를 수정하려는 화면입니다. 리뷰 내용 수정이 가능하고, 작성한 리뷰를 변경할 수 있습니다. 여기에선 사용자가 리뷰의 내용을 쉽게 확인하고 수정할 수 있는 기능을 제공합니다.</p>
 </div>
 
-### 리뷰 수정 화면
-<div style="display: flex; align-items: center; gap: 10px;">
-  <img src="https://github.com/wanted2001/imagefile/blob/main/%ED%8A%B8%EB%A6%BD%ED%8A%B8%EB%9E%A9/%EB%A6%AC%EB%B7%B0%20%EC%88%98%EC%A0%95%ED%95%98%EA%B8%B0.png" width="400">
-  <p style="font-size: 14px; margin: 0;">사용자가 리뷰를 수정하는 화면입니다. 리뷰의 내용을 업데이트하고 사진도 교체할 수 있습니다. 입력된 데이터는 데이터베이스에 저장되어 실시간으로 업데이트됩니다.</p>
-</div>
-
-### 리뷰 수정 후 화면
-<div style="display: flex; align-items: center; gap: 10px;">
-  <img src="https://github.com/wanted2001/imagefile/blob/main/%ED%8A%B8%EB%A6%BD%ED%8A%B8%EB%9E%A9/%EB%A6%AC%EB%B7%B0%20%EC%88%98%EC%A0%95%20%ED%9B%84.png" width="400">
-  <p style="font-size: 14px; margin: 0;">수정된 리뷰가 보여진 화면입니다. 리뷰가 변경된것을 실시간으로 확인할수 있습니다.</p>
-</div>
+---
 
 ## ▶ 내가 찜한 장소
 <a id="wishPlace"></a>
   - 사용자가 찜한 장소를 유형별로 분류.
   - 찜한 장소 삭제 가능.
-  
+
+---
+
 ## ▶ 내가 찜한 여행일정
 <a id="wishTrip"></a>
   - 사용자가 찜한 여행일정을 표시하고, 삭제 가능.
