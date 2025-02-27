@@ -38,14 +38,13 @@
 ## ▶ 나의 여행일정
 ### 일정 작성 전 화면
 <div style="display: flex; align-items: center; gap: 10px;">
-  <img src="https://github.com/wanted2001/imagefile/blob/main/%ED%8A%B8%EB%A6%BD%ED%8A%B8%EB%9E%A9/%EB%A6%AC%EB%B7%B0%20%EC%93%B0%EA%B8%B0%20%EC%A0%84.png" width="400">
+  <img src="https://github.com/wanted2001/imagefile/blob/main/%ED%8A%B8%EB%A6%BD%ED%8A%B8%EB%9E%A9/%EC%97%AC%ED%96%89%EC%9D%BC%EC%A0%95%20%EC%B6%94%EA%B0%80%20%EC%A0%84.png">
   <p style="font-size: 14px; margin: 0;">아무 일정이 없을떄 화면입니다.</p>
 </div>
 
 ### 일정 작성 후 화면
 <div style="display: flex; align-items: center; gap: 10px;">
-  <img src="https://github.com/wanted2001/imagefile/blob/main/%ED%8A%B8%EB%A6%BD%ED%8A%B8%EB%9E%A9/%EB%A6%AC%EB%B7%B0%20%EC%93%B0%EA%B8%B0%20%EC%A0%84.png" width="400">
-  <img src="https://github.com/wanted2001/imagefile/blob/main/%ED%8A%B8%EB%A6%BD%ED%8A%B8%EB%9E%A9/%EB%A6%AC%EB%B7%B0%20%EC%93%B0%EA%B8%B0%20%EC%A0%84.png" width="400">
+  <img src="https://github.com/wanted2001/imagefile/blob/main/%ED%8A%B8%EB%A6%BD%ED%8A%B8%EB%9E%A9/%EC%9D%BC%EC%A0%95%20%EC%B6%94%EA%B0%80%20%ED%9B%84.png">
   <p style="font-size: 14px; margin: 0;">일정을 작성하게 되면 날짜에 따라 지난일정과 예정일정으로 구분됩니다.</p>
 </div>
 
@@ -56,14 +55,26 @@
 
 ### 리뷰 작성 전 화면
 <div style="display: flex; align-items: center; gap: 10px;">
-  <img src="https://github.com/wanted2001/imagefile/blob/main/%ED%8A%B8%EB%A6%BD%ED%8A%B8%EB%9E%A9/%EB%A6%AC%EB%B7%B0%20%EC%93%B0%EA%B8%B0%20%EC%A0%84.png" width="400">
+  <img src="https://github.com/wanted2001/imagefile/blob/main/%ED%8A%B8%EB%A6%BD%ED%8A%B8%EB%9E%A9/%EB%A6%AC%EB%B7%B0%20%EC%93%B0%EA%B8%B0%20%EC%A0%84.png">
   <p style="font-size: 14px; margin: 0;">사용자가 리뷰를 작성하기 전에 보게 되는 화면입니다. 여기에서 리뷰의 내용을 입력하고 사진을 최대 3장까지 첨부할 수 있습니다.</p>
 </div>
 
 ### 리뷰 수정 전 화면
 <div style="display: flex; align-items: center; gap: 10px;">
-  <img src="https://github.com/wanted2001/imagefile/blob/main/%ED%8A%B8%EB%A6%BD%ED%8A%B8%EB%9E%A9/%EB%A6%AC%EB%B7%B0%20%EC%88%98%EC%A0%95%20%EC%A0%84.png" width="400">
+  <img src="https://github.com/wanted2001/imagefile/blob/main/%ED%8A%B8%EB%A6%BD%ED%8A%B8%EB%9E%A9/%EB%A6%AC%EB%B7%B0%20%EC%88%98%EC%A0%95%20%EC%A0%84.png">
   <p style="font-size: 14px; margin: 0;">이미 작성한 리뷰를 수정하려는 화면입니다. 리뷰 내용 수정이 가능하고, 작성한 리뷰를 변경할 수 있습니다. 여기에선 사용자가 리뷰의 내용을 쉽게 확인하고 수정할 수 있는 기능을 제공합니다.</p>
+</div>
+
+### 리뷰 수정 화면
+<div style="display: flex; align-items: center; gap: 10px;">
+  <img src="https://github.com/wanted2001/imagefile/blob/main/%ED%8A%B8%EB%A6%BD%ED%8A%B8%EB%9E%A9/%EB%A6%AC%EB%B7%B0%20%EC%88%98%EC%A0%95%ED%95%98%EA%B8%B0.png">
+  <p style="font-size: 14px; margin: 0;">사용자가 리뷰를 수정하는 화면입니다. 리뷰의 내용을 업데이트하고 사진도 교체할 수 있습니다. 입력된 데이터는 데이터베이스에 저장되어 실시간으로 업데이트됩니다.</p>
+</div>
+
+### 리뷰 수정 후 화면
+<div style="display: flex; align-items: center; gap: 10px;">
+  <img src="https://github.com/wanted2001/imagefile/blob/main/%ED%8A%B8%EB%A6%BD%ED%8A%B8%EB%9E%A9/%EB%A6%AC%EB%B7%B0%20%EC%88%98%EC%A0%95%20%ED%9B%84.png">
+  <p style="font-size: 14px; margin: 0;">수정된 리뷰가 보여진 화면입니다. 리뷰가 변경된것을 실시간으로 확인할수 있습니다.</p>
 </div>
 
 ---
