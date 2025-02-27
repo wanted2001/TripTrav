@@ -36,10 +36,18 @@
 ---
 <a name="tripList"></a>
 ## ▶ 나의 여행일정
+### 일정 작성 전 화면
+<div style="display: flex; align-items: center; gap: 10px;">
+  <img src="https://github.com/wanted2001/imagefile/blob/main/%ED%8A%B8%EB%A6%BD%ED%8A%B8%EB%9E%A9/%EB%A6%AC%EB%B7%B0%20%EC%93%B0%EA%B8%B0%20%EC%A0%84.png" width="400">
+  <p style="font-size: 14px; margin: 0;">아무 일정이 없을떄 화면입니다.</p>
+</div>
 
-  - 사용자가 작성한 여행일정을 마이페이지에서 확인할 수 있음.
-  - 클릭하면 해당 여행일정 페이지로 이동.
-  - 지난 여행일정과 예정된 여행일정이 구분되어 표시됨.
+### 일정 작성 후 화면
+<div style="display: flex; align-items: center; gap: 10px;">
+  <img src="https://github.com/wanted2001/imagefile/blob/main/%ED%8A%B8%EB%A6%BD%ED%8A%B8%EB%9E%A9/%EB%A6%AC%EB%B7%B0%20%EC%93%B0%EA%B8%B0%20%EC%A0%84.png" width="400">
+  <img src="https://github.com/wanted2001/imagefile/blob/main/%ED%8A%B8%EB%A6%BD%ED%8A%B8%EB%9E%A9/%EB%A6%AC%EB%B7%B0%20%EC%93%B0%EA%B8%B0%20%EC%A0%84.png" width="400">
+  <p style="font-size: 14px; margin: 0;">일정을 작성하게 되면 날짜에 따라 지난일정과 예정일정으로 구분됩니다.</p>
+</div>
 
 ---
 <a name="review"></a>
